@@ -13,7 +13,7 @@ import {
 import { constants, errorLog } from "../../utils";
 import { axiosPull } from "../../utils/axiosPull";
 import { useToast } from "react-native-styled-toast";
-import * as i18n from '../../../i18n';
+import * as i18n from "../../../i18n";
 
 const Products = (props) => {
   const {
@@ -32,7 +32,7 @@ const Products = (props) => {
     if (!props.unsubscribe) {
       toast({
         message: i18n.t("No internet connection"),
-                toastStyles: {
+        toastStyles: {
           bg: "#3D4849",
           borderRadius: 5,
         },
@@ -91,15 +91,16 @@ const Products = (props) => {
           });
           const data = {
             owner: props.route.params.owner,
-            receipt:currentPurchase?.transactionReceipt,
+            receipt: currentPurchase?.transactionReceipt,
             transID: currentPurchase?.transactionId,
             transDate: currentPurchase?.transactionDate,
             token: currentPurchase?.purchaseToken,
             user: props.route.params.user,
             pin: props.route.params.pin,
-            event: props.route.params.eventName,
             currentPurchase: currentPurchase,
-            sku: sku,
+            sku: currentPurchase?.productId,
+            cameras: props.route.params.cameras,
+            eventName: props.route.params.eventName
           };
           await axiosPull.postData("/store/index.php", data);
           axiosPull._pullCameraFeed(
@@ -144,9 +145,12 @@ const Products = (props) => {
                 textAlign: "center",
               }}
             >
-              {i18n.t('In-app purchases')}{`\n`}
-              {i18n.t('Event Upgrades')}{`\n`}
-              {i18n.t('Camera Upgrades')}{`\n`}
+              {i18n.t("In-app purchases")}
+              {`\n`}
+              {i18n.t("Event Upgrades")}
+              {`\n`}
+              {i18n.t("Camera Upgrades")}
+              {`\n`}
             </Text>
           </View>
         }

@@ -28,14 +28,13 @@ const StoreListItem = (props) => {
           alignItems:'center',
         }}>
           <Text style={{
-            color: '#4DAAEE',
+            color: '#000',
             fontFamily: 'HelveticaNeue-Medium',
             fontSize: 16,
             textAlign:'center',
           }}>{`${i18n.t('Upgradeto')} \n${props.item.item.description}`.toLocaleUpperCase()}</Text>
           
            <View style={{
-            backgroundColor: '#62cff4',
             borderRadius: 30,
             marginTop:15,
             justifyContent: "center",

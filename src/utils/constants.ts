@@ -177,7 +177,7 @@ export const productSkusUser = Platform.select({
 
 export const productSkusSubscriptions = Platform.select({
   ios: [
-    '0000000001'
+    '0000000002'
   ],
 
   android: [
