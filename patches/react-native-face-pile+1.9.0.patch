@@ -1,0 +1,53 @@
+diff --git a/node_modules/react-native-face-pile/src/index.js b/node_modules/react-native-face-pile/src/index.js
+index 76562d7..b8a286f 100644
+--- a/node_modules/react-native-face-pile/src/index.js
++++ b/node_modules/react-native-face-pile/src/index.js
+@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
+     borderColor: 'white'
+   },
+   overflow: {
+-    backgroundColor: '#b6c0ca',
++    backgroundColor: "rgba(234, 85, 4, 0.80)",
+     justifyContent: 'center',
+     alignItems: 'center',
+     marginLeft: 18
+@@ -26,6 +26,12 @@ const styles = StyleSheet.create({
+     letterSpacing: -1,
+     marginLeft: 3,
+     fontWeight: 'bold'
++  },
++  overflowLabelEmpty: {
++    color: '#fff',
++    fontSize: 14,
++    marginLeft: -2,
++    fontWeight: 'bold'
+   }
+ })
+ 
+@@ -136,14 +142,14 @@ export default class FacePile extends PureComponent {
+         >
+           <Text
+             style={[
+-              styles.overflowLabel,
++              overflow > 0 ? styles.overflowLabel : styles.overflowLabelEmpty,
+               {
+                 fontSize: circleSize * 0.7
+               },
+               overflowLabelStyle
+             ]}
+           >
+-            +{overflow}
++            { overflow > 0 ? "+" : ""} {overflow}
+           </Text>
+         </View>
+       </View>
+@@ -174,7 +180,8 @@ export default class FacePile extends PureComponent {
+ 
+     return (
+       <View style={[styles.container, containerStyle]}>
+-        {overflow > 0 && !hideOverflow && this._renderOverflowCircle(overflow)}
++        {facesToRender.length > numFaces ? this._renderOverflowCircle(overflow) : <></>}
++        {facesToRender.length == 0 ? this._renderOverflowCircle(overflow) : <></>}
+         {Array.isArray(facesToRender) && facesToRender.map(this._renderFace)}
+       </View>
+     )

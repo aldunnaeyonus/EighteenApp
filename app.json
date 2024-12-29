@@ -1,0 +1,82 @@
+{
+  "expo": {
+    "name": "Snap Eighteen",
+    "slug": "Eighteen",
+    "scheme": "snapseighteenapp",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "jsEngine": "jsc",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#fff"
+    },
+    "doctor": {
+      "reactNativeDirectoryCheck": {
+        "enabled": true
+      }
+    },
+    "plugins": [
+        "./withAndroidStrategiesPlugin.js",
+        "react-native-iap",
+      [
+        "react-native-permissions",
+        {
+          "iosPermissions": [
+            "Camera",
+            "Microphone",
+            "Notifications",
+            "PhotoLibrary",
+            "LocationWhenInUse"
+            ]
+        }
+      ],
+      "expo-localization",
+      "expo-asset",
+      "expo-secure-store",
+      "expo-build-properties"
+    ],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "infoPlist": {
+        "NSCameraUsageDescription": "The $(PRODUCT_NAME) App needs accesses your microphone to let users add sound to vidoes.",
+        "NSMicrophoneUsageDescription": "The $(PRODUCT_NAME) App needs accesses your microphone to let users add sound to vidoes.",
+        "NSPhotoLibraryUsageDescription": "The $(PRODUCT_NAME) App needs accesses your photos to let users share photos with friends.",
+        "NSLocationWhenInUseUsageDescription": "The $(PRODUCT_NAME) App needs accesses your location to show event locations."
+      },
+      "supportsTablet": false,
+      "newArchEnabled": true,
+      "bundleIdentifier": "com.dunn-carabali.eighteen"
+    },
+    "android": {
+      "newArchEnabled": true,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#3D4849"
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.WAKE_LOCK",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ],
+      "package": "com.dunncarabali.eighteen"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "a7f7121f-b70a-43bf-8fea-9ec44a3a87f7"
+      }
+    }
+  }
+}

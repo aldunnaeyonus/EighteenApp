@@ -1,0 +1,13 @@
+diff --git a/node_modules/@rneui/base/dist/ListItem/ListItem.Chevron.js b/node_modules/@rneui/base/dist/ListItem/ListItem.Chevron.js
+index e196a60..187c320 100644
+--- a/node_modules/@rneui/base/dist/ListItem/ListItem.Chevron.js
++++ b/node_modules/@rneui/base/dist/ListItem/ListItem.Chevron.js
+@@ -16,7 +16,7 @@ export const ListItemChevron = (_a) => {
+     var { containerStyle } = _a, rest = __rest(_a, ["containerStyle"]);
+     return (React.createElement(Icon, Object.assign({ type: Platform.OS === 'ios' ? 'ionicon' : 'material', color: "#D1D1D6", name: Platform.OS === 'ios'
+             ? 'chevron-forward-outline'
+-            : 'keyboard-arrow-right', size: 16, containerStyle: StyleSheet.flatten([
++            : 'keyboard-arrow-right', size: 20, containerStyle: StyleSheet.flatten([
+             { alignSelf: 'center' },
+             containerStyle,
+         ]) }, rest)));

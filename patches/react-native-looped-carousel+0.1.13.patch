@@ -1,0 +1,105 @@
+diff --git a/node_modules/react-native-looped-carousel/index.js b/node_modules/react-native-looped-carousel/index.js
+index a47d574..33aa916 100644
+--- a/node_modules/react-native-looped-carousel/index.js
++++ b/node_modules/react-native-looped-carousel/index.js
+@@ -6,17 +6,16 @@ import {
+   ScrollView,
+   TouchableOpacity,
+   View,
+-  ViewPropTypes,
+   TouchableWithoutFeedback,
+ } from 'react-native';
+ import PropTypes from 'prop-types';
+ import isEqual from 'lodash.isequal';
++import AsyncStorage from "@react-native-async-storage/async-storage";
+ 
+ 
+ const PAGE_CHANGE_DELAY = 4000;
+ 
+ // if ViewPropTypes is not defined fall back to View.propTypes (to support RN < 0.44)
+-const viewPropTypes = ViewPropTypes || View.propTypes;
+ 
+ /**
+  * Animates pages in cycle
+@@ -28,25 +27,13 @@ export default class Carousel extends Component {
+     autoplay: PropTypes.bool,
+     delay: PropTypes.number,
+     currentPage: PropTypes.number,
+-    style: viewPropTypes.style,
+-    pageStyle: viewPropTypes.style,
+-    contentContainerStyle: viewPropTypes.style,
+     pageInfo: PropTypes.bool,
+     pageInfoBackgroundColor: PropTypes.string,
+-    pageInfoTextStyle: Text.propTypes.style,
+-    pageInfoBottomContainerStyle: viewPropTypes.style,
+     pageInfoTextSeparator: PropTypes.string,
+     bullets: PropTypes.bool,
+-    bulletsContainerStyle: Text.propTypes.style,
+-    bulletStyle: Text.propTypes.style,
+     arrows: PropTypes.bool,
+-    arrowsContainerStyle: Text.propTypes.style,
+-    arrowStyle: Text.propTypes.style,
+-    leftArrowStyle: Text.propTypes.style,
+-    rightArrowStyle: Text.propTypes.style,
+     leftArrowText: PropTypes.string,
+     rightArrowText: PropTypes.string,
+-    chosenBulletStyle: Text.propTypes.style,
+     onAnimateNextPage: PropTypes.func,
+     onPageBeingChanged: PropTypes.func,
+     swipe: PropTypes.bool,
+@@ -60,20 +47,8 @@ export default class Carousel extends Component {
+     bullets: false,
+     arrows: false,
+     pageInfoBackgroundColor: 'rgba(0, 0, 0, 0.25)',
+-    pageInfoTextSeparator: ' / ',
++    pageInfoTextSeparator: ' of ',
+     currentPage: 0,
+-    style: undefined,
+-    pageStyle: undefined,
+-    contentContainerStyle: undefined,
+-    pageInfoTextStyle: undefined,
+-    pageInfoBottomContainerStyle: undefined,
+-    bulletsContainerStyle: undefined,
+-    chosenBulletStyle: undefined,
+-    bulletStyle: undefined,
+-    arrowsContainerStyle: undefined,
+-    arrowStyle: undefined,
+-    leftArrowStyle: undefined,
+-    rightArrowStyle: undefined,
+     leftArrowText: '',
+     rightArrowText: '',
+     onAnimateNextPage: undefined,
+@@ -110,7 +85,7 @@ export default class Carousel extends Component {
+     this._clearTimer();
+   }
+ 
+-  componentWillReceiveProps({ children }) {
++  UNSAFE_componentWillReceiveProps({ children }) {
+     if (!isEqual(this.props.children, children)) {
+       const { currentPage } = this.state;
+       this._clearTimer();
+@@ -159,7 +134,9 @@ export default class Carousel extends Component {
+     return this.state.currentPage;
+   }
+ 
+-  _setCurrentPage = (currentPage) => {
++  _setCurrentPage = async (currentPage) => {
++    await AsyncStorage.setItem("current", ""+currentPage);
++
+     this.setState({ currentPage }, () => {
+       if (this.props.onAnimateNextPage) {
+         // FIXME: called twice on ios with auto-scroll
+@@ -180,11 +157,12 @@ export default class Carousel extends Component {
+     this._setUpTimer();
+   }
+ 
+-  _onScroll = (event) => {
++  _onScroll = async (event) => {
+     const currentOffset = event.nativeEvent.contentOffset.x;
+     const direction = currentOffset > this.offset ? 'right' : 'left';
+     this.offset = currentOffset;
+     const nextPage = this._calculateNextPage(direction);
++    await AsyncStorage.setItem("current", ""+nextPage);
+     if (this.nextPage !== nextPage) {
+       this.nextPage = nextPage;
+       if (this.props.onPageBeingChanged) {

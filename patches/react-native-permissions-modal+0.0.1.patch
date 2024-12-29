@@ -1,0 +1,76 @@
+diff --git a/node_modules/react-native-permissions-modal/lib/components/.DS_Store b/node_modules/react-native-permissions-modal/lib/components/.DS_Store
+new file mode 100644
+index 0000000..f56a98d
+Binary files /dev/null and b/node_modules/react-native-permissions-modal/lib/components/.DS_Store differ
+diff --git a/node_modules/react-native-permissions-modal/lib/components/PermissionItem/PermissionItem.js b/node_modules/react-native-permissions-modal/lib/components/PermissionItem/PermissionItem.js
+index 948d68a..763a12e 100644
+--- a/node_modules/react-native-permissions-modal/lib/components/PermissionItem/PermissionItem.js
++++ b/node_modules/react-native-permissions-modal/lib/components/PermissionItem/PermissionItem.js
+@@ -14,15 +14,15 @@ const chevronIcon = require("../../local-assets/chevron.png");
+ 
+ const PermissionItem = props => {
+   const {
+-    title,
+-    source,
+-    subtitle,
++  	title = "Location",
++    source = require("../../local-assets/placeholder.png"),
++    subtitle = "Give us the this permission to access full features",
+     iconComponent,
+     titleTextStyle,
+-    ImageComponent,
+-    iconStatusColor,
++    ImageComponent = Image,
++    iconStatusColor = "grey",
+     subtitleTextStyle,
+-    iconContainerBackgroundColor
++    iconContainerBackgroundColor = "#f7f7f7"
+   } = props;
+   return (
+     <Ripple
+@@ -59,13 +59,5 @@ PermissionItem.propTypes = {
+   iconContainerBackgroundColor: PropTypes.string
+ };
+ 
+-PermissionItem.defaultProps = {
+-  title: "Location",
+-  ImageComponent: Image,
+-  iconStatusColor: "green",
+-  iconContainerBackgroundColor: "#f7f7f7",
+-  source: require("../../local-assets/placeholder.png"),
+-  subtitle: "Give us the this permission to access full features"
+-};
+ 
+ export default PermissionItem;
+diff --git a/node_modules/react-native-permissions-modal/lib/components/PermissionItem/PermissionItem.style.js b/node_modules/react-native-permissions-modal/lib/components/PermissionItem/PermissionItem.style.js
+index 3f3f5ba..5609649 100644
+--- a/node_modules/react-native-permissions-modal/lib/components/PermissionItem/PermissionItem.style.js
++++ b/node_modules/react-native-permissions-modal/lib/components/PermissionItem/PermissionItem.style.js
+@@ -28,8 +28,8 @@ export default {
+     flexDirection: "row"
+   },
+   iconStyle: {
+-    width: 15,
+-    height: 15
++    width: 20,
++    height: 20
+   },
+   textContainer: {
+     bottom: 3,
+diff --git a/node_modules/react-native-permissions-modal/lib/components/PermissionModal/PermissionModal.style.js b/node_modules/react-native-permissions-modal/lib/components/PermissionModal/PermissionModal.style.js
+index 84250d3..27fe221 100644
+--- a/node_modules/react-native-permissions-modal/lib/components/PermissionModal/PermissionModal.style.js
++++ b/node_modules/react-native-permissions-modal/lib/components/PermissionModal/PermissionModal.style.js
+@@ -15,11 +15,10 @@ export default StyleSheet.create({
+   },
+   subtitleStyle: {
+     fontSize: 15,
+-    fontSize: 14,
+     color: "#666",
+     lineHeight: 22,
+     paddingTop: 10,
+     paddingBottom: 10,
+-    fontWeight: "200"
++    fontWeight: "500"
+   }
+ });

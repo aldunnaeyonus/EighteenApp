@@ -1,0 +1,136 @@
+import axios from "axios";
+import { constants } from ".";
+import moment from "moment";
+import { storage } from "../context/components/Storage";
+
+const instance = axios.create({
+  baseURL: constants.url,
+  headers: {
+    "Content-Type": "application/json;charset=utf-8",
+    Authorization: `Bearer ${moment().unix()}`,
+  },
+});
+
+export const AITexttoImage = async (prompt) => {
+  const options = {
+    method: "POST",
+    url: "https://api.cloudflare.com/client/v4/accounts/b12ac09dbdadb4c2ff669e43992074ed/ai/run/@cf/stabilityai/stable-diffusion-xl-base-1.0",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer JlAgzE9tHfASmUs-2XkTs4rkPd8pIe2w5fULSy6R",
+    },
+    data: {
+      num_steps: 20,
+      prompt:
+        "A realistic representation, create a spectacular image about " +
+        prompt,
+    },
+  };
+  await axios
+    .request(options)
+    .then(function (response) {
+      console.log("Response: " + response.data[0]);
+      return response.data[0];
+    })
+    .catch(function (error) {
+      console.log("Error: " + error);
+    });
+};
+
+export const postData = async (endpoint, datas) => {
+  const response = await instance.post(endpoint, datas);
+  return response.data;
+};
+
+export const _pullCameraFeed = async (owner_ID, type) => {
+  const data = {
+    owner: owner_ID,
+    user: owner_ID,
+    type: type,
+  };
+  const response = await postData("/camera/index.php", data);
+  const myData = []
+    .concat(response)
+    .sort((a, b) => String(a.end).localeCompare(String(b.end)));
+  storage.set("user.Camera.Feed", JSON.stringify(myData));
+};
+
+export const _pullUser = async (id) => {
+  const data = {
+    owner: id,
+  };
+  const response = await postData("/users/index.php", data);
+  storage.set("user.Data", JSON.stringify(response[0]));
+};
+
+export const _pullGalleryFeed = async (pin) => {
+  const data = {
+    pin: pin,
+  };
+  const response = await postData("/camera/gallery.php", data);
+  const myData = []
+    .concat(response)
+    .sort((a, b) => (a.image_id > b.image_id ? -1 : 1));
+  storage.set("user.Gallery.Friend.Feed." + pin, JSON.stringify(myData));
+};
+
+export const _pullFriendCameraFeed = async (owner_ID, type, myID) => {
+  const data = {
+    owner: owner_ID,
+    user: myID,
+    type: type,
+  };
+
+  const response = await postData("/camera/index.php", data);
+  const myData = []
+    .concat(response)
+    .sort((a, b) => String(a.end).localeCompare(String(b.end)));
+  storage.set("user.Camera.Friend.Feed." + owner_ID, JSON.stringify(myData));
+};
+
+export const _pullFriendsFeed = async (owner_ID) => {
+  const data = {
+    owner: owner_ID,
+  };
+  const response = await postData("/camera/friend.php", data);
+  const myData = []
+    .concat(response)
+    .sort((a, b) =>
+      String(a.friend_post_date).localeCompare(String(b.friend_post_date))
+    );
+  storage.set("user.Friend.Feed", JSON.stringify(myData));
+};
+
+export const _pullHistoryFeed = async (owner) => {
+  const data = {
+    owner: owner,
+  };
+  const response = await postData("/camera/closed.php", data);
+  const myData = [].concat(response).sort((a, b) => (a.end > b.end ? -1 : 1));
+  storage.set("user.Media.Feed", JSON.stringify(myData));
+};
+
+export const _pullMembersFeed = async (pin, owner, UUID) => {
+  const data = {
+    owner: owner,
+    pin: pin,
+    UUID: UUID,
+  };
+  const response = await postData("/camera/members.php", data);
+  const myData = []
+    .concat(response)
+    .sort((a, b) => String(a.user_handle).localeCompare(String(b.user_handle)));
+  storage.set("user.Member.Join.Feed." + pin, JSON.stringify(myData));
+};
+
+export const axiosPull = {
+  AITexttoImage,
+  postData,
+  _pullHistoryFeed,
+  _pullUser,
+  _pullCameraFeed,
+  _pullFriendCameraFeed,
+  _pullGalleryFeed,
+  _pullMembersFeed,
+  _pullFriendsFeed,
+};

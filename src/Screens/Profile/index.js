@@ -1,0 +1,770 @@
+import {
+  StyleSheet,
+  Dimensions,
+  View,
+  Alert,
+  Text,
+  Modal,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
+const { width: ScreenWidth } = Dimensions.get("window");
+import React, { useCallback, useState } from "react";
+import { ListItem, Icon } from "@rneui/themed";
+import InfoText from "../../utils/InfoText";
+import * as Application from "expo-application";
+import axios from "axios";
+import { constants } from "../../utils";
+import FastImage from "react-native-fast-image";
+import { createImageProgress } from "react-native-image-progress";
+const Image = createImageProgress(FastImage);
+import Progress from "react-native-progress";
+import { storage } from "../../context/components/Storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useMMKVObject } from "react-native-mmkv";
+import { useToast } from "react-native-styled-toast";
+import { openSettings } from "react-native-permissions";
+import { axiosPull } from "../../utils/axiosPull";
+import { useFocusEffect } from "@react-navigation/native";
+import * as i18n from "../../../i18n";
+import ProfileHeader from "../../SubViews/home/profileHeader";
+
+const Profile = (props) => {
+  const [user] = useMMKVObject("user.Data", storage);
+  const { toast } = useToast();
+  const [modalVisable, setmodalVisable] = useState(false);
+  const [qrCodeURL] = useState(
+    constants.url + "/friendQRCode.php?owner=" + user.user_id
+  );
+  const logout = useCallback(async () => {
+    storage.clearAll();
+    FastImage.clearMemoryCache();
+    FastImage.clearDiskCache();
+    await AsyncStorage.removeItem("UUID");
+    await AsyncStorage.removeItem("logedIn");
+    await AsyncStorage.removeItem("user_id");
+    props.navigation.navigate("Begin");
+  });
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!props.unsubscribe) {
+        toast({
+          message: i18n.t("No internet connection"),
+          toastStyles: {
+            bg: "#3D4849",
+            borderRadius: 5,
+          },
+          duration: 5000,
+          color: "white",
+          iconColor: "white",
+          iconFamily: "Entypo",
+          iconName: "info-with-circle",
+          closeButtonStyles: {
+            px: 4,
+            bg: "translucent",
+          },
+          closeIconColor: "white",
+          hideAccent: true,
+        });
+      }
+
+      props.navigation.setOptions({
+        title:
+          user.user_id == null
+            ? i18n.t("Profile Page")
+            : user.user_handle.toUpperCase(),
+      });
+      axiosPull._pullUser(user.user_id);
+    }, [user, props, modalVisable, qrCodeURL])
+  );
+
+  const pro = useCallback(() => {
+    props.navigation.navigate("GetPro");
+  });
+
+  const notifications = useCallback(() => {
+    props.navigation.navigate("Notifications");
+  });
+
+  const about = useCallback(() => {
+    props.navigation.navigate("Abouts");
+  });
+
+  const privacy = useCallback(async () => {
+    props.navigation.navigate("WebView", {
+      url: constants.url + "/privacyPolicy.html",
+      name: i18n.t("Privacy Policy"),
+    });
+  });
+
+  const terms = useCallback(async () => {
+    props.navigation.navigate("WebView", {
+      url: constants.url + "/termsUsePolicy.html",
+      name: i18n.t("Terms & Use"),
+    });
+  });
+
+  const closedCameras = useCallback(() => {
+    props.navigation.navigate("ClosedCameras");
+  });
+
+  const accountDetails = useCallback(() => {
+    props.navigation.navigate("AccountDetails");
+  });
+
+  const changeAvatar = async () => {
+    props.navigation.navigate("ChangeAvatar");
+  };
+
+  const preview = useCallback(() => {
+    Alert.alert(
+      i18n.t("Delete Account"),
+      i18n.t("Are you sure"),
+      [
+        {
+          text: i18n.t("Cancel"),
+          onPress: () => console.log("Cancel Pressed"),
+          style: "default",
+        },
+        {
+          text: i18n.t("Delete Account"),
+          onPress: () => previewAction(),
+          style: "destructive",
+        },
+      ],
+      { cancelable: false }
+    );
+  }, []);
+
+  const previewAction = useCallback(async () => {
+    await axios
+      .post(
+        constants.url + "/users/delete.php",
+        {
+          id: user.user_id,
+        },
+        { headers: { "Content-Type": "application/json;charset=utf-8" } }
+      )
+      .then((response) => {
+        logout();
+      })
+      .catch((error) => {});
+  });
+
+  const deleteAccount = useCallback(() => {
+    preview();
+  }, []);
+
+  return (
+    <ScrollView style={{ backgroundColor: "white" }}>
+      <Modal
+        visible={modalVisable}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setmodalVisable(false)}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Image
+              indicator={Progress}
+              style={{
+                width: 300,
+                height: 300,
+                backgroundColor: "white",
+                alignSelf: "auto",
+              }}
+              resizeMode={FastImage.resizeMode.contain}
+              source={{
+                priority: FastImage.priority.high,
+                uri: qrCodeURL,
+              }}
+            />
+          </View>
+          <TouchableOpacity
+            style={{
+              marginTop: 20,
+              flexDirection: "row",
+              width: 250,
+              backgroundColor: "rgba(234, 85, 4, 1)",
+              borderRadius: 24,
+              padding: 15,
+              alignItems: "center",
+              justifyContent: "center",
+              marginbottom: 20,
+            }}
+            onPress={() => setmodalVisable(false)}
+          >
+            <Text
+              style={{
+                textTransform: "uppercase",
+                fontSize: 20,
+                fontWeight: 600,
+                color: "#fff",
+              }}
+            >
+              Close
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+      <ScrollView
+        stic
+        style={{ width: "100%", backgroundColor: "#fff" }}
+        scrollEnabled={true}
+        stickyHeaderIndices={[1]}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        stickyHeaderHiddenOnScroll={false}
+      >
+        <View style={{ width: "100%", backgroundColor: "#fff" }}>
+          <ProfileHeader
+            name={user.user_handle}
+            motto={user.user_motto}
+            avatar={user.user_avatar}
+            join={user.joined}
+            create={user.created}
+            isPro={user.isPro}
+            upload={user.uploaded}
+          />
+          <View>
+            <View style={[styles.dividerTableStyle]} />
+              <ListItem
+                containerStyle={{ paddingVertical: 5 }}
+                key="99"
+                onPress={() => {
+                  pro()
+                }}
+              >
+                 <FastImage
+                  style={{
+                    width: 25,
+                    height: 25,
+                    borderRadius: 6,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                  resizeMode={FastImage.resizeMode.contain}
+                  source={require("../../../assets/verified.png")}
+                />
+               
+                <ListItem.Content>
+                  <ListItem.Title>{i18n.t("GoPro")}</ListItem.Title>
+                </ListItem.Content>
+                <ListItem.Chevron />
+              </ListItem><View style={[styles.dividerTableStyle]} />
+            <ListItem
+              containerStyle={{ paddingVertical: 5 }}
+              key="1"
+              onPress={() => {
+                closedCameras();
+              }}
+            >
+              <Icon
+                type="material"
+                name="camera-roll"
+                size={20}
+                color="#3D4849"
+                containerStyle={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: 6,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              />
+              <ListItem.Content>
+                <ListItem.Title>{i18n.t("DownloadMedia")}</ListItem.Title>
+              </ListItem.Content>
+              <ListItem.Chevron />
+            </ListItem>
+            <View style={[styles.dividerTableStyle]} />
+            <ListItem
+              containerStyle={{ paddingVertical: 5 }}
+              key="10"
+              onPress={() => {
+                setmodalVisable(true);
+              }}
+            >
+              <Icon
+                type="material-community"
+                name="qrcode-scan"
+                size={20}
+                color="#3D4849"
+                containerStyle={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: 6,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              />
+              <ListItem.Content>
+                <ListItem.Title>{i18n.t("Friend Code")}</ListItem.Title>
+              </ListItem.Content>
+              <ListItem.Chevron />
+            </ListItem>
+
+            <View style={[styles.dividerTableStyle]} />
+            <ListItem
+              containerStyle={{ paddingVertical: 5 }}
+              key="11"
+              onPress={() => {
+                //props.navigation.navigate("Languages");
+              }}
+            >
+              <Icon
+                type="material-community"
+                name="translate"
+                size={20}
+                color="#3D4849"
+                containerStyle={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: 6,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              />
+              <ListItem.Content>
+                <ListItem.Title>{i18n.t("Languages")}</ListItem.Title>
+              </ListItem.Content>
+              <View
+                style={{
+                  marginTop: -5,
+                  marginLeft: 65,
+                  backgroundColor: "#3D4849",
+                  width: 22,
+                  height: 22,
+                  borderRadius: 11,
+                  borderWidth: 1,
+                  borderColor: "#3D4849",
+                  justifyContent: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    color: "#fff",
+                    textAlignVertical: "center",
+                    textAlign: "center",
+                    fontSize: 12,
+                    fontWeight: "bold",
+                  }}
+                >
+                  {constants.languages.length}
+                </Text>
+              </View>
+            </ListItem>
+            <View style={[styles.dividerTableStyle]} />
+
+            <InfoText text={i18n.t("Profile Settings")} />
+            <View>
+              <View style={[styles.dividerTableStyle]} />
+
+              <ListItem
+                containerStyle={{ paddingVertical: 5 }}
+                key="3"
+                onPress={() => {
+                  notifications();
+                }}
+              >
+                <Icon
+                  type="material-community"
+                  name="message"
+                  size={20}
+                  color="#3D4849"
+                  containerStyle={{
+                    width: 28,
+                    height: 28,
+                    borderRadius: 6,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                />
+                <ListItem.Content>
+                  <ListItem.Title>{i18n.t("Notifications")}</ListItem.Title>
+                </ListItem.Content>
+                <ListItem.Chevron />
+              </ListItem>
+              <View style={[styles.dividerTableStyleShort]} />
+              <ListItem
+                containerStyle={{ paddingVertical: 5 }}
+                key="12"
+                onPress={() => {
+                  changeAvatar();
+                }}
+              >
+                <Icon
+                  type="material-community"
+                  name="face-man-profile"
+                  size={20}
+                  color="#3D4849"
+                  containerStyle={{
+                    width: 28,
+                    height: 28,
+                    borderRadius: 6,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                />
+                <ListItem.Content>
+                  <ListItem.Title>{i18n.t("Change Avatar")}</ListItem.Title>
+                </ListItem.Content>
+                <ListItem.Chevron />
+              </ListItem>
+              <View style={[styles.dividerTableStyleShort]} />
+
+              <ListItem
+                containerStyle={{ paddingVertical: 5 }}
+                key="14"
+                onPress={() => {
+                  accountDetails();
+                }}
+              >
+                <Icon
+                  type="material-community"
+                  name="account-edit-outline"
+                  size={20}
+                  color="#3D4849"
+                  containerStyle={{
+                    width: 28,
+                    height: 28,
+                    borderRadius: 6,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                />
+                <ListItem.Content>
+                  <ListItem.Title>{i18n.t("Edit Account")}</ListItem.Title>
+                </ListItem.Content>
+                <ListItem.Chevron />
+              </ListItem>
+              <View style={[styles.dividerTableStyle]} />
+              <ListItem
+                containerStyle={{ paddingVertical: 5 }}
+                key="4"
+                onPress={() => {
+                  about();
+                }}
+              >
+                <Icon
+                  type="material-community"
+                  name="shield-account-variant-outline"
+                  size={20}
+                  color="#3D4849"
+                  containerStyle={{
+                    width: 28,
+                    height: 28,
+                    borderRadius: 6,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                />
+                <ListItem.Content>
+                  <ListItem.Title>{i18n.t("Account Details")}</ListItem.Title>
+                </ListItem.Content>
+                <ListItem.Chevron />
+              </ListItem>
+              <View style={[styles.dividerTableStyle]} />
+
+              <InfoText text={i18n.t("Account Actions")} />
+              <View style={[styles.dividerTableStyleShort]} />
+              <ListItem
+                containerStyle={{ paddingVertical: 5 }}
+                key="17"
+                onPress={() => {
+                  {
+                    openSettings();
+                  }
+                }}
+              >
+                <Icon
+                  type="material"
+                  name="screen-lock-portrait"
+                  size={20}
+                  color="#3D4849"
+                  containerStyle={{
+                    width: 28,
+                    height: 28,
+                    borderRadius: 6,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                />
+                <ListItem.Content>
+                  <ListItem.Title>{i18n.t("Permissions")}</ListItem.Title>
+                </ListItem.Content>
+                <ListItem.Chevron />
+              </ListItem>
+              <View style={[styles.dividerTableStyle]} />
+
+              <ListItem
+                containerStyle={{ paddingVertical: 5 }}
+                key="5"
+                onPress={() => {
+                  deleteAccount();
+                }}
+              >
+                <Icon
+                  type="ionicon"
+                  name="close-circle-outline"
+                  size={20}
+                  color="#FF3232"
+                  containerStyle={{
+                    width: 28,
+                    height: 28,
+                    borderRadius: 6,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                />
+                <ListItem.Content>
+                  <ListItem.Title>{i18n.t("Delete/Remove")}</ListItem.Title>
+                </ListItem.Content>
+                <ListItem.Chevron />
+              </ListItem>
+              <View style={[styles.dividerTableStyleShort]} />
+
+              <ListItem
+                containerStyle={{ paddingVertical: 5 }}
+                key="6"
+                onPress={() => {
+                  logout();
+                }}
+              >
+                <Icon
+                  type="ionicon"
+                  name="power"
+                  size={20}
+                  color="#FF3232"
+                  containerStyle={{
+                    width: 28,
+                    height: 28,
+                    borderRadius: 6,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                />
+                <ListItem.Content>
+                  <ListItem.Title>{i18n.t("Logout")}</ListItem.Title>
+                </ListItem.Content>
+                <ListItem.Chevron />
+              </ListItem>
+              <View style={[styles.dividerTableStyle]} />
+            </View>
+            <InfoText text={i18n.t("Policies")} />
+            <View style={[styles.dividerTableStyle]} />
+
+            <ListItem
+              containerStyle={{ paddingVertical: 5 }}
+              key="7"
+              onPress={() => {
+                privacy();
+              }}
+            >
+              <Icon
+                type="material"
+                name="policy"
+                size={20}
+                color="#3D4849"
+                containerStyle={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: 6,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              />
+              <ListItem.Content>
+                <ListItem.Title>{i18n.t("Privacy Policy")}</ListItem.Title>
+              </ListItem.Content>
+              <ListItem.Chevron />
+            </ListItem>
+            <View style={[styles.dividerTableStyleShort]} />
+
+            <ListItem
+              containerStyle={{ paddingVertical: 5 }}
+              key="8"
+              onPress={() => {
+                terms();
+              }}
+            >
+              <Icon
+                type="material"
+                name="policy"
+                size={20}
+                color="#3D4849"
+                containerStyle={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: 6,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              />
+              <ListItem.Content>
+                <ListItem.Title>{i18n.t("Terms & Use")}</ListItem.Title>
+              </ListItem.Content>
+              <ListItem.Chevron />
+            </ListItem>
+            <View style={[styles.dividerTableStyle]} />
+            <ListItem
+              containerStyle={{ paddingVertical: 5 }}
+              key="9"
+              onPress={() => {}}
+            >
+              <Icon
+                type="octicon"
+                name="versions"
+                size={20}
+                color="#3D4849"
+                containerStyle={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: 6,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              />
+              <ListItem.Content>
+                <ListItem.Title>{i18n.t("Version")}</ListItem.Title>
+              </ListItem.Content>
+              <View
+                style={{
+                  marginTop: -5,
+                  marginLeft: 65,
+                  width: 75,
+                  height: 22,
+                  borderRadius: 11,
+
+                  justifyContent: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    color: "#3D4849",
+                    textAlignVertical: "center",
+                    textAlign: "center",
+                    fontSize: 13,
+                    fontWeight: "bold",
+                  }}
+                >
+                  {Application.nativeApplicationVersion}
+                </Text>
+              </View>
+            </ListItem>
+          </View>
+          <View style={{ marginBottom: 25 }} />
+        </View>
+      </ScrollView>
+    </ScrollView>
+  );
+};
+
+const styles = StyleSheet.create({
+  listItemContainer: {
+    height: 55,
+    borderWidth: 0.5,
+    borderColor: "#ECECEC",
+  },
+  dividerStyle: {
+    height: 0,
+    marginTop: 0,
+    marginBottom: -20,
+    borderRadius: 16,
+    width: ScreenWidth * 0.9,
+    alignSelf: "center",
+    backgroundColor: "#ccc",
+  },
+  dividerTableStyle: {
+    height: 0,
+    marginTop: 10,
+    marginBottom: 10,
+    width: ScreenWidth * 1,
+    alignSelf: "center",
+    backgroundColor: "#ccc",
+  },
+  dividerTableStyleShort: {
+    height: 0,
+    marginTop: 10,
+    marginLeft: 65,
+    marginBottom: 10,
+    width: ScreenWidth,
+    alignSelf: "center",
+    backgroundColor: "#ccc",
+  },
+  header: {
+    backgroundColor: "#00BFFF",
+    flex: 1,
+    height: 240,
+    resizeMode: "center",
+  },
+  drawerIc: {
+    width: 35,
+    height: 35,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalView: {
+    width: "80%",
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 7,
+  },
+  avatar: {
+    width: 130,
+    height: 130,
+    borderRadius: 63,
+    borderWidth: 4,
+    borderColor: "white",
+    backgroundColor: "#b9d9ff",
+    marginBottom: 10,
+    alignSelf: "auto",
+    position: "absolute",
+    marginTop: 170,
+    marginLeft: 10,
+  },
+  name: {
+    fontSize: 20,
+    position: "absolute",
+    color: "#5A5A5A",
+    fontWeight: "600",
+    paddingLeft: 0,
+    marginTop: -35,
+  },
+  body: {
+    marginTop: 60,
+  },
+  bodyContent: {
+    flex: 1,
+    alignItems: "center",
+    padding: 30,
+  },
+  names: {
+    fontSize: 28,
+    color: "#696969",
+    fontWeight: "600",
+  },
+  info: {
+    fontSize: 14,
+    position: "absolute",
+    alignSelf: "auto",
+    color: "#b3b3b3",
+    paddingLeft: 60,
+    fontWeight: "600",
+    marginTop: -10,
+  },
+});
+export default Profile;
