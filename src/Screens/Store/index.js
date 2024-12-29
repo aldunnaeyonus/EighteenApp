@@ -91,15 +91,14 @@ const Products = (props) => {
           });
           const data = {
             owner: props.route.params.owner,
-            receipt: currentPurchase?.transactionReceipt,
-            transID: currentPurchase?.transactionId,
-            transDate: currentPurchase?.transactionDate,
-            token: currentPurchase?.purchaseToken,
+            receipt: String(currentPurchase?.transactionReceipt),
+            transID: String(currentPurchase?.transactionId),
+            transDate: String(currentPurchase?.transactionDate),
+            token: String(currentPurchase?.purchaseToken),
             user: props.route.params.user,
             pin: props.route.params.pin,
-            currentPurchase: currentPurchase,
-            sku: currentPurchase?.productId,
-            cameras: props.route.params.cameras,
+            currentPurchase: "",
+            sku: String(currentPurchase?.productId),
             eventName: props.route.params.eventName
           };
           await axiosPull.postData("/store/index.php", data);

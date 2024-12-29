@@ -1,7 +1,9 @@
 import axios from "axios";
 import { constants } from ".";
 import moment from "moment";
-import { storage } from "../context/components/Storage";
+import { updateStorage, storage } from "../context/components/Storage";
+import { useMMKVObject } from "react-native-mmkv";
+import { Platform } from "react-native";
 
 const instance = axios.create({
   baseURL: constants.url,
@@ -40,6 +42,18 @@ export const AITexttoImage = async (prompt) => {
 export const postData = async (endpoint, datas) => {
   const response = await instance.post(endpoint, datas);
   return response.data;
+};
+
+export const _getProStatus = async () => {
+  const [user] = useMMKVObject("user.Data", storage);
+  const data = {
+    user: user.user_id,
+    os: Platform.OS,
+  };
+  const response = await postData("/getPro.php", data);
+  if (response.data[0].code == "2" || response.data[0].code == "5") {
+    updateStorage(user, "isPro", "0", "user.Data");
+  }
 };
 
 export const _pullCameraFeed = async (owner_ID, type) => {
@@ -133,4 +147,5 @@ export const axiosPull = {
   _pullGalleryFeed,
   _pullMembersFeed,
   _pullFriendsFeed,
+  _getProStatus,
 };

@@ -21,10 +21,14 @@ import ProMain from "../../SubViews/store/ProMain";
 import { deepLinkToSubscriptions } from "react-native-iap";
 import { isIos, isPlay } from "react-native-iap/src/internal";
 export { isIos, isPlay };
+import { axiosPull } from "../../utils/axiosPull";
+import { useToast } from "react-native-styled-toast";
 
 const GetPro = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
   const [ownedSubscriptions, setOwnedSubscriptions] = useState([]);
+    const { toast } = useToast();
+
   const {
     connected,
     subscriptions,
@@ -147,19 +151,18 @@ const GetPro = (props) => {
           });
           const data = {
             owner: user.user_id,
-            receipt: currentPurchase?.transactionReceipt,
-            transID: currentPurchase?.transactionId,
-            transDate: currentPurchase?.transactionDate,
-            token: currentPurchase?.purchaseToken,
+            receipt: String(currentPurchase?.transactionReceipt),
+            transID: String(currentPurchase.transactionId),
+            transDate: String(currentPurchase.transactionDate),
+            token: String(currentPurchase.purchaseToken),
             user: user.user_id,
-            pin: "",
+            pin: String(currentPurchase.purchaseToken),
             currentPurchase: "9.99",
-            sku: currentPurchase?.productId,
-            cameras: "0",
-            eventName: "Snap Eighteen Pro",
+            sku: String(currentPurchase?.productId),
+            eventName: "Snap Eighteen Pro"
           };
           await axiosPull.postData("/store/index.php", data);
-          await axiosPull._pullUser(user.user_id);
+          axiosPull._pullUser(user.user_id);
           setOwnedSubscriptions((prev) => [
             ...prev,
             currentPurchase?.productId,
