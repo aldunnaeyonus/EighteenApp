@@ -91,6 +91,10 @@ const Products = (props) => {
           });
           const data = {
             owner: props.route.params.owner,
+            receipt:currentPurchase?.transactionReceipt,
+            transID: currentPurchase?.transactionId,
+            transDate: currentPurchase?.transactionDate,
+            token: currentPurchase?.purchaseToken,
             user: props.route.params.user,
             pin: props.route.params.pin,
             event: props.route.params.eventName,
