@@ -50,17 +50,21 @@ const ClosedCameras = (props) => {
     Alert.alert(i18n.t('DownloadingEventFiles'),i18n.t('Theventfiles'));
     setStartDownload(true)
     JSON.parse(array).map(async (item) => {
-        FileSystem.downloadAsync(
+        await FileSystem.downloadAsync(
           item.file_name,
           FileSystem.documentDirectory + item.file_name.split("/").pop()
         )
           .then(async ({ uri }) => {
             setStartDownload(true)
+            try { 
             await CameraRoll.saveAsset(uri);
             setCount(count - 1);
-            FileSystem.deleteAsync(uri);
+            await FileSystem.deleteAsync(uri);
             if (count <= 0){
-            setStartDownload(false)
+              setStartDownload(false)
+            }
+            } catch (error) { 
+              console.error("Error fetching data: ", error.message); 
             }
           })
           .catch((error) => {
