@@ -1,9 +1,6 @@
 import axios from "axios";
 import { constants } from ".";
 import moment from "moment";
-import { updateStorage, storage } from "../context/components/Storage";
-import { useMMKVObject } from "react-native-mmkv";
-import { Platform } from "react-native";
 
 const instance = axios.create({
   baseURL: constants.url,
@@ -44,16 +41,18 @@ export const postData = async (endpoint, datas) => {
   return response.data;
 };
 
-export const _getProStatus = async () => {
-  const [user] = useMMKVObject("user.Data", storage);
+export const _getProStatus = async (id, os) => {
+  const response = "";
   const data = {
-    user: user.user_id,
-    os: Platform.OS,
+    user: id,
+    os: os,
   };
-  const response = await postData("/getPro.php", data);
-  if (response.data[0].code == "2" || response.data[0].code == "5") {
-    updateStorage(user, "isPro", "0", "user.Data");
+  if (os == "ios") {
+    response = await postData("/getPro.php", data);
+  } else {
+    response = await postData("/getProv2.php", data);
   }
+  return response[0].code;
 };
 
 export const _pullCameraFeed = async (owner_ID, type) => {

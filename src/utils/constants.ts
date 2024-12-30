@@ -181,7 +181,7 @@ export const productSkusSubscriptions = Platform.select({
   ],
 
   android: [
-    'com.dunn_carabali.eighteen.Pro'
+    'com.dunn_carabali.eighteen.pro'
   ],
 
   default:[],

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
-import { Text, LogBox } from "react-native";
+import { Text, LogBox, Platform } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
@@ -36,7 +36,10 @@ import Languages from "./src/Screens/Profile/Languages";
 import Notifications from "./src/Screens/Profile/Notifications";
 import Abouts from "./src/Screens/Profile/About";
 import GetPro from "./src/Screens/Store/GetPro";
-
+import { axiosPull } from "./src/utils/axiosPull";
+import { useMMKVObject } from "react-native-mmkv";
+import { storage } from "./src/context/components/Storage";
+import { updateStorage } from "./src/context/components/Storage";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -46,7 +49,7 @@ export default function App() {
   Text.defaultProps = Text.defaultProps || {};
   Text.defaultProps.allowFontScaling = false;
   LogBox.ignoreAllLogs(true);
-
+  const [user] = useMMKVObject("user.Data", storage);
   const [signIn, setSignIn] = useState(false);
   const [ready, setReady] = useState(false);
   const [owner, setOwner] = useState("0");
@@ -123,15 +126,19 @@ export default function App() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const owner = await AsyncStorage.getItem("UUID");
+      const owner = await AsyncStorage.getItem("user_id");
       setOwner(owner);
-      const gridView = await AsyncStorage.getItem("gridOptions");
-      if (gridView == null) {
-        await AsyncStorage.setItem("gridOptions", "1");
-      }
+
       const logedIn = await AsyncStorage.getItem("logedIn");
       setSignIn(stringToBoolean(logedIn));
       setReady(true);
+      if (signIn){
+      const response = await axiosPull._getProStatus(owner, Platform.OS);
+      console.log(response)
+      if (response == "2" || response == "5") {
+         updateStorage(user, "isPro", "0", "user.Data");
+      }
+      }
     };
     fetchData();
   }, []);
