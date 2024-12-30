@@ -25,13 +25,14 @@ import * as i18n from "../../../i18n";
 import { ActivityIndicator } from "react-native-paper";
 import { MenuView } from "@react-native-menu/menu";
 import { constants } from "../../utils";
+import * as FileSystem from "expo-file-system";
+import { CameraRoll } from "@react-native-camera-roll/camera-roll";
 
 const ClosedCameras = (props) => {
   const [filteredDataSource] = useMMKVObject("user.Media.Feed", storage);
   const [refreshing, serRefreshing] = useState(false);
   const [disable, setdisable] = useState(false);
   const [user] = useMMKVObject("user.Data", storage);
-
   const _refresh = async () => {
     serRefreshing(true);
     axiosPull._pullHistoryFeed(user.user_id);
@@ -41,6 +42,23 @@ const ClosedCameras = (props) => {
   };
 
   const { toast } = useToast();
+
+  const handleDownloadAction = async (array) => {
+    JSON.parse(array).map(async (item) => {
+        console.log(item.file_name.split("/").pop());
+        FileSystem.downloadAsync(
+          item.file_name,
+          FileSystem.documentDirectory + item.file_name.split("/").pop()
+        )
+          .then(async ({ uri }) => {
+            await CameraRoll.saveAsset(uri);
+            FileSystem.deleteAsync(uri);
+          })
+          .catch((error) => {
+            console.log(error.message);
+          });
+      });
+  };
 
   const _deleteFeedItemIndex = (UUID) => {
     filteredDataSource.forEach((res, index) => {
@@ -232,7 +250,7 @@ const ClosedCameras = (props) => {
               Ended: {moment.unix(item.end).format("LLL")}
             </Text>
           </View>
-          
+
           <View
             style={{
               height: 27,
@@ -248,12 +266,12 @@ const ClosedCameras = (props) => {
                 fontSize: 13,
               }}
             >
-             {i18n.t("Media:")}{" "}{item.media_count} | {i18n.t("Claim by")}{moment.unix(item.end).add(1, 'M').format("LLL")}
+              {i18n.t("Media:")} {item.media_count} | {i18n.t("Claim by")}
+              {moment.unix(item.end).add(1, "M").format("LLL")}
             </Text>
           </View>
-          
         </View>
-        
+
         <MenuView
           key={item.UUID}
           title={item.title.toUpperCase()}
@@ -263,6 +281,10 @@ const ClosedCameras = (props) => {
               _deleteFeedItem(item.UUID, item.owner, item.pin);
             } else if (nativeEvent.event == "Download-" + item.UUID) {
               actionFeed(item.pin, item.UUID, item.title);
+            } else if (nativeEvent.event == "Save-" + item.UUID) {
+              const array = await axiosPull._pullGalleryArray(item.pin);
+              handleDownloadAction(array);
+              //[file_name: http],
             }
           }}
           actions={constants.historyActions(item.UUID)}
@@ -282,7 +304,6 @@ const ClosedCameras = (props) => {
             color="#3D4849"
           />
         </MenuView>
-        
       </View>
     );
   };

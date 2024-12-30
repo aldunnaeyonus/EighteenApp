@@ -133,15 +133,11 @@ export default function App() {
       setSignIn(stringToBoolean(logedIn));
       setReady(true);
       if (signIn){
-      const response = await axiosPull._getProStatus(owner, Platform.OS);
-      console.log(response)
-      if (response == "2" || response == "5") {
-         updateStorage(user, "isPro", "0", "user.Data");
-      }
+      await axiosPull._getProStatus(owner, Platform.OS);
       }
     };
     fetchData();
-  }, []);
+  }, [signIn]);
 
   if (!ready) {
     return null;

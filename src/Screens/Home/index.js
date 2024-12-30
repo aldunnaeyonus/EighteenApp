@@ -19,7 +19,7 @@ import Progress from "react-native-progress";
 const { width: ScreenWidth } = Dimensions.get("window");
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Icon } from "react-native-elements";
-import { storage, deleteItemIndex } from "../../context/components/Storage";
+import { storage, updateStorage } from "../../context/components/Storage";
 import RefreshableWrapper from "react-native-fresh-refresh";
 import Animated, { useSharedValue } from "react-native-reanimated";
 import { useMMKVObject } from "react-native-mmkv";
@@ -317,7 +317,7 @@ const Home = (props) => {
       return () => {
         clearInterval(timeout);
       };
-    }, [user, props, friendData, refreshing, modalVisable, qrCodeURL, cameraData])
+    }, [user, friendData, cameraData])
   );
 
   const goToFriend = async (
@@ -420,11 +420,8 @@ const Home = (props) => {
       </Modal>
 
       <RefreshableWrapper
-        contentOffset={contentOffset}
-        managedLoading={true}
-        bounces={true}
         defaultAnimationEnabled={true}
-        Loader={() => <RefreshView refreshing={refreshing} />}
+        Loader={() => <RefreshView/>}
         isLoading={refreshing}
         onRefresh={() => {
           _refresh();

@@ -54,6 +54,11 @@ open -a /Applications/Android\ Studio.app
  - When a friend or self gallery is expired find means to remove `user.Gallery.Friend.Feed.${props.route.params.pin}` and `user.Member.Join.Feed.${pin}`, 
  - SERVER NOTIFICATIONS on start and end.
  - on 30th day send media to email and archive.
+- Save media to device and languages
+
+
+
+
 
 const resize = async () => {
     if (!imageUri) return;

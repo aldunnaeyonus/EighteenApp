@@ -1,6 +1,7 @@
 import axios from "axios";
 import { constants } from ".";
 import moment from "moment";
+import { storage } from "../context/components/Storage";
 
 const instance = axios.create({
   baseURL: constants.url,
@@ -42,17 +43,16 @@ export const postData = async (endpoint, datas) => {
 };
 
 export const _getProStatus = async (id, os) => {
-  const response = "";
   const data = {
     user: id,
-    os: os,
   };
   if (os == "ios") {
-    response = await postData("/getPro.php", data);
+    const response = await postData("/getPro.php", data);
+    return response[0].code;
   } else {
-    response = await postData("/getProv2.php", data);
+    const response = await postData("/getProv2.php", data);
+    return response[0].code;
   }
-  return response[0].code;
 };
 
 export const _pullCameraFeed = async (owner_ID, type) => {
@@ -74,6 +74,14 @@ export const _pullUser = async (id) => {
   };
   const response = await postData("/users/index.php", data);
   storage.set("user.Data", JSON.stringify(response[0]));
+};
+
+export const _pullGalleryArray = async (pin) => {
+  const data = {
+    pin: pin,
+  };
+  const response = await postData("/camera/array.php", data);
+  return JSON.stringify(response);
 };
 
 export const _pullGalleryFeed = async (pin) => {
@@ -147,4 +155,5 @@ export const axiosPull = {
   _pullMembersFeed,
   _pullFriendsFeed,
   _getProStatus,
+  _pullGalleryArray,
 };

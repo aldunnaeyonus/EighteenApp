@@ -34,6 +34,11 @@ export const historyActions = (UUID: String) => [
     title: i18n.t('DownloadMediaLink'),
     titleColor: "black",
   },
+  {
+    id: "Save-" + UUID,
+    title: i18n.t('SaveDevice'),
+    titleColor: "black",
+  },
 ];
 export const endActions = (UUID: String) => [
   {

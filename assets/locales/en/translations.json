@@ -231,5 +231,6 @@
     "Your event has been successfully saved.":"Your event has been successfully saved.",
     "Your profile picture has been successfully updated.":"Your profile picture has been successfully updated.",
     "UploadNotification":"Show Upload Notification",
-    "UploadNotification2":"This is to suppress the notification, 'Your request is being processed in the background. This may take up to 30 seconds. You'll be notified when it's complete.'"
+    "UploadNotification2":"This is to suppress the notification, 'Your request is being processed in the background. This may take up to 30 seconds. You'll be notified when it's complete.'",
+    "SaveDevice":"Save to Device"
 }
