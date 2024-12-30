@@ -6,7 +6,7 @@ import {
   Dimensions,
   Alert,
 } from "react-native";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
 import moment from "moment";
@@ -32,7 +32,11 @@ const ClosedCameras = (props) => {
   const [filteredDataSource] = useMMKVObject("user.Media.Feed", storage);
   const [refreshing, serRefreshing] = useState(false);
   const [disable, setdisable] = useState(false);
+  const [startDownload, setStartDownload] = useState(false);
+  const [count, setCount] = useState(0);
+
   const [user] = useMMKVObject("user.Data", storage);
+
   const _refresh = async () => {
     serRefreshing(true);
     axiosPull._pullHistoryFeed(user.user_id);
@@ -40,19 +44,24 @@ const ClosedCameras = (props) => {
       serRefreshing(false);
     }, 1500);
   };
-
   const { toast } = useToast();
 
   const handleDownloadAction = async (array) => {
+    Alert.alert(i18n.t('DownloadingEventFiles'),i18n.t('Theventfiles'));
+    setStartDownload(true)
     JSON.parse(array).map(async (item) => {
-        console.log(item.file_name.split("/").pop());
         FileSystem.downloadAsync(
           item.file_name,
           FileSystem.documentDirectory + item.file_name.split("/").pop()
         )
           .then(async ({ uri }) => {
+            setStartDownload(true)
             await CameraRoll.saveAsset(uri);
+            setCount(count - 1);
             FileSystem.deleteAsync(uri);
+            if (count <= 0){
+            setStartDownload(false)
+            }
           })
           .catch((error) => {
             console.log(error.message);
@@ -152,7 +161,7 @@ const ClosedCameras = (props) => {
       return () => {
         clearInterval(timeout);
       };
-    }, [props, user, filteredDataSource, refreshing, disable])
+    }, [props, user, filteredDataSource, refreshing, disable, count])
   );
 
   const actionFeed = async (pin, UUID, title) => {
@@ -271,7 +280,15 @@ const ClosedCameras = (props) => {
             </Text>
           </View>
         </View>
-
+        {
+        startDownload ?
+        <ActivityIndicator
+        color="black"
+        size={"small"}
+        style={{marginTop:-50}}
+        animating={startDownload}
+        hidesWhenStopped={true}
+      /> : 
         <MenuView
           key={item.UUID}
           title={item.title.toUpperCase()}
@@ -283,8 +300,8 @@ const ClosedCameras = (props) => {
               actionFeed(item.pin, item.UUID, item.title);
             } else if (nativeEvent.event == "Save-" + item.UUID) {
               const array = await axiosPull._pullGalleryArray(item.pin);
+              setCount(parseInt(JSON.parse(array).length));
               handleDownloadAction(array);
-              //[file_name: http],
             }
           }}
           actions={constants.historyActions(item.UUID)}
@@ -304,6 +321,7 @@ const ClosedCameras = (props) => {
             color="#3D4849"
           />
         </MenuView>
+  }
       </View>
     );
   };
