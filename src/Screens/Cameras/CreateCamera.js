@@ -69,6 +69,8 @@ const CreateCamera = (props) => {
   const [end, setEnd] = useState(moment().unix() + 28800);
   const [verified, setVerified] = useState(true);
   const [errorColor] = useState(verified ? "#fafbfc" : "#ffa3a6");
+  const [uploading] = useMMKVObject("uploadData", storage);
+
   const MODE_VALUES = Platform.select({
     ios: Object.values(IOS_MODE),
     android: Object.values(ANDROID_MODE),
@@ -362,7 +364,10 @@ const CreateCamera = (props) => {
       user.user_id,
       "create",
       "",
-      name
+      name,
+      i18n.t('CreatingEvent') + ' ' + i18n.t('PleaseWait'),
+      image,
+      uploading
     );
     setTimeout(() => {
       setIsAI(false);

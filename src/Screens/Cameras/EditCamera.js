@@ -92,6 +92,7 @@ const EditCamera = (props) => {
   const [start, setStart] = useState(timestamp);
   const [end, setEnd] = useState(timestampEnd);
   const [isEditing, setisEditing] = useState(false);
+  const [uploading] = useMMKVObject("uploadData", storage);
 
   const onChange = (event, selectDate) => {
     if (event.type === "set") {
@@ -385,7 +386,10 @@ const EditCamera = (props) => {
       user.user_id,
       "save",
       props.route.params.pin,
-      ""
+      "",
+      i18n.t('EdintEvent') + ' ' + i18n.t('PleaseWait'),
+      image,
+      uploading
     );
     setTimeout(() => {
       setIsAI(false);

@@ -2,7 +2,6 @@ import React from "react";
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
-import { constants } from "../../utils";
 import Progress from "react-native-progress";
 const Image = createImageProgress(FastImage);
 import * as i18n from "../../../i18n";
@@ -62,7 +61,7 @@ const FriendHeader = (props) => {
           >
             <Image
               indicator={Progress}
-              key={constants.url + "/avatars/" + props.user.user_avatar}
+              key={props.user.user_avatar}
               style={{
                 height: 70,
                 width: 70,
@@ -76,7 +75,7 @@ const FriendHeader = (props) => {
               }}
               resizeMode={FastImage.resizeMode.contain}
               source={{
-                uri: constants.url + "/avatars/" + props.user.user_avatar,
+                uri: props.user.user_avatar
               }}
             />
             <Text
@@ -94,7 +93,7 @@ const FriendHeader = (props) => {
             >
               {i18n.t("AddCamera")}
             </Text>
-            {props.isPro == "1" && (
+            {props.user.isPro == "1" && (
               <View style={{ position: "absolute" }}>
                 <View
                   style={{
@@ -170,7 +169,7 @@ const FriendHeader = (props) => {
                 }}
                 resizeMode={FastImage.resizeMode.contain}
                 source={{
-                  uri: constants.url + "/avatars/" + grids.friend_avatar,
+                  uri: grids.friend_avatar,
                 }}
               />
               <Text

@@ -24,7 +24,7 @@ const AboutProfile = (props) => {
                               style={[style.image, {width: 70, height: 70, overflow:'hidden'}]}
                               source={{
                                 uri:
-                                  constants.url + "/avatars/" + props.route.params.items.userAvatar,
+                                  props.route.params.items.userAvatar,
                               }}
                             />
                           </View>

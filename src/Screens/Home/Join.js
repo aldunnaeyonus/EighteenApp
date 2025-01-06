@@ -107,7 +107,7 @@ const Join = (props) => {
         ListHeaderComponent={
           <EmptyStateView
             imageSource={{
-              uri: constants.url + "/avatars/" + avatar,
+              uri: avatar,
             }}
             imageStyle={style.imageStyle}
             headerText={username.toUpperCase()}

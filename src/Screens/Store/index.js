@@ -102,7 +102,7 @@ const Products = (props) => {
             eventName: props.route.params.eventName
           };
           await axiosPull.postData("/store/index.php", data);
-          axiosPull._pullCameraFeed(
+          await axiosPull._pullCameraFeed(
             props.route.params.owner,
             props.route.params.type
           );

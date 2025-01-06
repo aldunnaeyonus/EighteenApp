@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Share,
   StyleSheet,
@@ -19,17 +19,18 @@ import Progress from "react-native-progress";
 const { width: ScreenWidth } = Dimensions.get("window");
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Icon } from "react-native-elements";
-import { storage, updateStorage } from "../../context/components/Storage";
+import { storage } from "../../context/components/Storage";
 import RefreshableWrapper from "react-native-fresh-refresh";
-import Animated, { useSharedValue } from "react-native-reanimated";
+import Animated from "react-native-reanimated";
 import { useMMKVObject } from "react-native-mmkv";
 import ListItem from "../../SubViews/home/listItem";
 import RefreshView from "../../utils/refreshView";
 import FriendHeader from "../../SubViews/home/homeHeader";
 import { axiosPull } from "../../utils/axiosPull";
-import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../i18n";
 import NotifService from "../../../NotifService";
+import { useIsFocused } from "@react-navigation/native";
+import Loading from "../../SubViews/home/Loading";
 
 const Home = (props) => {
   const [cameraData, setcameraData] = useMMKVObject(
@@ -41,8 +42,9 @@ const Home = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
   const [refreshing, setRefreshing] = useState(false);
   const [qrCodeURL, setQrCodeURL] = useState("");
-  const contentOffset = useSharedValue(0);
   const AnimatedFlatList = Animated.FlatList;
+  const isFocused = useIsFocused();
+  const [uploading] = useMMKVObject("uploadData", storage);
 
   const triggerProfileFunction = async () => {
     props.navigation.navigate("Profile");
@@ -197,7 +199,7 @@ const Home = (props) => {
       isPro: user.isPro
     };
     await axiosPull.postData("/camera/maxCamera.php", data);
-    axiosPull._pullCameraFeed(owner, "owner");
+   await axiosPull._pullCameraFeed(owner, "owner");
   };
 
   const _joinFeedItem = async (UUID, owner, pin, title) => {
@@ -236,7 +238,7 @@ const Home = (props) => {
       id: UUID,
     };
     await axiosPull.postData("/camera/close.php", data);
-    axiosPull._pullCameraFeed(owner, "owner");
+    await axiosPull._pullCameraFeed(owner, "owner");
   };
 
   const _deleteFeedItem = (UUID, owner, pin) => {
@@ -276,7 +278,7 @@ const Home = (props) => {
 
   const _refresh = async () => {
     setRefreshing(true);
-    axiosPull._pullCameraFeed(user.user_id, "owner");
+    await axiosPull._pullCameraFeed(user.user_id, "owner");
     setTimeout(async () => {
       setRefreshing(false);
     }, 1500);
@@ -287,8 +289,7 @@ const Home = (props) => {
     setmodalVisable(true);
   };
 
-  useFocusEffect(
-    useCallback(() => {
+  useEffect(() => {
       props.navigation.setOptions({
         headerLeft: () => <></>,
         headerRight: () => (
@@ -305,20 +306,19 @@ const Home = (props) => {
         ),
       });
       var timeout = setInterval(async () => {
-        axiosPull._pullCameraFeed(user.user_id, "owner");
-        axiosPull._pullFriendsFeed(user.user_id);
+        await axiosPull._pullCameraFeed(user.user_id, "owner");
+        await axiosPull._pullFriendsFeed(user.user_id);
       }, 15000);
       const fetchData = async () => {
-        axiosPull._pullUser(user.user_id);
-        axiosPull._pullCameraFeed(user.user_id, "owner");
-        axiosPull._pullFriendsFeed(user.user_id);
+        await axiosPull._pullUser(user.user_id, "Home");
+       await  axiosPull._pullCameraFeed(user.user_id, "owner");
+        await axiosPull._pullFriendsFeed(user.user_id);
       };
       fetchData();
       return () => {
         clearInterval(timeout);
       };
-    }, [user, friendData, cameraData])
-  );
+    }, [isFocused]);
 
   const goToFriend = async (
     friendID,
@@ -335,7 +335,7 @@ const Home = (props) => {
     privacy,
     isPro
   ) => {
-     axiosPull._pullFriendCameraFeed(
+     await axiosPull._pullFriendCameraFeed(
               props.friendID,
               "user",
               user.user_id
@@ -427,6 +427,7 @@ const Home = (props) => {
           _refresh();
         }}
       >
+        
         <AnimatedFlatList
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicatorr={false}
@@ -444,21 +445,25 @@ const Home = (props) => {
             />
           }
           ListHeaderComponent={
+            <>
+            <Loading 
+            message={uploading.message}
+            flex={uploading.display}
+            image={uploading.image}
+            />
             <FriendHeader
               _createCamera={_createCamera}
               user={user}
-              isPro={user.isPro}
               friendData={friendData}
               _gotoAllFriends={_gotoAllFriends}
-              goToFriend={goToFriend}
-            />
+              goToFriend={goToFriend} /></>
           }
-          keyExtractor={(item) => item.UUID}
+          keyExtractor={(item, index) => index}
           renderItem={(item, index) => (
             <ListItem
               item={item}
               index={index}
-              isPro={user.isPro}
+              isPro={user == undefined ? "" : user.isPro}
               _gotoStore={_gotoStore}
               _deleteFeedItem={_deleteFeedItem}
               _joinFeedItem={_joinFeedItem}

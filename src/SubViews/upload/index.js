@@ -2,14 +2,10 @@ import BackgroundService from "react-native-background-actions";
 import axios from "axios";
 import { axiosPull } from "../../utils/axiosPull";
 import * as i18n from "../../../i18n";
-import NotifService from "../../../NotifService";
-import { Alert } from "react-native";
-import { useMMKVObject } from "react-native-mmkv";
-import { storage } from "../../context/components/Storage";
+import { updateStorage } from "../../context/components/Storage";
 
-export const handleUpload = async (url, data, user, action, pin, name) => {
-  const notif = new NotifService();
-  const [users] = useMMKVObject("user.Data", storage);
+export const handleUpload = async (url, data, user, action, pin, name, message, umageURI, storageData) => {
+  updateStorage(storageData, "display", 'flex', "uploadData");
 
   const options = {
     taskName: i18n.t("CraftingMemories"),
@@ -20,16 +16,12 @@ export const handleUpload = async (url, data, user, action, pin, name) => {
       name: "ic_launcher",
       type: "mipmap",
     },
-    color: "#ff00ff",
+    color: "#ff00ff"
   };
 
-  await BackgroundService.start(async () => {
-    if (users.showAlert == "1"){
-      Alert.alert(
-        i18n.t("Read Me!"),
-        i18n.t("alertReading")
-      );
-    }
+  updateStorage(storageData, "message", message, "uploadData");
+  updateStorage(storageData, "image", umageURI, "uploadData");
+   await BackgroundService.start(async () => {
 
     await axios({
       method: "POST",
@@ -43,56 +35,40 @@ export const handleUpload = async (url, data, user, action, pin, name) => {
       .then(async function (response) {
         switch (action) {
           case "create":
-            axiosPull._pullCameraFeed(user, "owner");
+            await axiosPull._pullCameraFeed(user, "owner");
             await BackgroundService.stop();
-            notif.localNotif("", i18n.t("Your event has been successfully created."));
             break;
           case "gallery":
-            axiosPull._pullGalleryFeed(pin);
-            axiosPull._pullFriendCameraFeed(name, "user", user);
+            await axiosPull._pullGalleryFeed(pin);
+            await axiosPull._pullFriendCameraFeed(name, "user", user);
             await BackgroundService.stop();
-            notif.localNotif(
-              "",
-              i18n.t("Your media file(s) has been successfully uploaded.")
-            );
             break;
           case "save":
-            axiosPull._pullCameraFeed(user, "owner");
-            notif.localNotif("", i18n.t("Your event has been successfully saved."));
+            await axiosPull._pullCameraFeed(user, "owner");
             await BackgroundService.stop();
             break;
           case "camera":
-            axiosPull._pullGalleryFeed(pin);
-            axiosPull._pullFriendCameraFeed(name, "user", user);
+            await axiosPull._pullGalleryFeed(pin);
+            await axiosPull._pullFriendCameraFeed(name, "user", user);
             await BackgroundService.stop();
-            notif.localNotif(
-              "",
-              i18n.t("Your media file(s) has been successfully uploaded.")
-            );
             break;
           case "avatar":
-            axiosPull._pullUser(user);
+            await axiosPull._pullUser(user, "Upload");
             await BackgroundService.stop();
-            notif.localNotif(
-              "",
-              i18n.t("Your profile picture has been successfully updated.")
-            );
             break;
           default:
             await BackgroundService.stop();
             break;
         }
+        updateStorage(storageData, "message", '', "uploadData");
+        updateStorage(storageData, "image", '', "uploadData");
+        updateStorage(storageData, "display", 'none', "uploadData");
       })
       .catch(async (error) => {
-        notif.localNotif(
-          "",
-          error.message
-        );
+        updateStorage(storageData, "message", '', "uploadData");
+        updateStorage(storageData, "image", '', "uploadData");
+        updateStorage(storageData, "display", 'none', "uploadData");
         await BackgroundService.stop();
       });
   }, options);
-};
-
-export const index = {
-  handleUpload,
 };

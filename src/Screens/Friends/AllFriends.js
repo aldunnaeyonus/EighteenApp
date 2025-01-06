@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { StyleSheet, Platform} from "react-native";
+import { StyleSheet} from "react-native";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
 import "moment-duration-format";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -16,7 +16,7 @@ import RefreshView from "../../utils/refreshView";
 import { SearchBar } from 'react-native-elements'
 
 const AllFriends = (props) => {
-  const [friendData, setFriendData] = useMMKVObject("user.Friend.Feed", storage);
+  const [friendData] = useMMKVObject("user.Friend.Feed", storage);
   const AnimatedFlatlist = Animated.FlatList;
   const { toast } = useToast();
   const [user] = useMMKVObject("user.Data", storage);
@@ -27,14 +27,14 @@ const AllFriends = (props) => {
 
   const _refresh = async () => {
     serRefreshing(true);
-    axiosPull._pullFriendsFeed(user.user_id);
+    await axiosPull._pullFriendsFeed(user.user_id);
     setTimeout(() => {
       serRefreshing(false);
     }, 1500);
   };
 
   const _clear = async () => {
-    axiosPull._pullFriendsFeed(user.user_id);
+    await _pullFriendsFeed(user.user_id);
   };
 
   useFocusEffect(
@@ -60,7 +60,7 @@ const AllFriends = (props) => {
         });
       }
       const fetchData = async () => {
-        axiosPull._pullFriendsFeed(user.user_id);
+        await axiosPull._pullFriendsFeed(user.user_id);
       };
       fetchData();
     }, [props, user, refreshing])

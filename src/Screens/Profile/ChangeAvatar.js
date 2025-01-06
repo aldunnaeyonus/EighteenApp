@@ -1,70 +1,26 @@
-import React, { useState, useCallback } from "react";
+import React from "react";
 import {
   ScrollView,
   StyleSheet,
-  View,
   TouchableOpacity,
   Platform,
-  Alert,
 } from "react-native";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
 import { constants } from "../../utils";
 import { useMMKVObject } from "react-native-mmkv";
 import * as ImagePicker from "expo-image-picker";
 import FormData from "form-data";
-import FastImage from "react-native-fast-image";
-import { createImageProgress } from "react-native-image-progress";
-const Image = createImageProgress(FastImage);
-import Progress from "react-native-progress";
-import { useToast } from "react-native-styled-toast";
-import { useFocusEffect } from "@react-navigation/native";
-import { storage, updateStorage } from "../../context/components/Storage";
+import { storage } from "../../context/components/Storage";
 import { handleUpload } from "../../SubViews/upload";
-import { axiosPull } from "../../utils/axiosPull";
 import * as i18n from "../../../i18n";
 
 const ChangeData = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
-  const [avatars, setAvatars] = useState([]);
-  const { toast } = useToast();
 
-  useFocusEffect(
-    useCallback(() => {
-      if (!props.unsubscribe) {
-        toast({
-          message: i18n.t("No internet connection"),
-          toastStyles: {
-            bg: "#3D4849",
-            borderRadius: 5,
-          },
-          duration: 5000,
-          color: "white",
-          iconColor: "white",
-          iconFamily: "Entypo",
-          iconName: "info-with-circle",
-          closeButtonStyles: {
-            px: 4,
-            bg: "translucent",
-          },
-          closeIconColor: "white",
-          hideAccent: true,
-        });
-      }
-      axiosPull._pullUser(user.user_id);
-      const fetchData = async () => {
-        fetch(constants.url + "/avatars/avatars.json")
-          .then((response) => response.json())
-          .then((jsonData) => {
-            setAvatars(jsonData);
-          })
-          .catch((error) => {});
-      };
-      fetchData();
-    }, [props])
-  );
 
-  const fetchCode = useCallback(
-    async (icon, types) => {
+  const [uploading] = useMMKVObject("uploadData", storage);
+
+  const fetchCode = async (icon, types) => {
       var formData = new FormData();
       formData.append("id", String(user.user_id));
       formData.append("type", String(types));
@@ -83,27 +39,19 @@ const ChangeData = (props) => {
         formData.append("avatar", String(icon));
       }
 
-      if (types == "1") {
-        updateStorage(
-          user,
-          "user_avatar",
-          String("SNAP18-" + user.user_id + "-" + icon.split("/").pop()),
-          "user.Data"
-        );
-      } else {
-        updateStorage(user, "user_avatar", String(icon), "user.Data");
-      }
       handleUpload(
         constants.url + "/avatars/fetch.php",
         formData,
         user.user_id,
         "avatar",
         "pin",
-        ""
+        "",
+      i18n.t('ProfilePic') + ' ' + i18n.t('PleaseWait'),
+      icon,
+      uploading
       );
-    },
-    [user, avatars]
-  );
+    props.navigation.goBack();
+    };
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -129,47 +77,13 @@ const ChangeData = (props) => {
         >
           <EmptyStateView
             imageSource={{
-              uri: constants.url + "/avatars/" + user.user_avatar,
+              uri: user.user_avatar,
             }}
             imageStyle={styles.imageStyle}
             headerText={i18n.t("Choose an avatar")}
             headerTextStyle={styles.headerTextStyle}
           />
         </TouchableOpacity>
-        <View style={styles.destinationsView}>
-          {avatars.map((grids) => (
-            <TouchableOpacity
-              key={"B" + grids.key}
-              onPress={() => {
-                fetchCode(grids.icon + ".png", "0");
-              }}
-              style={styles.gridButtonContainer}
-            >
-              <View key={"D" + grids.key} style={[styles.gridButton]}>
-                <Image
-                  key={"C" + grids.key}
-                  indicator={Progress}
-                  resizeMode={FastImage.resizeMode.contain}
-                  style={{
-                    width: 80,
-                    height: 80,
-                    backgroundColor: "#f2f2f2",
-                    borderRadius: 40,
-                    borderColor: "#e35504",
-                    borderWidth:
-                      grids.icon + ".png" == user.user_avatar ? 3 : 0,
-                    margin: 7,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                  source={{
-                    uri: constants.url + "/avatars/" + grids.icon + ".png",
-                  }}
-                />
-              </View>
-            </TouchableOpacity>
-          ))}
-        </View>
       </ScrollView>
     </>
   );

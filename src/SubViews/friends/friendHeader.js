@@ -17,7 +17,7 @@ return (
                   style={[style.image, {width: 70, height: 70, overflow:'hidden'}]}
                   source={{
                     uri:
-                      constants.url + "/avatars/" + props.avatar,
+                      props.avatar,
                   }}
                 />
               </View>

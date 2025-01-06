@@ -140,7 +140,7 @@ let eventEnd = startDate(props.item.item.end);
             props.item.item.camera_add_social,
             props.item.item.illustration
           )
-          : Alert.alert(i18n.t('BlockedGallery'));
+          : Alert.alert("", i18n.t('BlockedGallery'));
         }}
 
         containerStyle={{

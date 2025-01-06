@@ -18,7 +18,7 @@ const ProfileHeader = (props) => {
                 { width: 70, height: 70, overflow: "hidden" },
               ]}
               source={{
-                uri: constants.url + "/avatars/" + props.avatar,
+                uri: props.avatar,
               }}
             />
           </View>

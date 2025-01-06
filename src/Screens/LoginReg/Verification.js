@@ -1,6 +1,6 @@
 import { View, Text, TextInput, Platform } from "react-native";
 import { TouchableOpacity } from "react-native";
-import { storage } from "../../context/components/Storage";
+import { storage, updateStorage } from "../../context/components/Storage";
 import React, { useState, useCallback } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -95,6 +95,10 @@ const Verification = (props) => {
         storage.set("user.Data", JSON.stringify(response[0]));
         storage.set("user.Join.Feed", JSON.stringify([]));
         storage.set("user.Friend.Feed", JSON.stringify([]));
+        storage.set(
+          "uploadData",
+          JSON.stringify({ message: "", display: "none", image: "" })
+        );
         storage.set("user.Camera.Feed", JSON.stringify([]));
         storage.set("user.Camera.Friend.Feed", JSON.stringify([]));
         storage.set("user.Member.Join.Feed", JSON.stringify([]));
@@ -122,7 +126,10 @@ const Verification = (props) => {
     };
     setisEnabled(true);
     await axiosPull.postData("/register/checkUsername.php", data);
-    alert(i18n.t("A new verification code") + " " + props.route.params.email);
+    alert(
+      "",
+      i18n.t("A new verification code") + " " + props.route.params.email
+    );
   }, [props.route.params.email]);
 
   return (

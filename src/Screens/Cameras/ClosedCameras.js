@@ -6,7 +6,7 @@ import {
   Dimensions,
   Alert,
 } from "react-native";
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback } from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
 import moment from "moment";
@@ -19,7 +19,6 @@ import { Icon } from "@rneui/themed";
 import { storage } from "../../context/components/Storage";
 import { useMMKVObject } from "react-native-mmkv";
 import { axiosPull } from "../../utils/axiosPull";
-import { useToast } from "react-native-styled-toast";
 import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../i18n";
 import { ActivityIndicator } from "react-native-paper";
@@ -34,23 +33,21 @@ const ClosedCameras = (props) => {
   const [disable, setdisable] = useState(false);
   const [startDownload, setStartDownload] = useState(false);
   const [count, setCount] = useState(0);
-
   const [user] = useMMKVObject("user.Data", storage);
-
+  
   const _refresh = async () => {
     serRefreshing(true);
-    axiosPull._pullHistoryFeed(user.user_id);
+    await axiosPull._pullHistoryFeed(user.user_id);
     setTimeout(() => {
       serRefreshing(false);
     }, 1500);
   };
-  const { toast } = useToast();
 
   const handleDownloadAction = async (array) => {
     Alert.alert(i18n.t('DownloadingEventFiles'),i18n.t('Theventfiles'));
     setStartDownload(true)
     JSON.parse(array).map(async (item) => {
-        await FileSystem.downloadAsync(
+        FileSystem.downloadAsync(
           item.file_name,
           FileSystem.documentDirectory + item.file_name.split("/").pop()
         )
@@ -59,7 +56,7 @@ const ClosedCameras = (props) => {
             try { 
             await CameraRoll.saveAsset(uri);
             setCount(count - 1);
-            await FileSystem.deleteAsync(uri);
+            FileSystem.deleteAsync(uri);
             if (count <= 0){
               setStartDownload(false)
             }
@@ -118,7 +115,7 @@ const ClosedCameras = (props) => {
       id: UUID,
     };
     await axiosPull.postData("/camera/delete.php", data);
-    axiosPull._pullHistoryFeed(user.user_id);
+    await axiosPull._pullHistoryFeed(user.user_id);
     setdisable(false);
     props.navigation.setOptions({
       headerRight: () => (
@@ -134,38 +131,18 @@ const ClosedCameras = (props) => {
 
   useFocusEffect(
     useCallback(() => {
-      if (!props.unsubscribe) {
-        toast({
-          message: i18n.t("No internet connection"),
-          toastStyles: {
-            bg: "#3D4849",
-            borderRadius: 5,
-          },
-          duration: 5000,
-          color: "white",
-          iconColor: "white",
-          iconFamily: "Entypo",
-          iconName: "info-with-circle",
-          closeButtonStyles: {
-            px: 4,
-            bg: "translucent",
-          },
-          closeIconColor: "white",
-          hideAccent: true,
-        });
-      }
       var timeout = setInterval(async () => {
-        axiosPull._pullHistoryFeed(user.user_id);
+        await axiosPull._pullHistoryFeed(user.user_id);
       }, 60000);
 
       const fetchData = async () => {
-        axiosPull._pullHistoryFeed(user.user_id);
+        await axiosPull._pullHistoryFeed(user.user_id);
       };
       fetchData();
       return () => {
         clearInterval(timeout);
       };
-    }, [props, user, filteredDataSource, refreshing, disable, count])
+    }, [filteredDataSource, refreshing, disable, count])
   );
 
   const actionFeed = async (pin, UUID, title) => {
@@ -176,9 +153,9 @@ const ClosedCameras = (props) => {
       id: UUID,
       name: title,
     };
-    Alert.alert(i18n.t("j11"));
+    Alert.alert("",i18n.t("j11"));
     await axiosPull.postData("/camera/compress.php", data);
-    axiosPull._pullHistoryFeed(user.user_id);
+    await axiosPull._pullHistoryFeed(user.user_id);
     setdisable(false);
   };
 

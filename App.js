@@ -39,7 +39,6 @@ import GetPro from "./src/Screens/Store/GetPro";
 import { axiosPull } from "./src/utils/axiosPull";
 import { useMMKVObject } from "react-native-mmkv";
 import { storage } from "./src/context/components/Storage";
-import { updateStorage } from "./src/context/components/Storage";
 
 export default function App() {
   const Stack = createNativeStackNavigator();

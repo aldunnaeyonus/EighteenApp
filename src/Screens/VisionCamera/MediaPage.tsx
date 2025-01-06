@@ -22,7 +22,6 @@ import { ActivityIndicator } from "react-native-paper";
 import { handleUpload } from "../../SubViews/upload";
 import * as i18n from "../../../i18n";
 import { useFocusEffect } from "@react-navigation/native";
-import NotifService from "../../../NotifService";
 import { axiosPull } from "../../utils/axiosPull";
 import { storage, updateItemFeed } from "../../context/components/Storage";
 import { useMMKVObject } from "react-native-mmkv";
@@ -71,7 +70,7 @@ const MediaPage = (props: {
   const isVideoPaused = !isForeground || !isScreenFocused;
   momentDurationFormatSetup(moment);
   const [animating, setAnimating] = useState(false);
-  const notif = new NotifService();
+  const [uploading] = useMMKVObject("uploadData", storage);
   const [credits, setCredits] = useState(props.route.params.credits);
   const onMediaLoad = useCallback((event: OnLoadData | OnLoadImage) => {
     if (isVideoOnLoadEvent(event)) {
@@ -156,9 +155,12 @@ const MediaPage = (props: {
       props.route.params.user,
       "camera",
       props.route.params.pin,
-      props.route.params.owner
+      props.route.params.owner,
+      i18n.t('Uploading') + ' ' + i18n.t('PleaseWait'),
+      `file://${path}`,
+      uploading
     );
-    axiosPull._pullFriendCameraFeed(
+    await axiosPull._pullFriendCameraFeed(
       props.route.params.owner,
       "user",
       props.route.params.user

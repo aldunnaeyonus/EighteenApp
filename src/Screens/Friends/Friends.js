@@ -61,7 +61,7 @@ const Friends = (props) => {
     };
     await axiosPull.postData("/camera/autoJoin.php", data);
 
-    axiosPull._pullFriendCameraFeed(
+    await axiosPull._pullFriendCameraFeed(
       props.route.params.userID,
       props.route.params.type,
       user.user_id
@@ -89,7 +89,7 @@ const Friends = (props) => {
               type: "event",
             };
             await axiosPull.postData("/camera/report.php", data);
-            Alert.alert(i18n.t("A report event"));
+            Alert.alert("",i18n.t("A report event"));
           },
           style: "default",
         },
@@ -119,7 +119,7 @@ const Friends = (props) => {
               type: "friend",
             };
             await axiosPull.postData("/camera/report.php", data);
-            Alert.alert(i18n.t("A report"));
+            Alert.alert("",i18n.t("A report"));
           },
           style: "default",
         },
@@ -151,7 +151,7 @@ const Friends = (props) => {
   const addMember = async () => {
     const data = { owner: props.route.params.userID, user: user.user_id };
     await axiosPull.postData("/users/add.php", data);
-    axiosPull._pullFriendCameraFeed(
+    await axiosPull._pullFriendCameraFeed(
       props.route.params.userID,
       props.route.params.type,
       user.user_id
@@ -233,7 +233,7 @@ const Friends = (props) => {
 
   const _refresh = async () => {
     serRefreshing(true);
-    axiosPull._pullFriendCameraFeed(
+    await axiosPull._pullFriendCameraFeed(
       props.route.params.userID,
       props.route.params.type,
       user.user_id
@@ -266,7 +266,7 @@ const Friends = (props) => {
       }
 
       timeout = setInterval(async () => {
-        axiosPull._pullFriendCameraFeed(
+        await axiosPull._pullFriendCameraFeed(
           props.route.params.userID,
           props.route.params.type,
           user.user_id
@@ -313,7 +313,7 @@ const Friends = (props) => {
         };
         const results = await axiosPull.postData("/users/check.php", data);
         setisFriend(results[0]["response"]);
-        axiosPull._pullFriendCameraFeed(
+        await axiosPull._pullFriendCameraFeed(
           props.route.params.userID,
           props.route.params.type,
           user.user_id

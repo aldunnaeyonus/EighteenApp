@@ -88,6 +88,7 @@ const VisionCamera = (props: {
   );
   const device = useCameraDevice(cameraPosition);
   const [isCameraInitialized, setIsCameraInitialized] = useState(false);
+  const [uploading] = useMMKVObject("uploadData", storage);
 
   const durationAsString = (end: any, start: any) => {
     return start >= moment().unix()
@@ -223,7 +224,10 @@ const VisionCamera = (props: {
         props.route.params.user,
         "camera",
         props.route.params.pin,
-        props.route.params.owner
+        props.route.params.owner,
+       i18n.t('Uploading') + ' ' + i18n.t('PleaseWait'),
+        path,
+        uploading
       );
     if (props.route.params.owner != props.route.params.user){
       setCredits(String(parseInt(credits) - 1));

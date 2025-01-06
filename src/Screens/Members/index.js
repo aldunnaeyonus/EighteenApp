@@ -101,7 +101,7 @@ const JoinedMembers = (props) => {
 
   const _refresh = async () => {
     setRefreshing(true);
-    axiosPull._pullMembersFeed(
+    await axiosPull._pullMembersFeed(
       props.route.params.pin,
       props.route.params.owner,
       props.route.params.UUID
@@ -137,14 +137,14 @@ const JoinedMembers = (props) => {
         title: props.route.params.title.toUpperCase(),
       });
       var timeout = setInterval(async () => {
-        axiosPull._pullMembersFeed(
+        await axiosPull._pullMembersFeed(
           props.route.params.pin,
           props.route.params.owner,
           props.route.params.UUID
         );
       }, 30000);
       const fetchData = async () => {
-        axiosPull._pullMembersFeed(
+       await axiosPull._pullMembersFeed(
           props.route.params.pin,
           props.route.params.owner,
           props.route.params.UUID

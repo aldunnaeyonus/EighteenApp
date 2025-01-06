@@ -16,7 +16,7 @@ import {
   import { storage } from "../../context/components/Storage";
   import { useMMKVObject } from "react-native-mmkv";
 
-const Abouts = (props) => {
+const Abouts = () => {
   const [user] = useMMKVObject("user.Data", storage);
 
   return (
@@ -27,7 +27,7 @@ const Abouts = (props) => {
                               style={[style.image, {width: 70, height: 70, overflow:'hidden'}]}
                               source={{
                                 uri:
-                                  constants.url + "/avatars/" + user.user_avatar,
+                                  user.user_avatar,
                               }}
                             />
                           </View>

@@ -1,49 +1,22 @@
 import { View, Text, ScrollView } from "react-native";
 import styles from "../../styles/SliderEntry.style";
 import { ListItem, Icon, Switch } from "@rneui/themed";
-import React, { useState, useCallback } from "react";
-import { updateStorage, storage } from "../../context/components/Storage";
+import React, { useState, useEffect } from "react";
+import { storage } from "../../context/components/Storage";
 import { useMMKVObject } from "react-native-mmkv";
 import { axiosPull } from "../../utils/axiosPull";
-import { useToast } from "react-native-styled-toast";
-import { useFocusEffect } from "@react-navigation/native";
-import NotifService from "../../../NotifService";
+import { useIsFocused } from "@react-navigation/native";
 import * as i18n from "../../../i18n";
 
 const AccountDetails = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
   const [email, setEmail] = useState(user.user_email);
-  const [verifiedEmail, setVerifiedEmail] = useState(true);
-  const [submit, setsubmit] = useState(false);
   const [motto, setMootto] = useState(user.user_motto);
-  const [handle, setHandle] = useState(user.user_motto);
-  const { toast } = useToast();
-  const [switch4, setSwitch4] = useState((user.privacy = "1" ? true : false));
-  const [errorColorEmail] = useState(verifiedEmail ? "transparent" : "red");
-  const notif = new NotifService();
+  const [handle, setHandle] = useState(user.user_handle);
+  const [switch4, setSwitch4] = useState((user.privacy == "1" ? true : false));
+  const isFocused = useIsFocused();
 
-  useFocusEffect(
-    useCallback(() => {
-      if (!props.unsubscribe) {
-        toast({
-          message: i18n.t("No internet connection"),
-          toastStyles: {
-            bg: "#3D4849",
-            borderRadius: 5,
-          },
-          duration: 5000,
-          color: "white",
-          iconColor: "white",
-          iconFamily: "Entypo",
-          iconName: "info-with-circle",
-          closeButtonStyles: {
-            px: 4,
-            bg: "translucent",
-          },
-          closeIconColor: "white",
-          hideAccent: true,
-        });
-      }
+  useEffect(() => {
       props.navigation.setOptions({
         headerRight: () => (
           <Text
@@ -54,7 +27,6 @@ const AccountDetails = (props) => {
               fontWeight: "bold",
             }}
             onPress={() => {
-              setsubmit(true);
               _saveUserData();
             }}
           >
@@ -63,18 +35,12 @@ const AccountDetails = (props) => {
         ),
       });
     }, [
-      props,
-      submit,
-      user,
+      isFocused,
       email,
-      verifiedEmail,
-      submit,
       motto,
       handle,
-      errorColorEmail,
       switch4,
-    ])
-  );
+    ]);
 
   const toggleSwitch4 = () => {
     setSwitch4(!switch4);
@@ -88,25 +54,15 @@ const AccountDetails = (props) => {
       motto: motto,
       privacy: switch4 ? "1" : "0",
     };
-
-    axiosPull.postData("/users/save.php", data);
-    setVerifiedEmail(false);
-    updateStorage(user, "user_handle", handle, "user.Data");
-    updateStorage(user, "user_motto", motto, "user.Data");
-    updateStorage(user, "privacy", switch4 ? "1" : "0", "user.Data");
-    notif.localNotif("", i18n.t("AccountAvade"));
-    const response = axiosPull._pullUser(user.user_id);
+    const response = await axiosPull.postData("/users/save.php", data);
     if (response[0].errorMessage == "logout") {
-      notif.localNotif("", i18n.t("VerifyEmail"));
-      setsubmit(false);
       await AsyncStorage.removeItem("UUID");
       await AsyncStorage.removeItem("logedIn");
       await AsyncStorage.removeItem("user_id");
       props.navigation.navigate("Begin");
     }
-    setTimeout(() => {
-      setsubmit(false);
-    }, 500);
+    await axiosPull._pullUser(user.user_id, "Account");
+    props.navigation.goBack();
   };
 
   return (
@@ -232,7 +188,7 @@ const AccountDetails = (props) => {
         </ListItem>
         <View style={[styles.dividerStyle]} />
         <ListItem
-          borderColor={errorColorEmail}
+          borderColor='transparent'
           containerStyle={{ height: 65, backgroundColor: "#fafbfc" }}
           key="5"
         >

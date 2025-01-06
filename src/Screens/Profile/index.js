@@ -9,7 +9,7 @@ import {
   ScrollView,
 } from "react-native";
 const { width: ScreenWidth } = Dimensions.get("window");
-import React, { useCallback, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { ListItem, Icon } from "@rneui/themed";
 import InfoText from "../../utils/InfoText";
 import * as Application from "expo-application";
@@ -22,22 +22,21 @@ import Progress from "react-native-progress";
 import { storage } from "../../context/components/Storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useMMKVObject } from "react-native-mmkv";
-import { useToast } from "react-native-styled-toast";
 import { openSettings } from "react-native-permissions";
 import { axiosPull } from "../../utils/axiosPull";
-import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../i18n";
 import ProfileHeader from "../../SubViews/home/profileHeader";
+import { useIsFocused } from "@react-navigation/native";
 
 const Profile = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
-  const { toast } = useToast();
   const [modalVisable, setmodalVisable] = useState(false);
   const [qrCodeURL] = useState(
     constants.url + "/friendQRCode.php?owner=" + user.user_id
   );
+  const isFocused = useIsFocused();
+
   const logout = useCallback(async () => {
-    storage.clearAll();
     FastImage.clearMemoryCache();
     FastImage.clearDiskCache();
     await AsyncStorage.removeItem("UUID");
@@ -46,39 +45,21 @@ const Profile = (props) => {
     props.navigation.navigate("Begin");
   });
 
-  useFocusEffect(
-    useCallback(() => {
-      if (!props.unsubscribe) {
-        toast({
-          message: i18n.t("No internet connection"),
-          toastStyles: {
-            bg: "#3D4849",
-            borderRadius: 5,
-          },
-          duration: 5000,
-          color: "white",
-          iconColor: "white",
-          iconFamily: "Entypo",
-          iconName: "info-with-circle",
-          closeButtonStyles: {
-            px: 4,
-            bg: "translucent",
-          },
-          closeIconColor: "white",
-          hideAccent: true,
-        });
-      }
-
+  useEffect(() => {
+    
       props.navigation.setOptions({
         title:
           user.user_id == null
             ? i18n.t("Profile Page")
             : user.user_handle.toUpperCase(),
       });
-      axiosPull._pullUser(user.user_id);
-    }, [user, props, modalVisable, qrCodeURL])
-  );
+      pullData();
+    }, [isFocused, user.user_avatar, user.isPro]);
 
+  const pullData=async ()=> {
+    await axiosPull._pullUser(user.user_id, "Profile");
+
+  }
   const pro = useCallback(() => {
     props.navigation.navigate("GetPro");
   });
@@ -220,6 +201,7 @@ const Profile = (props) => {
         <View style={{ width: "100%", backgroundColor: "#fff" }}>
           <ProfileHeader
             name={user.user_handle}
+            id={user.user_id}
             motto={user.user_motto}
             avatar={user.user_avatar}
             join={user.joined}

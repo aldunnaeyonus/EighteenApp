@@ -140,6 +140,7 @@ export const NEUTRAL_BUTTON_ACTION = 'neutralButtonAction';
 
 export const CONTENT_SPACING = 15;
 export const url = "https://snapeighteen.com";
+export const urldata = "https://snapeighteen.com/dataFiles";
 export const verification_number = "+1 682.259.3773";
 export const verification_email = 'support@snapeighteen.com';
 const SAFE_BOTTOM = 0;
@@ -273,5 +274,6 @@ export const constants = {
   camera_time_text_PRO,
   camera_time_seconds_PRO,
   camera_amount_PRO,
-  media_amount
+  media_amount,
+  urldata
 };

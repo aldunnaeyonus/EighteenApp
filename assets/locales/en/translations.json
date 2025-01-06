@@ -21,7 +21,7 @@
     "Whohasjoinedtheevent":"Who joined the event.",
     "Onlybeforetheeventstarttime":"Only before the event start time.",
     "CraftingMemories": "Crafting Memories",
-    "CreatingEvent": "Creating Event",
+    "CreatingEvent": "Creating Event.",
     "Creating": "Creating....",
     "Joined":"Joined",
     "Friends":"Friends & Me",
@@ -234,5 +234,9 @@
     "UploadNotification2":"This is to suppress the notification, 'Your request is being processed in the background. This may take up to 30 seconds. You'll be notified when it's complete.'",
     "SaveDevice":"Save to Device",
     "DownloadingEventFiles":"Downloading Event Files",
-    "Theventfiles":"The event files are being downloaded, please do not navigate away while download is in progress."
+    "Theventfiles":"The event files are being downloaded, please do not navigate away while download is in progress.",
+    "PleaseWait":"Please wait.",
+    "EdintEvent":"Processing event changes.",
+    "Uploading":"Media is being processed.",
+    "ProfilePic":"Process profile picture."
 }

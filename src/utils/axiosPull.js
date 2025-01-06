@@ -68,11 +68,12 @@ export const _pullCameraFeed = async (owner_ID, type) => {
   storage.set("user.Camera.Feed", JSON.stringify(myData));
 };
 
-export const _pullUser = async (id) => {
+export const _pullUser = async (id, user) => {
   const data = {
     owner: id,
   };
   const response = await postData("/users/index.php", data);
+  console.log(user)
   storage.set("user.Data", JSON.stringify(response[0]));
 };
 

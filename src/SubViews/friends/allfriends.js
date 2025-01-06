@@ -48,7 +48,7 @@ const AllFriendsListItem = (props) => {
                 <Image
                     indicator={Progress}
                     source={{
-                        uri: constants.url + "/avatars/" + props.item.item.friend_avatar,
+                        uri: props.item.item.friend_avatar,
                         priority: FastImage.priority.normal,
                     }}
                     resizeMode={FastImage.resizeMode.contain}

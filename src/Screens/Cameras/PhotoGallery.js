@@ -39,6 +39,7 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 const stickers = [];
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
 import Zoom from 'react-native-zoom-reanimated'
+import Loading from "../../SubViews/home/Loading";
 
 const PhotoGallery = (props) => {
   const [filteredDataSource] = useMMKVObject(
@@ -65,6 +66,8 @@ const PhotoGallery = (props) => {
     `user.Camera.Friend.Feed.${props.route.params.owner}`,
     storage
   );
+    const [uploading] = useMMKVObject("uploadData", storage);
+
   const preLoad=()=> {
     let presloadImages = []
     filteredDataSource.map((image) => {
@@ -100,7 +103,10 @@ const PhotoGallery = (props) => {
       props.route.params.user,
       "gallery",
       props.route.params.pin,
-      props.route.params.owner
+      props.route.params.owner,
+      i18n.t('Uploading') + ' ' + i18n.t('PleaseWait'),
+      pickedImages[0],
+      uploading
     );
     setAnimating(false);
     setPickedImages([]);
@@ -313,10 +319,10 @@ const PhotoGallery = (props) => {
           ),
       });
       var timeout = setInterval(async () => {
-        axiosPull._pullGalleryFeed(props.route.params.pin);
+        await axiosPull._pullGalleryFeed(props.route.params.pin);
       }, 15000);
       const fetchData = async () => {
-        axiosPull._pullGalleryFeed(props.route.params.pin);
+       await  axiosPull._pullGalleryFeed(props.route.params.pin);
         preLoad();
       };
       fetchData();
@@ -417,7 +423,7 @@ const PhotoGallery = (props) => {
                   }}
                   source={{
                     priority: FastImage.priority.normal,
-                    uri: constants.url + "/avatars/" + image.icon,
+                    uri: image.icon,
                   }}
                 />
                  {image.isPro == "1" &&
@@ -541,7 +547,7 @@ const PhotoGallery = (props) => {
                     spinnerColor={"rgba(0, 0, 0, 1.0)"}
                     source={{
                       priority: FastImage.priority.normal,
-                      uri: constants.url + "/avatars/" + image.icon,
+                      uri: image.icon,
                     }}
                   />
          {image.isPro == "1" &&
@@ -778,12 +784,17 @@ const PhotoGallery = (props) => {
           scrollEventThrottle={16}
           ListHeaderComponent={
             !modalVisibleStatus && (
-              <GalleryHeader
+              <><GalleryHeader
                 UUID={props.route.params.UUID}
                 image={props.route.params.illustration}
                 title={props.route.params.title}
-                endEventTime={endEventTime}
-              />
+                endEventTime={endEventTime} />
+                
+                <Loading
+                  message={uploading.message}
+                  flex={uploading.display}
+                  image={uploading.image} />
+                  </>
             )
           }
           ListEmptyComponent={
@@ -802,11 +813,10 @@ const PhotoGallery = (props) => {
           data={filteredDataSource}
           keyExtractor={(item) => item.image_id}
           renderItem={(item, index) => (
-            <ImageGallery
-              item={item}
-              index={index}
-              showModalFunction={showModalFunction}
-            />
+              <ImageGallery
+                item={item}
+                index={index}
+                showModalFunction={showModalFunction} />
           )}
         />
       </SafeAreaView>

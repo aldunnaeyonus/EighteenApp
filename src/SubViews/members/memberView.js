@@ -42,7 +42,7 @@ const MemberListItem = (props) => {
         <Image
           indicator={Progress}
           source={{
-            uri: constants.url + "/avatars/" + props.item.item.user_avatar,
+           ri: props.item.item.user_avatar,
             priority: FastImage.priority.normal,
           }}
           resizeMode={FastImage.resizeMode.contain}

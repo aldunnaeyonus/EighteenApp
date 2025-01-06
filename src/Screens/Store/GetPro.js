@@ -162,7 +162,7 @@ const GetPro = (props) => {
             eventName: "Snap Eighteen Pro"
           };
           await axiosPull.postData("/store/index.php", data);
-          axiosPull._pullUser(user.user_id);
+          await axiosPull._pullUser(user.user_id, "GetPro");
           setOwnedSubscriptions((prev) => [
             ...prev,
             currentPurchase?.productId,
