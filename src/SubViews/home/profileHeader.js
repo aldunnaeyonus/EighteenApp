@@ -17,6 +17,7 @@ const ProfileHeader = (props) => {
                 style.image,
                 { width: 70, height: 70, overflow: "hidden" },
               ]}
+              resizeMode={FastImage.resizeMode.contain}
               source={{
                 uri: props.avatar,
               }}

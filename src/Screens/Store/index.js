@@ -23,7 +23,6 @@ const Products = (props) => {
     finishTransaction,
     getProducts,
   } = useIAP();
-  const [sku, setsku] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const AnimatedFlatlist = Animated.FlatList;
   const { toast } = useToast();
@@ -50,6 +49,7 @@ const Products = (props) => {
       });
     }
   }, [props.unsubscribe]);
+
   const handleGetProducts = async () => {
     try {
       await getProducts({
@@ -65,7 +65,6 @@ const Products = (props) => {
   };
 
   const handleBuyProduct = async (sku) => {
-    setsku(sku);
     try {
       await requestPurchase({ sku });
     } catch (error) {

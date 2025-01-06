@@ -1,4 +1,4 @@
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, Dimensions } from "react-native";
 import * as i18n from "../../../i18n";
 import { constants } from "../../utils";
 import { storage } from "../../context/components/Storage";
@@ -23,6 +23,7 @@ import { isIos, isPlay } from "react-native-iap/src/internal";
 export { isIos, isPlay };
 import { axiosPull } from "../../utils/axiosPull";
 import { useToast } from "react-native-styled-toast";
+import { ActivityIndicator, MD2Colors } from "react-native-paper";
 
 const GetPro = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
@@ -38,6 +39,7 @@ const GetPro = (props) => {
   } = useIAP();
   const isFocused = useIsFocused();
   const AnimatedFlatlist = Animated.FlatList;
+  const [isLoading, setIsLoading] = useState(true);
 
   useFocusEffect(
     useCallback(() => {
@@ -112,6 +114,7 @@ const GetPro = (props) => {
   };
 
   const handleGetSubscriptions = async () => {
+    setIsLoading(false);
     try {
       await getSubscriptions({ skus: constants.productSkusSubscriptions });
     } catch (error) {
@@ -220,6 +223,17 @@ const GetPro = (props) => {
           )}
         />
       </SafeAreaView>
+      <ActivityIndicator
+                size={80}
+                style={{
+                  position: "absolute",
+                  top: Dimensions.get("window").height / 3.5,
+                  left: Dimensions.get("window").width / 2 - 40,
+                }}
+                animating={isLoading}
+                hidesWhenStopped={true}
+                color={MD2Colors.orange900}
+              />
     </SafeAreaProvider>
   );
 };

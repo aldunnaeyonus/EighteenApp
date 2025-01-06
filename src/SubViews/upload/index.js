@@ -3,6 +3,7 @@ import axios from "axios";
 import { axiosPull } from "../../utils/axiosPull";
 import * as i18n from "../../../i18n";
 import { updateStorage } from "../../context/components/Storage";
+import * as FileSystem from "expo-file-system";
 
 export const handleUpload = async (url, data, user, action, pin, name, message, umageURI, storageData) => {
   updateStorage(storageData, "display", 'flex', "uploadData");
@@ -41,6 +42,7 @@ export const handleUpload = async (url, data, user, action, pin, name, message, 
           case "gallery":
             await axiosPull._pullGalleryFeed(pin);
             await axiosPull._pullFriendCameraFeed(name, "user", user);
+            await axiosPull._pullCameraFeed(user, "owner");
             await BackgroundService.stop();
             break;
           case "save":
@@ -50,6 +52,7 @@ export const handleUpload = async (url, data, user, action, pin, name, message, 
           case "camera":
             await axiosPull._pullGalleryFeed(pin);
             await axiosPull._pullFriendCameraFeed(name, "user", user);
+            await axiosPull._pullCameraFeed(user, "owner");
             await BackgroundService.stop();
             break;
           case "avatar":
@@ -63,12 +66,14 @@ export const handleUpload = async (url, data, user, action, pin, name, message, 
         updateStorage(storageData, "message", '', "uploadData");
         updateStorage(storageData, "image", '', "uploadData");
         updateStorage(storageData, "display", 'none', "uploadData");
+        FileSystem.deleteAsync(umageURI);
       })
       .catch(async (error) => {
+        await BackgroundService.stop();
         updateStorage(storageData, "message", '', "uploadData");
         updateStorage(storageData, "image", '', "uploadData");
         updateStorage(storageData, "display", 'none', "uploadData");
-        await BackgroundService.stop();
+        FileSystem.deleteAsync(umageURI);
       });
   }, options);
 };

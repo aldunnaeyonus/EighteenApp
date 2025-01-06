@@ -91,7 +91,7 @@ const ListItem = (props) => {
     <View
       style={{
         position: "absolute",
-        height: 60,
+        height: 62,
         backgroundColor: "rgba(0, 0, 0, 0.60)",
         width: ScreenWidth,
         bottom: 0,
@@ -285,8 +285,6 @@ const ListItem = (props) => {
               height:40,
               marginRight: 5,
               marginTop: 0,
-              borderBottomRightRadius:5,
-              borderBottomLeftRadius:5,
               backgroundColor:"rgba(0, 0, 0, 0.60)"
             }}
             type="material-community"
@@ -313,8 +311,6 @@ const ListItem = (props) => {
               height:40,
               marginRight: 5,
               marginTop: 0,
-              borderBottomRightRadius:5,
-              borderBottomLeftRadius:5,
               backgroundColor:"rgba(0, 0, 0, 0.60)"
             }}
             type="ionicon"

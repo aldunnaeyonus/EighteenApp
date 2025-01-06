@@ -28,7 +28,7 @@ return (
       style={{
         width: 40,
         height: 40,
-        borderRadius:20
+        borderRadius:6
       }}
       source={{
         uri: props.image == "" ? require('../../../assets/avatars/default.png') : props.image
