@@ -231,6 +231,16 @@
     "Your event has been successfully saved.": "Uw evenement is met succes opgeslagen.",
     "Your profile picture has been successfully updated.": "Uw profielfoto is met succes bijgewerkt.",
     "UploadNotification": "Uploadmelding tonen",
-    "UploadNotification2": "Dit is om de melding 'Uw verzoek wordt verwerkt op de achtergrond. Dit kan enkele seconden duren. U wordt op de hoogte gebracht wanneer het voltooid is.' te onderdrukken." 
-
+    "UploadNotification2": "Dit is om de melding 'Uw verzoek wordt verwerkt op de achtergrond. Dit kan enkele seconden duren. U wordt op de hoogte gebracht wanneer het voltooid is.' te onderdrukken.",
+    "SaveDevice": "Opslaan op apparaat",
+    "DownloadingEventFiles": "Downloaden van evenementbestanden",
+    "Theventfiles": "De evenementbestanden worden gedownload. Verlaat deze pagina niet tijdens het downloaden.",
+    "PleaseWait": "Even geduld alstublieft.",
+    "EdintEvent": "Verwerken van evenementwijzigingen.",
+    "Uploading": "Media wordt verwerkt.",
+    "ProfilePic": "Profielfoto wordt verwerkt.",
+    "EvnetStart": "Het Snap Eighteen-evenement begint.",
+    "EvnetEnd": "Het Snap Eighteen-evenement eindigt.",
+    "Resendcodein": "Verificatiecode opnieuw verzenden in ",
+    "Seconds": " seconden"
 }

@@ -122,7 +122,6 @@
     "A gallery": "Et galleri med minner, men dette minnegalleriet er tomt.",
     "Gallery": "Galleri",
     "Make a Selection": "Gjør et valg",
-"Make a Selection": "Gjør et valg",
     "Members are Capturing Moments": "For øyeblikket er det ingen medlemmer som fanger øyeblikk",
     "Remove": "Fjern",
     "Report Friend": "Rapporter venn",
@@ -232,6 +231,16 @@
     "Your event has been successfully saved.": "Arrangementet ditt er lagret.",
     "Your profile picture has been successfully updated.": "Profilbildet ditt er oppdatert.",
     "UploadNotification": "Vis opplastingsvarsel",
-    "UploadNotification2": "Dette er for å undertrykke meldingen, 'Forespørselen din behandles i bakgrunnen. Dette kan ta opptil 30 sekunder. Du vil bli varslet når den er fullført.'"
-
+    "UploadNotification2": "Dette er for å undertrykke meldingen, 'Forespørselen din behandles i bakgrunnen. Dette kan ta opptil 30 sekunder. Du vil bli varslet når den er fullført.'",
+    "SaveDevice": "Lagre til enhet",
+    "DownloadingEventFiles": "Laster ned hendelsesfiler",
+    "Theventfiles": "Hendelsesfilene lastes ned. Ikke forlat denne siden under nedlastingen.",
+    "PleaseWait": "Vennligst vent.",
+    "EdintEvent": "Behandler hendelsesendringer.",
+    "Uploading": "Media behandles.",
+    "ProfilePic": "Behandler profilbilde.",
+    "EvnetStart": "Snap Eighteen-hendelsen starter.",
+    "EvnetEnd": "Snap Eighteen-hendelsen avsluttes.",
+    "Resendcodein": "Send verifiseringskode på nytt om ",
+    "Seconds": " sekunder"
 }

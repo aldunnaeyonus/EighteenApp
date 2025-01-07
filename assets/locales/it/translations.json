@@ -232,6 +232,17 @@
     "Your event has been successfully saved.": "Il tuo evento è stato salvato con successo.",
     "Your profile picture has been successfully updated.": "La tua immagine del profilo è stata aggiornata con successo.",
     "UploadNotification": "Mostra notifica di caricamento",
-    "UploadNotification2": "Questo serve per sopprimere la notifica, 'La tua richiesta è in elaborazione in background. Potrebbe richiedere fino a 30 secondi. Verrai notificato al completamento.'" 
+    "UploadNotification2": "Questo serve per sopprimere la notifica, 'La tua richiesta è in elaborazione in background. Potrebbe richiedere fino a 30 secondi. Verrai notificato al completamento.'",
+    "SaveDevice": "Salva sul dispositivo",
+    "DownloadingEventFiles": "Download dei file evento",
+    "Theventfiles": "I file dell'evento stanno venendo scaricati, si prega di non abbandonare questa pagina durante il download.",
+    "PleaseWait": "Attendere prego.",
+    "EdintEvent": "Elaborazione delle modifiche all'evento.",
+    "Uploading": "I media stanno venendo elaborati.",
+    "ProfilePic": "Elaborazione della foto del profilo.",
+    "EvnetStart": "L'evento Snap Eighteen sta iniziando.",
+    "EvnetEnd": "L'evento Snap Eighteen sta terminando.",
+    "Resendcodein": "Reinvia codice di verifica in ",
+    "Seconds": " secondi"
 
 }

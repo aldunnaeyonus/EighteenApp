@@ -230,5 +230,16 @@
     "Your event has been successfully saved.": "Tapahtumasi on tallennettu onnistuneesti.",
     "Your profile picture has been successfully updated.": "Profiilikuvasi on päivitetty onnistuneesti.",
     "UploadNotification": "Näytä latausilmoitus",
-    "UploadNotification2": "Tämä on tukahduttamaan ilmoitus, 'Päivitys käsitellään taustalla. Tämä voi kestää jopa 30 sekuntia. Saat ilmoituksen, kun se on valmis.'" 
+    "UploadNotification2": "Tämä on tukahduttamaan ilmoitus, 'Päivitys käsitellään taustalla. Tämä voi kestää jopa 30 sekuntia. Saat ilmoituksen, kun se on valmis.'",
+    "SaveDevice": "Tallenna laitteelle",
+    "DownloadingEventFiles": "Ladataan tapahtumatiedostoja",
+    "Theventfiles": "Tapahtumatiedostoja ladataan. Älä siirry pois sivulta latauksen aikana.",
+    "PleaseWait": "Odota hetki.",
+    "EdintEvent": "Käsitellään tapahtuman muutoksia.",
+    "Uploading": "Mediaa käsitellään.",
+    "ProfilePic": "Käsitellään profiilikuvaa.",
+    "EvnetStart": "Snap Eighteen -tapahtuma alkaa.",
+    "EvnetEnd": "Snap Eighteen -tapahtuma päättyy.",
+    "Resendcodein": "Lähetä varmennuskoodi uudelleen ",
+    "Seconds": " sekunnin kuluttua"
         }

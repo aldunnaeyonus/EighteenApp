@@ -231,5 +231,16 @@
     "Your event has been successfully saved.": "イベントが正常に保存されました。",
     "Your profile picture has been successfully updated.": "プロフィール画像が正常に更新されました。",
     "UploadNotification": "アップロード通知を表示する",
-    "UploadNotification2": "これは、「ご依頼はバックグラウンドで処理中です。完了まで最大30秒かかる場合があります。完了次第お知らせいたします。」という通知を非表示にするためのものです。"
+    "UploadNotification2": "これは、「ご依頼はバックグラウンドで処理中です。完了まで最大30秒かかる場合があります。完了次第お知らせいたします。」という通知を非表示にするためのものです。",
+    "SaveDevice": "デバイスに保存",
+    "DownloadingEventFiles": "イベントファイルのダウンロード",
+    "Theventfiles": "イベントファイルがダウンロード中です。ダウンロード中はページを移動しないでください。",
+    "PleaseWait": "しばらくお待ちください。",
+    "EdintEvent": "イベントの変更を処理しています。",
+    "Uploading": "メディアを処理中です。",
+    "ProfilePic": "プロフィール写真を処理しています。",
+    "EvnetStart": "Snap Eighteen イベントが開始します。",
+    "EvnetEnd": "Snap Eighteen イベントが終了します。",
+    "Resendcodein": "確認コードを再送信します ",
+    "Seconds": " 秒後"
     }

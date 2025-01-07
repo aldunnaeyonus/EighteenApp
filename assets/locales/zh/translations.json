@@ -231,6 +231,16 @@
     "Your event has been successfully saved.": "您的活动已成功保存。",
     "Your profile picture has been successfully updated.": "您的个人资料图片已成功更新。",
     "UploadNotification": "显示上传通知",
-    "UploadNotification2": "这是为了取消“您的请求正在后台处理中。这可能需要最多30秒。完成后将通知您。”的通知。"
-
+    "UploadNotification2": "这是为了取消“您的请求正在后台处理中。这可能需要最多30秒。完成后将通知您。”的通知。",
+    "SaveDevice": "保存到设备",
+    "DownloadingEventFiles": "正在下载事件文件",
+    "Theventfiles": "事件文件正在下载中，请勿在下载过程中离开此页面。",
+    "PleaseWait": "请稍候。",
+    "EdintEvent": "正在处理事件更改。",
+    "Uploading": "正在处理媒体。",
+    "ProfilePic": "正在处理个人资料图片。",
+    "EvnetStart": "Snap Eighteen 活动即将开始。",
+    "EvnetEnd": "Snap Eighteen 活动即将结束。",
+    "Resendcodein": "将在  秒后重新发送验证码",
+    "Seconds": " 秒"
 }

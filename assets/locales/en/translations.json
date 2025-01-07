@@ -238,9 +238,9 @@
     "PleaseWait":"Please wait.",
     "EdintEvent":"Processing event changes.",
     "Uploading":"Media is being processed.",
-    "ProfilePic":"Process profile picture.",
-    "EvnetStart":"The event has began.",
-    "EvnetEnd":"The event has ended.",
-    "Resendcodein":"Resend code in ",
+    "ProfilePic":"Processing profile picture.",
+    "EvnetStart":"The Snap Eighteen event is begning.",
+    "EvnetEnd":"The Snap Eighteen event is ending.",
+    "Resendcodein":"Resend Verification Code in ",
     "Seconds":" seconds"
 }

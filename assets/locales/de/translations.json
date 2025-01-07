@@ -232,6 +232,16 @@
     "Your event has been successfully saved.": "Ihre Veranstaltung wurde erfolgreich gespeichert.",
     "Your profile picture has been successfully updated.": "Ihr Profilbild wurde erfolgreich aktualisiert.",
     "UploadNotification": "Upload-Benachrichtigung anzeigen",
-    "UploadNotification2": "Dies dient zur Unterdrückung der Benachrichtigung „Ihre Anfrage wird im Hintergrund verarbeitet. Dies kann bis zu 30 Sekunden dauern. Sie werden benachrichtigt, wenn es abgeschlossen ist.“" 
-
+    "UploadNotification2": "Dies dient zur Unterdrückung der Benachrichtigung „Ihre Anfrage wird im Hintergrund verarbeitet. Dies kann bis zu 30 Sekunden dauern. Sie werden benachrichtigt, wenn es abgeschlossen ist.",
+    "SaveDevice": "Auf Gerät speichern",
+    "DownloadingEventFiles": "Lade Event-Dateien herunter",
+    "Theventfiles": "Die Event-Dateien werden heruntergeladen. Bitte verlassen Sie diese Seite nicht während des Downloads.",
+    "PleaseWait": "Bitte warten.",
+    "EdintEvent": "Verarbeite Event-Änderungen.",
+    "Uploading": "Medien werden verarbeitet.",
+    "ProfilePic": "Verarbeite Profilbild.",
+    "EvnetStart": "Das Snap Eighteen-Event beginnt.",
+    "EvnetEnd": "Das Snap Eighteen-Event endet.",
+    "Resendcodein": "Bestätigungscode erneut senden in ",
+    "Seconds": " Sekunden"
 }

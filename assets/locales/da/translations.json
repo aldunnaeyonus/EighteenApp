@@ -231,5 +231,16 @@
     "Your event has been successfully saved.": "Din begivenhed er blevet gemt.",
     "Your profile picture has been successfully updated.": "Dit profilbillede er blevet opdateret.",
     "UploadNotification": "Vis Upload-meddelelse",
-    "UploadNotification2": "Dette er for at undertrykke meddelelsen, 'Din anmodning behandles i baggrunden. Dette kan tage op til 30 sekunder. Du vil blive underrettet, når det er færdigt.'" 
+    "UploadNotification2": "Dette er for at undertrykke meddelelsen, 'Din anmodning behandles i baggrunden. Dette kan tage op til 30 sekunder. Du vil blive underrettet, når det er færdigt.'",
+    "SaveDevice": "Gem på enhed",
+    "DownloadingEventFiles": "Downloaderings-eventfiler",
+    "Theventfiles": "Eventfilerne downloades. Afbryd ikke processen.",
+    "PleaseWait": "Vent venligst.",
+    "EdintEvent": "Behandler ændringer af begivenhed.",
+    "Uploading": "Medierne behandles.",
+    "ProfilePic": "Behandler profilbillede.",
+    "EvnetStart": "Snap Eighteen-begivenheden starter.",
+    "EvnetEnd": "Snap Eighteen-begivenheden slutter.",
+    "Resendcodein": "Gensend bekræftelseskode om ",
+    "Seconds": " sekunder"
     }

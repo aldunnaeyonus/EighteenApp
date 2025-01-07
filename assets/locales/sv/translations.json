@@ -231,5 +231,16 @@
     "Your event has been successfully saved.": "Din händelse har sparats.",
     "Your profile picture has been successfully updated.": "Din profilbild har uppdaterats.",
     "UploadNotification": "Visa uppladdningsmeddelande",
-    "UploadNotification2": "Detta är för att undertrycka meddelandet 'Din förfrågan bearbetas i bakgrunden. Detta kan ta upp till 30 sekunder. Du kommer att meddelas när det är klart.'"
+    "UploadNotification2": "Detta är för att undertrycka meddelandet 'Din förfrågan bearbetas i bakgrunden. Detta kan ta upp till 30 sekunder. Du kommer att meddelas när det är klart.'",
+    "SaveDevice": "Spara till enhet",
+    "DownloadingEventFiles": "Hämtar händelsefiler",
+    "Theventfiles": "Händelsefilerna hämtas. Lämna inte sidan under hämtningen.",
+    "PleaseWait": "Vänta ett ögonblick.",
+    "EdintEvent": "Bearbetar händelseändringar.",
+    "Uploading": "Media bearbetas.",
+    "ProfilePic": "Bearbetar profilbild.",
+    "EvnetStart": "Snap Eighteen-evenemanget börjar.",
+    "EvnetEnd": "Snap Eighteen-evenemanget avslutas.",
+    "Resendcodein": "Skicka verifieringskod igen om ",
+    "Seconds": " sekunder"
     }

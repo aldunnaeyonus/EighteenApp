@@ -231,6 +231,16 @@
     "Your event has been successfully saved.": "Twoje wydarzenie zostało pomyślnie zapisane.",
     "Your profile picture has been successfully updated.": "Twoje zdjęcie profilowe zostało pomyślnie zaktualizowane.",
     "UploadNotification": "Pokaż powiadomienie o przesyłaniu",
-    "UploadNotification2": "Służy to stłumieniu powiadomienia „Twoje żądanie jest przetwarzane w tle. Może to potrwać do 30 sekund. Zostaniesz powiadomiony o jego zakończeniu.”"
-
+    "UploadNotification2": "Służy to stłumieniu powiadomienia „Twoje żądanie jest przetwarzane w tle. Może to potrwać do 30 sekund. Zostaniesz powiadomiony o jego zakończeniu.”",
+    "SaveDevice": "Zapisz na urządzeniu",
+    "DownloadingEventFiles": "Pobieranie plików zdarzeń",
+    "Theventfiles": "Pobierane są pliki zdarzeń. Nie opuszczaj tej strony podczas pobierania.",
+    "PleaseWait": "Proszę czekać.",
+    "EdintEvent": "Przetwarzanie zmian zdarzeń.",
+    "Uploading": "Media są przetwarzane.",
+    "ProfilePic": "Przetwarzanie zdjęcia profilowego.",
+    "EvnetStart": "Rozpoczyna się wydarzenie Snap Eighteen.",
+    "EvnetEnd": "Wydarzenie Snap Eighteen kończy się.",
+    "Resendcodein": "Wyślij ponownie kod weryfikacyjny za ",
+    "Seconds": " sekundy"
     }
