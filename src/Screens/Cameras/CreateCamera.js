@@ -39,6 +39,7 @@ import PhotoEditor from "@baronha/react-native-photo-editor";
 const stickers = [];
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
+import NotifService from "../../../NotifService";
 
 const CreateCamera = (props) => {
   var newDate = new Date();
@@ -70,6 +71,7 @@ const CreateCamera = (props) => {
   const [verified, setVerified] = useState(true);
   const [errorColor] = useState(verified ? "#fafbfc" : "#ffa3a6");
   const [uploading] = useMMKVObject("uploadData", storage);
+  const notification = new NotifService();
 
   const MODE_VALUES = Platform.select({
     ios: Object.values(IOS_MODE),
@@ -316,7 +318,20 @@ const CreateCamera = (props) => {
     ])
   );
 
+  const makeid = (length) => {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
+    }
+    return result;
+}
+
   const createEvent = async () => {
+    const pin = "SNAP-"+makeid(4)+'-'+makeid(5)+'-'+moment().unix()+'-'+makeid(3);
     var formData = new FormData();
     var fileName = "";
     formData.append("owner", user.user_id);
@@ -338,6 +353,7 @@ const CreateCamera = (props) => {
     );
     formData.append("shots", isPro ? constants.media_amount[media] : "18");
     formData.append("start", start);
+    formData.append("pin", pin);
     formData.append("ai_description", isPro ? dname : "");
     formData.append("end", end);
     formData.append("photoGallery", switch2 ? "1" : "0");
@@ -345,7 +361,7 @@ const CreateCamera = (props) => {
     formData.append("autoJoin", switch4 ? "1" : "0");
     formData.append("device", Platform.OS);
     formData.append("camera", "0");
-    var fileName = "SNAP18-cover-" + user.user_id + "-" + Date.now() + ".jpg";
+    fileName = "SNAP18-cover-" + user.user_id + "-" + Date.now() + image.split("/").pop();
     formData.append("aiIMAGE", "");
     formData.append("file", {
       name: fileName,
@@ -369,6 +385,11 @@ const CreateCamera = (props) => {
       image,
       uploading
     );
+    if (parseInt(start) >= moment().unix()){
+    notification.scheduleNotif(String(name), i18n.t('EvnetStart'), parseInt(start), pin+"-start", constants.urldata+"/"+user.user_id+"/events/"+pin+"/"+fileName);
+    }
+    notification.scheduleNotif(String(name), i18n.t('EvnetEnd'), parseInt(end), pin+"-end", constants.urldata+"/"+user.user_id+"/events/"+pin+"/"+fileName);
+
     setTimeout(() => {
       setIsAI(false);
       props.navigation.goBack();

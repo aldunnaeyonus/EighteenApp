@@ -49,7 +49,10 @@ const Home = (props) => {
   const triggerProfileFunction = async () => {
     props.navigation.navigate("Profile");
   };
-  new NotifService();
+
+  useEffect(() => {
+    new NotifService();
+  }, []);
 
   const _gotoCamera = (
     pin,

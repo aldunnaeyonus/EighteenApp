@@ -1,6 +1,6 @@
 import { View, Text, TextInput, Platform } from "react-native";
 import { TouchableOpacity } from "react-native";
-import { storage, updateStorage } from "../../context/components/Storage";
+import { storage } from "../../context/components/Storage";
 import React, { useState, useCallback } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -18,12 +18,25 @@ const Verification = (props) => {
   const [handleStatus, setHandleStatus] = useState("");
   const { toast } = useToast();
   const [code, setCode] = useState("");
-  const [isEnabled, setisEnabled] = useState(false);
+  const [resendTimer, setResendTimer] = useState(90);
+  const [canResend, setCanResend] = useState(false);
+
+  useEffect(() => {
+    let timerId;
+    if (resendTimer > 0) {
+      timerId = setInterval(() => {
+        setResendTimer(resendTimer - 1);
+      }, 1000);
+    } else {
+      setCanResend(true);
+    }
+
+    return () => clearInterval(timerId);
+  }, [resendTimer]);
 
   const changeHandler = useCallback(
     (value) => {
       setCode(value);
-      setisEnabled(true);
       value.length == 8 ? checkHandle(value) : null;
     },
     [code]
@@ -74,7 +87,7 @@ const Verification = (props) => {
           </TouchableOpacity>
         ),
       });
-    }, [code, props, handleStatus, isEnabled])
+    }, [code, props, handleStatus, canResend])
   );
 
   const [isLoading, setIsLoading] = useState(false);
@@ -106,12 +119,10 @@ const Verification = (props) => {
         await AsyncStorage.setItem("logedIn", "1");
         await AsyncStorage.setItem("user_id", response[0].user_id);
         setTimeout(() => {
-          setisEnabled(true);
           setIsLoading(false);
           props.navigation.navigate("Home");
         }, 1000);
       } else {
-        setisEnabled(true);
         setIsLoading(false);
         setHandleStatus(i18n.t("The verification code"));
       }
@@ -120,11 +131,12 @@ const Verification = (props) => {
   );
 
   const resendCode = useCallback(async () => {
+    setCanResend(false);
+    setResendTimer(90);
     const data = {
       email: props.route.params.email,
       device: Platform.OS,
     };
-    setisEnabled(true);
     await axiosPull.postData("/register/checkUsername.php", data);
     alert(
       "",
@@ -242,12 +254,12 @@ const Verification = (props) => {
           </Text>
 
           <TouchableOpacity
-            disabled={isEnabled}
             style={{
               width: "50%",
               height: 40,
               margin: 20,
             }}
+            disabled={!canResend}
             onPress={() => resendCode()}
           >
             <View
@@ -265,7 +277,7 @@ const Verification = (props) => {
                 color="#3D4849"
               />
 
-              <Text>{i18n.t("Resend Code")}</Text>
+              <Text>{canResend ? i18n.t("Resend Code") : i18n.t("Resendcodein") + resendTimer + i18n.t("Seconds")}</Text>
             </View>
           </TouchableOpacity>
         </View>

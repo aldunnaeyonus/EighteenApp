@@ -238,5 +238,9 @@
     "PleaseWait":"Please wait.",
     "EdintEvent":"Processing event changes.",
     "Uploading":"Media is being processed.",
-    "ProfilePic":"Process profile picture."
+    "ProfilePic":"Process profile picture.",
+    "EvnetStart":"The event has began.",
+    "EvnetEnd":"The event has ended.",
+    "Resendcodein":"Resend code in ",
+    "Seconds":" seconds"
 }

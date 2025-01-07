@@ -362,7 +362,7 @@ const EditCamera = (props) => {
     formData.append("autoJoin", switch4 ? "1" : "0");
     formData.append("device", Platform.OS);
     formData.append("camera", "0");
-    var fileName = "SNAP18-cover-" + user.user_id + "-" + Date.now() + ".jpg";
+    var fileName = "SNAP18-cover-" + user.user_id + "-" + Date.now() + image.split("/").pop();
     formData.append("isAI", "0");
     formData.append("aiIMAGE", "");
     if (props.route.params.illustration != image) {
@@ -380,6 +380,17 @@ const EditCamera = (props) => {
         <ActivityIndicator color="black" size={"small"} animating={true} />
       ),
     });
+if (start != props.route.params.start){
+  notification.cancelNotif(pin+"-start")
+  if (parseInt(start) >= moment().unix()){
+    notification.scheduleNotif(String(name), i18n.t('EvnetStart'), parseInt(start), pin+"-start", constants.urldata+"/"+user.user_id+"/events/"+pin+"/"+fileName);
+  }
+}
+if (end != props.route.params.end){
+  notification.cancelNotif(pin+"-end")
+  notification.scheduleNotif(String(name), i18n.t('EvnetEnd'), parseInt(end), pin+"-end", constants.urldata+"/"+user.user_id+"/events/"+pin+"/"+fileName);
+}
+
     handleUpload(
       constants.url + "/camera/save.php",
       formData,

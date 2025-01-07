@@ -114,12 +114,12 @@ const GetPro = (props) => {
   };
 
   const handleGetSubscriptions = async () => {
-    setIsLoading(false);
     try {
       await getSubscriptions({ skus: constants.productSkusSubscriptions });
     } catch (error) {
       errorLog({ message: "handleGetSubscriptions", error });
     }
+    setIsLoading(false);
   };
 
   const handleBuySubscription = async (productId, offerToken) => {
@@ -227,11 +227,10 @@ const GetPro = (props) => {
                 size={80}
                 style={{
                   position: "absolute",
-                  top: Dimensions.get("window").height / 3.5,
-                  left: Dimensions.get("window").width / 2 - 40,
+                  top: Dimensions.get("window").height / 2.0,
+                  left: Dimensions.get("window").width / 2 - 50,
                 }}
                 animating={isLoading}
-                hidesWhenStopped={true}
                 color={MD2Colors.orange900}
               />
     </SafeAreaProvider>
