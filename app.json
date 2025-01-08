@@ -53,6 +53,7 @@
       "bundleIdentifier": "com.dunn-carabali.eighteen"
     },
     "android": {
+      "usesCleartextTraffic": true,
       "newArchEnabled": true,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",

@@ -63,7 +63,7 @@
     "Loading": "Chargement",
     "Continue": "Continuer",
     "The verification code": "Le code de vérification que vous avez saisi est invalide. Veuillez vérifier et réessayer.",
-    "A new verification code": "Nous avons envoyé un code de vérification à l'adresse e-mail indiquée ci-dessous. Vérifiez votre e-mail et saisissez le code pour continuer.",
+    "Anewverificationcode": "Nous avons envoyé un code de vérification à l'adresse e-mail indiquée ci-dessous. Vérifiez votre e-mail et saisissez le code pour continuer.",
     "Verify": "Vérifier",
     "Resend Code": "Renvoyer le code",
     "In-app purchases": "Achats intégrés : Tous les consommables nécessitent un paiement via le compte de votre boutique d'applications. Chaque achat est une transaction unique.",

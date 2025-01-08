@@ -1,7 +1,7 @@
 import { View, Text, TextInput, Platform } from "react-native";
 import { TouchableOpacity } from "react-native";
 import { storage } from "../../context/components/Storage";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import styles from "../../styles/index.style";
@@ -66,6 +66,7 @@ const Verification = (props) => {
       }
       props.navigation.setOptions({
         headerLeft: () => (
+          Platform.OS == "ios" ? 
           <TouchableOpacity
             onPress={() => {
               props.navigation.goBack();
@@ -85,6 +86,7 @@ const Verification = (props) => {
               textStyle={{ color: "white" }}
             />
           </TouchableOpacity>
+          : <></>
         ),
       });
     }, [code, props, handleStatus, canResend])
@@ -138,10 +140,7 @@ const Verification = (props) => {
       device: Platform.OS,
     };
     await axiosPull.postData("/register/checkUsername.php", data);
-    alert(
-      "",
-      i18n.t("A new verification code") + " " + props.route.params.email
-    );
+    alert("", i18n.t("Anewverificationcode") + " " + props.route.params.email);
   }, [props.route.params.email]);
 
   return (
@@ -244,7 +243,7 @@ const Verification = (props) => {
             </Text>
           </TouchableOpacity>
           <Text style={styles.titleText2}>
-            {i18n.t("A new verification code")}
+            {i18n.t("Anewverificationcode")}
             {"\n"}{" "}
             <Text style={{ fontWeight: "bold" }}>
               {props.route.params.email == null
@@ -255,7 +254,7 @@ const Verification = (props) => {
 
           <TouchableOpacity
             style={{
-              width: "50%",
+              width: "90%",
               height: 40,
               margin: 20,
             }}
@@ -277,7 +276,11 @@ const Verification = (props) => {
                 color="#3D4849"
               />
 
-              <Text>{canResend ? i18n.t("Resend Code") : i18n.t("Resendcodein") + resendTimer + i18n.t("Seconds")}</Text>
+              <Text>
+                {canResend
+                  ? i18n.t("Resend Code")
+                  : i18n.t("Resendcodein") + resendTimer + i18n.t("Seconds")}
+              </Text>
             </View>
           </TouchableOpacity>
         </View>

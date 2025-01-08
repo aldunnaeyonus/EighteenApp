@@ -35,7 +35,6 @@ const Profile = (props) => {
     constants.url + "/friendQRCode.php?owner=" + user.user_id
   );
   const isFocused = useIsFocused();
-
   const logout = useCallback(async () => {
     FastImage.clearMemoryCache();
     FastImage.clearDiskCache();

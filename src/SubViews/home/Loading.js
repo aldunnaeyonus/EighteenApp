@@ -31,7 +31,7 @@ return (
         borderRadius:6
       }}
       source={{
-        uri: props.image == "" ? require('../../../assets/avatars/default.png') : props.image
+        uri: props.image
       }}
     />
      <ActivityIndicator

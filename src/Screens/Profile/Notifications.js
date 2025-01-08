@@ -1,4 +1,4 @@
-import { ScrollView, View, Text } from "react-native";
+import { ScrollView, View, Text, TouchableOpacity } from "react-native";
 import { ListItem, Switch } from "@rneui/themed";
 import * as i18n from "../../../i18n";
 import styles from "../../styles/SliderEntry.style";
@@ -9,6 +9,7 @@ import { storage } from "../../context/components/Storage";
 import { useMMKVObject } from "react-native-mmkv";
 import { axiosPull } from "../../utils/axiosPull";
 import { useIsFocused } from "@react-navigation/native";
+import { ActivityIndicator } from "react-native-paper";
 
 const Notifications = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
@@ -30,6 +31,11 @@ const Notifications = (props) => {
   };
 
   const _saveUserData = async () => {
+        props.navigation.setOptions({
+          headerRight: () => (
+            <ActivityIndicator color="black" size={"small"} animating={true} />
+          ),
+        });
     const data = {
       owner: user.user_id,
       email: switch2 ? "1" : "0",
@@ -44,6 +50,11 @@ const Notifications = (props) => {
   useEffect(() => {
     props.navigation.setOptions({
       headerRight: () => (
+        <TouchableOpacity
+        onPress={() => {
+          _saveUserData();
+        }}
+      >
         <Text
           style={{
             color: "#3D4849",
@@ -56,7 +67,7 @@ const Notifications = (props) => {
           }}
         >
           {i18n.t("Save")}
-        </Text>
+        </Text></TouchableOpacity>
       ),
     });
   }, [isFocused, switch2, switch3, switch4]);

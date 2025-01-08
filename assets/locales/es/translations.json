@@ -63,7 +63,7 @@
     "Loading":"Cargando",
     "Continue":"Continuar",
     "The verification code":"El código de verificación que ingresaste no es válido. Por favor, revisa e inténtalo de nuevo.",
-    "A new verification code":"Enviamos un código de verificación al correo electrónico indicado a continuación. Revisa tu correo electrónico e ingresa el código para continuar.",
+    "Anewverificationcode":"Enviamos un código de verificación al correo electrónico indicado a continuación. Revisa tu correo electrónico e ingresa el código para continuar.",
     "Verify":"Verificar",
     "Resend Code":"Reenviar Código de Verificación",
     "In-app purchases":"Compras en la aplicación: Todos los consumibles requieren pago a través de la cuenta de tu tienda de aplicaciones. Cada compra es una transacción única.",

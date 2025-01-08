@@ -63,7 +63,7 @@
     "Loading": "Ladataan",
     "Continue": "Jatka",
     "The verification code": "Syöttämäsi vahvistuskoodi on virheellinen. Tarkista ja yritä uudelleen.",
-    "A new verification code": "Lähetimme vahvistuskoodin alla olevaan sähköpostiosoitteeseen. Tarkista sähköpostisi ja syötä koodi jatkaaksesi.",
+    "Anewverificationcode": "Lähetimme vahvistuskoodin alla olevaan sähköpostiosoitteeseen. Tarkista sähköpostisi ja syötä koodi jatkaaksesi.",
     "Verify": "Vahvista",
     "Resend Code": "Lähetä koodi uudelleen",
     "In-app purchases": "Sovellusostot: Kaikki kulutustavarat edellyttävät maksua sovelluskaupan kautta. Jokainen osto on kertaluonteinen.",

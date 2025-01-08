@@ -1,0 +1,58 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools">
+
+  <uses-feature android:name="android.hardware.camera" android:required="false" />
+
+  <uses-permission android:name="android.permission.CAMERA"/>
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+  <uses-permission android:name="android.permission.INTERNET"/>
+  <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+  <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+  <uses-permission android:name="android.permission.VIBRATE"/>
+  <uses-permission android:name="android.permission.WAKE_LOCK"/>
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+  <queries>
+    <intent>
+      <action android:name="android.intent.action.VIEW"/>
+      <category android:name="android.intent.category.BROWSABLE"/>
+      <data android:scheme="https"/>
+    </intent>
+  </queries>
+  <application android:name=".MainApplication" android:usesCleartextTraffic="true" android:label="@string/app_name" android:icon="@mipmap/ic_launcher" tools:replace="android:allowBackup" android:roundIcon="@mipmap/ic_launcher_round" android:allowBackup="true" android:theme="@style/AppTheme">
+    <meta-data android:name="expo.modules.updates.ENABLED" android:value="false"/>
+    <meta-data android:name="expo.modules.updates.EXPO_UPDATES_CHECK_ON_LAUNCH" android:value="ALWAYS"/>
+    <meta-data android:name="expo.modules.updates.EXPO_UPDATES_LAUNCH_WAIT_MS" android:value="0"/>
+    <meta-data android:name="com.dieam.reactnativepushnotification.notification_foreground" android:value="false"/>
+    <!-- Change the resource name to your App's accent color - or any other color you want -->
+    <meta-data android:name="com.dieam.reactnativepushnotification.notification_color" android:resource="@color/white"/>
+    <!-- or @android:color/{name} to use a standard color -->
+    <service android:name="com.asterinet.react.bgactions.RNBackgroundActionsTask" />
+
+    <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationActions" />
+    <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationPublisher" />
+
+    <service android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerService" android:exported="true">
+      <intent-filter>
+        <action android:name="com.google.firebase.MESSAGING_EVENT" />
+      </intent-filter>
+    </service>
+    <activity android:name=".MainActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|uiMode|locale|layoutDirection" android:launchMode="singleTask" android:windowSoftInputMode="adjustResize" android:theme="@style/Theme.App.SplashScreen" android:exported="true" android:screenOrientation="portrait">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+        <data android:scheme="snapseighteenapp"/>
+        <data android:scheme="com.dunncarabali.eighteen"/>
+      </intent-filter>
+    </activity>
+    <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false"/>
+  </application>
+</manifest>

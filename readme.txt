@@ -39,6 +39,8 @@ Launch Packager
 Patch Packager
     npx patch-package react-native-background-timer --use-yarn
 
+diskutil resetUserPermissions / `id -u`
+
 open -a /Applications/Android\ Studio.app
 
         $myfile = fopen("file.txt", "w") or die("Unable to open file!");

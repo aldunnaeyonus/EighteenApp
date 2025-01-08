@@ -13,6 +13,7 @@ import FormData from "form-data";
 import { storage } from "../../context/components/Storage";
 import { handleUpload } from "../../SubViews/upload";
 import * as i18n from "../../../i18n";
+import { ActivityIndicator } from "react-native-paper";
 
 const ChangeData = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
@@ -21,6 +22,11 @@ const ChangeData = (props) => {
   const [uploading] = useMMKVObject("uploadData", storage);
 
   const fetchCode = async (icon, types) => {
+    props.navigation.setOptions({
+      headerRight: () => (
+        <ActivityIndicator color="black" size={"small"} animating={true} />
+      ),
+    });
       var formData = new FormData();
       formData.append("id", String(user.user_id));
       formData.append("type", String(types));

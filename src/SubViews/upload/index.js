@@ -67,10 +67,12 @@ export const handleUpload = async (url, data, user, action, pin, name, message, 
         updateStorage(storageData, "display", 'none', "uploadData");
       })
       .catch(async (error) => {
+        alert(error, error.message);
         await BackgroundService.stop();
         updateStorage(storageData, "message", '', "uploadData");
         updateStorage(storageData, "image", '', "uploadData");
         updateStorage(storageData, "display", 'none', "uploadData");
       });
+      
   }, options);
 };

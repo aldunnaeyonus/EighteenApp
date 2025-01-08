@@ -63,7 +63,7 @@
     "Loading": "Indlæser",
     "Continue": "Fortsæt",
     "The verification code": "Den indtastede bekræftelseskode er ugyldig. Kontrollér og prøv igen.",
-    "A new verification code": "Vi har sendt en bekræftelseskode til den nedenstående e-mailadresse. Kontrollér din e-mail og indtast koden for at fortsætte.",
+    "Anewverificationcode": "Vi har sendt en bekræftelseskode til den nedenstående e-mailadresse. Kontrollér din e-mail og indtast koden for at fortsætte.",
     "Verify": "Bekræft",
     "Resend Code": "Send kode igen",
     "In-app purchases": "In-app køb: Alle forbrugsvarer kræver betaling via din app store-konto. Hvert køb er en engangsbetaling.",

@@ -1,21 +1,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools">
-
-  <uses-feature android:name="android.hardware.camera" android:required="false" />
-
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
   <uses-permission android:name="android.permission.CAMERA"/>
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
   <uses-permission android:name="android.permission.INTERNET"/>
   <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
-  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
   <uses-permission android:name="android.permission.RECORD_AUDIO"/>
   <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
   <uses-permission android:name="android.permission.VIBRATE"/>
   <uses-permission android:name="android.permission.WAKE_LOCK"/>
-  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+  <uses-feature android:name="android.hardware.camera" android:required="false" />
   <queries>
     <intent>
       <action android:name="android.intent.action.VIEW"/>
@@ -23,7 +19,7 @@
       <data android:scheme="https"/>
     </intent>
   </queries>
-  <application android:name=".MainApplication" android:label="@string/app_name" android:icon="@mipmap/ic_launcher" tools:replace="android:allowBackup" android:roundIcon="@mipmap/ic_launcher_round" android:allowBackup="true" android:theme="@style/AppTheme">
+  <application android:name=".MainApplication" tools:replace="android:allowBackup" android:label="@string/app_name" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round" android:allowBackup="true" android:theme="@style/AppTheme">
     <meta-data android:name="expo.modules.updates.ENABLED" android:value="false"/>
     <meta-data android:name="expo.modules.updates.EXPO_UPDATES_CHECK_ON_LAUNCH" android:value="ALWAYS"/>
     <meta-data android:name="expo.modules.updates.EXPO_UPDATES_LAUNCH_WAIT_MS" android:value="0"/>
@@ -31,12 +27,11 @@
     <!-- Change the resource name to your App's accent color - or any other color you want -->
     <meta-data android:name="com.dieam.reactnativepushnotification.notification_color" android:resource="@color/white"/>
     <!-- or @android:color/{name} to use a standard color -->
-    <service android:name="com.asterinet.react.bgactions.RNBackgroundActionsTask" android:foregroundServiceType="specialUse" android:exported="false"/>
+    <service android:name="com.asterinet.react.bgactions.RNBackgroundActionsTask" />
 
     <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationActions" />
     <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationPublisher" />
-
-    <service android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerService" android:exported="false" android:foregroundServiceType="specialUse">
+    <service android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerService" android:exported="true">
       <intent-filter>
         <action android:name="com.google.firebase.MESSAGING_EVENT" />
       </intent-filter>

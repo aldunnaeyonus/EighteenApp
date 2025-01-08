@@ -1,4 +1,4 @@
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import styles from "../../styles/SliderEntry.style";
 import { ListItem, Icon, Switch } from "@rneui/themed";
 import React, { useState, useEffect } from "react";
@@ -7,6 +7,7 @@ import { useMMKVObject } from "react-native-mmkv";
 import { axiosPull } from "../../utils/axiosPull";
 import { useIsFocused } from "@react-navigation/native";
 import * as i18n from "../../../i18n";
+import { ActivityIndicator } from "react-native-paper";
 
 const AccountDetails = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
@@ -19,6 +20,11 @@ const AccountDetails = (props) => {
   useEffect(() => {
       props.navigation.setOptions({
         headerRight: () => (
+                      <TouchableOpacity
+                        onPress={() => {
+                          _saveUserData();
+                        }}
+                      >
           <Text
             style={{
               color: "#3D4849",
@@ -26,12 +32,9 @@ const AccountDetails = (props) => {
               fontSize: 15,
               fontWeight: "bold",
             }}
-            onPress={() => {
-              _saveUserData();
-            }}
           >
             {i18n.t("Save")}
-          </Text>
+          </Text></TouchableOpacity>
         ),
       });
     }, [
@@ -47,6 +50,11 @@ const AccountDetails = (props) => {
   };
 
   const _saveUserData = async () => {
+    props.navigation.setOptions({
+      headerRight: () => (
+        <ActivityIndicator color="black" size={"small"} animating={true} />
+      ),
+    });
     const data = {
       owner: user.user_id,
       email: email,

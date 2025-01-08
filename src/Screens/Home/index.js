@@ -449,11 +449,13 @@ const Home = (props) => {
           }
           ListHeaderComponent={
             <>
+            {uploading.display == "flex" &&
             <Loading 
             message={uploading.message}
             flex={uploading.display}
             image={uploading.image}
             />
+          }
             <FriendHeader
               _createCamera={_createCamera}
               user={user}

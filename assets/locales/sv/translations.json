@@ -63,7 +63,7 @@
     "Loading": "Laddar",
     "Continue": "Fortsätt",
     "The verification code": "Verifieringskoden du angav är ogiltig. Kontrollera och försök igen.",
-    "A new verification code": "Vi skickade en verifieringskod till e-postadressen nedan. Kontrollera din e-post och ange koden för att fortsätta.",
+    "Anewverificationcode": "Vi skickade en verifieringskod till e-postadressen nedan. Kontrollera din e-post och ange koden för att fortsätta.",
     "Verify": "Verifiera",
     "Resend Code": "Skicka verifieringskod igen",
     "In-app purchases": "In-app-köp: Alla förbrukningsvaror kräver betalning via ditt app store-konto. Varje köp är en engångstransaktion.",
