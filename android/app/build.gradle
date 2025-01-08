@@ -210,3 +210,12 @@ android {
         minSdk 31
         targetSdk 35
         missingDimensionStrategy "store", "play" } }
+        afterEvaluate {
+    tasks.named('generateDebugLintReportModel').configure {
+        dependsOn tasks.named('copyReactNativeVectorIconFonts')
+    }
+
+    tasks.named('lintAnalyzeDebug').configure {
+        dependsOn tasks.named('copyReactNativeVectorIconFonts')
+    }    
+}

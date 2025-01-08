@@ -37,7 +37,7 @@ Launch Packager
     /Users/andrewdunn/Documents/GitHubDunn/SnapEighteen/node_modules/expo/scripts/launchPackager.command ; exit;    
 
 Patch Packager
-    npx patch-package expo-file-system --use-yarn
+    npx patch-package react-native-background-timer --use-yarn
 
 open -a /Applications/Android\ Studio.app
 
