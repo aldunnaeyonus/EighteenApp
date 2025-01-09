@@ -29,7 +29,7 @@ export const handleUpload = async (url, data, user, action, pin, name, message, 
       data: data,
       headers: {
         Accept: "application/json",
-        "Content-Type": "multipart/form-data",
+        "content-Type": "multipart/form-data",
       },
     })
       .then(async function (response) {

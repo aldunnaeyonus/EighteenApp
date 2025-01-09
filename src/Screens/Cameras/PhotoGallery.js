@@ -87,6 +87,7 @@ const PhotoGallery = (props) => {
     formData.append("camera", "0");
     pickedImages.map((image) => {
       formData.append("file[]", {
+        type: "image/"+image.split(".").pop(), // set MIME type
         name:
           "SNAP18-gallary-" +
           props.route.params.pin +

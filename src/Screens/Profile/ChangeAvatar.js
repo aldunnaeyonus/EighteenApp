@@ -18,7 +18,6 @@ import { ActivityIndicator } from "react-native-paper";
 const ChangeData = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
 
-
   const [uploading] = useMMKVObject("uploadData", storage);
 
   const fetchCode = async (icon, types) => {
@@ -27,37 +26,37 @@ const ChangeData = (props) => {
         <ActivityIndicator color="black" size={"small"} animating={true} />
       ),
     });
-      var formData = new FormData();
-      formData.append("id", String(user.user_id));
-      formData.append("type", String(types));
-      formData.append("device", Platform.OS);
-
-      if (types == "1") {
-        formData.append(
-          "avatar",
-          String("SNAP18-avatar-" + user.user_id + "-" + icon.split("/").pop())
-        );
-        formData.append("file", {
-          name: icon,
-          uri: Platform.OS === "android" ? icon : icon.replace("file://", ""),
-        });
-      } else {
-        formData.append("avatar", String(icon));
-      }
-
-      handleUpload(
-        constants.url + "/avatars/fetch.php",
-        formData,
-        user.user_id,
+    var formData = new FormData();
+    formData.append("id", String(user.user_id));
+    formData.append("type", String(types));
+    formData.append("device", Platform.OS);
+    if (types == "1") {
+      formData.append(
         "avatar",
-        "pin",
-        "",
-      i18n.t('ProfilePic') + ' ' + i18n.t('PleaseWait'),
+        String("SNAP18-avatar-" + user.user_id + "-" + icon.split("/").pop())
+      );
+      formData.append("file", {
+        name: icon,
+        type: "image/"+image.split(".").pop(), // set MIME type
+        uri: Platform.OS === "android" ? icon : icon.replace("file://", ""),
+      });
+    } else {
+      formData.append("avatar", String(icon));
+    }
+
+    handleUpload(
+      constants.url + "/avatars/fetch.php",
+      formData,
+      user.user_id,
+      "avatar",
+      "pin",
+      "",
+      i18n.t("ProfilePic") + " " + i18n.t("PleaseWait"),
       icon,
       uploading
-      );
+    );
     props.navigation.goBack();
-    };
+  };
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({

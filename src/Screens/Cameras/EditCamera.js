@@ -370,6 +370,7 @@ const EditCamera = (props) => {
       formData.append("photoName", fileName);
       formData.append("file", {
         name: fileName,
+        type: "image/"+image.split(".").pop(), // set MIME type
         uri: Platform.OS === "android" ? image : image.replace("file://", ""),
       });
     } else {
