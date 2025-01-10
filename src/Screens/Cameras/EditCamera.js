@@ -245,7 +245,6 @@ const EditCamera = (props) => {
         path: image,
         stickers,
       });
-      await CameraRoll.saveAsset(`file://${path}`);
       setImage(path);
       setisEditing(false);
     } catch (e) {
@@ -370,7 +369,7 @@ const EditCamera = (props) => {
       formData.append("photoName", fileName);
       formData.append("file", {
         name: fileName,
-        type: "image/"+image.split(".").pop(), // set MIME type
+      type: constants.mimes(image.split(".").pop()), // set MIME type
         uri: Platform.OS === "android" ? image : image.replace("file://", ""),
       });
     } else {
@@ -391,6 +390,7 @@ if (end != props.route.params.end){
   notification.cancelNotif(pin+"-end")
   notification.scheduleNotif(String(name), i18n.t('EvnetEnd'), parseInt(end), pin+"-end", constants.urldata+"/"+user.user_id+"/events/"+pin+"/"+fileName);
 }
+    await CameraRoll.saveAsset(image);
 
     handleUpload(
       constants.url + "/camera/save.php",
@@ -809,7 +809,6 @@ if (end != props.route.params.end){
                         }}
                         onPress={() => {
                           editImage(image);
-                          setisEditing(false);
                         }}
                       >
                         <View

@@ -76,7 +76,7 @@ const PhotoGallery = (props) => {
       FastImage.preload(presloadImages)
   }
 
-  const createEvent = () => {
+  const createEvent = async () => {
     var formData = new FormData();
     formData.append("pin", props.route.params.pin);
     formData.append("owner", props.route.params.owner);
@@ -87,7 +87,7 @@ const PhotoGallery = (props) => {
     formData.append("camera", "0");
     pickedImages.map((image) => {
       formData.append("file[]", {
-        type: "image/"+image.split(".").pop(), // set MIME type
+      type: constants.mimes(image.split(".").pop()), // set MIME type
         name:
           "SNAP18-gallary-" +
           props.route.params.pin +
@@ -98,6 +98,7 @@ const PhotoGallery = (props) => {
         uri: Platform.OS === "android" ? image : image.replace("file://", ""),
       });
     });
+
     handleUpload(
       constants.url + "/camera/upload.php",
       formData,
@@ -109,6 +110,7 @@ const PhotoGallery = (props) => {
       pickedImages[0],
       uploading
     );
+
     setAnimating(false);
     setPickedImages([]);
   };
@@ -160,7 +162,6 @@ const PhotoGallery = (props) => {
             path: result.assets[0].uri,
             stickers,
           });
-          await CameraRoll.saveAsset(`file://${path}`);
           pickedImages.push(path);
           createEvent();
         } catch (e) {

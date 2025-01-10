@@ -37,7 +37,7 @@ const ChangeData = (props) => {
       );
       formData.append("file", {
         name: icon,
-        type: "image/"+image.split(".").pop(), // set MIME type
+      type: constants.mimes(icon.split(".").pop()), // set MIME type
         uri: Platform.OS === "android" ? icon : icon.replace("file://", ""),
       });
     } else {

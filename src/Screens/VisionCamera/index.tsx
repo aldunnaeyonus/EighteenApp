@@ -215,7 +215,7 @@ const VisionCamera = (props: {
         path.split("/").pop();
       formData.append("file[]", {
         name: fileName,
-        type: "image/"+path.split(".").pop(), // set MIME type
+      type: constants.mimes(path.split(".").pop()), // set MIME type
         uri: path,
       });
       

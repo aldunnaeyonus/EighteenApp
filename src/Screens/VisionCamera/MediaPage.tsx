@@ -145,7 +145,7 @@ const MediaPage = (props: {
       source.uri.split("/").pop();
     formData.append("file[]", {
       name: fileName,
-      type: "image/"+source.uri.split(".").pop(), // set MIME type
+      type: constants.mimes(source.uri.split(".").pop()), // set MIME type
       uri: path,
     });
     await CameraRoll.saveAsset(`file://${path}`);

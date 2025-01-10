@@ -116,8 +116,6 @@ const CreateCamera = (props) => {
         path: image,
         stickers,
       });
-      await CameraRoll.saveAsset(`file://${path}`);
-
       setImage(path);
       setisEditing(false);
     } catch (e) {
@@ -365,7 +363,7 @@ const CreateCamera = (props) => {
     formData.append("aiIMAGE", "");
     formData.append("file", {
       name: fileName,
-      type: "image/"+image.split(".").pop(), // set MIME type
+      type: constants.mimes(image.split(".").pop()), // set MIME type
       uri: Platform.OS === "android" ? image : image.replace("file://", ""),
     });
     formData.append("photoName", fileName);
@@ -375,6 +373,8 @@ const CreateCamera = (props) => {
         <ActivityIndicator color="black" size={"small"} animating={true} />
       ),
     });
+    await CameraRoll.saveAsset(image);
+
     handleUpload(
       constants.url + "/camera/create.php",
       formData,
@@ -796,7 +796,6 @@ const CreateCamera = (props) => {
                         }}
                         onPress={() => {
                           editImage(image);
-                          setisEditing(false);
                         }}
                       >
                         <View

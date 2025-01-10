@@ -102,12 +102,31 @@ const COMMON_MODES = Object.freeze({
 export const ANDROID_MODE = COMMON_MODES;
 
 export const WINDOWS_MODE = COMMON_MODES;
-
+ 
 export const IOS_MODE = Object.freeze({
   ...COMMON_MODES,
   datetime: 'datetime',
   countdown: 'countdown',
 });
+
+export const mimes = (ext: any) => {
+switch (ext.toLowerCase()){
+        case 'jpg':
+    return 'image/jpeg'
+        case 'jpeg':
+    return 'image/jpeg'
+        case 'png':
+    return 'image/png'
+        case 'mp4':
+    return 'video/mp4'
+        case 'mpeg':
+      return 'video/mpeg'   
+      case 'mov':
+        return 'video/quicktime'
+        case 'avi':
+          return 'video/avi'   
+}
+}
 
 export const formatMobileNumber = (text: String) => {
   var cleaned = ("" + text).replace(/\D/g, "");
@@ -275,5 +294,6 @@ export const constants = {
   camera_time_seconds_PRO,
   camera_amount_PRO,
   media_amount,
-  urldata
+  urldata,
+  mimes
 };
