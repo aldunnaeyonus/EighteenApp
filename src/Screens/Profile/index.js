@@ -7,6 +7,7 @@ import {
   Modal,
   TouchableOpacity,
   ScrollView,
+  Platform
 } from "react-native";
 const { width: ScreenWidth } = Dimensions.get("window");
 import React, { useEffect, useState, useCallback } from "react";
@@ -211,6 +212,7 @@ const Profile = (props) => {
           />
           <View>
             <View style={[styles.dividerTableStyle]} />
+            { Platform.OS == "ios" && 
               <ListItem
                 containerStyle={{ paddingVertical: 5 }}
                 key="99"
@@ -234,7 +236,9 @@ const Profile = (props) => {
                   <ListItem.Title>{i18n.t("GoPro")}</ListItem.Title>
                 </ListItem.Content>
                 <ListItem.Chevron />
-              </ListItem><View style={[styles.dividerTableStyle]} />
+              </ListItem>
+           }
+              <View style={[styles.dividerTableStyle]} />
             <ListItem
               containerStyle={{ paddingVertical: 5 }}
               key="1"

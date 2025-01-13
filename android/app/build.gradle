@@ -142,6 +142,16 @@ missingDimensionStrategy "store", "play"
             crunchPngs (findProperty('android.enablePngCrunchInReleaseBuilds')?.toBoolean() ?: true)
         }
     }
+
+flavorDimensions "appstore"
+
+    productFlavors {
+        googlePlay {
+            dimension "appstore"
+            missingDimensionStrategy "store", "play"
+        }
+    }
+
     packagingOptions {
         jniLibs {
             useLegacyPackaging (findProperty('expo.useLegacyPackaging')?.toBoolean() ?: false)

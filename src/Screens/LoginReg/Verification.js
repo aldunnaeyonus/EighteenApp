@@ -66,7 +66,6 @@ const Verification = (props) => {
       }
       props.navigation.setOptions({
         headerLeft: () => (
-          Platform.OS == "ios" ? 
           <TouchableOpacity
             onPress={() => {
               props.navigation.goBack();
@@ -86,7 +85,6 @@ const Verification = (props) => {
               textStyle={{ color: "white" }}
             />
           </TouchableOpacity>
-          : <></>
         ),
       });
     }, [code, props, handleStatus, canResend])

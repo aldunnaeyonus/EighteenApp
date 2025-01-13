@@ -45,7 +45,7 @@ const Home = (props) => {
   const AnimatedFlatList = Animated.FlatList;
   const isFocused = useIsFocused();
   const [uploading] = useMMKVObject("uploadData", storage);
-
+  var timeout;
   const triggerProfileFunction = async () => {
     props.navigation.navigate("Profile");
   };
@@ -308,20 +308,22 @@ const Home = (props) => {
           />
         ),
       });
-      var timeout = setInterval(async () => {
+      timeout = setInterval(async () => {
         await axiosPull._pullCameraFeed(user.user_id, "owner");
         await axiosPull._pullFriendsFeed(user.user_id);
       }, 15000);
+
       const fetchData = async () => {
         await axiosPull._pullUser(user.user_id, "Home");
        await  axiosPull._pullCameraFeed(user.user_id, "owner");
         await axiosPull._pullFriendsFeed(user.user_id);
       };
       fetchData();
+
       return () => {
         clearInterval(timeout);
       };
-    }, [isFocused]);
+    }, [isFocused, timeout]);
 
   const goToFriend = async (
     friendID,

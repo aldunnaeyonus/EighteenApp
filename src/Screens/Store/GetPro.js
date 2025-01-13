@@ -1,4 +1,4 @@
-import { TouchableOpacity, Dimensions, Platform } from "react-native";
+import { TouchableOpacity, Dimensions } from "react-native";
 import * as i18n from "../../../i18n";
 import { constants } from "../../utils";
 import { storage } from "../../context/components/Storage";
@@ -37,6 +37,7 @@ const GetPro = (props) => {
     currentPurchase,
     finishTransaction,
   } = useIAP();
+  
   const isFocused = useIsFocused();
   const AnimatedFlatlist = Animated.FlatList;
   const [isLoading, setIsLoading] = useState(true);
@@ -65,7 +66,6 @@ const GetPro = (props) => {
       }
       props.navigation.setOptions({
         headerLeft: () => (
-          Platform.OS == "ios" ? 
           <TouchableOpacity
             onPress={() => {
               props.navigation.goBack();
@@ -84,10 +84,9 @@ const GetPro = (props) => {
               }}
             />
           </TouchableOpacity>
-          : <></>
         ),
       });
-    }, [props])
+    }, [props.unsubscribe])
   );
 
   const privacy = useCallback(async () => {
@@ -108,7 +107,7 @@ const GetPro = (props) => {
     try {
       await deepLinkToSubscriptions(
         constants.productSkusSubscriptions,
-        false
+        true
       );
     } catch (error) {
       console.log("Error opening subscription management:", error);
@@ -188,6 +187,7 @@ const GetPro = (props) => {
     handleGetSubscriptions();
   }, [isFocused]);
 
+  console.log(subscriptions);
   return (
     <SafeAreaProvider>
       <SafeAreaView

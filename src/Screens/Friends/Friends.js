@@ -332,7 +332,7 @@ const Friends = (props) => {
     return () => {
       clearInterval(timeout);
     };
-  }, [isFocused]);
+  }, [isFocused, isFriend, friendData, props.route.params.userID, props.unsubscribe, user.user_id]);
 
   if (!ready){
     return null;
@@ -485,7 +485,7 @@ const Friends = (props) => {
               onPress={() => {
                 actionSheetRef.current?.hide();
                 props.navigation.navigate("About", {
-                  items: props.route.params,
+                  items: friendData,
                 });
               }}
             >

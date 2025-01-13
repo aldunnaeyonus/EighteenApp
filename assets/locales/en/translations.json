@@ -242,5 +242,6 @@
     "EvnetStart":"The Snap Eighteen event is begning.",
     "EvnetEnd":"The Snap Eighteen event is ending.",
     "Resendcodein":"Resend Verification Code in ",
-    "Seconds":" seconds"
+    "Seconds":" seconds",
+    "getnotifications":"Snap Eighteen needs access to notifications so you can receive updates."
 }

@@ -14,6 +14,7 @@ const AndroidPermissions = () => {
     const [photo, setPhoto] = useState("");
     const [video, setVideo] = useState("");
     const [accuracy, setAccuracy] = useState("");
+    const [notifications, setnotifications] = useState("");
 
   useFocusEffect(
     useCallback(() => {
@@ -22,7 +23,7 @@ const AndroidPermissions = () => {
       checkMic();
       checkVideo();
       checkAccuracy();
-      if ((camera == "granted") && (mic == "granted") && (photo == "granted") && (video == "granted") && (accuracy == "granted")){
+      if ((camera == "granted") && (mic == "granted") && (photo == "granted") && (video == "granted") && (accuracy == "granted")  && (notifications == "granted")){
           this.permModal.closeModal();
       }else{
           this.permModal.openModal();
@@ -33,6 +34,12 @@ const AndroidPermissions = () => {
   const checkAccuracy=() => {
     check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION).then((status) => { 
       setAccuracy(status);
+    })
+  }
+
+  const checkNotifiations=() => {
+    check(PERMISSIONS.ANDROID.POST_NOTIFICATIONS).then((status) => { 
+      setnotifications(status);
     })
   }
 
@@ -79,6 +86,20 @@ const AndroidPermissions = () => {
                   PERMISSIONS.ANDROID.CAMERA
                 ).then((status) => {
                   setCamera(status);
+                });
+              }}
+            />
+
+          <PermissionItem
+              title={i18n.t("Notifications")}
+              iconStatusColor={notifications == "granted" ? 'green' : 'red'}
+              subtitle={i18n.t('getnotifications')}
+              source={require("../../../assets/push-notifications.png")}
+              onPress={() => {
+                request(
+                  PERMISSIONS.POST_NOTIFICATIONS
+                ).then((status) => {
+                  setnotifications(status);
                 });
               }}
             />

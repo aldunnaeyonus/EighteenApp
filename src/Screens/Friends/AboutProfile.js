@@ -23,7 +23,7 @@ const AboutProfile = (props) => {
                               style={[style.image, {width: 70, height: 70, overflow:'hidden'}]}
                               source={{
                                 uri:
-                                  props.route.params.items.userAvatar,
+                                  props.route.params.items.friend_avatar,
                               }}
                             />
                           </View>
@@ -54,7 +54,7 @@ const AboutProfile = (props) => {
               </View>
             </View>
 }
-                            <Text style={style.name}>{props.route.params.items.userName}</Text>
+                            <Text style={style.name}>{props.route.params.items.friend_handle}</Text>
                           </View>
                           <Text style={{
                             textAlign:'center', margin:30, fontSize:13, color:'grey'
@@ -78,7 +78,7 @@ const AboutProfile = (props) => {
               />
               <ListItem.Content>
               <ListItem.Title>{i18n.t('Account Created from:')}</ListItem.Title>
-              <ListItem.Subtitle>{props.route.params.items.location}</ListItem.Subtitle>
+              <ListItem.Subtitle>{props.route.params.items.friend_country}</ListItem.Subtitle>
               </ListItem.Content>
               </ListItem>
               <ListItem
@@ -100,7 +100,7 @@ const AboutProfile = (props) => {
               />
               <ListItem.Content>
               <ListItem.Title>{i18n.t('Account Time Zone:')}</ListItem.Title>
-              <ListItem.Subtitle>{ props.route.params.items.privacy == "1" ? "Hidden" : props.route.params.items.tz}</ListItem.Subtitle>
+              <ListItem.Subtitle>{ props.route.params.items.friend_privacy == "1" ? "Hidden" : props.route.params.items.friend_tz}</ListItem.Subtitle>
               </ListItem.Content>
               </ListItem>
               <ListItem
@@ -122,7 +122,7 @@ const AboutProfile = (props) => {
               />
               <ListItem.Content>
               <ListItem.Title>{i18n.t('Account Created:')}</ListItem.Title>
-              <ListItem.Subtitle>{moment.unix(parseInt(props.route.params.items.joined)).format('LLL')}</ListItem.Subtitle>
+              <ListItem.Subtitle>{moment.unix(parseInt(props.route.params.items.friend_joined)).format('LLL')}</ListItem.Subtitle>
               </ListItem.Content>
               </ListItem>
                 </View>
