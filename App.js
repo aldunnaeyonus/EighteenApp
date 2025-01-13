@@ -76,13 +76,10 @@ export default function App() {
         path: "home",
       },
       Friends: {
-        path: "friends/:userID/:userName/:userAvatar/:motto/:type",
+        path: "friends/:userID/:type",
         parse: {
           userID: (userID) => `${userID}`,
-          userName: (userName) => `${userName}`,
-          userAvatar: (userAvatar) => `${userAvatar}`,
-          motto: (motto) => `${motto}`,
-          type: (type) => `${type}`,
+          type: (type) => `${type}`
         },
       },
       Join: {

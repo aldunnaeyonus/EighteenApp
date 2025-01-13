@@ -21,18 +21,6 @@ const AllFriendsListItem = (props) => {
               onPress={async () => {
                 props.goToFriend(
                     props.item.item.friendID,
-                    props.item.item.friend_handle,
-                    props.item.item.friend_avatar,
-                    props.item.item.friend_motto,
-                  "user",
-                  props.item.item.friend_camera,
-                  props.item.item.friend_media,
-                  props.item.item.friend_join,
-                  props.item.item.friend_joined,
-                  props.item.item.friend_tz,
-                  props.item.item.friend_country,
-                  props.item.item.friend_privacy,
-                  props.item.item.friend_isPro
                 );
               }}
             >

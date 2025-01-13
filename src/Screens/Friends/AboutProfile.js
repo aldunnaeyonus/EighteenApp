@@ -5,7 +5,6 @@ import {
     View,
     Text,
   } from "react-native";
-  import { constants } from "../../utils";
   import { ListItem, Icon } from "@rneui/themed";
   import * as i18n from '../../../i18n';
   import FastImage from "react-native-fast-image";

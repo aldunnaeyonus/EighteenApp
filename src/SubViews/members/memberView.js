@@ -17,18 +17,6 @@ const MemberListItem = (props) => {
               onPress={async () => {
                 props.goToFriend(
                     props.item.item.user_id,
-                    props.item.item.user_handle,
-                    props.item.item.user_avatar,
-                    props.item.item.user_motto,
-                  "user",
-                  props.item.item.created,
-                  props.item.item.uploaded,
-                  props.item.item.joined,
-                  props.item.item.user_joined,
-                  props.item.item.tz,
-                  props.item.item.country,
-                  props.item.item.privacy,
-                  props.item.item.isPro
                 );
               }}
             >

@@ -1,11 +1,11 @@
 import React from "react";
 import { StyleSheet, Dimensions, View, Text } from "react-native";
 import DownArrow from 'react-native-vector-icons/Ionicons';
-import { constants } from "../../utils";
 import * as i18n from '../../../i18n';
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
 const Image = createImageProgress(FastImage);
+import { constants } from "../../utils";
 
 const FriendHeader = (props) => {
 return (
@@ -103,7 +103,7 @@ const style = StyleSheet.create({
   container1: {
     flexDirection: 'row',
     justifyContent:'space-between',
-    marginHorizontal: 40,
+    marginHorizontal: 0,
     marginTop: 25,
   },
 

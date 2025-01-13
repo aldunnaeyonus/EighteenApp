@@ -628,7 +628,7 @@ if (end != props.route.params.end){
                     }}
                     value={name}
                     keyboardType="default"
-                    autoCapitalize="words"
+                    autoCapitalize="sentences"
                     maxLength={32}
                     onChangeText={(text) => {
                       setName(text);

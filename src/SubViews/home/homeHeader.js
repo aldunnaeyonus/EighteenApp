@@ -137,18 +137,6 @@ const FriendHeader = (props) => {
               onPress={async () => {
                 props.goToFriend(
                   grids.friendID,
-                  grids.friend_handle,
-                  grids.friend_avatar,
-                  grids.friend_motto,
-                  "user",
-                  grids.friend_camera,
-                  grids.friend_media,
-                  grids.friend_join,
-                  grids.friend_joined,
-                  grids.friend_tz,
-                  grids.friend_country,
-                  grids.friend_privacy,
-                  grids.friend_isPro
                 );
               }}
             >

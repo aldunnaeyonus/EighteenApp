@@ -616,7 +616,7 @@ const CreateCamera = (props) => {
                     }}
                     underlineColorAndroid="transparent"
                     inputContainerStyle={{ borderBottomWidth: 0 }}
-                    autoCapitalize="words"
+                    autoCapitalize="sentences"
                     keyboardType="default"
                     maxLength={32}
                     onChangeText={(text) => {

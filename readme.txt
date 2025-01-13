@@ -14,6 +14,10 @@ Build Run iOS
     npx react-native bundle --platform='android' --entry-file='index.js' --bundle-output='./android/app/src/main/assets/index.android.bundle' --dev=false --assets-dest='./android/app/src/main/res'
     sudo npx react-native start
 
+
+All Build jbundle.
+   npx react-native bundle --platform='android' --entry-file='index.js' --bundle-output='./android/app/src/main/assets/index.android.bundle' --dev=false --assets-dest='./android/app/src/main/res' && npx react-native bundle --entry-file='index.js' --bundle-output='./ios/SnapEighteen/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios/SnapEighteen/'
+
 PODs
     pod deintegrate  
     pod install
@@ -28,6 +32,9 @@ NPM Installs
     npm install -g npm-check-updates
 
 react-devtools
+
+npx uri-scheme open "snapseighteenapp://friends/45/user" --ios
+
 
 
 Watchman

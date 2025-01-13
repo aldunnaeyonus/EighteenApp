@@ -3,10 +3,19 @@ import axios from "axios";
 import { axiosPull } from "../../utils/axiosPull";
 import * as i18n from "../../../i18n";
 import { updateStorage } from "../../context/components/Storage";
+import { Alert } from "react-native";
 
-export const handleUpload = async (url, data, user, action, pin, name, message, umageURI, storageData) => {
-  updateStorage(storageData, "display", 'flex', "uploadData");
-
+export const handleUpload = async (
+  url,
+  data,
+  user,
+  action,
+  pin,
+  name,
+  message,
+  umageURI,
+  storageData
+) => {
   const options = {
     taskName: i18n.t("CraftingMemories"),
     taskTitle: i18n.t("Creating"),
@@ -16,13 +25,14 @@ export const handleUpload = async (url, data, user, action, pin, name, message, 
       name: "ic_launcher",
       type: "mipmap",
     },
-    color: "#ff00ff"
+    color: "#ff00ff",
   };
 
   updateStorage(storageData, "message", message, "uploadData");
   updateStorage(storageData, "image", umageURI, "uploadData");
-   await BackgroundService.start(async () => {
+  updateStorage(storageData, "display", "flex", "uploadData");
 
+  await BackgroundService.start(async () => {
     await axios({
       method: "POST",
       url: url,
@@ -33,6 +43,7 @@ export const handleUpload = async (url, data, user, action, pin, name, message, 
       },
     })
       .then(async function (response) {
+        console.log(response[0]);
         switch (action) {
           case "create":
             await axiosPull._pullCameraFeed(user, "owner");
@@ -62,17 +73,42 @@ export const handleUpload = async (url, data, user, action, pin, name, message, 
             await BackgroundService.stop();
             break;
         }
-        updateStorage(storageData, "message", '', "uploadData");
-        updateStorage(storageData, "image", '', "uploadData");
-        updateStorage(storageData, "display", 'none', "uploadData");
+        updateStorage(storageData, "message", "", "uploadData");
+        updateStorage(storageData, "image", "", "uploadData");
+        updateStorage(storageData, "display", "none", "uploadData");
       })
       .catch(async (error) => {
-        alert(error, error.message);
+        updateStorage(storageData, "display", "none", "uploadData");
         await BackgroundService.stop();
-        updateStorage(storageData, "message", '', "uploadData");
-        updateStorage(storageData, "image", '', "uploadData");
-        updateStorage(storageData, "display", 'none', "uploadData");
+        Alert.alert(
+          error,
+          error.message,
+          [
+            {
+              text: i18n.t("Cancel"),
+              onPress: () => console.log("Cancel Pressed"),
+              style: "destructive",
+            },
+            {
+              text: i18n.t("Retry"),
+              onPress: () => {
+                handleUpload(
+                  url,
+                  data,
+                  user,
+                  action,
+                  pin,
+                  name,
+                  message,
+                  umageURI,
+                  storageData
+                );
+              },
+              style: "default",
+            },
+          ],
+          { cancelable: false }
+        );
       });
-      
   }, options);
 };

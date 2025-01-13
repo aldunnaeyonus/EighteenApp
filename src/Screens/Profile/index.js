@@ -157,7 +157,7 @@ const Profile = (props) => {
               resizeMode={FastImage.resizeMode.contain}
               source={{
                 priority: FastImage.priority.high,
-                cache: FastImage.cacheControl.immutable,
+                cache: FastImage.cacheControl.web,
                 uri: qrCodeURL,
               }}
             />

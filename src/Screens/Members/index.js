@@ -54,33 +54,9 @@ const JoinedMembers = (props) => {
 
   const goToFriend = async (
     friendID,
-    handle,
-    avatar,
-    motto,
-    type,
-    created,
-    upload,
-    join,
-    joined,
-    tz,
-    location,
-    privacy,
-    isPro
   ) => {
     props.navigation.navigate("Friends", {
       userID: friendID,
-      userName: handle,
-      userAvatar: avatar,
-      motto: motto,
-      type: type,
-      upload: upload,
-      join: join,
-      create: created,
-      tz: tz,
-      location: location,
-      joined: joined,
-      privacy: privacy,
-      isPro: isPro
     });
   };
 

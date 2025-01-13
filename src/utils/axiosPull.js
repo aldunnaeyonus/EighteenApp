@@ -43,6 +43,7 @@ export const postData = async (endpoint, datas) => {
 };
 
 export const _getProStatus = async (id, os) => {
+  console.log("_getProStatus")
   const data = {
     user: id,
   };
@@ -56,6 +57,7 @@ export const _getProStatus = async (id, os) => {
 };
 
 export const _pullCameraFeed = async (owner_ID, type) => {
+  console.log("_pullCameraFeed")
   const data = {
     owner: owner_ID,
     user: owner_ID,
@@ -68,16 +70,17 @@ export const _pullCameraFeed = async (owner_ID, type) => {
   storage.set("user.Camera.Feed", JSON.stringify(myData));
 };
 
-export const _pullUser = async (id, user) => {
+export const _pullUser = async (id, screen) => {
   const data = {
     owner: id,
   };
   const response = await postData("/users/index.php", data);
-  console.log(user)
+  console.log(screen)
   storage.set("user.Data", JSON.stringify(response[0]));
 };
 
 export const _pullGalleryArray = async (pin) => {
+  console.log("_pullGalleryArray")
   const data = {
     pin: pin,
   };
@@ -86,6 +89,7 @@ export const _pullGalleryArray = async (pin) => {
 };
 
 export const _pullGalleryFeed = async (pin) => {
+  console.log("_pullGalleryFeed")
   const data = {
     pin: pin,
   };
@@ -93,10 +97,11 @@ export const _pullGalleryFeed = async (pin) => {
   const myData = []
     .concat(response)
     .sort((a, b) => (a.image_id > b.image_id ? -1 : 1));
-  storage.set("user.Gallery.Friend.Feed." + pin, JSON.stringify(myData));
+  storage.set(`user.Gallery.Friend.Feed.${pin}`, JSON.stringify(myData));
 };
 
 export const _pullFriendCameraFeed = async (owner_ID, type, myID) => {
+  console.log("_pullFriendCameraFeed")
   const data = {
     owner: owner_ID,
     user: myID,
@@ -107,14 +112,15 @@ export const _pullFriendCameraFeed = async (owner_ID, type, myID) => {
   const myData = []
     .concat(response)
     .sort((a, b) => String(a.end).localeCompare(String(b.end)));
-  storage.set("user.Camera.Friend.Feed." + owner_ID, JSON.stringify(myData));
+  storage.set(`user.Camera.Friend.Feed.${owner_ID}`, JSON.stringify(myData));
 };
 
-export const _pullFriendsFeed = async (owner_ID) => {
+export const _pullFriendsFeed = async (id) => {
+  console.log("_pullFriendsFeed")
   const data = {
-    owner: owner_ID,
+    owner: id,
   };
-  const response = await postData("/camera/friend.php", data);
+  const response = await postData("/users/friends.php", data);
   const myData = []
     .concat(response)
     .sort((a, b) =>
@@ -123,7 +129,18 @@ export const _pullFriendsFeed = async (owner_ID) => {
   storage.set("user.Friend.Feed", JSON.stringify(myData));
 };
 
+export const _pullFriendFeed = async (id) => {
+  console.log("_pullFriendFeed")
+
+  const data = {
+    owner: id,
+  };
+  const response = await postData("/users/friend.php", data);
+  storage.set(`user.Feed.${id}`, JSON.stringify(response[0]));
+};
+
 export const _pullHistoryFeed = async (owner) => {
+  console.log("_pullHistoryFeed")
   const data = {
     owner: owner,
   };
@@ -133,6 +150,7 @@ export const _pullHistoryFeed = async (owner) => {
 };
 
 export const _pullMembersFeed = async (pin, owner, UUID) => {
+  console.log("_pullMembersFeed")
   const data = {
     owner: owner,
     pin: pin,
@@ -142,7 +160,7 @@ export const _pullMembersFeed = async (pin, owner, UUID) => {
   const myData = []
     .concat(response)
     .sort((a, b) => String(a.user_handle).localeCompare(String(b.user_handle)));
-  storage.set("user.Member.Join.Feed." + pin, JSON.stringify(myData));
+  storage.set(`user.Member.Join.Feed.${pin}`, JSON.stringify(myData));
 };
 
 export const axiosPull = {
@@ -157,4 +175,5 @@ export const axiosPull = {
   _pullFriendsFeed,
   _getProStatus,
   _pullGalleryArray,
+  _pullFriendFeed
 };
