@@ -31,8 +31,8 @@ const StoreListItem = (props) => {
       <Text
         style={{
           color: "#000",
-          fontFamily: "HelveticaNeue-Medium",
           fontSize: 16,
+          fontWeight:'bold',
           textAlign: "center",
         }}
       >
@@ -51,7 +51,7 @@ const StoreListItem = (props) => {
         <Text
           style={{
             color: "black",
-            fontFamily: "HelveticaNeue-Medium",
+            fontWeight:'bold',
             fontSize: 20,
             textAlign: "center",
           }}
@@ -64,7 +64,7 @@ const StoreListItem = (props) => {
           marginTop: 15,
           marginBottom: 10,
           color: "black",
-          fontFamily: "HelveticaNeue-Bold",
+          fontWeight:'bold',
           fontSize: 13,
         }}
       >
@@ -90,7 +90,6 @@ const StoreListItem = (props) => {
               backgroundColor: "white",
               margin: 3,
               fontSize: 13,
-              fontFamily: "HelveticaNeue-Light",
               textAlign: "center",
             }}
           >
@@ -115,7 +114,6 @@ const StoreListItem = (props) => {
           <Text
             style={{
               backgroundColor: "white",
-              fontFamily: "HelveticaNeue-Light",
               margin: 5,
               fontSize: 13,
               textAlign: "center",
@@ -137,7 +135,6 @@ const StoreListItem = (props) => {
             style={{
               backgroundColor: "white",
               margin: 5,
-              fontFamily: "HelveticaNeue-Light",
               fontSize: 13,
               textAlign: "center",
             }}
@@ -184,7 +181,6 @@ const StoreListItem = (props) => {
             style={{
               textTransform: "uppercase",
               fontSize: 17,
-              fontFamily: "HelveticaNeue-Light",
               fontWeight: 600,
               color: "#fff",
             }}

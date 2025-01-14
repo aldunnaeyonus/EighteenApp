@@ -210,7 +210,6 @@ const Profile = (props) => {
           />
           <View>
             <View style={[styles.dividerTableStyle]} />
-            {Platform.OS == "ios" && (
               <ListItem
                 containerStyle={{ paddingVertical: 5 }}
                 key="99"
@@ -235,7 +234,6 @@ const Profile = (props) => {
                 </ListItem.Content>
                 <ListItem.Chevron />
               </ListItem>
-            )}
             <View style={[styles.dividerTableStyle]} />
             <ListItem
               containerStyle={{ paddingVertical: 5 }}

@@ -10,7 +10,7 @@ export const camera_time_seconds_PRO = ["86400", "432000", "604800","1209600", "
 export const camera_amount = ["1", "2", "3", "4", "5", "10", "15", "18"];
 export const media_amount = ["1", "2", "3", "4", "5", "10", "15", "18"];
 export const camera_amount_PRO = ["10", "18", "25", "50", "100", "150", "250", "500", "1000"];
-export const languages = ["French","German","Italian","Dutch","Danish","Polish","Portuguese","Norwegian","Swedish","Finish","English","Spanish", "Japanese", "Chinese", "Ukrainian", "Greek"];
+export const languages = ["French","German","Italian","Dutch","Danish","Polish","Portuguese","Norwegian","Swedish","Finish","English","Spanish", "Japanese", "Chinese", "Ukrainian", "Greek", "South Korean"];
 
 export const ANDROID_DISPLAY = Object.freeze({
   default: 'default',

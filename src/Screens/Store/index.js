@@ -155,7 +155,7 @@ const Products = (props) => {
         style={{ background: "white" }}
         showsVerticalScrollIndicatorr={false}
         data={products}
-        numColumns={2}
+        numColumns={(Platform.OS == "ios") ? 2 : 1}
         extraData={products}
         scrollEventThrottle={16}
         keyExtractor={(item) => item.productId}
