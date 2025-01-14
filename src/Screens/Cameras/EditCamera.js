@@ -30,7 +30,7 @@ import Progress from "react-native-progress";
 import { useToast } from "react-native-styled-toast";
 import moment from "moment";
 import { useFocusEffect } from "@react-navigation/native";
-import { handleUpload } from "../../SubViews/upload";
+import { handleUpload } from "../SubViews/upload";
 import { ActivityIndicator } from "react-native-paper";
 import * as i18n from "../../../i18n";
 import { useMMKVObject } from "react-native-mmkv";
@@ -361,7 +361,12 @@ const EditCamera = (props) => {
     formData.append("autoJoin", switch4 ? "1" : "0");
     formData.append("device", Platform.OS);
     formData.append("camera", "0");
-    var fileName = "SNAP18-cover-" + user.user_id + "-" + Date.now() + image.split("/").pop();
+    var fileName =
+      "SNAP18-cover-" +
+      user.user_id +
+      "-" +
+      Date.now() +
+      image.split("/").pop();
     formData.append("isAI", "0");
     formData.append("aiIMAGE", "");
     if (props.route.params.illustration != image) {
@@ -369,7 +374,7 @@ const EditCamera = (props) => {
       formData.append("photoName", fileName);
       formData.append("file", {
         name: fileName,
-      type: constants.mimes(image.split(".").pop()), // set MIME type
+        type: constants.mimes(image.split(".").pop()), // set MIME type
         uri: Platform.OS === "android" ? image : image.replace("file://", ""),
       });
     } else {
@@ -380,16 +385,40 @@ const EditCamera = (props) => {
         <ActivityIndicator color="black" size={"small"} animating={true} />
       ),
     });
-if (start != props.route.params.start){
-  notification.cancelNotif(pin+"-start")
-  if (parseInt(start) >= moment().unix()){
-    notification.scheduleNotif(String(name), i18n.t('EvnetStart'), parseInt(start), pin+"-start", constants.urldata+"/"+user.user_id+"/events/"+pin+"/"+fileName);
-  }
-}
-if (end != props.route.params.end){
-  notification.cancelNotif(pin+"-end")
-  notification.scheduleNotif(String(name), i18n.t('EvnetEnd'), parseInt(end), pin+"-end", constants.urldata+"/"+user.user_id+"/events/"+pin+"/"+fileName);
-}
+    if (start != props.route.params.start) {
+      notification.cancelNotif(pin + "-start");
+      if (parseInt(start) >= moment().unix()) {
+        notification.scheduleNotif(
+          String(name),
+          i18n.t("EvnetStart"),
+          parseInt(start),
+          pin + "-start",
+          constants.urldata +
+            "/" +
+            user.user_id +
+            "/events/" +
+            pin +
+            "/" +
+            fileName
+        );
+      }
+    }
+    if (end != props.route.params.end) {
+      notification.cancelNotif(pin + "-end");
+      notification.scheduleNotif(
+        String(name),
+        i18n.t("EvnetEnd"),
+        parseInt(end),
+        pin + "-end",
+        constants.urldata +
+          "/" +
+          user.user_id +
+          "/events/" +
+          pin +
+          "/" +
+          fileName
+      );
+    }
     await CameraRoll.saveAsset(image);
 
     handleUpload(
@@ -399,7 +428,7 @@ if (end != props.route.params.end){
       "save",
       props.route.params.pin,
       "",
-      i18n.t('EdintEvent') + ' ' + i18n.t('PleaseWait'),
+      i18n.t("EdintEvent") + " " + i18n.t("PleaseWait"),
       image,
       uploading
     );
@@ -972,9 +1001,7 @@ if (end != props.route.params.end){
                         {i18n.t("Purchase More Shots")}
                       </ListItem.Title>
                       <ListItem.Subtitle>
-                        {i18n.t(
-                          "Allow members"
-                        )}
+                        {i18n.t("Allow members")}
                       </ListItem.Subtitle>
                     </ListItem.Content>
                   </ListItem>

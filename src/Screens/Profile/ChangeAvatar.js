@@ -11,7 +11,7 @@ import { useMMKVObject } from "react-native-mmkv";
 import * as ImagePicker from "expo-image-picker";
 import FormData from "form-data";
 import { storage } from "../../context/components/Storage";
-import { handleUpload } from "../../SubViews/upload";
+import { handleUpload } from "../SubViews/upload";
 import * as i18n from "../../../i18n";
 import { ActivityIndicator } from "react-native-paper";
 
@@ -37,7 +37,7 @@ const ChangeData = (props) => {
       );
       formData.append("file", {
         name: icon,
-      type: constants.mimes(icon.split(".").pop()), // set MIME type
+        type: constants.mimes(icon.split(".").pop()), // set MIME type
         uri: Platform.OS === "android" ? icon : icon.replace("file://", ""),
       });
     } else {

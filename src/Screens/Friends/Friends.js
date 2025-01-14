@@ -14,14 +14,14 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { storage } from "../../context/components/Storage";
 import Animated, { useSharedValue } from "react-native-reanimated";
 import { useMMKVObject } from "react-native-mmkv";
-import FriendHeader from "../../SubViews/friends/friendHeader";
+import FriendHeader from "../SubViews/friends/friendHeader";
 import RefreshView from "../../utils/refreshView";
 import { Icon } from "react-native-elements";
 import { axiosPull } from "../../utils/axiosPull";
 import { useToast } from "react-native-styled-toast";
 import * as i18n from "../../../i18n";
 import ActionSheet from "react-native-actions-sheet";
-import FriendListItem from "../../SubViews/friends/friendsitem";
+import FriendListItem from "../SubViews/friends/friendsitem";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
 import { ListItem } from "@rneui/themed";
 const { width: ScreenWidth } = Dimensions.get("window");
@@ -41,7 +41,7 @@ const Friends = (props) => {
     `user.Feed.${props.route.params.userID}`,
     storage
   );
-    const [ready, setReady] = useState(false);
+  const [ready, setReady] = useState(false);
   const [refreshing, serRefreshing] = useState(false);
   const [isFriend, setisFriend] = useState(2);
   const contentOffset = useSharedValue(0);
@@ -66,11 +66,7 @@ const Friends = (props) => {
     };
     await axiosPull.postData("/camera/autoJoin.php", data);
 
-    await axiosPull._pullFriendCameraFeed(
-      props.owner,
-      "user",
-      user.user_id
-    );
+    await axiosPull._pullFriendCameraFeed(props.owner, "user", user.user_id);
   };
 
   const _repotPost = async (pin, owner, title) => {
@@ -165,7 +161,6 @@ const Friends = (props) => {
     setisFriend(results[0]["response"]);
     Alert.alert(i18n.t("SnapEighteen"), i18n.t("FreiendsNow"));
     await axiosPull._pullFriendFeed(props.route.params.userID);
-
   };
 
   const deleteMember = async () => {
@@ -283,40 +278,40 @@ const Friends = (props) => {
         props.route.params.userID,
         "user",
         user.user_id
-      );    
-    props.navigation.setOptions({
-      title: friendData.friend_handle.toUpperCase(),
-      headerRight: () => (
-        <View style={{ flexDirection: "row" }}>
-          {isFriend == "0" ? (
-            <Icon
-              containerStyle={{ marginRight: 10 }}
-              type="material"
-              name="person-add-alt"
-              size={30}
-              onPress={() => {
-                addMember();
-              }}
-              color="#3D4849"
-            />
-          ) : isFriend == "1" ? (
-            <Icon
-              containerStyle={{ marginLeft: 5 }}
-              type="material"
-              name="menu"
-              size={30}
-              onPress={() => {
-                actionSheetRef.current?.show();
-              }}
-              color="#3D4849"
-            />
-          ) : (
-            <></>
-          )}
-        </View>
-      ),
-    });
-    setReady(true)
+      );
+      props.navigation.setOptions({
+        title: friendData.friend_handle.toUpperCase(),
+        headerRight: () => (
+          <View style={{ flexDirection: "row" }}>
+            {isFriend == "0" ? (
+              <Icon
+                containerStyle={{ marginRight: 10 }}
+                type="material"
+                name="person-add-alt"
+                size={30}
+                onPress={() => {
+                  addMember();
+                }}
+                color="#3D4849"
+              />
+            ) : isFriend == "1" ? (
+              <Icon
+                containerStyle={{ marginLeft: 5 }}
+                type="material"
+                name="menu"
+                size={30}
+                onPress={() => {
+                  actionSheetRef.current?.show();
+                }}
+                color="#3D4849"
+              />
+            ) : (
+              <></>
+            )}
+          </View>
+        ),
+      });
+      setReady(true);
     };
     fetchData();
 
@@ -328,13 +323,19 @@ const Friends = (props) => {
       );
     }, 60000);
 
-
     return () => {
       clearInterval(timeout);
     };
-  }, [isFocused, isFriend, friendData, props.route.params.userID, props.unsubscribe, user.user_id]);
+  }, [
+    isFocused,
+    isFriend,
+    friendData,
+    props.route.params.userID,
+    props.unsubscribe,
+    user.user_id,
+  ]);
 
-  if (!ready){
+  if (!ready) {
     return null;
   }
 
@@ -367,14 +368,14 @@ const Friends = (props) => {
             scrollEventThrottle={16}
             ListEmptyComponent={
               isFriend == "1" && (
-              <EmptyStateView
-                headerText={""}
-                imageSource={require("../../../assets/friend.png")}
-                imageStyle={style.imageStyle}
-                subHeaderText={i18n.t("A gallery")}
-                headerTextStyle={style.headerTextStyle}
-                subHeaderTextStyle={style.subHeaderTextStyle}
-              />
+                <EmptyStateView
+                  headerText={""}
+                  imageSource={require("../../../assets/friend.png")}
+                  imageStyle={style.imageStyle}
+                  subHeaderText={i18n.t("A gallery")}
+                  headerTextStyle={style.headerTextStyle}
+                  subHeaderTextStyle={style.subHeaderTextStyle}
+                />
               )
             }
             ListHeaderComponent={

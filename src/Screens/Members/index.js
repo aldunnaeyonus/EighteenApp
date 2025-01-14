@@ -7,7 +7,7 @@ import { storage } from "../../context/components/Storage";
 import { useMMKVObject } from "react-native-mmkv";
 import Animated, { useSharedValue } from "react-native-reanimated";
 import RefreshView from "../../utils/refreshView";
-import MemberListItem from "../../SubViews/members/memberView";
+import MemberListItem from "../SubViews/members/memberView";
 import { axiosPull } from "../../utils/axiosPull";
 import { useToast } from "react-native-styled-toast";
 import { useFocusEffect } from "@react-navigation/native";
@@ -52,9 +52,7 @@ const JoinedMembers = (props) => {
     );
   };
 
-  const goToFriend = async (
-    friendID,
-  ) => {
+  const goToFriend = async (friendID) => {
     props.navigation.navigate("Friends", {
       userID: friendID,
     });
@@ -120,7 +118,7 @@ const JoinedMembers = (props) => {
         );
       }, 30000);
       const fetchData = async () => {
-       await axiosPull._pullMembersFeed(
+        await axiosPull._pullMembersFeed(
           props.route.params.pin,
           props.route.params.owner,
           props.route.params.UUID

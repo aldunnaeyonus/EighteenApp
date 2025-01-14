@@ -7,7 +7,7 @@ import {
   Modal,
   TouchableOpacity,
   ScrollView,
-  Platform
+  Platform,
 } from "react-native";
 const { width: ScreenWidth } = Dimensions.get("window");
 import React, { useEffect, useState, useCallback } from "react";
@@ -26,7 +26,7 @@ import { useMMKVObject } from "react-native-mmkv";
 import { openSettings } from "react-native-permissions";
 import { axiosPull } from "../../utils/axiosPull";
 import * as i18n from "../../../i18n";
-import ProfileHeader from "../../SubViews/home/profileHeader";
+import ProfileHeader from "../SubViews/home/profileHeader";
 import { useIsFocused } from "@react-navigation/native";
 
 const Profile = (props) => {
@@ -46,20 +46,18 @@ const Profile = (props) => {
   });
 
   useEffect(() => {
-    
-      props.navigation.setOptions({
-        title:
-          user.user_id == null
-            ? i18n.t("Profile Page")
-            : user.user_handle.toUpperCase(),
-      });
-      pullData();
-    }, [isFocused, user.user_avatar, user.isPro]);
+    props.navigation.setOptions({
+      title:
+        user.user_id == null
+          ? i18n.t("Profile Page")
+          : user.user_handle.toUpperCase(),
+    });
+    pullData();
+  }, [isFocused, user.user_avatar, user.isPro]);
 
-  const pullData=async ()=> {
+  const pullData = async () => {
     await axiosPull._pullUser(user.user_id, "Profile");
-
-  }
+  };
   const pro = useCallback(() => {
     props.navigation.navigate("GetPro");
   });
@@ -212,15 +210,15 @@ const Profile = (props) => {
           />
           <View>
             <View style={[styles.dividerTableStyle]} />
-            { Platform.OS == "ios" && 
+            {Platform.OS == "ios" && (
               <ListItem
                 containerStyle={{ paddingVertical: 5 }}
                 key="99"
                 onPress={() => {
-                  pro()
+                  pro();
                 }}
               >
-                 <FastImage
+                <FastImage
                   style={{
                     width: 25,
                     height: 25,
@@ -231,14 +229,14 @@ const Profile = (props) => {
                   resizeMode={FastImage.resizeMode.contain}
                   source={require("../../../assets/verified.png")}
                 />
-               
+
                 <ListItem.Content>
                   <ListItem.Title>{i18n.t("GoPro")}</ListItem.Title>
                 </ListItem.Content>
                 <ListItem.Chevron />
               </ListItem>
-           }
-              <View style={[styles.dividerTableStyle]} />
+            )}
+            <View style={[styles.dividerTableStyle]} />
             <ListItem
               containerStyle={{ paddingVertical: 5 }}
               key="1"

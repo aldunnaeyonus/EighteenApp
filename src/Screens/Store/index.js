@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, Dimensions } from "react-native";
 import Animated from "react-native-reanimated";
 import { ActivityIndicator, MD2Colors } from "react-native-paper";
-import StoreListItem from "../../SubViews/store/storeList";
+import StoreListItem from "../SubViews/store/storeList";
 import {
   isIosStorekit2,
   PurchaseError,
@@ -98,7 +98,7 @@ const Products = (props) => {
             pin: props.route.params.pin,
             currentPurchase: "",
             sku: String(currentPurchase?.productId),
-            eventName: props.route.params.eventName
+            eventName: props.route.params.eventName,
           };
           await axiosPull.postData("/store/index.php", data);
           await axiosPull._pullCameraFeed(

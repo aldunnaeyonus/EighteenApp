@@ -19,7 +19,7 @@ import momentDurationFormatSetup from "moment-duration-format";
 import moment from "moment";
 import FormData from "form-data";
 import { ActivityIndicator } from "react-native-paper";
-import { handleUpload } from "../../SubViews/upload";
+import { handleUpload } from "../SubViews/upload";
 import * as i18n from "../../../i18n";
 import { useFocusEffect } from "@react-navigation/native";
 import { axiosPull } from "../../utils/axiosPull";
@@ -149,7 +149,7 @@ const MediaPage = (props: {
       uri: path,
     });
     await CameraRoll.saveAsset(`file://${path}`);
-    
+
     handleUpload(
       constants.url + "/camera/upload.php",
       formData,
@@ -157,7 +157,7 @@ const MediaPage = (props: {
       "camera",
       props.route.params.pin,
       props.route.params.owner,
-      i18n.t('Uploading') + ' ' + i18n.t('PleaseWait'),
+      i18n.t("Uploading") + " " + i18n.t("PleaseWait"),
       `file://${path}`,
       uploading
     );
@@ -167,7 +167,7 @@ const MediaPage = (props: {
       props.route.params.user
     );
 
-    if (props.route.params.owner != props.route.params.user){
+    if (props.route.params.owner != props.route.params.user) {
       setCredits(String(parseInt(credits) - 1));
       updateItemFeed(
         JSON.stringify(cameraData),
@@ -177,7 +177,7 @@ const MediaPage = (props: {
         "1"
       );
       props.route.params.credits = credits;
-  }
+    }
     setTimeout(() => {
       setAnimating(false);
       props.navigation.pop(4);

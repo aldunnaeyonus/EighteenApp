@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { StyleSheet} from "react-native";
+import { StyleSheet } from "react-native";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
 import "moment-duration-format";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -7,13 +7,13 @@ import { storage } from "../../context/components/Storage";
 import Animated, { useSharedValue } from "react-native-reanimated";
 import { useMMKVObject } from "react-native-mmkv";
 import { useToast } from "react-native-styled-toast";
-import AllFriendsListItem from "../../SubViews/friends/allfriends";
+import AllFriendsListItem from "../SubViews/friends/allfriends";
 import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../i18n";
 import { axiosPull } from "../../utils/axiosPull";
 import RefreshableWrapper from "react-native-fresh-refresh";
 import RefreshView from "../../utils/refreshView";
-import { SearchBar } from 'react-native-elements'
+import { SearchBar } from "react-native-elements";
 
 const AllFriends = (props) => {
   const [friendData] = useMMKVObject("user.Friend.Feed", storage);
@@ -22,8 +22,11 @@ const AllFriends = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
   const contentOffset = useSharedValue(0);
   const [refreshing, serRefreshing] = useState(false);
-  const [search, setSearch] = useState('');
-  const [friendDataTemp, setFriendDataTemp] = useMMKVObject("user.Friend.Feed_Temp", storage);
+  const [search, setSearch] = useState("");
+  const [friendDataTemp, setFriendDataTemp] = useMMKVObject(
+    "user.Friend.Feed_Temp",
+    storage
+  );
 
   const _refresh = async () => {
     serRefreshing(true);
@@ -66,26 +69,24 @@ const AllFriends = (props) => {
     }, [props, user, refreshing])
   );
 
-  const goToFriend = async (
-    friendID,
-  ) => {
+  const goToFriend = async (friendID) => {
     props.navigation.navigate("Friends", {
       userID: friendID,
     });
   };
 
   const searchFunction = (text) => {
-    if (text.length <= 0){
+    if (text.length <= 0) {
       _clear();
-      setSearch('');
-    }else{
-    const updatedData = friendData.filter((item) => {
-      const item_data = `${item.friend_handle.toLowerCase()}`;
-      return item_data.indexOf(text.toLowerCase()) > -1;
-    });
-    setFriendDataTemp(updatedData);
-    setSearch(text)
-  }
+      setSearch("");
+    } else {
+      const updatedData = friendData.filter((item) => {
+        const item_data = `${item.friend_handle.toLowerCase()}`;
+        return item_data.indexOf(text.toLowerCase()) > -1;
+      });
+      setFriendDataTemp(updatedData);
+      setSearch(text);
+    }
   };
 
   return (
@@ -110,15 +111,15 @@ const AllFriends = (props) => {
           EmptyStateView={<></>}
           ListHeaderComponent={
             <SearchBar
-            inputContainerStyle={{backgroundColor: 'white'}}
-            containerStyle={{backgroundColor: 'white'}}
-            placeholder={i18n.t("Enter Member Username")}
-            lightTheme
-            value={search}
-            onClear={_clear}
-            onChangeText={(text) => searchFunction(text)}
-            autoCorrect={false}
-          />
+              inputContainerStyle={{ backgroundColor: "white" }}
+              containerStyle={{ backgroundColor: "white" }}
+              placeholder={i18n.t("Enter Member Username")}
+              lightTheme
+              value={search}
+              onClear={_clear}
+              onChangeText={(text) => searchFunction(text)}
+              autoCorrect={false}
+            />
           }
           ListEmptyComponent={
             <EmptyStateView

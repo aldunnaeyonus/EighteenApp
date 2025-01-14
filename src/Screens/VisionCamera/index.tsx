@@ -35,7 +35,7 @@ import {
 } from "react-native-gesture-handler";
 import momentDurationFormatSetup from "moment-duration-format";
 import moment from "moment";
-import CreditsFont from "../../SubViews/camera/camerCredits";
+import CreditsFont from "../SubViews/camera/camerCredits";
 import * as i18n from "../../../i18n";
 import { updateItemFeed, storage } from "../../context/components/Storage";
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
@@ -47,7 +47,7 @@ Reanimated.addWhitelistedNativeProps({
 import "moment-duration-format";
 import PhotoEditor from "@baronha/react-native-photo-editor";
 const stickers: never[] = [];
-import { handleUpload } from "../../SubViews/upload";
+import { handleUpload } from "../SubViews/upload";
 import { useMMKVObject } from "react-native-mmkv";
 
 const VisionCamera = (props: {
@@ -73,9 +73,9 @@ const VisionCamera = (props: {
       : props.route.params.credits
   );
   const [cameraData] = useMMKVObject(
-      `user.Camera.Friend.Feed.${props.route.params.owner}`,
-      storage
-    );
+    `user.Camera.Friend.Feed.${props.route.params.owner}`,
+    storage
+  );
   const { hasPermission, requestPermission } = useCameraPermission();
   const {
     hasPermission: microphonePermission,
@@ -197,55 +197,42 @@ const VisionCamera = (props: {
     [isPressingButton]
   );
 
-  const createEvent = ((path: String) => {
-      var formData = new FormData();
-      formData.append("pin", props.route.params.pin);
-      formData.append("owner", props.route.params.owner);
-      formData.append("user", props.route.params.user);
-      formData.append("id", props.route.params.UUID);
-      formData.append("count", "1");
-      formData.append("device", Platform.OS);
-      formData.append("camera", "1");
-      var fileName =
-        "SNAP18-camera-" +
-        props.route.params.pin +
-        "-" +
-        Date.now() +
-        +"-" +
-        path.split("/").pop();
-      formData.append("file[]", {
-        name: fileName,
+  const createEvent = async (path: String) => {
+    var formData = new FormData();
+    formData.append("pin", props.route.params.pin);
+    formData.append("owner", props.route.params.owner);
+    formData.append("user", props.route.params.user);
+    formData.append("id", props.route.params.UUID);
+    formData.append("count", "1");
+    formData.append("device", Platform.OS);
+    formData.append("camera", "1");
+    var fileName =
+      "SNAP18-camera-" +
+      props.route.params.pin +
+      "-" +
+      Date.now() +
+      +"-" +
+      path.split("/").pop();
+    formData.append("file[]", {
+      name: fileName,
       type: constants.mimes(path.split(".").pop()), // set MIME type
-        uri: path,
-      });
-      
-      handleUpload(
-        constants.url + "/camera/upload.php",
-        formData,
-        props.route.params.user,
-        "camera",
-        props.route.params.pin,
-        props.route.params.owner,
-       i18n.t('Uploading') + ' ' + i18n.t('PleaseWait'),
-        path,
-        uploading
-      );
-    if (props.route.params.owner != props.route.params.user){
-      setCredits(String(parseInt(credits) - 1));
-
-      updateItemFeed(
-        JSON.stringify(cameraData),
-        props.route.params.pin,
-        String(parseInt(credits) - 1),
-        `user.Camera.Friend.Feed.${props.route.params.owner}`,
-        "1"
-      );
-      props.route.params.credits = credits;
-    }
-    setTimeout(() => {
-      props.navigation.pop(3);
-    }, 500);
+      uri: path,
     });
+
+    handleUpload(
+      constants.url + "/camera/upload.php",
+      formData,
+      props.route.params.user,
+      "camera",
+      props.route.params.pin,
+      props.route.params.owner,
+      i18n.t("Uploading") + " " + i18n.t("PleaseWait"),
+      path,
+      uploading
+    );
+    props.navigation.pop(1);
+
+  };
 
   const onMediaCaptured = useCallback(
     async (media: PhotoFile | VideoFile, type: "photo" | "video") => {
@@ -255,10 +242,10 @@ const VisionCamera = (props: {
             path: media.path,
             stickers,
           });
-            await CameraRoll.saveAsset(String(path), {
-                type: type,
-              });
-           createEvent(path);
+          await CameraRoll.saveAsset(String(path), {
+            type: type,
+          });
+          createEvent(path);
         } catch (e) {
           console.log("e", e);
         }

@@ -35,7 +35,7 @@ react-devtools
 
 npx uri-scheme open "snapseighteenapp://friends/45/user" --ios
 
-
+npx uri-scheme open "snapseighteenapp://join/SNAP-UL49-PY965-1736841682-6AB/1737273600/45" --ios
 
 Watchman
     watchman watch-del '/Users/andrewdunn/Documents/GitHubDunn/Eighteen' ; watchman watch-project '/Users/andrewdunn/Documents/GitHubDunn/Eighteen'

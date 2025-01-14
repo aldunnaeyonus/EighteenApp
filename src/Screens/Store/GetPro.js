@@ -13,11 +13,11 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import Animated from "react-native-reanimated";
-import ProHeader from "../../SubViews/store/ProHeader";
+import ProHeader from "../SubViews/store/ProHeader";
 import { useFocusEffect } from "@react-navigation/native";
 import { Icon } from "react-native-elements";
-import ProFooter from "../../SubViews/store/ProFooter";
-import ProMain from "../../SubViews/store/ProMain";
+import ProFooter from "../SubViews/store/ProFooter";
+import ProMain from "../SubViews/store/ProMain";
 import { deepLinkToSubscriptions } from "react-native-iap";
 import { isIos, isPlay } from "react-native-iap/src/internal";
 export { isIos, isPlay };
@@ -28,7 +28,7 @@ import { ActivityIndicator, MD2Colors } from "react-native-paper";
 const GetPro = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
   const [ownedSubscriptions, setOwnedSubscriptions] = useState([]);
-    const { toast } = useToast();
+  const { toast } = useToast();
 
   const {
     connected,
@@ -37,7 +37,7 @@ const GetPro = (props) => {
     currentPurchase,
     finishTransaction,
   } = useIAP();
-  
+
   const isFocused = useIsFocused();
   const AnimatedFlatlist = Animated.FlatList;
   const [isLoading, setIsLoading] = useState(true);
@@ -105,10 +105,7 @@ const GetPro = (props) => {
 
   const openSubscriptions = async () => {
     try {
-      await deepLinkToSubscriptions(
-        constants.productSkusSubscriptions,
-        true
-      );
+      await deepLinkToSubscriptions(constants.productSkusSubscriptions, true);
     } catch (error) {
       console.log("Error opening subscription management:", error);
     }
@@ -163,7 +160,7 @@ const GetPro = (props) => {
             pin: String(currentPurchase.purchaseToken),
             currentPurchase: "9.99",
             sku: String(currentPurchase?.productId),
-            eventName: "Snap Eighteen Pro"
+            eventName: "Snap Eighteen Pro",
           };
           await axiosPull.postData("/store/index.php", data);
           await axiosPull._pullUser(user.user_id, "GetPro");
@@ -226,15 +223,15 @@ const GetPro = (props) => {
         />
       </SafeAreaView>
       <ActivityIndicator
-                size={80}
-                style={{
-                  position: "absolute",
-                  top: Dimensions.get("window").height / 2.0,
-                  left: Dimensions.get("window").width / 2 - 50,
-                }}
-                animating={isLoading}
-                color={MD2Colors.orange900}
-              />
+        size={80}
+        style={{
+          position: "absolute",
+          top: Dimensions.get("window").height / 2.0,
+          left: Dimensions.get("window").width / 2 - 50,
+        }}
+        animating={isLoading}
+        color={MD2Colors.orange900}
+      />
     </SafeAreaProvider>
   );
 };

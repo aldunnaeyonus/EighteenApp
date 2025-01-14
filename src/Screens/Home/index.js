@@ -23,14 +23,14 @@ import { storage } from "../../context/components/Storage";
 import RefreshableWrapper from "react-native-fresh-refresh";
 import Animated from "react-native-reanimated";
 import { useMMKVObject } from "react-native-mmkv";
-import ListItem from "../../SubViews/home/listItem";
+import ListItem from "../SubViews/home/listItem";
 import RefreshView from "../../utils/refreshView";
-import FriendHeader from "../../SubViews/home/homeHeader";
+import FriendHeader from "../SubViews/home/homeHeader";
 import { axiosPull } from "../../utils/axiosPull";
 import * as i18n from "../../../i18n";
 import NotifService from "../../../NotifService";
 import { useIsFocused } from "@react-navigation/native";
-import Loading from "../../SubViews/home/Loading";
+import Loading from "../SubViews/home/Loading";
 
 const Home = (props) => {
   const [cameraData, setcameraData] = useMMKVObject(
@@ -107,7 +107,7 @@ const Home = (props) => {
     camera_purchase_more,
     length_index,
     end,
-    shots, 
+    shots,
     description
   ) => {
     props.navigation.navigate("EditCamera", {
@@ -124,8 +124,8 @@ const Home = (props) => {
       end: end,
       camera_purchase_more: camera_purchase_more,
       length_index: length_index,
-      shots:shots, 
-      description:description
+      shots: shots,
+      description: description,
     });
   };
 
@@ -170,17 +170,17 @@ const Home = (props) => {
       time +
       "&owner=" +
       owner;
-        const shareOptions = {
-              title: title,
-              url: url,
-              message: message,
-            };
-      try {
-        const ShareResponse = await Share.share(shareOptions);
-        console.log('Result =>', ShareResponse);
-      } catch (error) {
-        console.log('Error =>', error);
-      }
+    const shareOptions = {
+      title: title,
+      url: url,
+      message: message,
+    };
+    try {
+      const ShareResponse = await Share.share(shareOptions);
+      console.log("Result =>", ShareResponse);
+    } catch (error) {
+      console.log("Error =>", error);
+    }
   };
 
   const _deleteFeedItemIndex = (UUID) => {
@@ -199,10 +199,10 @@ const Home = (props) => {
     const data = {
       owner: owner,
       pin: pin,
-      isPro: user.isPro
+      isPro: user.isPro,
     };
     await axiosPull.postData("/camera/maxCamera.php", data);
-   await axiosPull._pullCameraFeed(owner, "owner");
+    await axiosPull._pullCameraFeed(owner, "owner");
   };
 
   const _joinFeedItem = async (UUID, owner, pin, title) => {
@@ -259,7 +259,7 @@ const Home = (props) => {
           onPress: () => {
             //deleteItemIndex(JSON.stringify(cameraData), UUID, "user.Camera.Feed");
 
-            _deleteFeedItemSource(UUID, owner, pin)
+            _deleteFeedItemSource(UUID, owner, pin);
           },
           style: "destructive",
         },
@@ -293,48 +293,42 @@ const Home = (props) => {
   };
 
   useEffect(() => {
-      props.navigation.setOptions({
-        headerLeft: () => <></>,
-        headerRight: () => (
-          <Icon
-            containerStyle={{ zIndex: 0 }}
-            type="material-community"
-            name="account-settings-outline"
-            size={30}
-            onPress={() => {
-              triggerProfileFunction();
-            }}
-            color="#3D4849"
-          />
-        ),
-      });
-      timeout = setInterval(async () => {
-        await axiosPull._pullCameraFeed(user.user_id, "owner");
-        await axiosPull._pullFriendsFeed(user.user_id);
-      }, 15000);
+    props.navigation.setOptions({
+      headerLeft: () => <></>,
+      headerRight: () => (
+        <Icon
+          containerStyle={{ zIndex: 0 }}
+          type="material-community"
+          name="account-settings-outline"
+          size={30}
+          onPress={() => {
+            triggerProfileFunction();
+          }}
+          color="#3D4849"
+        />
+      ),
+    });
+    timeout = setInterval(async () => {
+      await axiosPull._pullCameraFeed(user.user_id, "owner");
+      await axiosPull._pullFriendsFeed(user.user_id);
+    }, 15000);
 
-      const fetchData = async () => {
-        await axiosPull._pullUser(user.user_id, "Home");
-       await  axiosPull._pullCameraFeed(user.user_id, "owner");
-        await axiosPull._pullFriendsFeed(user.user_id);
-      };
-      fetchData();
+    const fetchData = async () => {
+      await axiosPull._pullUser(user.user_id, "Home");
+      await axiosPull._pullCameraFeed(user.user_id, "owner");
+      await axiosPull._pullFriendsFeed(user.user_id);
+    };
+    fetchData();
 
-      return () => {
-        clearInterval(timeout);
-      };
-    }, [isFocused, timeout]);
+    return () => {
+      clearInterval(timeout);
+    };
+  }, [isFocused, timeout]);
 
-  const goToFriend = async (
-    friendID,
-  ) => {
-     await axiosPull._pullFriendCameraFeed(
-              props.friendID,
-              "user",
-              user.user_id
-            );
+  const goToFriend = async (friendID) => {
+    await axiosPull._pullFriendCameraFeed(props.friendID, "user", user.user_id);
     props.navigation.navigate("Friends", {
-      userID: friendID
+      userID: friendID,
     });
   };
 
@@ -345,7 +339,9 @@ const Home = (props) => {
   };
 
   return (
-    <SafeAreaProvider style={{ backgroundColor: "#fff", flex: 1, paddingBottom: 24 }}>
+    <SafeAreaProvider
+      style={{ backgroundColor: "#fff", flex: 1, paddingBottom: 24 }}
+    >
       <Modal
         visible={modalVisable}
         animationType="slide"
@@ -402,13 +398,12 @@ const Home = (props) => {
 
       <RefreshableWrapper
         defaultAnimationEnabled={true}
-        Loader={() => <RefreshView/>}
+        Loader={() => <RefreshView />}
         isLoading={refreshing}
         onRefresh={() => {
           _refresh();
         }}
       >
-        
         <AnimatedFlatList
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicatorr={false}
@@ -427,19 +422,21 @@ const Home = (props) => {
           }
           ListHeaderComponent={
             <>
-            {uploading.display == "flex" &&
-            <Loading 
-            message={uploading.message}
-            flex={uploading.display}
-            image={uploading.image}
-            />
-          }
-            <FriendHeader
-              _createCamera={_createCamera}
-              user={user}
-              friendData={friendData}
-              _gotoAllFriends={_gotoAllFriends}
-              goToFriend={goToFriend} /></>
+              {uploading.display == "flex" && (
+                <Loading
+                  message={uploading.message}
+                  flex={uploading.display}
+                  image={uploading.image}
+                />
+              )}
+              <FriendHeader
+                _createCamera={_createCamera}
+                user={user}
+                friendData={friendData}
+                _gotoAllFriends={_gotoAllFriends}
+                goToFriend={goToFriend}
+              />
+            </>
           }
           keyExtractor={(item, index) => index}
           renderItem={(item, index) => (
