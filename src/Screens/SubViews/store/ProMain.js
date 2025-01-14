@@ -1,5 +1,5 @@
 import React from "react";
-import { Dimensions, View, Text, TouchableOpacity } from "react-native";
+import { Dimensions, View, Text, TouchableOpacity, Platform } from "react-native";
 import FastImage from "react-native-fast-image";
 const { width } = Dimensions.get("window");
 import { Icon } from "react-native-elements";
@@ -371,7 +371,7 @@ const ProMain = (props) => {
                 textAlign: "center",
               }}
             >
-              {props.item.item.localizedPrice}{" "}
+              {Platform.OS == "ios" ? props.item.item.localizedPrice : props.item.item.subscriptionOfferDetails[1].pricingPhases.pricingPhaseList[0].formattedPrice}{" "}
             </Text>
             <Text
               style={{
@@ -397,7 +397,7 @@ const ProMain = (props) => {
               justifyContent: "center",
             }}
             onPress={() => {
-              props.handleBuySubscription(props.item.item.productId);
+              Platform.OS == "ios" ? props.handleBuySubscription(props.item.item.productId) : props.handleBuySubscription(props.item.item.productId,props.item.item.subscriptionOfferDetails[1].offerToken );
             }}
           >
             <Text

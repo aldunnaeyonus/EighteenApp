@@ -8,10 +8,8 @@ const StoreListItem = (props) => {
     <View
       key={props.index}
       style={{
-        marginLeft: 10,
-        marginRight: 10,
-        padding: 10,
-        marginTop: 10,
+        margin: 5,
+        padding: 20,
         borderRadius: 5,
         shadowColor: "rgba(0, 0, 0, 1)",
         shadowOpacity: 0.4,
@@ -21,10 +19,11 @@ const StoreListItem = (props) => {
           width: 1,
         },
         backgroundColor: "#FFF",
-        height: 300,
+        height: 'auto',
+        width:'auto',
         elevation: 7,
         flex: 1,
-        alignSelf: "center",
+        alignSelf: "flex-start",
         alignItems: "center",
       }}
     >
@@ -80,7 +79,6 @@ const StoreListItem = (props) => {
         <View
           style={{
             flexDirection: "row",
-            alignSelf: "left",
             alignItems: "left",
           }}
         >
@@ -106,7 +104,6 @@ const StoreListItem = (props) => {
         <View
           style={{
             flexDirection: "row",
-            alignSelf: "left",
             alignItems: "left",
           }}
         >
@@ -126,7 +123,6 @@ const StoreListItem = (props) => {
         <View
           style={{
             flexDirection: "row",
-            alignSelf: "left",
             alignItems: "left",
           }}
         >
@@ -166,7 +162,7 @@ const StoreListItem = (props) => {
           style={{
             flexDirection: "row",
             marginTop: 20,
-            width: 150,
+            width: 'auto',
             backgroundColor: "#e35504",
             borderRadius: 12,
             padding: 10,
