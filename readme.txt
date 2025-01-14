@@ -61,42 +61,9 @@ open -a /Applications/Android\ Studio.app
         
 #TODO
  - When a friend or self gallery is expired find means to remove `user.Gallery.Friend.Feed.${props.route.params.pin}` and `user.Member.Join.Feed.${pin}`, 
- - SERVER NOTIFICATIONS on start and end.
- - on 30th day send media to email and archive.
- 
- - Save media to device and languages
-{
-    "SaveDevice":"Save to Device",
-    "DownloadingEventFiles":"Downloading Event Files",
-    "Theventfiles":"The event files are being downloaded, please do not navigate away while download is in progress."
-}
 
 
-
-
-const resize = async () => {
-    if (!imageUri) return;
-
-    setResizedImage(null);
-
-    try {
-      let result = await ImageResizer.createResizedImage(
-        imageUri,
-        80,
-        80,
-        'JPEG',
-        80,
-        0,
-        undefined,
-        false,
-        {
-          mode: 'contain',
-          true,
-        }
-      );
-
-      setResizedImage(result);
-    } catch (error) {
-      Alert.alert('Unable to resize the photo');
-    }
-  };
+Android Keystore
+key0
+snapeighteen
+ntrboy21
