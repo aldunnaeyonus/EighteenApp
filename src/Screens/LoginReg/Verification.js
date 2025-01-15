@@ -108,7 +108,7 @@ const Verification = (props) => {
         storage.set("user.Data", JSON.stringify(response[0]));
         storage.set(
           "uploadData",
-          JSON.stringify({ message: "", display: "none", image: "" })
+          JSON.stringify([{ message: "", display: "none", image: "" }])
         );
         await AsyncStorage.setItem("current", "0");
         await AsyncStorage.setItem("logedIn", "1");
