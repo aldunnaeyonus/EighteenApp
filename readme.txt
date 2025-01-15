@@ -6,7 +6,7 @@ Build Web
 Build Run iOS
     npx expo run:ios --Builds on Machine
     eas build -p ios -- Sends to Server
-    npx react-native bundle --entry-file='index.js' --bundle-output='./ios/SnapEighteen/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios/SnapEighteen/' 
+    npx react-native bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios/SnapEighteen/' 
 
    Build Run Android
     npx expo run:android --Builds on Machine
@@ -14,6 +14,7 @@ Build Run iOS
     npx react-native bundle --platform='android' --entry-file='index.js' --bundle-output='./android/app/src/main/assets/index.android.bundle' --dev=false --assets-dest='./android/app/src/main/res'
     sudo npx react-native start
 
+curl 'http://localhost:8081/index.js.bundle?dev=false&minify=true' -o ios/main2.jsbundle
 
 All Build jbundle.
    npx react-native bundle --platform='android' --entry-file='index.js' --bundle-output='./android/app/src/main/assets/index.android.bundle' --dev=false --assets-dest='./android/app/src/main/res' && npx react-native bundle --entry-file='index.js' --bundle-output='./ios/SnapEighteen/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios/SnapEighteen/'
