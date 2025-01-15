@@ -1499,7 +1499,7 @@ PODS:
     - Yoga
   - RNStaticSafeAreaInsets (2.2.0):
     - React-Core
-  - RNSVG (15.9.0):
+  - RNSVG (15.11.1):
     - React-Core
   - RNVectorIcons (10.2.0):
     - DoubleConversion
@@ -1932,7 +1932,7 @@ SPEC CHECKSUMS:
   RNScreens: 5da859a26c2b3fb9807c1da33e1405db3031675e
   RNShare: 16aafcdb5d7a88b48a1031493ba2f3a2f92eb19e
   RNStaticSafeAreaInsets: 055ddbf5e476321720457cdaeec0ff2ba40ec1b8
-  RNSVG: 3d2bdcaef51c8071880a9c0072fe324f4423a3ba
+  RNSVG: 703242a230641638cf72d3891e57db0344d5208c
   RNVectorIcons: a98ff1d74647e3de2eafd248466e7989bbac631c
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
