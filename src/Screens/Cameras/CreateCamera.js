@@ -143,7 +143,7 @@ const CreateCamera = (props) => {
       start +
         (isPro
           ? parseInt(constants.camera_time_seconds_PRO[value])
-          : parseInt(constants.camera_time_seconds_PRO[value]))
+          : parseInt(constants.camera_time_seconds[value]))
     );
   };
 
@@ -155,7 +155,7 @@ const CreateCamera = (props) => {
         moment(selectedDate).unix() +
           (isPro
             ? parseInt(constants.camera_time_seconds_PRO[selectedIndex])
-            : parseInt(constants.camera_time_seconds_PRO[selectedIndex]))
+            : parseInt(constants.camera_time_seconds[selectedIndex]))
       );
     } else {
       setSelectedDate(selectDate);
@@ -164,7 +164,7 @@ const CreateCamera = (props) => {
         moment(selectDate).unix() +
           (isPro
             ? parseInt(constants.camera_time_seconds_PRO[selectedIndex])
-            : parseInt(constants.camera_time_seconds_PRO[selectedIndex]))
+            : parseInt(constants.camera_time_seconds[selectedIndex]))
       );
     }
   };
@@ -178,7 +178,7 @@ const CreateCamera = (props) => {
         moment(selectDate).unix() +
           (isPro
             ? parseInt(constants.camera_time_seconds_PRO[selectedIndex])
-            : parseInt(constants.camera_time_seconds_PRO[selectedIndex]))
+            : parseInt(constants.camera_time_seconds[selectedIndex]))
       );
     } else {
       setClockShow(false);
@@ -188,7 +188,7 @@ const CreateCamera = (props) => {
         moment(selectedDate).unix() +
           (isPro
             ? parseInt(constants.camera_time_seconds_PRO[selectedIndex])
-            : parseInt(constants.camera_time_seconds_PRO[selectedIndex]))
+            : parseInt(constants.camera_time_seconds[selectedIndex]))
       );
     }
   };
@@ -409,7 +409,7 @@ const CreateCamera = (props) => {
       notification.scheduleNotif(
         String(name),
         i18n.t("EvnetStart"),
-        parseInt(start * 1000),
+        parseInt(start),
         pin + "-start",
         constants.urldata +
           "/" +
@@ -423,7 +423,7 @@ const CreateCamera = (props) => {
     notification.scheduleNotif(
       String(name),
       i18n.t("EvnetEnd"),
-      parseInt(end * 1000),
+      parseInt(end),
       pin + "-end",
       constants.urldata + "/" + user.user_id + "/events/" + pin + "/" + fileName
     );
