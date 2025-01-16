@@ -2,7 +2,7 @@ import BackgroundService from "react-native-background-actions";
 import axios from "axios";
 import { axiosPull } from "../../../utils/axiosPull";
 import * as i18n from "../../../../i18n";
-import { storage, updateStorage } from "../../../context/components/Storage";
+import { updateStorage } from "../../../context/components/Storage";
 import { Alert } from "react-native";
 
 export const handleUpload = async (
@@ -27,10 +27,10 @@ export const handleUpload = async (
     },
     color: "#ff00ff",
   };
-        storage.set(
-          "uploadData",
-          JSON.stringify([{ message: message, display: "flex", image: umageURI }])
-        );
+  updateStorage(storageData, "message", message, "uploadData");
+  updateStorage(storageData, "display", "flex", "uploadData");
+  updateStorage(storageData, "image", umageURI, "uploadData");
+
 
   await BackgroundService.start(async () => {
     await axios({
@@ -73,14 +73,15 @@ export const handleUpload = async (
             await BackgroundService.stop();
             break;
         }
-        storage.set(
-          "uploadData",
-          JSON.stringify([{ message: "", display: "none", image: "" }])
-        );
+        updateStorage(storageData, "message", "", "uploadData");
+        updateStorage(storageData, "display", "none", "uploadData");
+        updateStorage(storageData, "image", "", "uploadData");
       })
       .catch(async (error) => {
 
+        updateStorage(storageData, "message", "", "uploadData");
         updateStorage(storageData, "display", "none", "uploadData");
+        updateStorage(storageData, "image", "", "uploadData");
         await BackgroundService.stop();
         Alert.alert(
           error,

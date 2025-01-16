@@ -10,7 +10,6 @@ import { useToast } from "react-native-styled-toast";
 import { ActivityIndicator } from "react-native-paper";
 import * as i18n from "../../../i18n";
 import * as RNLocalize from "react-native-localize";
-import { storage } from "../../context/components/Storage";
 
 const Handle = (props) => {
   const [handleStatus, setHandleStatus] = useState("");
@@ -60,40 +59,6 @@ const Handle = (props) => {
   const changeEmail = useCallback(
     (value) => {
       validate(value);
-    },
-    [email]
-  );
-
-
-  const checkHandle2 = useCallback(async () => {
-    setIsLoading(true);
-
-      const data = {
-        code: "none",
-        email: props.route.params.email,
-      };
-
-      const response = await axiosPull.postData(
-        "/register/checkCode.php",
-        data
-      );
-      if (response[0].errorResponse == "Member") {
-        storage.set("user.Data", JSON.stringify(response[0]));
-        storage.set(
-          "uploadData",
-          JSON.stringify([{ message: "", display: "none", image: "" }])
-        );
-        await AsyncStorage.setItem("current", "0");
-        await AsyncStorage.setItem("logedIn", "1");
-        await AsyncStorage.setItem("user_id", response[0].user_id);
-        setTimeout(() => {
-          setIsLoading(false);
-          props.navigation.navigate("Home");
-        }, 1000);
-      } else {
-        setIsLoading(false);
-        setHandleStatus(i18n.t("The verification code"));
-      }
     },
     [email]
   );
@@ -215,7 +180,10 @@ const Handle = (props) => {
               borderColor: "#e35504",
               marginbottom: 20,
             }}
-            onPress={() => { (email == "support-test-01@snapeighteen.com") ? checkHandle2() : checkHandle()}}
+            onPress={() => { 
+              checkHandle();
+
+            }}
           >
             {isLoading && (
               <ActivityIndicator

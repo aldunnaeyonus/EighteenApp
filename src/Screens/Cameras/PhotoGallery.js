@@ -131,20 +131,22 @@ const PhotoGallery = (props) => {
   const pickImageChooser = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsMultipleSelection: true,
-      selectionLimit: credits >= 5 ? 5 : parseInt(credits),
+      selectionLimit: parseInt(credits) >= 5 ? 5 : parseInt(credits),
       allowsEditing: false,
       videoMaxDuration: 30,
       quality: 1,
       mediaTypes: ImagePicker.MediaTypeOptions.All,
     });
     if (!result.canceled) {
-      setCredits(parseInt(credits) - parseInt(result.assets.length));
+      setCredits(parseInt(credits) - result.assets.length);
+      
+      console.log(parseInt(credits) - result.assets.length)
 
       if (props.route.params.owner != props.route.params.user) {
         updateItemFeed(
           JSON.stringify(cameraData),
           props.route.params.pin,
-          String(parseInt(credits) - parseInt(result.assets.length)),
+          String(parseInt(credits) - result.assets.length),
           `user.Camera.Friend.Feed.${props.route.params.owner}`,
           "1"
         );
