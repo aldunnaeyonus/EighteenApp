@@ -4,7 +4,9 @@
 #import <React/RCTLinkingManager.h>
 #import <UserNotifications/UserNotifications.h>
 #import <RNCPushNotificationIOS.h>
-
+#import <AppCenterReactNative.h>
+#import <AppCenterReactNativeAnalytics.h>
+#import <AppCenterReactNativeCrashes.h>
 
 @interface AppDelegate () <UNUserNotificationCenterDelegate>
 @end
@@ -18,6 +20,10 @@
   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
   center.delegate = self;
   
+[AppCenterReactNative register];
+[AppCenterReactNativeAnalytics registerWithInitiallyEnabled:true];
+[AppCenterReactNativeCrashes registerWithAutomaticProcessing];
+
   self.initialProps = @{};
 
   return [super application:application didFinishLaunchingWithOptions:launchOptions];

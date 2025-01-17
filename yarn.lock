@@ -3990,6 +3990,39 @@ anymatch@^3.0.3:
     normalize-path "^3.0.0"
     picomatch "^2.0.4"
 
+appcenter-analytics@^5.0.2:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/appcenter-analytics/-/appcenter-analytics-5.0.2.tgz#d211f60fe03a01b7290f37cc0231e9492ea19d87"
+  integrity sha512-BYwFuGg40uFlTAgLZhNAuYKtEDGleMqVr05gIyfTivXNPxfIClJ0qnI7p1UJIOvCJPNE66PuVoBdMXsCbg3jiw==
+  dependencies:
+    appcenter "5.0.2"
+
+appcenter-crashes@^5.0.2:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/appcenter-crashes/-/appcenter-crashes-5.0.2.tgz#311f9ffe55a079ee25f86e9878e9e79f0317225c"
+  integrity sha512-h5bChfjO1GbsY542XBMLbVZdVFSeL/P814YG5vuGG4rJHr/91Wcbe4bAevAPKkJzMDQA7D8D5Ri5ZpGPktnRGQ==
+  dependencies:
+    appcenter "5.0.2"
+
+appcenter-link-scripts@5.0.2:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/appcenter-link-scripts/-/appcenter-link-scripts-5.0.2.tgz#1f7a7181c8894a852921804d9815b0e5c354a3bc"
+  integrity sha512-up7AYSmP1qAZQXqsmTljAZj3Pv6Ng3ZxQbrYUX5WI8/znx8uzpa59vaBoOsaEvHJVVdZgjalQQZE6xKnFP82Wg==
+  dependencies:
+    debug "4.3.1"
+    glob "5.0.15"
+    mkdirp "0.5.3"
+    plist "^3.0.2"
+    which "1.2.11"
+    xcode "2.0.0"
+
+appcenter@5.0.2, appcenter@^5.0.2:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/appcenter/-/appcenter-5.0.2.tgz#8908d1e0bfaf6e4ccd4a1e8f1f644d34fb001755"
+  integrity sha512-pfk3ctu8jHWx5agzpoU1jDBVfqSi1JSquJIZ0npQXI4ys1WwDglhIpANiGBvLfHuzSeIG+ulOYRq11XO81zBTQ==
+  dependencies:
+    appcenter-link-scripts "5.0.2"
+
 appdirsjs@^1.2.4:
   version "1.2.7"
   resolved "https://registry.yarnpkg.com/appdirsjs/-/appdirsjs-1.2.7.tgz#50b4b7948a26ba6090d4aede2ae2dc2b051be3b3"
@@ -5186,6 +5219,13 @@ debug@4, debug@^4.0.0, debug@^4.1.0, debug@^4.1.1, debug@^4.3.1, debug@^4.3.2, d
   integrity sha512-Er2nc/H7RrMXZBFCEim6TCmMk02Z8vLC2Rbi1KEBggpo0fS6l0S1nnapwmIi3yW/+GOJap1Krg4w0Hg80oCqgQ==
   dependencies:
     ms "^2.1.3"
+
+debug@4.3.1:
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.1.tgz#f0d229c505e0c6d8c49ac553d1b13dc183f6b2ee"
+  integrity sha512-doEwdvm4PCeK4K3RQN2ZC2BYUBaxwLARCqZmMjtF8a51J2Rb0xpVloFRnCODwqjpwnAoao4pelN8l3RJdv3gRQ==
+  dependencies:
+    ms "2.1.2"
 
 debug@^3.1.0:
   version "3.2.7"
@@ -6524,6 +6564,17 @@ glob-parent@^6.0.2:
   dependencies:
     is-glob "^4.0.3"
 
+glob@5.0.15:
+  version "5.0.15"
+  resolved "https://registry.yarnpkg.com/glob/-/glob-5.0.15.tgz#1bc936b9e02f4a603fcc222ecf7633d30b8b93b1"
+  integrity sha512-c9IPMazfRITpmAAKi22dK1VKxGDX9ehhqfABDriL/lzO92xcUKEJPQHrVA/2YHSNFB4iFlykVmWvwo48nr3OxA==
+  dependencies:
+    inflight "^1.0.4"
+    inherits "2"
+    minimatch "2 || 3"
+    once "^1.3.0"
+    path-is-absolute "^1.0.0"
+
 glob@7.1.6:
   version "7.1.6"
   resolved "https://registry.yarnpkg.com/glob/-/glob-7.1.6.tgz#141f33b81a7c2492e125594307480c46679278a6"
@@ -7415,6 +7466,11 @@ isarray@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/isarray/-/isarray-1.0.0.tgz#bb935d48582cba168c06834957a54a3e07124f11"
   integrity sha512-VLghIWNM6ELQzo7zwmcg0NmTVyWKYjvIeM83yjp0wRDTmUnrM678fQbcKBo6n2CJEF0szoG//ytg+TKla89ALQ==
+
+isexe@^1.1.1:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/isexe/-/isexe-1.1.2.tgz#36f3e22e60750920f5e7241a476a8c6a42275ad0"
+  integrity sha512-d2eJzK691yZwPHcv1LbeAOa91yMJ9QmfTgSO1oXB65ezVhXQsxBac2vEB4bMVms9cGzaA99n6V2viHMq82VLDw==
 
 isexe@^2.0.0:
   version "2.0.0"
@@ -8969,7 +9025,7 @@ mimic-fn@^2.1.0:
   resolved "https://registry.yarnpkg.com/mimic-fn/-/mimic-fn-2.1.0.tgz#7ed2c2ccccaf84d3ffcb7a69b57711fc2083401b"
   integrity sha512-OqbOk5oEQeAZ8WXWydlu9HJjz9WVdEIvamMCcXmuqUYjTknH/sqsWvhQ3vgwKFRR1HpjvNBKQ37nbJgYzGqGcg==
 
-minimatch@^3.0.2, minimatch@^3.0.4, minimatch@^3.1.1, minimatch@^3.1.2:
+"minimatch@2 || 3", minimatch@^3.0.2, minimatch@^3.0.4, minimatch@^3.1.1, minimatch@^3.1.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.1.2.tgz#19cd194bfd3e428f049a70817c038d89ab4be35b"
   integrity sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw==
@@ -8990,7 +9046,7 @@ minimatch@^9.0.0, minimatch@^9.0.4, minimatch@^9.0.5:
   dependencies:
     brace-expansion "^2.0.1"
 
-minimist@^1.2.0, minimist@^1.2.6:
+minimist@^1.2.0, minimist@^1.2.5, minimist@^1.2.6:
   version "1.2.8"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.8.tgz#c1a464e7693302e082a075cee0c057741ac4772c"
   integrity sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==
@@ -9083,6 +9139,13 @@ minizlib@^3.0.1:
     minipass "^7.0.4"
     rimraf "^5.0.5"
 
+mkdirp@0.5.3:
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-0.5.3.tgz#5a514b7179259287952881e94410ec5465659f8c"
+  integrity sha512-P+2gwrFqx8lhew375MQHHeTlY8AuOJSrGf0R5ddkEndUkmwpgUob/vQuBD1V22/Cw1/lJr4x+EjllSezBThzBg==
+  dependencies:
+    minimist "^1.2.5"
+
 mkdirp@^0.5.1:
   version "0.5.6"
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-0.5.6.tgz#7def03d2432dcae4ba1d611445c48396062255f6"
@@ -9119,6 +9182,11 @@ ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
   integrity sha512-Tpp60P6IUJDTuOq/5Z8cdskzJujfwqfOTkrwIwj7IRISpnkJnT6SyJ4PCPnGMoFjC9ddhal5KVIYtAt97ix05A==
+
+ms@2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
+  integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
 
 ms@2.1.3, ms@^2.1.1, ms@^2.1.2, ms@^2.1.3:
   version "2.1.3"
@@ -9957,7 +10025,7 @@ pkg-up@^3.1.0:
   dependencies:
     find-up "^3.0.0"
 
-plist@^3.0.5:
+plist@^3.0.2, plist@^3.0.5:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/plist/-/plist-3.1.0.tgz#797a516a93e62f5bde55e0b9cc9c967f860893c9"
   integrity sha512-uysumyrvkUX0rX/dEVqt8gC3sTBzd4zoWfLeS29nb53imdaXVvLINYXTI2GNqzaMuvacNx4uJQ8+b3zXR0pkgQ==
@@ -11373,7 +11441,7 @@ sigstore@^3.0.0:
     "@sigstore/tuf" "^3.0.0"
     "@sigstore/verify" "^2.0.0"
 
-simple-plist@^1.1.0:
+simple-plist@^1.0.0, simple-plist@^1.1.0:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/simple-plist/-/simple-plist-1.3.1.tgz#16e1d8f62c6c9b691b8383127663d834112fb017"
   integrity sha512-iMSw5i0XseMnrhtIzRb7XpQEXepa9xhWxGUojHBL43SIpQuDQkh3Wpy67ZbDzZVr6EKxvwVChnVpdl8hEVLDiw==
@@ -12516,6 +12584,11 @@ utils-merge@1.0.1:
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   integrity sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==
 
+uuid@^3.3.2:
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
+  integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
+
 uuid@^7.0.3:
   version "7.0.3"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-7.0.3.tgz#c5c9f2c8cf25dc0a372c4df1441c41f5bd0c680b"
@@ -12747,6 +12820,13 @@ which-typed-array@^1.1.16, which-typed-array@^1.1.18:
     gopd "^1.2.0"
     has-tostringtag "^1.0.2"
 
+which@1.2.11:
+  version "1.2.11"
+  resolved "https://registry.yarnpkg.com/which/-/which-1.2.11.tgz#c8b2eeea6b8c1659fa7c1dd4fdaabe9533dc5e8b"
+  integrity sha512-8kWuAZrtPpcfj0UM1rpIJopAawk+Uz+KxNSxk0U0j9fmekidFSRDhyrHOEbD5qePWF6YicG1wSUuFA6BfsE3ig==
+  dependencies:
+    isexe "^1.1.1"
+
 which@^1.2.9:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/which/-/which-1.3.1.tgz#a45043d54f5805316da8d62f9f50918d3da70b0a"
@@ -12872,6 +12952,14 @@ ws@^8.12.1:
   version "8.18.0"
   resolved "https://registry.yarnpkg.com/ws/-/ws-8.18.0.tgz#0d7505a6eafe2b0e712d232b42279f53bc289bbc"
   integrity sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==
+
+xcode@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/xcode/-/xcode-2.0.0.tgz#134f1f94c26fbfe8a9aaa9724bfb2772419da1a2"
+  integrity sha512-5xF6RCjAdDEiEsbbZaS/gBRt3jZ/177otZcpoLCjGN/u1LrfgH7/Sgeeavpr/jELpyDqN2im3AKosl2G2W8hfw==
+  dependencies:
+    simple-plist "^1.0.0"
+    uuid "^3.3.2"
 
 xcode@^3.0.1:
   version "3.0.1"
