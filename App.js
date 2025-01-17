@@ -37,8 +37,6 @@ import Notifications from "./src/Screens/Profile/Notifications";
 import Abouts from "./src/Screens/Profile/About";
 import GetPro from "./src/Screens/Store/GetPro";
 import { axiosPull } from "./src/utils/axiosPull";
-import { useMMKVObject } from "react-native-mmkv";
-import { storage } from "./src/context/components/Storage";
 import hotUpdate from 'react-native-ota-hot-update';
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import { constants } from "./src/utils";
