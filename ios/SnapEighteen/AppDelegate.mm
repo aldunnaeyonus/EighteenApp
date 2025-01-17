@@ -49,7 +49,7 @@
   return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@".expo/.virtual-metro-entry"];
 #else
   //return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
-    return [OtaHotUpdate getBundle]; ## add this line
+    return [OtaHotUpdate getBundle];
 #endif
 }
 
