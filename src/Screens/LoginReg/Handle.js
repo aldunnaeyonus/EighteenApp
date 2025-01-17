@@ -21,6 +21,7 @@ const Handle = (props) => {
     Platform.OS === "ios"
       ? NativeModules.SettingsManager.settings.AppleLocale
       : NativeModules.I18nManager.localeIdentifier;
+      
   useEffect(() => {
     if (!props.unsubscribe) {
       toast({

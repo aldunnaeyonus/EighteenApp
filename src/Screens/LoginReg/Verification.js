@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Platform } from "react-native";
+import { View, Text, TextInput, Platform, Alert } from "react-native";
 import { TouchableOpacity } from "react-native";
 import { storage } from "../../context/components/Storage";
 import React, { useState, useCallback, useEffect } from "react";
@@ -87,13 +87,12 @@ const Verification = (props) => {
           </TouchableOpacity>
         ),
       });
-    }, [code, props, handleStatus, canResend])
+    }, [code, props, handleStatus, canResend, resendTimer])
   );
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const checkHandle = useCallback(
-    async (value) => {
+  const checkHandle = useCallback(async (value) => {
       setHandleStatus("");
       const data = {
         code: value.toUpperCase(),
@@ -122,7 +121,7 @@ const Verification = (props) => {
         setHandleStatus(i18n.t("The verification code"));
       }
     },
-    [props.route.params.email]
+    [props.route.params.email, resendTimer, canResend, isLoading]
   );
 
   const resendCode = useCallback(async () => {
@@ -133,8 +132,8 @@ const Verification = (props) => {
       device: Platform.OS,
     };
     await axiosPull.postData("/register/checkUsername.php", data);
-    alert("", i18n.t("Anewverificationcode") + " " + props.route.params.email);
-  }, [props.route.params.email]);
+    Alert.alert(i18n.t("Resend Code"), i18n.t("Anewverificationcode"));
+  }, [props.route.params.email, resendTimer, canResend]);
 
   return (
     <KeyboardAwareScrollView style={{ backgroundColor: "#fff" }}>
