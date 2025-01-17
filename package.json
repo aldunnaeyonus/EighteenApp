@@ -13,7 +13,10 @@
     "typescript": "tsc --noEmit",
     "pod-install": "cd ios && RCT_NEW_ARCH_ENABLED=1 bundle exec pod install cd .. && npx patch-package --use-yarn",
     "build": "node --max_old_space_size=4096 node_modules/.bin/react-scripts start",
-    "postinstall": "npx patch-package"
+    "postinstall": "npx patch-package",
+    "export-android": "npx react-native bundle --platform='android' --entry-file='index.js' --bundle-output='./android/app/src/main/assets/index.android.bundle' --dev=false --assets-dest='./android/app/src/main/res'",
+    "export-ios": "npx react-native bundle --entry-file='index.js' --bundle-output='./ios/SnapEighteen/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios/SnapEighteen/'"
+
   },
   "dependencies": {
     "@baronha/react-native-photo-editor": "^1.1.6",
@@ -37,9 +40,6 @@
     "@types/react-native-background-timer": "^2.0.2",
     "@types/react-native-push-notification": "^8.1.4",
     "D": "^1.0.0",
-    "appcenter": "^5.0.2",
-    "appcenter-analytics": "^5.0.2",
-    "appcenter-crashes": "^5.0.2",
     "axios": "^1.7.7",
     "expo": "~51.0.39",
     "expo-application": "^5.9.1",
@@ -64,6 +64,7 @@
     "react-native-actions-sheet": "^0.9.7",
     "react-native-background-actions": "^4.0.1",
     "react-native-background-timer": "^2.4.1",
+    "react-native-blob-util": "^0.21.2",
     "react-native-device-info": "^14.0.1",
     "react-native-dotenv": "^3.4.11",
     "react-native-elements": "^3.4.3",
@@ -80,6 +81,7 @@
     "react-native-material-ripple": "^0.9.1",
     "react-native-mmkv": "^2.12.2",
     "react-native-modalize": "^2.1.1",
+    "react-native-ota-hot-update": "^2.0.6",
     "react-native-paper": "^5.12.5",
     "react-native-permissions": "^4.1.5",
     "react-native-permissions-modal": "^0.0.1",

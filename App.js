@@ -39,6 +39,9 @@ import GetPro from "./src/Screens/Store/GetPro";
 import { axiosPull } from "./src/utils/axiosPull";
 import { useMMKVObject } from "react-native-mmkv";
 import { storage } from "./src/context/components/Storage";
+import hotUpdate from 'react-native-ota-hot-update';
+import ReactNativeBlobUtil from 'react-native-blob-util';
+import { constants } from "./src/utils";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -48,10 +51,37 @@ export default function App() {
   Text.defaultProps = Text.defaultProps || {};
   Text.defaultProps.allowFontScaling = false;
   LogBox.ignoreAllLogs(true);
-  const [user] = useMMKVObject("user.Data", storage);
   const [signIn, setSignIn] = useState(false);
   const [ready, setReady] = useState(false);
   const [owner, setOwner] = useState("0");
+
+  const startUpdate = async (url, urlversion) => {
+    hotUpdate.downloadBundleUri(ReactNativeBlobUtil, url, urlversion, {
+      updateSuccess: () => {
+        console.log('update success!');
+      },
+      updateFail(message) {
+        console.log(message);
+
+      },
+      restartAfterInstall: false,
+    });
+  };
+
+const onCheckVersion = () => {
+    fetch(constants.updateJSON).then(async (data) => {
+      const result = await data.json();
+      const currentVersion = await hotUpdate.getCurrentVersion();
+      if (result?.version > currentVersion) {
+                startUpdate(
+                  Platform.OS === 'ios'
+                    ? result?.downloadIosUrl
+                    : result?.downloadAndroidUrl,
+                  result.version
+                );
+    };
+  });
+  };
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener((state) => {
@@ -121,6 +151,7 @@ export default function App() {
 
   useEffect(() => {
     const fetchData = async () => {
+      onCheckVersion();
       const owner = await AsyncStorage.getItem("user_id");
       setOwner(owner);
 

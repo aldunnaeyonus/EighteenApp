@@ -4,9 +4,7 @@
 #import <React/RCTLinkingManager.h>
 #import <UserNotifications/UserNotifications.h>
 #import <RNCPushNotificationIOS.h>
-#import <AppCenterReactNative.h>
-#import <AppCenterReactNativeAnalytics.h>
-#import <AppCenterReactNativeCrashes.h>
+#import "OtaHotUpdate.h"
 
 @interface AppDelegate () <UNUserNotificationCenterDelegate>
 @end
@@ -19,10 +17,6 @@
 
   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
   center.delegate = self;
-  
-[AppCenterReactNative register];
-[AppCenterReactNativeAnalytics registerWithInitiallyEnabled:true];
-[AppCenterReactNativeCrashes registerWithAutomaticProcessing];
 
   self.initialProps = @{};
 
@@ -34,12 +28,28 @@
   return [self bundleURL];
 }
 
+- (void)applicationWillResignActive:(UIApplication *)application {
+   if (self.taskIdentifier != UIBackgroundTaskInvalid) {
+      [application endBackgroundTask:self.taskIdentifier];
+      self.taskIdentifier = UIBackgroundTaskInvalid;
+   }
+
+   __weak AppDelegate *weakSelf = self;
+   self.taskIdentifier = [application beginBackgroundTaskWithName:nil expirationHandler:^{
+      if (weakSelf) {
+          [application endBackgroundTask:weakSelf.taskIdentifier];
+          weakSelf.taskIdentifier = UIBackgroundTaskInvalid;
+      }
+   }];
+}
+
 - (NSURL *)bundleURL
 {
 #if DEBUG
   return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@".expo/.virtual-metro-entry"];
 #else
-  return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+  //return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+    return [OtaHotUpdate getBundle]; ## add this line
 #endif
 }
 
