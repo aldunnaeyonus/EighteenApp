@@ -1,4 +1,22 @@
 PODS:
+  - appcenter-analytics (5.0.2):
+    - AppCenter/Analytics (~> 5.0)
+    - AppCenterReactNativeShared (~> 5.0)
+    - React-Core
+  - appcenter-core (5.0.2):
+    - AppCenterReactNativeShared (~> 5.0)
+    - React-Core
+  - appcenter-crashes (5.0.2):
+    - AppCenter/Crashes (~> 5.0)
+    - AppCenterReactNativeShared (~> 5.0)
+    - React-Core
+  - AppCenter/Analytics (5.0.5):
+    - AppCenter/Core
+  - AppCenter/Core (5.0.5)
+  - AppCenter/Crashes (5.0.5):
+    - AppCenter/Core
+  - AppCenterReactNativeShared (5.0.2):
+    - AppCenter/Core (= 5.0.5)
   - boost (1.83.0)
   - DoubleConversion (1.1.6)
   - EXApplication (5.9.1):
@@ -1544,6 +1562,9 @@ PODS:
   - Yoga (0.0.0)
 
 DEPENDENCIES:
+  - appcenter-analytics (from `../node_modules/appcenter-analytics`)
+  - appcenter-core (from `../node_modules/appcenter`)
+  - appcenter-crashes (from `../node_modules/appcenter-crashes`)
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - EXApplication (from `../node_modules/expo-application/ios`)
@@ -1644,6 +1665,8 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - AppCenter
+    - AppCenterReactNativeShared
     - libwebp
     - MMKV
     - MMKVCore
@@ -1652,6 +1675,12 @@ SPEC REPOS:
     - SocketRocket
 
 EXTERNAL SOURCES:
+  appcenter-analytics:
+    :path: "../node_modules/appcenter-analytics"
+  appcenter-core:
+    :path: "../node_modules/appcenter"
+  appcenter-crashes:
+    :path: "../node_modules/appcenter-crashes"
   boost:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
   DoubleConversion:
@@ -1840,6 +1869,11 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
+  AppCenter: 994875ea7941b9e168babb98299f900a94bcef13
+  appcenter-analytics: b90b12a9357d8e3f6174ac761f00c70d95a137ee
+  appcenter-core: 711583753e9b44d3a9c75f8f78baa23804be3e40
+  appcenter-crashes: be716cca49539023ab5778502230098dd4b41d54
+  AppCenterReactNativeShared: e6f6bd4d0e055bf1a3d7337edb4993bfce79185b
   boost: d3f49c53809116a5d38da093a8aa78bf551aed09
   DoubleConversion: 76ab83afb40bddeeee456813d9c04f67f78771b5
   EXApplication: c08200c34daca7af7fd76ac4b9d606077410e8ad
