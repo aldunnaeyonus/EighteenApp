@@ -430,8 +430,8 @@ const CreateCamera = (props) => {
 
     setTimeout(() => {
       setIsAI(false);
-      props.navigation.goBack();
-    }, 1000);
+      props.navigation.pop(2);
+    }, 500);
   };
 
   return (

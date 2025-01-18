@@ -38,13 +38,15 @@ import Abouts from "./src/Screens/Profile/About";
 import GetPro from "./src/Screens/Store/GetPro";
 import { axiosPull } from "./src/utils/axiosPull";
 import hotUpdate from 'react-native-ota-hot-update';
-import ReactNativeBlobUtil from 'react-native-blob-util';
 import { constants } from "./src/utils";
+import ReactNativeBlobUtil from 'react-native-blob-util';
+import NotifService from "./NotifService";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
   setup({ storekitMode: "STOREKIT2_MODE" });
   const [isConnected, setIsConnected] = useState(true);
+  var notification;
 
   Text.defaultProps = Text.defaultProps || {};
   Text.defaultProps.allowFontScaling = false;
@@ -57,6 +59,7 @@ export default function App() {
     hotUpdate.downloadBundleUri(ReactNativeBlobUtil, url, urlversion, {
       updateSuccess: () => {
         console.log('update success!');
+        notification.localNotif(i18n.t("Update"), i18n.t("UpdateDesc"));
       },
       updateFail(message) {
         console.log(message);
@@ -148,6 +151,7 @@ const onCheckVersion = () => {
   };
 
   useEffect(() => {
+    notification = new NotifService();
     const fetchData = async () => {
       onCheckVersion();
       const owner = await AsyncStorage.getItem("user_id");

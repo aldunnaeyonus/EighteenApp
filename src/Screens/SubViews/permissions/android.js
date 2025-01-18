@@ -101,7 +101,6 @@ const AndroidPermissions = () => {
         source={require("../../../../assets/push-notifications.png")}
         onPress={() => {
           request(PERMISSIONS.ANDROID.POST_NOTIFICATIONS).then((status) => {
-            console.log(status)
             setnotifications(status);
           });
         }}

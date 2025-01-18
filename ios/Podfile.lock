@@ -972,7 +972,7 @@ PODS:
     - React-Core
   - react-native-background-timer (2.4.1):
     - React-Core
-  - react-native-blob-util (0.21.2):
+  - react-native-blob-util (0.19.11):
     - React-Core
   - react-native-blur (4.4.1):
     - DoubleConversion
@@ -1386,6 +1386,8 @@ PODS:
     - React-Core
     - SDWebImage (~> 5.11.1)
     - SDWebImageWebPCoder (~> 0.8.4)
+  - RNFS (2.20.0):
+    - React-Core
   - RNGestureHandler (2.21.0):
     - DoubleConversion
     - glog
@@ -1654,6 +1656,7 @@ DEPENDENCIES:
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNFastImage (from `../node_modules/react-native-fast-image`)
+  - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNIap (from `../node_modules/react-native-iap`)
   - RNLocalize (from `../node_modules/react-native-localize`)
@@ -1846,6 +1849,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-device-info"
   RNFastImage:
     :path: "../node_modules/react-native-fast-image"
+  RNFS:
+    :path: "../node_modules/react-native-fs"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNIap:
@@ -1918,7 +1923,7 @@ SPEC CHECKSUMS:
   React-Mapbuffer: 6c1cacdbf40b531f549eba249e531a7d0bfd8e7f
   react-native-background-actions: ea5bab231a28710eea614acb9ca595594415a5ec
   react-native-background-timer: 17ea5e06803401a379ebf1f20505b793ac44d0fe
-  react-native-blob-util: 64a732c0b8bb7f4928905e16ea8dc5cde6fb4832
+  react-native-blob-util: 39a20f2ef11556d958dc4beb0aa07d1ef2690745
   react-native-blur: 0c7027d6edc81de69a206b505c87535955565aac
   react-native-cameraroll: 24f8f8bce30b3573293b3995d216bd7c7cb755f6
   react-native-image-resizer: d9fb629a867335bdc13230ac2a58702bb8c8828f
@@ -1958,6 +1963,7 @@ SPEC CHECKSUMS:
   RNDateTimePicker: 40ffda97d071a98a10fdca4fa97e3977102ccd14
   RNDeviceInfo: 825f0d2f4381327317f12d1522720a8f76e6a19e
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
+  RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNGestureHandler: bdb3590608eea4ee4d557883cac19507c0a21239
   RNIap: f3ca6e7597afccb2c1631de97d88f2e33b10dafd
   RNLocalize: 298e85ce16540a11de40c1a588ead39fc5e9a072

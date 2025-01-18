@@ -16,7 +16,6 @@
     "postinstall": "npx patch-package",
     "export-android": "npx react-native bundle --platform='android' --entry-file='index.js' --bundle-output='./android/app/src/main/assets/index.android.bundle' --sourcemap-output './android/app/src/main/assets/sourcemap.js' --dev=false --assets-dest='./android/app/src/main/res'",
     "export-ios": "npx react-native bundle --entry-file='index.js' --bundle-output='./ios/SnapEighteen/main.jsbundle' --dev=false --platform='ios' --sourcemap-output './ios/SnapEighteen/sourcemap.js' --assets-dest='./ios/SnapEighteen/'"
-
   },
   "dependencies": {
     "@baronha/react-native-photo-editor": "^1.1.6",
@@ -64,13 +63,14 @@
     "react-native-actions-sheet": "^0.9.7",
     "react-native-background-actions": "^4.0.1",
     "react-native-background-timer": "^2.4.1",
-    "react-native-blob-util": "^0.21.2",
+    "react-native-blob-util": "0.19.11",
     "react-native-device-info": "^14.0.1",
     "react-native-dotenv": "^3.4.11",
     "react-native-elements": "^3.4.3",
     "react-native-face-pile": "^1.9.0",
     "react-native-fast-image": "^8.6.3",
     "react-native-fresh-refresh": "^2.1.1",
+    "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "2.21.0",
     "react-native-iap": "^12.14.2-rc.1",
     "react-native-image-progress": "^1.2.0",

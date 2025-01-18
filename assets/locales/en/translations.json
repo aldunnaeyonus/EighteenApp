@@ -235,5 +235,8 @@
     "EvnetEnd":"The Snap Eighteen event is ending.",
     "Resendcodein":"Resend Verification Code in ",
     "Seconds":" seconds",
-    "getnotifications":"Snap Eighteen needs access to notifications so you can receive updates."
+    "getnotifications":"Snap Eighteen needs access to notifications so you can receive updates.",
+    "Update":"Snap Eighteen Update",
+    "UpdateDesc":"The backend code was updated via OTA and will take effect on the next opening of Snap Eighteen."
+
 }
