@@ -13,7 +13,7 @@
 		242F8DB0B348281046E7E6B1 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 6B3B086A818A0E0C824B9F20 /* PrivacyInfo.xcprivacy */; };
 		381DCBB4A3054750A3F29946 /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250C99061CF04380B143CDE1 /* noop-file.swift */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
-		8561B73E2D3AA0A7000B29BC /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 8561B73D2D3AA0A7000B29BC /* main.jsbundle */; };
+		8515ED862D3BE731003F4759 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 8515ED852D3BE731003F4759 /* main.jsbundle */; };
 		8561B7402D3AA218000B29BC /* sourcemap.js in Resources */ = {isa = PBXBuildFile; fileRef = 8561B73F2D3AA218000B29BC /* sourcemap.js */; };
 		858CB2AD2D030B1C00B83D49 /* Stickers.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 858CB2AC2D030B1C00B83D49 /* Stickers.bundle */; };
 		858CB2AE2D030B1C00B83D49 /* LUTs.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 858CB2AB2D030B1C00B83D49 /* LUTs.bundle */; };
@@ -39,7 +39,7 @@
 		6B3B086A818A0E0C824B9F20 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = SnapEighteen/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		6C2E3173556A471DD304B334 /* Pods-SnapEighteen.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SnapEighteen.debug.xcconfig"; path = "Target Support Files/Pods-SnapEighteen/Pods-SnapEighteen.debug.xcconfig"; sourceTree = "<group>"; };
 		7A4D352CD337FB3A3BF06240 /* Pods-SnapEighteen.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SnapEighteen.release.xcconfig"; path = "Target Support Files/Pods-SnapEighteen/Pods-SnapEighteen.release.xcconfig"; sourceTree = "<group>"; };
-		8561B73D2D3AA0A7000B29BC /* main.jsbundle */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
+		8515ED852D3BE731003F4759 /* main.jsbundle */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		8561B73F2D3AA218000B29BC /* sourcemap.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = sourcemap.js; sourceTree = "<group>"; };
 		858CB2AB2D030B1C00B83D49 /* LUTs.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = LUTs.bundle; sourceTree = "<group>"; };
 		858CB2AC2D030B1C00B83D49 /* Stickers.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Stickers.bundle; sourceTree = "<group>"; };
@@ -75,7 +75,7 @@
 				BB2F792B24A3F905000567C9 /* Supporting */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
-				8561B73D2D3AA0A7000B29BC /* main.jsbundle */,
+				8515ED852D3BE731003F4759 /* main.jsbundle */,
 				8561B73F2D3AA218000B29BC /* sourcemap.js */,
 				858CB2AB2D030B1C00B83D49 /* LUTs.bundle */,
 				858CB2AC2D030B1C00B83D49 /* Stickers.bundle */,
@@ -231,9 +231,9 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
+				8515ED862D3BE731003F4759 /* main.jsbundle in Resources */,
 				858CB2AD2D030B1C00B83D49 /* Stickers.bundle in Resources */,
 				858CB2AE2D030B1C00B83D49 /* LUTs.bundle in Resources */,
-				8561B73E2D3AA0A7000B29BC /* main.jsbundle in Resources */,
 				8561B7402D3AA218000B29BC /* sourcemap.js in Resources */,
 				242F8DB0B348281046E7E6B1 /* PrivacyInfo.xcprivacy in Resources */,
 			);
@@ -400,7 +400,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = SnapEighteen/SnapEighteen.entitlements;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = 2899NRK28S;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -439,7 +439,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = SnapEighteen/SnapEighteen.entitlements;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = 2899NRK28S;
 				INFOPLIST_FILE = SnapEighteen/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Snap Eighteen";
@@ -525,10 +525,7 @@
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/usr/lib/swift\"$(inherited)\"";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = false;
@@ -587,10 +584,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/usr/lib/swift\"$(inherited)\"";
 				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
