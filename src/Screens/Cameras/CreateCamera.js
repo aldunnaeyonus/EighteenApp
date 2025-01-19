@@ -40,6 +40,7 @@ const stickers = [];
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
 import NotifService from "../../../NotifService";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const CreateCamera = (props) => {
@@ -129,6 +130,7 @@ const CreateCamera = (props) => {
       console.log("e", e);
       setisEditing(false);
     }
+    await AsyncStorage.removeItem("media.path");
   };
   const cameraChange = (value) => {
     setCameras(value);
@@ -277,6 +279,13 @@ const CreateCamera = (props) => {
           hideAccent: true,
         });
       }
+      const pickImage = async () => {
+        const value = await AsyncStorage.getItem("media.path");
+      if (value != undefined){
+            editImage(value) 
+      }
+    }
+    pickImage();
       props.navigation.setOptions({
         title: isPro == "1" ? i18n.t("CreatePro") : i18n.t("Create"),
         headerRight: () =>
@@ -429,7 +438,7 @@ const CreateCamera = (props) => {
     );
      await CameraRoll.saveAsset(image);
 
-    setTimeout(() => {
+    setTimeout(async () => {
       setIsAI(false);
       props.navigation.goBack()
     }, 1500);

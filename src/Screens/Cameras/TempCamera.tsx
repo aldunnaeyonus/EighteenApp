@@ -34,6 +34,7 @@ import {
 } from "react-native-gesture-handler";
 import momentDurationFormatSetup from "moment-duration-format";
 import moment from "moment";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ReanimatedCamera = Reanimated.createAnimatedComponent(Camera);
 Reanimated.addWhitelistedNativeProps({
@@ -157,7 +158,8 @@ const TempCamera = (props: {
   const onMediaCaptured = useCallback(
     async (media: PhotoFile | VideoFile, type: "photo" | "video") => {
       if (type == "photo") {
-        
+        await AsyncStorage.setItem("media.path",  media.path);
+        props.navigation.goBack()
       } 
     },
     [props]
@@ -268,16 +270,7 @@ const TempCamera = (props: {
             disabledOpacity={0.4}
           />
         )}
-        <Text
-          style={{
-            color: "white",
-            textAlign: "center",
-            fontSize: 10,
-            top: constants.SAFE_AREA_PADDING.paddingBottom - 45,
-          }}
-        >
-          Credits
-        </Text>
+       
       </View>
       <CaptureButton
         style={{

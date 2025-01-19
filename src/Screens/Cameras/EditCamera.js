@@ -252,6 +252,8 @@ const EditCamera = (props) => {
       console.log("e", e);
       setisEditing(false);
     }
+    await AsyncStorage.removeItem("media.path");
+
   };
 
   const pickImage = async () => {
@@ -293,6 +295,13 @@ const EditCamera = (props) => {
           hideAccent: true,
         });
       }
+      const pickImage = async () => {
+        const value = await AsyncStorage.getItem("media.path");
+      if (value != undefined){
+            editImage(value) 
+      }
+    }
+    pickImage();
       props.navigation.setOptions({
         headerRight: () =>
           name.length > 0 && image.length > 0 ? (
@@ -590,7 +599,9 @@ const EditCamera = (props) => {
                                 onPress={() => {
                                   setTimeout(() => {
                                     setIsAI(false);
-              
+                                    props.navigation.navigate("TempCameraPage", {
+                                      title: String(name),
+                                    });
                                   }, 200);
                                   setModalUpload(false);
                                 }}

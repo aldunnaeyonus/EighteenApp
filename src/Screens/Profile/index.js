@@ -7,7 +7,6 @@ import {
   Modal,
   TouchableOpacity,
   ScrollView,
-  Platform,
 } from "react-native";
 const { width: ScreenWidth } = Dimensions.get("window");
 import React, { useEffect, useState, useCallback } from "react";

@@ -37,7 +37,7 @@ import Notifications from "./src/Screens/Profile/Notifications";
 import Abouts from "./src/Screens/Profile/About";
 import GetPro from "./src/Screens/Store/GetPro";
 import { axiosPull } from "./src/utils/axiosPull";
-import hotUpdate from 'react-native-ota-hot-update';
+import hotUpdate  from 'react-native-ota-hot-update';
 import { constants } from "./src/utils";
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import NotifService from "./NotifService";
@@ -47,7 +47,6 @@ export default function App() {
   const Stack = createNativeStackNavigator();
   setup({ storekitMode: "STOREKIT2_MODE" });
   const [isConnected, setIsConnected] = useState(true);
-  let notification = new NotifService();
 
 
   Text.defaultProps = Text.defaultProps || {};
@@ -61,7 +60,6 @@ export default function App() {
     hotUpdate.downloadBundleUri(ReactNativeBlobUtil, url, urlversion, {
       updateSuccess: () => {
         console.log('update success!');
-        notification.localNotif(i18n.t("Update"), i18n.t("UpdateDesc"));
       },
       updateFail(message) {
         console.log(message);
@@ -75,7 +73,7 @@ const onCheckVersion = () => {
     fetch(constants.updateJSON).then(async (data) => {
       const result = await data.json();
       const currentVersion = await hotUpdate.getCurrentVersion();
-      if (result?.version > currentVersion) {
+      if (result?.version > isNaN(currentVersion) ? 1 : currentVersion) {
                 startUpdate(
                   Platform.OS === 'ios'
                     ? result?.downloadIosUrl
@@ -153,6 +151,15 @@ const onCheckVersion = () => {
   };
 
   useEffect(() => {
+    new NotifService();
+
+    const fetchData = () => {
+      onCheckVersion();
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
     const fetchData = async () => {
       onCheckVersion();
       const owner = await AsyncStorage.getItem("user_id");
@@ -166,7 +173,7 @@ const onCheckVersion = () => {
       }
     };
     fetchData();
-  }, [signIn]);
+  }, [signIn, ready, owner]);
 
   if (!ready) {
     return null;
