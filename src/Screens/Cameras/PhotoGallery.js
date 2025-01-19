@@ -671,12 +671,12 @@ const PhotoGallery = (props) => {
               <View style={{ flexDirection: "column" }}>
                 <Icon
                   type="material-community"
-                  size={40}
+                  size={30}
                   name="image-outline"
                   color={"#fff"}
                   containerStyle={{
-                    height: 75,
-                    width: 75,
+                    height: 55,
+                    width: 55,
                     alignContent: "center",
                     justifyContent: "center",
                     backgroundColor: "#ea5504",
@@ -705,12 +705,12 @@ const PhotoGallery = (props) => {
               >
                 <Icon
                   type="material-community"
-                  size={40}
+                  size={30}
                   name="camera-outline"
                   color={"#fff"}
                   containerStyle={{
-                    height: 75,
-                    width: 75,
+                    height: 55,
+                    width: 55,
                     alignContent: "center",
                     justifyContent: "center",
                     backgroundColor: "rgba(250, 190, 0, 1)",

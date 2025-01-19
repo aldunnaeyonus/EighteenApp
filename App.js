@@ -41,12 +41,14 @@ import hotUpdate from 'react-native-ota-hot-update';
 import { constants } from "./src/utils";
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import NotifService from "./NotifService";
+import TempCamera from "./src/Screens/Cameras/TempCamera";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
   setup({ storekitMode: "STOREKIT2_MODE" });
   const [isConnected, setIsConnected] = useState(true);
-  var notification;
+  let notification = new NotifService();
+
 
   Text.defaultProps = Text.defaultProps || {};
   Text.defaultProps.allowFontScaling = false;
@@ -151,7 +153,6 @@ const onCheckVersion = () => {
   };
 
   useEffect(() => {
-    notification = new NotifService();
     const fetchData = async () => {
       onCheckVersion();
       const owner = await AsyncStorage.getItem("user_id");
@@ -192,6 +193,24 @@ const onCheckVersion = () => {
               initialRouteName={signIn ? "Home" : "Begin"}
               options={{ animationEnabled: false, animation: "none" }}
             >
+                <Stack.Screen
+                name="TempCameraPage"
+                options={{
+                  gestureEnabled: false,
+                  title: i18n.t(""),
+                  headerShown: false,
+                }}
+              >
+                {(props) => (
+                  <TempCamera
+                    {...props}
+                    UUID={owner}
+                    loggedIn={signIn}
+                    unsubscribe={isConnected}
+                  />
+                )}
+              </Stack.Screen>
+
               <Stack.Screen
                 name="Begin"
                 options={{

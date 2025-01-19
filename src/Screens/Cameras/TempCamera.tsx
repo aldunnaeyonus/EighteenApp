@@ -4,7 +4,6 @@ import {
   StyleSheet,
   GestureResponderEvent,
   Text,
-  Platform,
 } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import {
@@ -26,7 +25,7 @@ import Reanimated, {
   useAnimatedGestureHandler,
   useSharedValue,
 } from "react-native-reanimated";
-import { CaptureButton } from "./CaptureButton";
+import { CaptureButton } from "../VisionCamera/CaptureButton";
 import { constants } from "../../utils";
 import type { PinchGestureHandlerGestureEvent } from "react-native-gesture-handler";
 import {
@@ -35,48 +34,24 @@ import {
 } from "react-native-gesture-handler";
 import momentDurationFormatSetup from "moment-duration-format";
 import moment from "moment";
-import CreditsFont from "../SubViews/camera/camerCredits";
-import * as i18n from "../../../i18n";
-import { storage } from "../../context/components/Storage";
-import { CameraRoll } from "@react-native-camera-roll/camera-roll";
 
 const ReanimatedCamera = Reanimated.createAnimatedComponent(Camera);
 Reanimated.addWhitelistedNativeProps({
   zoom: true,
 });
 import "moment-duration-format";
-import PhotoEditor from "@baronha/react-native-photo-editor";
-const stickers: never[] = [];
-import { handleUpload } from "../SubViews/upload";
-import { useMMKVObject } from "react-native-mmkv";
 
-const VisionCamera = (props: {
+const TempCamera = (props: {
   route: {
     params: {
       title: any;
-      user: any;
-      owner: any;
-      credits: any;
-      end: any;
-      start: any;
-      pin: any;
-      UUID: any;
-      action: any;
     };
   };
   navigation: any;
 }) => {
   momentDurationFormatSetup(moment);
   const [uiRotation, setUiRotation] = useState(0);
-  const [credits, setCredits] = useState(
-    props.route.params.user == props.route.params.owner
-      ? "99"
-      : props.route.params.credits
-  );
-  const [cameraData] = useMMKVObject(
-    `user.Camera.Friend.Feed.${props.route.params.owner}`,
-    storage
-  );
+
   const { hasPermission, requestPermission } = useCameraPermission();
   const {
     hasPermission: microphonePermission,
@@ -89,23 +64,7 @@ const VisionCamera = (props: {
   );
   const device = useCameraDevice(cameraPosition);
   const [isCameraInitialized, setIsCameraInitialized] = useState(false);
-  const [uploading] = useMMKVObject("uploadData", storage);
-
-  const durationAsString = (end: any, start: any) => {
-    return start >= moment().unix()
-      ? i18n.t("Event Starts in:") +
-          moment
-            .duration(parseInt(start) - moment().unix(), "seconds")
-            .format("d [days], h [hrs], m [min]")
-      : i18n.t("Event Ends in:") +
-          moment
-            .duration(parseInt(end), "seconds")
-            .format("d [days], h [hrs], m [min]");
-  };
-  let endEventTime = durationAsString(
-    parseInt(props.route.params.end) - moment().unix(),
-    parseInt(props.route.params.start)
-  );
+  
   const camera = useRef<Camera>(null);
 
   const onFocusTap = useCallback(
@@ -124,9 +83,6 @@ const VisionCamera = (props: {
 
     runAtTargetFps(10, () => {
       "worklet";
-      //console.log(`${frame.timestamp}: ${frame.width}x${frame.height} ${frame.pixelFormat} Frame (${frame.orientation})`)
-      //examplePlugin(frame)
-      // exampleKotlinSwiftPlugin(frame)
     });
   }, []);
 
@@ -198,72 +154,11 @@ const VisionCamera = (props: {
     [isPressingButton]
   );
 
-  const createEvent = async (path: String) => {
-    var formData = new FormData();
-    formData.append("pin", props.route.params.pin);
-    formData.append("owner", props.route.params.owner);
-    formData.append("user", props.route.params.user);
-    formData.append("id", props.route.params.UUID);
-    formData.append("count", "1");
-    formData.append("device", Platform.OS);
-    formData.append("camera", "1");
-    var fileName =
-      "SNAP18-camera-" +
-      props.route.params.pin +
-      "-" +
-      Date.now() +
-      +"-" +
-      path.split("/").pop();
-    formData.append("file[]", {
-      name: fileName,
-      type: constants.mimes(path.split(".").pop()), // set MIME type
-      uri: path,
-    });
-
-    handleUpload(
-      constants.url + "/camera/upload.php",
-      formData,
-      props.route.params.user,
-      "camera",
-      props.route.params.pin,
-      props.route.params.owner,
-      i18n.t("Uploading") + " " + i18n.t("PleaseWait"),
-      path,
-      uploading
-    );
-    props.navigation.pop(1);
-
-  };
-
   const onMediaCaptured = useCallback(
     async (media: PhotoFile | VideoFile, type: "photo" | "video") => {
       if (type == "photo") {
-        try {
-          const path = await PhotoEditor.open({
-            path: media.path,
-            stickers,
-          });
-          await CameraRoll.saveAsset(String(path), {
-            type: type,
-          });
-          createEvent(path);
-        } catch (e) {
-          console.log("e", e);
-        }
-      } else {
-        props.navigation.navigate("VisionCameraMediaPage", {
-          path: media.path,
-          type: type,
-          UUID: props.route.params.UUID,
-          title: props.route.params.title,
-          end: props.route.params.end,
-          start: props.route.params.start,
-          pin: props.route.params.pin,
-          owner: props.route.params.owner,
-          user: props.route.params.user,
-          credits: credits,
-        });
-      }
+        
+      } 
     },
     [props]
   );
@@ -297,8 +192,8 @@ const VisionCamera = (props: {
               enableZoomGesture={true}
               photo={true}
               isMirrored={false}
-              video={true}
-              audio={true}
+              video={false}
+              audio={false}
               device={device}
               frameProcessor={frameProcessor}
             />
@@ -324,7 +219,6 @@ const VisionCamera = (props: {
           top: constants.SAFE_AREA_PADDING.paddingBottom + 45,
         }}
       >
-        {endEventTime}
       </Text>
       <View
         style={{
@@ -374,7 +268,6 @@ const VisionCamera = (props: {
             disabledOpacity={0.4}
           />
         )}
-        <CreditsFont credits={credits} />
         <Text
           style={{
             color: "white",
@@ -398,11 +291,11 @@ const VisionCamera = (props: {
         minZoom={minZoom}
         maxZoom={maxZoom}
         flash={flash == "off" ? "off" : "on"}
-        enabled={isCameraInitialized && isActive && credits > 0}
+        enabled={isCameraInitialized && isActive}
         setIsPressingButton={setIsPressingButton}
       />
     </View>
   );
 };
 
-export default VisionCamera;
+export default TempCamera;

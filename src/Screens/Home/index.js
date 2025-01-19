@@ -28,7 +28,6 @@ import RefreshView from "../../utils/refreshView";
 import FriendHeader from "../SubViews/home/homeHeader";
 import { axiosPull } from "../../utils/axiosPull";
 import * as i18n from "../../../i18n";
-import NotifService from "../../../NotifService";
 import { useIsFocused } from "@react-navigation/native";
 import Loading from "../SubViews/home/Loading";
 
@@ -49,10 +48,6 @@ const Home = (props) => {
   const triggerProfileFunction = async () => {
     props.navigation.navigate("Profile");
   };
-
-  useEffect(() => {
-    new NotifService();
-  }, []);
 
   const _gotoCamera = (
     pin,

@@ -41,6 +41,7 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
 import NotifService from "../../../NotifService";
 
+
 const CreateCamera = (props) => {
   var newDate = new Date();
   const [switch2, setSwitch2] = useState(true);
@@ -71,11 +72,11 @@ const CreateCamera = (props) => {
   const [verified, setVerified] = useState(true);
   const [errorColor] = useState(verified ? "#fafbfc" : "#ffa3a6");
   const [uploading] = useMMKVObject("uploadData", storage);
-  var notification;
+  let notification = new NotifService();
 
   useFocusEffect(
     useCallback(async () => {
-      notification = new NotifService();
+
     }, [])
   );
 
@@ -392,7 +393,6 @@ const CreateCamera = (props) => {
         <ActivityIndicator color="black" size={"small"} animating={true} />
       ),
     });
-    await CameraRoll.saveAsset(image);
 
     handleUpload(
       constants.url + "/camera/create.php",
@@ -427,11 +427,12 @@ const CreateCamera = (props) => {
       pin + "-end",
       constants.urldata + "/" + user.user_id + "/events/" + pin + "/" + fileName
     );
+     await CameraRoll.saveAsset(image);
 
     setTimeout(() => {
       setIsAI(false);
-      props.navigation.pop(2);
-    }, 500);
+      props.navigation.goBack()
+    }, 1500);
   };
 
   return (
@@ -485,12 +486,12 @@ const CreateCamera = (props) => {
               <View style={{ flexDirection: "column" }}>
                 <Icon
                   type="material-community"
-                  size={40}
+                  size={30}
                   name="chip"
                   color={"#fff"}
                   containerStyle={{
-                    height: 75,
-                    width: 75,
+                    height: 55,
+                    width: 55,
                     alignContent: "center",
                     justifyContent: "center",
                     backgroundColor: "rgba(116, 198, 190, 1)",
@@ -540,12 +541,12 @@ const CreateCamera = (props) => {
               <View style={{ flexDirection: "column" }}>
                 <Icon
                   type="material-community"
-                  size={40}
+                  size={30}
                   name="image-outline"
                   color={"#fff"}
                   containerStyle={{
-                    height: 75,
-                    width: 75,
+                    height: 55,
+                    width: 55,
                     alignContent: "center",
                     justifyContent: "center",
                     backgroundColor: "rgba(250, 190, 0, 1)",
@@ -566,6 +567,40 @@ const CreateCamera = (props) => {
                   }}
                 >
                   {i18n.t("Gallery")}
+                </Text>
+               
+              </View>
+              <View style={{ flexDirection: "column" }}>
+                <Icon
+                  type="material-community"
+                  size={30}
+                  name="camera-outline"
+                  color={"#fff"}
+                  containerStyle={{
+                    height: 55,
+                    width: 55,
+                    alignContent: "center",
+                    justifyContent: "center",
+                    backgroundColor: "#ea5504",
+                    borderRadius: 22,
+                  }}
+                  onPress={() => {
+                    setTimeout(() => {
+                      setIsAI(false);
+                      props.navigation.navigate("TempCameraPage", {
+                        title: String(name),
+                      });
+                    }, 200);
+                    setModalUpload(false);
+                  }}
+                />
+                <Text
+                  style={{
+                    textAlign: "center",
+                    marginTop: 10,
+                  }}
+                >
+                  {i18n.t("Camera")}
                 </Text>
               </View>
             </View>

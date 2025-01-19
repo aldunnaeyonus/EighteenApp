@@ -18,7 +18,7 @@ const Verification = (props) => {
   const [handleStatus, setHandleStatus] = useState("");
   const { toast } = useToast();
   const [code, setCode] = useState("");
-  const [resendTimer, setResendTimer] = useState(90);
+  const [resendTimer, setResendTimer] = useState(180);
   const [canResend, setCanResend] = useState(false);
 
   useEffect(() => {
@@ -132,7 +132,7 @@ const Verification = (props) => {
 
   const resendCode = useCallback(async () => {
     setCanResend(false);
-    setResendTimer(90);
+    setResendTimer(180);
     const data = {
       email: props.route.params.email,
       device: Platform.OS,
