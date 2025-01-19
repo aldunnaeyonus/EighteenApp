@@ -16,8 +16,9 @@
 		858CB2B02D030BDB00B83D49 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 858CB2AF2D030BDB00B83D49 /* StoreKit.framework */; };
 		858CB2B22D030C1300B83D49 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 858CB2B12D030C1300B83D49 /* NotificationCenter.framework */; };
 		85F4D1B02D3D3C4B007D3664 /* Stickers.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 85F4D1AF2D3D3C4B007D3664 /* Stickers.bundle */; };
-		85F4D1B12D3D3C4B007D3664 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 85F4D1AE2D3D3C4B007D3664 /* main.jsbundle */; };
 		85F4D1B22D3D3C4B007D3664 /* LUTs.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 85F4D1AD2D3D3C4B007D3664 /* LUTs.bundle */; };
+		85F4D2992D3D400F007D3664 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 85F4D2982D3D400F007D3664 /* main.jsbundle */; };
+		85F4D29B2D3D40AC007D3664 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 85F4D29A2D3D40AC007D3664 /* assets */; };
 		85FC93F92D38583100C50C8F /* UserNotificationsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85FC93F82D38583100C50C8F /* UserNotificationsUI.framework */; };
 		85FC93FB2D38583D00C50C8F /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85FC93FA2D38583D00C50C8F /* UserNotifications.framework */; };
 		96905EF65AED1B983A6B3ABC /* libPods-SnapEighteen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EEBF8E8E6FB1BC6CAF49B5 /* libPods-SnapEighteen.a */; };
@@ -41,8 +42,9 @@
 		858CB2AF2D030BDB00B83D49 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		858CB2B12D030C1300B83D49 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
 		85F4D1AD2D3D3C4B007D3664 /* LUTs.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = LUTs.bundle; path = SnapEighteen/LUTs.bundle; sourceTree = "<group>"; };
-		85F4D1AE2D3D3C4B007D3664 /* main.jsbundle */ = {isa = PBXFileReference; lastKnownFileType = text; name = main.jsbundle; path = SnapEighteen/main.jsbundle; sourceTree = "<group>"; };
 		85F4D1AF2D3D3C4B007D3664 /* Stickers.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Stickers.bundle; path = SnapEighteen/Stickers.bundle; sourceTree = "<group>"; };
+		85F4D2982D3D400F007D3664 /* main.jsbundle */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
+		85F4D29A2D3D40AC007D3664 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assets; sourceTree = "<group>"; };
 		85FC93F82D38583100C50C8F /* UserNotificationsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotificationsUI.framework; path = System/Library/Frameworks/UserNotificationsUI.framework; sourceTree = SDKROOT; };
 		85FC93FA2D38583D00C50C8F /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = SnapEighteen/SplashScreen.storyboard; sourceTree = "<group>"; };
@@ -81,7 +83,7 @@
 				666AA3231E504502BEB0EC90 /* SnapEighteen-Bridging-Header.h */,
 				6B3B086A818A0E0C824B9F20 /* PrivacyInfo.xcprivacy */,
 				85F4D1AD2D3D3C4B007D3664 /* LUTs.bundle */,
-				85F4D1AE2D3D3C4B007D3664 /* main.jsbundle */,
+				85F4D2982D3D400F007D3664 /* main.jsbundle */,
 				85F4D1AF2D3D3C4B007D3664 /* Stickers.bundle */,
 			);
 			name = SnapEighteen;
@@ -110,6 +112,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				85F4D29A2D3D40AC007D3664 /* assets */,
 				13B07FAE1A68108700A75B9A /* SnapEighteen */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
@@ -225,13 +228,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				85F4D29B2D3D40AC007D3664 /* assets in Resources */,
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
 				242F8DB0B348281046E7E6B1 /* PrivacyInfo.xcprivacy in Resources */,
 				85F4D1B02D3D3C4B007D3664 /* Stickers.bundle in Resources */,
-				85F4D1B12D3D3C4B007D3664 /* main.jsbundle in Resources */,
 				85F4D1B22D3D3C4B007D3664 /* LUTs.bundle in Resources */,
+				85F4D2992D3D400F007D3664 /* main.jsbundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

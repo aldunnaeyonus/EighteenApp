@@ -6,7 +6,7 @@ Build Web
 Build Run iOS
     npx expo run:ios --Builds on Machine
     eas build -p ios -- Sends to Server
-    npx react-native bundle --entry-file='index.js' --bundle-output='./ios/SnapEighteen/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios/SnapEighteen/' 
+    npx react-native bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios' 
 
    Build Run Android
     npx expo run:android --Builds on Machine
