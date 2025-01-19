@@ -445,7 +445,7 @@ const EditCamera = (props) => {
     setTimeout(() => {
       setIsAI(false);
       props.navigation.goBack();
-    }, 1500);
+    }, 3500);
   };
 
   return (

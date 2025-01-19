@@ -73,14 +73,17 @@ const onCheckVersion = () => {
     fetch(constants.updateJSON).then(async (data) => {
       const result = await data.json();
       const currentVersion = await hotUpdate.getCurrentVersion();
-      if (result?.version > isNaN(currentVersion) ? 1 : currentVersion) {
+      console.log("JSON: ", result?.version);
+      console.log("currentVersion: ", currentVersion);
+
+      //if (result?.version > isNaN(currentVersion) ? 1 : currentVersion) {
                 startUpdate(
                   Platform.OS === 'ios'
                     ? result?.downloadIosUrl
                     : result?.downloadAndroidUrl,
                   result.version
                 );
-    };
+    //};
   });
   };
 

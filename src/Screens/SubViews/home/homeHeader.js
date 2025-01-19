@@ -34,7 +34,7 @@ const FriendHeader = (props) => {
           <Text
             style={{
               fontSize: 15,
-              fontWeight: "30",
+              fontWeight: "300",
             }}
           >
             {i18n.t("ViewAll")}
