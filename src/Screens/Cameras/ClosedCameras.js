@@ -21,7 +21,7 @@ import { useMMKVObject } from "react-native-mmkv";
 import { axiosPull } from "../../utils/axiosPull";
 import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../i18n";
-import { ActivityIndicator } from "react-native-paper";
+import { ActivityIndicator, ProgressBar  } from "react-native-paper";
 import { MenuView } from "@react-native-menu/menu";
 import { constants } from "../../utils";
 import * as FileSystem from "expo-file-system";
@@ -269,7 +269,7 @@ const ClosedCameras = (props) => {
         style={{marginTop:-50}}
         animating={startDownload}
         hidesWhenStopped={true}
-      /> : 
+      />  <ProgressBar progress={progress} color="#0000ff" />: 
         <MenuView
           key={item.UUID}
           title={item.title.toUpperCase()}
