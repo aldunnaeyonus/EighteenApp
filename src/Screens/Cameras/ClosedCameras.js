@@ -21,12 +21,12 @@ import { useMMKVObject } from "react-native-mmkv";
 import { axiosPull } from "../../utils/axiosPull";
 import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../i18n";
-import { ActivityIndicator } from "react-native-paper";
+import { ActivityIndicator, ProgressBar  } from "react-native-paper";
 import { MenuView } from "@react-native-menu/menu";
 import { constants } from "../../utils";
 import * as FileSystem from "expo-file-system";
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
-import RefreshableWrapper from "react-native-fresh-refresh";
+
 
 const ClosedCameras = (props) => {
   const [filteredDataSource] = useMMKVObject("user.Media.Feed", storage);
@@ -35,7 +35,8 @@ const ClosedCameras = (props) => {
   const [startDownload, setStartDownload] = useState(false);
   const [count, setCount] = useState(0);
   const [user] = useMMKVObject("user.Data", storage);
-  
+  const [progress, setProgress] = useState(0);
+
   const _refresh = async () => {
     serRefreshing(true);
     await axiosPull._pullHistoryFeed(user.user_id);
@@ -44,31 +45,29 @@ const ClosedCameras = (props) => {
     }, 1500);
   };
 
-  const handleDownloadAction = async (array) => {
-    Alert.alert(i18n.t('DownloadingEventFiles'),i18n.t('Theventfiles'));
+   const handleDownloadAction = async (fileUris) => {
+    let totalSize = 0;
+    let savedSize = 0;
     setStartDownload(true)
-    JSON.parse(array).map(async (item) => {
-        FileSystem.downloadAsync(
-          item.file_name,
-          FileSystem.documentDirectory + item.file_name.split("/").pop()
-        )
-          .then(async ({ uri }) => {
-            setStartDownload(true)
-            try { 
-            await CameraRoll.saveAsset(uri);
-            setCount(count - 1);
-            FileSystem.deleteAsync(uri);
-            if (count <= 0){
-              setStartDownload(false)
-            }
-            } catch (error) { 
-              console.error("Error fetching data: ", error.message); 
-            }
-          })
-          .catch((error) => {
-            console.log(error.message);
-          });
-      });
+    Alert.alert(i18n.t('DownloadingEventFiles'),i18n.t('Theventfiles'));
+    // Calculate total size of files
+    for (const uri of fileUris) {
+      const statResult = await RNFS.stat(uri);
+      totalSize += statResult.size;
+    }
+
+    for (const uri of fileUris) {
+      await CameraRoll.saveAsset(uri);
+
+      // Update progress
+      const statResult = await RNFS.stat(uri);
+      savedSize += statResult.size;
+      setProgress((savedSize / totalSize) * 100);
+    }
+      if (progress >= 100){
+        setProgress(0)
+        setStartDownload(false)
+      }
   };
 
   const _deleteFeedItemIndex = (UUID) => {
@@ -270,7 +269,7 @@ const ClosedCameras = (props) => {
         style={{marginTop:-50}}
         animating={startDownload}
         hidesWhenStopped={true}
-      /> : 
+      />  <ProgressBar progress={progress} color="#0000ff" />: 
         <MenuView
           key={item.UUID}
           title={item.title.toUpperCase()}
