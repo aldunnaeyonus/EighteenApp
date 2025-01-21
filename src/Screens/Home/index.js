@@ -156,7 +156,7 @@ const Home = (props) => {
     const link =
       constants.url + "/link.php?pin=" + pin + "." + time + "." + owner;
     const message =
-      i18n.t("Join my Snap Eighteen Event") + "[" + title + "] at " + link;
+      i18n.t("Join my Snap Eighteen Event") + " [" + title + "] at " + link;
     const url =
       constants.url +
       "/qrcode.php?pin=" +
