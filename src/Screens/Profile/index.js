@@ -7,7 +7,6 @@ import {
   Modal,
   TouchableOpacity,
   ScrollView,
-  Platform,
 } from "react-native";
 const { width: ScreenWidth } = Dimensions.get("window");
 import React, { useEffect, useState, useCallback } from "react";
@@ -28,6 +27,7 @@ import { axiosPull } from "../../utils/axiosPull";
 import * as i18n from "../../../i18n";
 import ProfileHeader from "../SubViews/home/profileHeader";
 import { useIsFocused } from "@react-navigation/native";
+import Loading from "../SubViews/home/Loading";
 
 const Profile = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
@@ -198,6 +198,11 @@ const Profile = (props) => {
         stickyHeaderHiddenOnScroll={false}
       >
         <View style={{ width: "100%", backgroundColor: "#fff" }}>
+        <Loading
+                  message={uploading.message}
+                  flex={uploading.display}
+                  image={uploading.image}
+                />
           <ProfileHeader
             name={user.user_handle}
             id={user.user_id}
@@ -210,7 +215,6 @@ const Profile = (props) => {
           />
           <View>
             <View style={[styles.dividerTableStyle]} />
-            {Platform.OS == "ios" && (
               <ListItem
                 containerStyle={{ paddingVertical: 5 }}
                 key="99"
@@ -235,7 +239,6 @@ const Profile = (props) => {
                 </ListItem.Content>
                 <ListItem.Chevron />
               </ListItem>
-            )}
             <View style={[styles.dividerTableStyle]} />
             <ListItem
               containerStyle={{ paddingVertical: 5 }}

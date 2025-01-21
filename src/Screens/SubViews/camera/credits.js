@@ -10,13 +10,17 @@ const CreditsFont = (props) => {
   let second = "";
 
   const number = splitNumberIntoDigits(props.credits);
-
-  if (number.length > 1) {
-    first = `numeric-${number[0]}`;
-    second = `numeric-${number[1]}`;
-  } else {
+     console.log(String(props.credits).length);
+     
+  if (parseInt(props.credits) < 0) {
     first = "numeric-0";
-    second = `numeric-${number[0]}`;
+    second = "numeric-0";
+  }else if (parseInt(props.credits) > 9) {
+      first = `numeric-${number[0]}`;
+      second = `numeric-${number[1]}`;
+    }else if (parseInt(props.credits) < 10) {
+      first = "numeric-0";
+      second = `numeric-${number[0]}`;
   }
 
   return (

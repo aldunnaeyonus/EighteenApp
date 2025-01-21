@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Dimensions } from "react-native";
+import { View, Text, Dimensions, Platform } from "react-native";
 import Animated from "react-native-reanimated";
 import { ActivityIndicator, MD2Colors } from "react-native-paper";
 import StoreListItem from "../SubViews/store/storeList";
@@ -66,7 +66,11 @@ const Products = (props) => {
 
   const handleBuyProduct = async (sku) => {
     try {
-      await requestPurchase({ sku });
+      if (Platform.OS === 'ios') {
+        await requestPurchase({sku});
+    } else if (Platform.OS === 'android') {
+        await requestPurchase({ skus: [sku] });
+    }
     } catch (error) {
       if (error instanceof PurchaseError) {
         errorLog({ message: `[${error.code}]: ${error.message}`, error });
@@ -155,7 +159,7 @@ const Products = (props) => {
         style={{ background: "white" }}
         showsVerticalScrollIndicatorr={false}
         data={products}
-        numColumns={2}
+        numColumns={(Platform.OS == "ios") ? 2 : 2}
         extraData={products}
         scrollEventThrottle={16}
         keyExtractor={(item) => item.productId}

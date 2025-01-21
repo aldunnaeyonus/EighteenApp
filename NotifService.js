@@ -1,5 +1,6 @@
 import PushNotification, {Importance} from 'react-native-push-notification';
 import NotificationHandler from './NotificationHandler';
+import moment from "moment";
 
 export default class NotifService {
   constructor(onRegister, onNotification) {
@@ -82,7 +83,7 @@ export default class NotifService {
 
   scheduleNotif( bigText, subText, date, lastId, picture) {
     PushNotification.localNotificationSchedule({
-      date: new Date(date), // in 30 secs
+      date: moment.unix(date).toDate(), // in 30 secs
       /* Android Only Properties */
       channelId: 'default-channel-id',
       /* iOS and Android properties */

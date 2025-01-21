@@ -26,7 +26,7 @@ import { MenuView } from "@react-native-menu/menu";
 import { constants } from "../../utils";
 import * as FileSystem from "expo-file-system";
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
-import RNFS from 'react-native-fs';
+
 
 const ClosedCameras = (props) => {
   const [filteredDataSource] = useMMKVObject("user.Media.Feed", storage);
@@ -308,10 +308,17 @@ const ClosedCameras = (props) => {
   };
   return (
     <View style={styles.container}>
+        <RefreshableWrapper
+        defaultAnimationEnabled={true}
+        Loader={() => <RefreshView />}
+        isLoading={refreshing}
+        onRefresh={() => {
+          _refresh();
+        }}
+      >
       <FlatList
         extraData={filteredDataSource}
-        refreshing={refreshing}
-        onRefresh={_refresh}
+
         ListEmptyComponent={
           <EmptyStateView
             imageSource={require("../../../assets/4320872.png")}
@@ -348,6 +355,7 @@ const ClosedCameras = (props) => {
           </View>
         }
       />
+      </RefreshableWrapper>
     </View>
   );
 };

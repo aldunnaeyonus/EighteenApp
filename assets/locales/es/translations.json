@@ -44,7 +44,7 @@
     "Not Joined":"No Unido",
     "Join Event":"Unirse al Evento",
     "Permissions":"Permisos",
-    "PermissionsText":"Por favor, apruebe los permisos del dispositivo para Snap Eighteen.",
+    "PermissionsText":"Toque cada permiso para aprobar el funcionamiento correcto de Snap Eighteen.",
     "To access camera":"Conceda permiso para usar la cámara de su dispositivo para grabar videos y tomar fotos.",
     "To access microphone":"Conceda permiso para usar el micrófono de su dispositivo para grabar videos.",
     "Microphone":"Micrófono",
@@ -155,7 +155,7 @@
     "Video Library":"Biblioteca de Videos",
     "To access video":"Concede permiso para usar la biblioteca de videos de tu dispositivo para subir contenido.",
     "Share a Snap Eighteen Photo":"Comparte una Foto o Video Snap Eighteen",
-    "AI":"Generado por IA",
+    "AI":"IA",
     "Location":"Ubicación",
     "Location Status":"Concede permiso para usar la ubicación de tu dispositivo para mostrar ubicaciones de eventos.",
     "AI Image Generator":"Generador de Imágenes por IA",
@@ -230,5 +230,8 @@
     "EvnetStart":"El evento Snap Eighteen está comenzando.",
     "EvnetEnd":"El evento Snap Eighteen está terminando.",
     "Resendcodein":"Reenviar código de verificación en ",
-    "Seconds":" segundos"
+    "Seconds":" segundos",
+    "getnotifications":"Snap Eighteen necesita acceso a las notificaciones para que pueda recibir actualizaciones.",
+    "Update":"Actualización de Snap Eighteen",
+    "UpdateDesc":"El código del servidor se actualizó a través de OTA y entrará en vigor en la próxima apertura de Snap Eighteen."
 }

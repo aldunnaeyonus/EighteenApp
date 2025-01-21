@@ -180,7 +180,7 @@ const MediaPage = (props: {
     }
     setTimeout(() => {
       setAnimating(false);
-      props.navigation.pop(4);
+      props.navigation.pop(3);
     }, 500);
   };
 

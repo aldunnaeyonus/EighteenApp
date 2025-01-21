@@ -37,7 +37,7 @@ import momentDurationFormatSetup from "moment-duration-format";
 import moment from "moment";
 import CreditsFont from "../SubViews/camera/camerCredits";
 import * as i18n from "../../../i18n";
-import { updateItemFeed, storage } from "../../context/components/Storage";
+import { storage } from "../../context/components/Storage";
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
 
 const ReanimatedCamera = Reanimated.createAnimatedComponent(Camera);
@@ -61,6 +61,7 @@ const VisionCamera = (props: {
       start: any;
       pin: any;
       UUID: any;
+      action: any;
     };
   };
   navigation: any;

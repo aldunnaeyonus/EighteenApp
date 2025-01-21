@@ -22,6 +22,7 @@ const AndroidPermissions = () => {
       checkMic();
       checkVideo();
       checkAccuracy();
+      checkNotifiations();
       if (
         camera == "granted" &&
         mic == "granted" &&
@@ -34,7 +35,7 @@ const AndroidPermissions = () => {
       } else {
         this.permModal.openModal();
       }
-    }, [camera, mic, photo, video, accuracy])
+    }, [camera, mic, photo, video, accuracy, notifications])
   );
 
   const checkAccuracy = () => {
@@ -99,7 +100,7 @@ const AndroidPermissions = () => {
         subtitle={i18n.t("getnotifications")}
         source={require("../../../../assets/push-notifications.png")}
         onPress={() => {
-          request(PERMISSIONS.POST_NOTIFICATIONS).then((status) => {
+          request(PERMISSIONS.ANDROID.POST_NOTIFICATIONS).then((status) => {
             setnotifications(status);
           });
         }}

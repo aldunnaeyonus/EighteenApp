@@ -15,7 +15,6 @@ const Notifications = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
   const [switch2, setSwitch2] = useState(user.email_notification == "1" ? true : false);
   const [switch4, setSwitch4] = useState(user.mobile_notification == "1" ? true : false);
-  const [switch3, setSwitch3] = useState(user.showAlert == "1" ? true : false);
 
   const toggleSwitch2 = () => {
     setSwitch2(!switch2);
@@ -26,9 +25,6 @@ const Notifications = (props) => {
   };
   const isFocused = useIsFocused();
 
-  const toggleSwitch3 = () => {
-    setSwitch3(!switch3);
-  };
 
   const _saveUserData = async () => {
         props.navigation.setOptions({
@@ -40,7 +36,7 @@ const Notifications = (props) => {
       owner: user.user_id,
       email: switch2 ? "1" : "0",
       mobile: switch4 ? "1" : "0",
-      showAlert: switch3 ? "1" : "0",
+      showAlert: "1",
     };
    await axiosPull.postData("/users/notifications.php", data);
    await axiosPull._pullUser(user.user_id, "Notifications");
@@ -149,46 +145,6 @@ const Notifications = (props) => {
               style={{ alignSelf: "flex-end" }}
               value={switch4}
               onValueChange={(value) => {toggleSwitch4(value)}}
-            />
-          </ListItem.Content>
-        </ListItem>
-        <View style={[styles.dividerStyle]} />
-        <View style={[styles.dividerStyle]} />
-
-        <ListItem key="5">
-          <Icon
-            type="material-community"
-            name="sticker-alert-outline"
-            size={25}
-            color="#3D4849"
-            containerStyle={{
-              width: 28,
-              height: 28,
-              borderRadius: 6,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          />
-          <ListItem.Content>
-            <ListItem.Title style={styles.imageUserNameTitleBlack}>
-              {i18n.t("UploadNotification")}
-            </ListItem.Title>
-            <ListItem.Subtitle>
-              {i18n.t("UploadNotification2")}
-            </ListItem.Subtitle>
-          </ListItem.Content>
-        </ListItem>
-
-        <View style={[styles.dividerStyle]} />
-        <ListItem
-          containerStyle={{ height: 65, backgroundColor: "#fafbfc" }}
-          key="6"
-        >
-          <ListItem.Content>
-            <Switch
-              style={{ alignSelf: "flex-end" }}
-              value={switch3}
-              onValueChange={(value) => {toggleSwitch3(value)}}
             />
           </ListItem.Content>
         </ListItem>

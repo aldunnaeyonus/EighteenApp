@@ -27,10 +27,10 @@ export const handleUpload = async (
     },
     color: "#ff00ff",
   };
-
   updateStorage(storageData, "message", message, "uploadData");
-  updateStorage(storageData, "image", umageURI, "uploadData");
   updateStorage(storageData, "display", "flex", "uploadData");
+  updateStorage(storageData, "image", umageURI, "uploadData");
+
 
   await BackgroundService.start(async () => {
     await axios({
@@ -74,11 +74,14 @@ export const handleUpload = async (
             break;
         }
         updateStorage(storageData, "message", "", "uploadData");
-        updateStorage(storageData, "image", "", "uploadData");
         updateStorage(storageData, "display", "none", "uploadData");
+        updateStorage(storageData, "image", "", "uploadData");
       })
       .catch(async (error) => {
+
+        updateStorage(storageData, "message", "", "uploadData");
         updateStorage(storageData, "display", "none", "uploadData");
+        updateStorage(storageData, "image", "", "uploadData");
         await BackgroundService.stop();
         Alert.alert(
           error,

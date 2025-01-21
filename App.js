@@ -37,21 +37,55 @@ import Notifications from "./src/Screens/Profile/Notifications";
 import Abouts from "./src/Screens/Profile/About";
 import GetPro from "./src/Screens/Store/GetPro";
 import { axiosPull } from "./src/utils/axiosPull";
-import { useMMKVObject } from "react-native-mmkv";
-import { storage } from "./src/context/components/Storage";
+import hotUpdate  from 'react-native-ota-hot-update';
+import { constants } from "./src/utils";
+import ReactNativeBlobUtil from 'react-native-blob-util';
+import NotifService from "./NotifService";
+import TempCamera from "./src/Screens/Cameras/TempCamera";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
   setup({ storekitMode: "STOREKIT2_MODE" });
   const [isConnected, setIsConnected] = useState(true);
 
+
   Text.defaultProps = Text.defaultProps || {};
   Text.defaultProps.allowFontScaling = false;
   LogBox.ignoreAllLogs(true);
-  const [user] = useMMKVObject("user.Data", storage);
   const [signIn, setSignIn] = useState(false);
   const [ready, setReady] = useState(false);
   const [owner, setOwner] = useState("0");
+
+  const startUpdate = async (url, urlversion) => {
+    hotUpdate.downloadBundleUri(ReactNativeBlobUtil, url, urlversion, {
+      updateSuccess: () => {
+        console.log('update success!');
+      },
+      updateFail(message) {
+        console.log(message);
+
+      },
+      restartAfterInstall: false,
+    });
+  };
+
+const onCheckVersion = () => {
+    fetch(constants.updateJSON).then(async (data) => {
+      const result = await data.json();
+      const currentVersion = await hotUpdate.getCurrentVersion();
+      console.log("JSON: ", result?.version);
+      console.log("currentVersion: ", currentVersion);
+
+      //if (result?.version > isNaN(currentVersion) ? 1 : currentVersion) {
+                startUpdate(
+                  Platform.OS === 'ios'
+                    ? result?.downloadIosUrl
+                    : result?.downloadAndroidUrl,
+                  result.version
+                );
+    //};
+  });
+  };
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener((state) => {
@@ -120,7 +154,17 @@ export default function App() {
   };
 
   useEffect(() => {
+    new NotifService();
+
+    const fetchData = () => {
+      onCheckVersion();
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
     const fetchData = async () => {
+      onCheckVersion();
       const owner = await AsyncStorage.getItem("user_id");
       setOwner(owner);
 
@@ -132,7 +176,7 @@ export default function App() {
       }
     };
     fetchData();
-  }, [signIn]);
+  }, [signIn, ready, owner]);
 
   if (!ready) {
     return null;
@@ -159,6 +203,24 @@ export default function App() {
               initialRouteName={signIn ? "Home" : "Begin"}
               options={{ animationEnabled: false, animation: "none" }}
             >
+                <Stack.Screen
+                name="TempCameraPage"
+                options={{
+                  gestureEnabled: false,
+                  title: i18n.t(""),
+                  headerShown: false,
+                }}
+              >
+                {(props) => (
+                  <TempCamera
+                    {...props}
+                    UUID={owner}
+                    loggedIn={signIn}
+                    unsubscribe={isConnected}
+                  />
+                )}
+              </Stack.Screen>
+
               <Stack.Screen
                 name="Begin"
                 options={{

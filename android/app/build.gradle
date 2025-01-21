@@ -117,7 +117,7 @@ missingDimensionStrategy "store", "play"
         applicationId 'com.dunncarabali.eighteen'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 4
+        versionCode 12
         versionName "1.0.0"
     }
     signingConfigs {
@@ -182,6 +182,7 @@ flavorDimensions "appstore"
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
+  implementation project(':react-native-blob-util')
 
     def isGifEnabled = (findProperty('expo.gif.enabled') ?: "") == "true";
     def isWebpEnabled = (findProperty('expo.webp.enabled') ?: "") == "true";

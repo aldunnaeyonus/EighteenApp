@@ -9,10 +9,11 @@ const { width: ScreenWidth } = Dimensions.get("window");
 import { ActivityIndicator, MD2Colors } from "react-native-paper";
 
 const Loading = (props) => {
-return (
+
+  return (
     <View
     style={{
-      display:props.flex,
+      display:props.flex == undefined ? "none" : props.flex == "none" ? 'none' : props.flex,
       margin:5,
       flex:1,
       height: 40,
@@ -24,12 +25,16 @@ return (
   >
     
      <Image
-     blurRadius={2}
+     blurRadius={3}
       style={{
         width: 40,
         height: 40,
         borderRadius:6
       }}
+      defaultSource={{
+        source: require("../../../../assets/adaptive-icon.png")
+      }}
+
       source={{
         uri: props.image
       }}

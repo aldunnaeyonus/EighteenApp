@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Platform } from "react-native";
+import { View, Text, TextInput, Platform, Alert } from "react-native";
 import { TouchableOpacity } from "react-native";
 import { storage } from "../../context/components/Storage";
 import React, { useState, useCallback, useEffect } from "react";
@@ -18,7 +18,7 @@ const Verification = (props) => {
   const [handleStatus, setHandleStatus] = useState("");
   const { toast } = useToast();
   const [code, setCode] = useState("");
-  const [resendTimer, setResendTimer] = useState(90);
+  const [resendTimer, setResendTimer] = useState(180);
   const [canResend, setCanResend] = useState(false);
 
   useEffect(() => {
@@ -87,13 +87,12 @@ const Verification = (props) => {
           </TouchableOpacity>
         ),
       });
-    }, [code, props, handleStatus, canResend])
+    }, [code, props, handleStatus, canResend, resendTimer])
   );
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const checkHandle = useCallback(
-    async (value) => {
+  const checkHandle = useCallback(async (value) => {
       setHandleStatus("");
       const data = {
         code: value.toUpperCase(),
@@ -108,8 +107,14 @@ const Verification = (props) => {
         storage.set("user.Data", JSON.stringify(response[0]));
         storage.set(
           "uploadData",
-          JSON.stringify({ message: "", display: "none", image: "" })
+          JSON.stringify([{ message: "", display: "none", image: "" }])
         );
+        storage.set("user.Join.Feed", JSON.stringify([]));
+        storage.set("user.Friend.Feed", JSON.stringify([]));
+        storage.set("uploadData", JSON.stringify(["message"]));
+        storage.set("user.Camera.Feed", JSON.stringify([]));
+        storage.set("user.Camera.Friend.Feed", JSON.stringify([]));
+        storage.set("user.Member.Join.Feed", JSON.stringify([]));
         await AsyncStorage.setItem("current", "0");
         await AsyncStorage.setItem("logedIn", "1");
         await AsyncStorage.setItem("user_id", response[0].user_id);
@@ -122,19 +127,19 @@ const Verification = (props) => {
         setHandleStatus(i18n.t("The verification code"));
       }
     },
-    [props.route.params.email]
+    [props.route.params.email, resendTimer, canResend, isLoading]
   );
 
   const resendCode = useCallback(async () => {
     setCanResend(false);
-    setResendTimer(90);
+    setResendTimer(180);
     const data = {
       email: props.route.params.email,
       device: Platform.OS,
     };
     await axiosPull.postData("/register/checkUsername.php", data);
-    alert("", i18n.t("Anewverificationcode") + " " + props.route.params.email);
-  }, [props.route.params.email]);
+    Alert.alert(i18n.t("Resend Code"), i18n.t("Anewverificationcode"));
+  }, [props.route.params.email, resendTimer, canResend]);
 
   return (
     <KeyboardAwareScrollView style={{ backgroundColor: "#fff" }}>

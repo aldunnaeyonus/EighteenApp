@@ -10,7 +10,7 @@ export const camera_time_seconds_PRO = ["86400", "432000", "604800","1209600", "
 export const camera_amount = ["1", "2", "3", "4", "5", "10", "15", "18"];
 export const media_amount = ["1", "2", "3", "4", "5", "10", "15", "18"];
 export const camera_amount_PRO = ["10", "18", "25", "50", "100", "150", "250", "500", "1000"];
-export const languages = ["French","German","Italian","Dutch","Danish","Polish","Portuguese","Norwegian","Swedish","Finish","English","Spanish", "Japanese", "Chinese", "Ukrainian", "Greek"];
+export const languages = ["French","German","Italian","Dutch","Danish","Polish","Portuguese","Norwegian","Swedish","Finish","English","Spanish", "Japanese", "Chinese", "Ukrainian", "Greek", "South Korean"];
 
 export const ANDROID_DISPLAY = Object.freeze({
   default: 'default',
@@ -120,11 +120,11 @@ switch (ext.toLowerCase()){
         case 'mp4':
     return 'video/mp4'
         case 'mpeg':
-      return 'video/mpeg'   
-      case 'mov':
-        return 'video/quicktime'
+    return 'video/mpeg'   
+        case 'mov':
+    return 'video/quicktime'
         case 'avi':
-          return 'video/avi'   
+    return 'video/avi'   
 }
 }
 
@@ -159,6 +159,7 @@ export const NEUTRAL_BUTTON_ACTION = 'neutralButtonAction';
 
 export const CONTENT_SPACING = 15;
 export const url = "https://snapeighteen.com";
+export const updateJSON = "https://snapeighteen.com/update.json";
 export const urldata = "https://snapeighteen.com/dataFiles";
 export const verification_number = "+1 682.259.3773";
 export const verification_email = 'support@snapeighteen.com';
@@ -295,5 +296,6 @@ export const constants = {
   camera_amount_PRO,
   media_amount,
   urldata,
+  updateJSON,
   mimes
 };

@@ -39,6 +39,7 @@ import * as RNLocalize from "react-native-localize";
 import PhotoEditor from "@baronha/react-native-photo-editor";
 const stickers = [];
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
+import NotifService from "../../../NotifService";
 
 const EditCamera = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
@@ -48,7 +49,7 @@ const EditCamera = (props) => {
   const [switch3, setSwitch3] = useState(
     (props.route.params.camera_purchase_more = "1" ? true : false)
   );
-
+  let notification = new NotifService();
   const [dname, setDName] = useState(props.route.params.description);
   const [isPro] = useState(user.isPro == "1" ? true : false);
   const [switch2, setSwitch2] = useState(
@@ -251,6 +252,8 @@ const EditCamera = (props) => {
       console.log("e", e);
       setisEditing(false);
     }
+    await AsyncStorage.removeItem("media.path");
+
   };
 
   const pickImage = async () => {
@@ -292,6 +295,13 @@ const EditCamera = (props) => {
           hideAccent: true,
         });
       }
+      const pickImage = async () => {
+        const value = await AsyncStorage.getItem("media.path");
+      if (value != undefined){
+            editImage(value) 
+      }
+    }
+    pickImage();
       props.navigation.setOptions({
         headerRight: () =>
           name.length > 0 && image.length > 0 ? (
@@ -435,7 +445,7 @@ const EditCamera = (props) => {
     setTimeout(() => {
       setIsAI(false);
       props.navigation.goBack();
-    }, 1000);
+    }, 3500);
   };
 
   return (
@@ -489,12 +499,12 @@ const EditCamera = (props) => {
               <View style={{ flexDirection: "column" }}>
                 <Icon
                   type="material-community"
-                  size={40}
+                  size={30}
                   name="chip"
                   color={"#fff"}
                   containerStyle={{
-                    height: 75,
-                    width: 75,
+                    height: 55,
+                    width: 55,
                     alignContent: "center",
                     justifyContent: "center",
                     backgroundColor: "rgba(116, 198, 190, 1)",
@@ -544,12 +554,12 @@ const EditCamera = (props) => {
               <View style={{ flexDirection: "column" }}>
                 <Icon
                   type="material-community"
-                  size={40}
+                  size={30}
                   name="image-outline"
                   color={"#fff"}
                   containerStyle={{
-                    height: 75,
-                    width: 75,
+                    height: 55,
+                    width: 55,
                     alignContent: "center",
                     justifyContent: "center",
                     backgroundColor: "rgba(250, 190, 0, 1)",
@@ -572,6 +582,39 @@ const EditCamera = (props) => {
                   {i18n.t("Gallery")}
                 </Text>
               </View>
+               <View style={{ flexDirection: "column" }}>
+                              <Icon
+                                type="material-community"
+                                size={30}
+                                name="camera-outline"
+                                color={"#fff"}
+                                containerStyle={{
+                                  height: 55,
+                                  width: 55,
+                                  alignContent: "center",
+                                  justifyContent: "center",
+                                  backgroundColor: "#ea5504",
+                                  borderRadius: 22,
+                                }}
+                                onPress={() => {
+                                  setTimeout(() => {
+                                    setIsAI(false);
+                                    props.navigation.navigate("TempCameraPage", {
+                                      title: String(name),
+                                    });
+                                  }, 200);
+                                  setModalUpload(false);
+                                }}
+                              />
+                              <Text
+                                style={{
+                                  textAlign: "center",
+                                  marginTop: 10,
+                                }}
+                              >
+                                {i18n.t("Camera")}
+                              </Text>
+                            </View>
             </View>
           </View>
           <TouchableOpacity

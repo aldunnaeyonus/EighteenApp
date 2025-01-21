@@ -21,6 +21,7 @@ const Handle = (props) => {
     Platform.OS === "ios"
       ? NativeModules.SettingsManager.settings.AppleLocale
       : NativeModules.I18nManager.localeIdentifier;
+      
   useEffect(() => {
     if (!props.unsubscribe) {
       toast({
@@ -83,7 +84,7 @@ const Handle = (props) => {
           props.navigation.navigate("Verification", {
             email: email,
           });
-        }, 1000);
+        }, 500);
         break;
       default:
         setIsLoading(false);
@@ -180,7 +181,10 @@ const Handle = (props) => {
               borderColor: "#e35504",
               marginbottom: 20,
             }}
-            onPress={() => checkHandle()}
+            onPress={() => { 
+              checkHandle();
+
+            }}
           >
             {isLoading && (
               <ActivityIndicator
