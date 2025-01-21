@@ -75,12 +75,6 @@ const CreateCamera = (props) => {
   const [uploading] = useMMKVObject("uploadData", storage);
   let notification = new NotifService();
 
-  useFocusEffect(
-    useCallback(async () => {
-
-    }, [])
-  );
-
   const MODE_VALUES = Platform.select({
     ios: Object.values(IOS_MODE),
     android: Object.values(ANDROID_MODE),

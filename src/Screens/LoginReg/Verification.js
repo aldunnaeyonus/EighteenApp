@@ -92,7 +92,9 @@ const Verification = (props) => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const checkHandle = useCallback(async (value) => {
+  const checkHandle = useCallback( (value) => {
+    const execute = async ()=>{
+
       setHandleStatus("");
       const data = {
         code: value.toUpperCase(),
@@ -126,11 +128,13 @@ const Verification = (props) => {
         setIsLoading(false);
         setHandleStatus(i18n.t("The verification code"));
       }
-    },
-    [props.route.params.email, resendTimer, canResend, isLoading]
+    }
+    execute();
+  },[props.route.params.email, resendTimer, canResend, isLoading]
   );
 
-  const resendCode = useCallback(async () => {
+  const resendCode = useCallback = (() => {
+    const execute = async () =>{
     setCanResend(false);
     setResendTimer(180);
     const data = {
@@ -139,6 +143,8 @@ const Verification = (props) => {
     };
     await axiosPull.postData("/register/checkUsername.php", data);
     Alert.alert(i18n.t("Resend Code"), i18n.t("Anewverificationcode"));
+  }
+  execute();
   }, [props.route.params.email, resendTimer, canResend]);
 
   return (

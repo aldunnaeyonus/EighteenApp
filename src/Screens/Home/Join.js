@@ -38,7 +38,7 @@ const Join = (props) => {
 
 
   useFocusEffect(
-    useCallback(async () => {
+    useCallback(() => {
       if (!props.unsubscribe) {
         toast({
           message: i18n.t("No internet connection"),
