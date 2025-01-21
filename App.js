@@ -42,11 +42,13 @@ import { constants } from "./src/utils";
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import NotifService from "./NotifService";
 import TempCamera from "./src/Screens/Cameras/TempCamera";
+import { useIsFocused } from "@react-navigation/native";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
   setup({ storekitMode: "STOREKIT2_MODE" });
   const [isConnected, setIsConnected] = useState(true);
+  const isFocused = useIsFocused();
 
 
   Text.defaultProps = Text.defaultProps || {};
@@ -151,8 +153,9 @@ const onCheckVersion = async () => {
   };
 
   useEffect(() => {
+    new NotifService();
+
     const fetchData = async () => {
-      new NotifService();
       onCheckVersion();
       const owner = await AsyncStorage.getItem("user_id");
       setOwner(owner);
@@ -165,7 +168,7 @@ const onCheckVersion = async () => {
       }
     };
     fetchData();
-  }, [signIn, ready, owner]);
+  }, [signIn, ready, owner, isFocused]);
 
   if (!ready) {
     return null;
