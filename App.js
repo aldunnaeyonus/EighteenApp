@@ -57,7 +57,7 @@ export default function App() {
   const [owner, setOwner] = useState("0");
 
   const startUpdate = async (url, urlversion) => {
-    await AsyncStorage.setItem("Version", urlversion);
+    await AsyncStorage.setItem("Version", ""+urlversion);
     hotUpdate.downloadBundleUri(ReactNativeBlobUtil, url, urlversion, {
       updateSuccess: () => {
         console.log('update success!');
@@ -151,16 +151,8 @@ const onCheckVersion = async () => {
   };
 
   useEffect(() => {
-    new NotifService();
-
-    const fetchData = () => {
-      onCheckVersion();
-    };
-    fetchData();
-  }, []);
-
-  useEffect(() => {
     const fetchData = async () => {
+      new NotifService();
       onCheckVersion();
       const owner = await AsyncStorage.getItem("user_id");
       setOwner(owner);

@@ -66,14 +66,12 @@ const Notifications = (props) => {
         </Text></TouchableOpacity>
       ),
     });
-  }, [isFocused, switch2, switch3, switch4]);
+  }, [isFocused, switch2, switch4]);
 
   return (
     <SafeAreaProvider style={{ backgroundColor: "#fff" }}>
       <ScrollView
         style={{ backgroundColor: "#fff", marginBottom: 0 }}
-        keyboardShouldPersistTaps={"never"}
-        keyboardDismissMode="on-drag"
         showsVerticalScrollIndicator={false}
       >
         <ListItem key="1">

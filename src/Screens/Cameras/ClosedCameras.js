@@ -28,6 +28,7 @@ import { CameraRoll } from "@react-native-camera-roll/camera-roll";
 import RefreshableWrapper from "react-native-fresh-refresh";
 import * as FileSystem from "expo-file-system";
 import RefreshView from "../../utils/refreshView";
+import Animated from "react-native-reanimated";
 
 const ClosedCameras = (props) => {
   const [filteredDataSource] = useMMKVObject("user.Media.Feed", storage);
@@ -36,6 +37,7 @@ const ClosedCameras = (props) => {
   const [startDownload, setStartDownload] = useState(false);
   const [count, setCount] = useState(0);
   const [user] = useMMKVObject("user.Data", storage);
+  const AnimatedFlatList = Animated.FlatList;
 
   const _refresh = async () => {
     serRefreshing(true);
@@ -318,9 +320,8 @@ const ClosedCameras = (props) => {
           _refresh();
         }}
       >
-      <FlatList
+      <AnimatedFlatList
         extraData={filteredDataSource}
-
         ListEmptyComponent={
           <EmptyStateView
             imageSource={require("../../../assets/4320872.png")}
