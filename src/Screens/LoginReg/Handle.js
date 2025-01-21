@@ -84,7 +84,7 @@ const Handle = (props) => {
           props.navigation.navigate("Verification", {
             email: email,
           });
-        }, 1000);
+        }, 500);
         break;
       default:
         setIsLoading(false);

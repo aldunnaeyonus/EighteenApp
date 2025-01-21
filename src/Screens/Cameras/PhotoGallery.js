@@ -85,7 +85,7 @@ const PhotoGallery = (props) => {
     formData.append("device", Platform.OS);
     formData.append("camera", "0");
     pickedImages.map((image) => {
-      formData.append("file[]", {
+    formData.append("file[]", {
         type: constants.mimes(image.split(".").pop()), // set MIME type
         name:
           "SNAP18-gallary-" +
@@ -109,6 +109,17 @@ const PhotoGallery = (props) => {
       pickedImages[0],
       uploading
     );
+
+    setCredits(parseInt(credits) - pickedImages.length);
+    if (props.route.params.owner != props.route.params.user) {
+      updateItemFeed(
+        JSON.stringify(cameraData),
+        props.route.params.pin,
+        String(parseInt(credits) - pickedImages.length),
+        `user.Camera.Friend.Feed.${props.route.params.owner}`,
+        "1"
+      );
+    }
 
     setAnimating(false);
     setPickedImages([]);
@@ -137,25 +148,17 @@ const PhotoGallery = (props) => {
       quality: 1,
       mediaTypes: ImagePicker.MediaTypeOptions.All,
     });
-    if (!result.canceled) {
-      setCredits(parseInt(credits) - result.assets.length);
-      
-      console.log(parseInt(credits) - result.assets.length)
+    const mime = result.assets[0].uri.split(".").pop().toLowerCase();
 
-      if (props.route.params.owner != props.route.params.user) {
-        updateItemFeed(
-          JSON.stringify(cameraData),
-          props.route.params.pin,
-          String(parseInt(credits) - result.assets.length),
-          `user.Camera.Friend.Feed.${props.route.params.owner}`,
-          "1"
-        );
-      }
+    if (!result.canceled) {
       setAnimating(true);
       if (result.assets.length > 1) {
         result.assets.forEach((file) => {
           pickedImages.push(file.uri);
         });
+        createEvent();
+      }else if ((mime == "mov") || (mime == "mpeg") (mime == "mp4")) {
+        pickedImages.push(result.assets[0].uri);
         createEvent();
       } else {
         try {
@@ -167,6 +170,7 @@ const PhotoGallery = (props) => {
           createEvent();
         } catch (e) {
           console.log("e", e.message);
+          setAnimating(false);
         }
       }
     }
@@ -369,7 +373,6 @@ const PhotoGallery = (props) => {
     setModalVisibleStatus(visible);
     setPageIndex(index);
   };
-
   return modalVisibleStatus ? (
     <SafeAreaProvider>
       <SafeAreaView
@@ -394,22 +397,30 @@ const PhotoGallery = (props) => {
           {filteredDataSource.map((image) =>
             image.type == "video" ? (
               <View
-                key={"n" + image.image_id}
+              key={"i" + image.image_id}
+              style={{
+                flex: 1,
+                height: "100%",
+                width: "100%",
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "transparent",
+              }}
+            >
+              <View
+                key={"g" + image.image_id}
                 style={{
-                  flex: 1,
-                  backgroundColor: "#fff",
+                  backgroundColor: "transparent",
+                  position: "absolute",
+                  top: 0,
+                  zIndex: 2,
+                  height: 60,
+                  marginTop: 30,
+                  width: width,
+                  flexDirection: "row",
+                  opacity: 0.9,
                 }}
               >
-                <View
-                  key={"l" + image.image_id}
-                  style={{
-                    height: 60,
-                    marginTop: width / 3.0 - 22,
-                    width: width,
-                    flexDirection: "row",
-                    opacity: 0.9,
-                  }}
-                >
                   <Image
                     indicator={Progress}
                     ref={(component) => (mediaPlayer = component)}

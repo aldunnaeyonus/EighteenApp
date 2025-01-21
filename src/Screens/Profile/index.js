@@ -27,6 +27,7 @@ import { axiosPull } from "../../utils/axiosPull";
 import * as i18n from "../../../i18n";
 import ProfileHeader from "../SubViews/home/profileHeader";
 import { useIsFocused } from "@react-navigation/native";
+import Loading from "../SubViews/home/Loading";
 
 const Profile = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
@@ -197,6 +198,11 @@ const Profile = (props) => {
         stickyHeaderHiddenOnScroll={false}
       >
         <View style={{ width: "100%", backgroundColor: "#fff" }}>
+        <Loading
+                  message={uploading.message}
+                  flex={uploading.display}
+                  image={uploading.image}
+                />
           <ProfileHeader
             name={user.user_handle}
             id={user.user_id}

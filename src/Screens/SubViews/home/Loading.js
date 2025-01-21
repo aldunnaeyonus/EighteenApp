@@ -25,12 +25,16 @@ const Loading = (props) => {
   >
     
      <Image
-     blurRadius={2}
+     blurRadius={3}
       style={{
         width: 40,
         height: 40,
         borderRadius:6
       }}
+      defaultSource={{
+        source: require("../../../../assets/adaptive-icon.png")
+      }}
+
       source={{
         uri: props.image
       }}
