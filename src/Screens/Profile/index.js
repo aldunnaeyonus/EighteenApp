@@ -36,12 +36,18 @@ const Profile = (props) => {
     constants.url + "/friendQRCode.php?owner=" + user.user_id
   );
   const isFocused = useIsFocused();
-  const logout = useCallback(async () => {
+  const [uploading] = useMMKVObject("uploadData", storage);
+  const [version, setVersion] = useState("0");
+
+  const logout = useCallback(() => {
     FastImage.clearMemoryCache();
     FastImage.clearDiskCache();
+    const execute = async ()=>{
     await AsyncStorage.removeItem("UUID");
     await AsyncStorage.removeItem("logedIn");
     await AsyncStorage.removeItem("user_id");
+    }
+    execute();
     props.navigation.navigate("Begin");
   });
 
@@ -52,12 +58,13 @@ const Profile = (props) => {
           ? i18n.t("Profile Page")
           : user.user_handle.toUpperCase(),
     });
+    const pullData = async ()=> {
+      setVersion(await AsyncStorage.getItem("Version"))
+      await axiosPull._pullUser(user.user_id, "Profile");
+    }
     pullData();
-  }, [isFocused, user.user_avatar, user.isPro]);
+  }, [isFocused, version, user, props]);
 
-  const pullData = async () => {
-    await axiosPull._pullUser(user.user_id, "Profile");
-  };
   const pro = useCallback(() => {
     props.navigation.navigate("GetPro");
   });
@@ -70,14 +77,14 @@ const Profile = (props) => {
     props.navigation.navigate("Abouts");
   });
 
-  const privacy = useCallback(async () => {
+  const privacy = useCallback( () => {
     props.navigation.navigate("WebView", {
       url: constants.url + "/privacyPolicy.html",
       name: i18n.t("Privacy Policy"),
     });
   });
 
-  const terms = useCallback(async () => {
+  const terms = useCallback( () => {
     props.navigation.navigate("WebView", {
       url: constants.url + "/termsUsePolicy.html",
       name: i18n.t("Terms & Use"),
@@ -116,7 +123,8 @@ const Profile = (props) => {
     );
   }, []);
 
-  const previewAction = useCallback(async () => {
+  const previewAction = useCallback( () => {
+    const execute = async()=>{
     await axios
       .post(
         constants.url + "/users/delete.php",
@@ -129,6 +137,8 @@ const Profile = (props) => {
         logout();
       })
       .catch((error) => {});
+    }
+    execute();
   });
 
   const deleteAccount = useCallback(() => {
@@ -136,7 +146,11 @@ const Profile = (props) => {
   }, []);
 
   return (
-    <ScrollView style={{ backgroundColor: "white" }}>
+    <ScrollView
+    style={{ width: "100%", backgroundColor: "#fff" }}
+    showsVerticalScrollIndicator={false}
+    showsHorizontalScrollIndicator={false}
+  >
       <Modal
         visible={modalVisable}
         animationType="slide"
@@ -188,21 +202,13 @@ const Profile = (props) => {
           </TouchableOpacity>
         </View>
       </Modal>
-      <ScrollView
-        stic
-        style={{ width: "100%", backgroundColor: "#fff" }}
-        scrollEnabled={true}
-        stickyHeaderIndices={[1]}
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-        stickyHeaderHiddenOnScroll={false}
-      >
         <View style={{ width: "100%", backgroundColor: "#fff" }}>
         <Loading
                   message={uploading.message}
                   flex={uploading.display}
                   image={uploading.image}
-                />
+        />
+
           <ProfileHeader
             name={user.user_handle}
             id={user.user_id}
@@ -213,6 +219,7 @@ const Profile = (props) => {
             isPro={user.isPro}
             upload={user.uploaded}
           />
+
           <View>
             <View style={[styles.dividerTableStyle]} />
               <ListItem
@@ -636,14 +643,13 @@ const Profile = (props) => {
                     fontWeight: "bold",
                   }}
                 >
-                  {Application.nativeApplicationVersion}
+                  {Application.nativeApplicationVersion} ({version})
                 </Text>
               </View>
             </ListItem>
           </View>
           <View style={{ marginBottom: 25 }} />
         </View>
-      </ScrollView>
     </ScrollView>
   );
 };

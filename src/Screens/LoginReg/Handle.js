@@ -64,7 +64,8 @@ const Handle = (props) => {
     [email]
   );
 
-  const checkHandle = useCallback(async () => {
+  const checkHandle = useCallback(() => {
+    const execute = async ()=>{
     setIsLoading(true);
     const data = {
       email: email,
@@ -91,6 +92,8 @@ const Handle = (props) => {
         setHandleStatus(i18n.t("An issue exists"));
         break;
     }
+  }
+  execute();
   }, [email]);
 
   return (

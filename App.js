@@ -57,34 +57,31 @@ export default function App() {
   const [owner, setOwner] = useState("0");
 
   const startUpdate = async (url, urlversion) => {
+    await AsyncStorage.setItem("Version", ""+urlversion);
     hotUpdate.downloadBundleUri(ReactNativeBlobUtil, url, urlversion, {
       updateSuccess: () => {
         console.log('update success!');
       },
       updateFail(message) {
         console.log(message);
-
       },
       restartAfterInstall: false,
     });
   };
 
-const onCheckVersion = () => {
+const onCheckVersion = async () => {
+  const currentVersion = await AsyncStorage.getItem("Version") == null ? result?.version : await AsyncStorage.getItem("Version");
     fetch(constants.updateJSON).then(async (data) => {
       const result = await data.json();
-      const currentVersion = await hotUpdate.getCurrentVersion();
-      console.log("JSON: ", result?.version);
-      console.log("currentVersion: ", currentVersion);
-
-      //if (result?.version > isNaN(currentVersion) ? 1 : currentVersion) {
+      if (parseInt(result?.version) > parseInt(currentVersion)) {
                 startUpdate(
                   Platform.OS === 'ios'
                     ? result?.downloadIosUrl
                     : result?.downloadAndroidUrl,
-                  result.version
+                  result?.version
                 );
-    //};
-  });
+        };
+    });
   };
 
   useEffect(() => {
@@ -154,16 +151,8 @@ const onCheckVersion = () => {
   };
 
   useEffect(() => {
-    new NotifService();
-
-    const fetchData = () => {
-      onCheckVersion();
-    };
-    fetchData();
-  }, []);
-
-  useEffect(() => {
     const fetchData = async () => {
+      new NotifService();
       onCheckVersion();
       const owner = await AsyncStorage.getItem("user_id");
       setOwner(owner);

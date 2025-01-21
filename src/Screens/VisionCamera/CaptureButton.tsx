@@ -58,19 +58,22 @@ const _CaptureButton: React.FC<Props> = ({
   const isPressingButton = useSharedValue(false)
 
   //#region Camera Capture
-  const takePhoto = useCallback(async () => {
-    try {
-      if (camera.current == null) throw new Error('Camera ref is null!')
-
-      console.log('Taking photo...')
-      const photo = await camera.current.takePhoto({
-        flash: flash,
-        enableShutterSound: false,
-      })
-      onMediaCaptured(photo, 'photo')
-    } catch (e) {
-      console.error('Failed to take photo!', e)
+  const takePhoto = useCallback(() => {
+    const execute = async ()=>{
+      try {
+        if (camera.current == null) throw new Error('Camera ref is null!')
+  
+        console.log('Taking photo...')
+        const photo = await camera.current.takePhoto({
+          flash: flash,
+          enableShutterSound: false,
+        })
+        onMediaCaptured(photo, 'photo')
+      } catch (e) {
+        console.error('Failed to take photo!', e)
+      }
     }
+    execute();
   }, [camera, flash, onMediaCaptured])
 
   const onStoppedRecording = useCallback(() => {
@@ -78,7 +81,10 @@ const _CaptureButton: React.FC<Props> = ({
     cancelAnimation(recordingProgress)
     console.log('stopped recording video!')
   }, [recordingProgress])
-  const stopRecording = useCallback(async () => {
+
+  const stopRecording = useCallback( () => {
+    const execute = async ()=>{
+
     try {
       if (camera.current == null) throw new Error('Camera ref is null!')
 
@@ -88,6 +94,8 @@ const _CaptureButton: React.FC<Props> = ({
     } catch (e) {
       console.error('failed to stop recording!', e)
     }
+  }
+  execute();
   }, [camera])
   const startRecording = useCallback(() => {
     try {

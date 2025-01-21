@@ -89,14 +89,14 @@ const GetPro = (props) => {
     }, [props.unsubscribe])
   );
 
-  const privacy = useCallback(async () => {
+  const privacy = useCallback(() => {
     props.navigation.navigate("WebView", {
       url: constants.url + "/privacyPolicy.html",
       name: i18n.t("Privacy Policy"),
     });
   });
 
-  const terms = useCallback(async () => {
+  const terms = useCallback(() => {
     props.navigation.navigate("WebView", {
       url: constants.url + "/termsUsePolicy.html",
       name: i18n.t("Terms & Use"),

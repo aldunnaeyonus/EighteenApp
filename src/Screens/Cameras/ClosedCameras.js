@@ -21,12 +21,14 @@ import { useMMKVObject } from "react-native-mmkv";
 import { axiosPull } from "../../utils/axiosPull";
 import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../i18n";
-import { ActivityIndicator, ProgressBar  } from "react-native-paper";
+import { ActivityIndicator  } from "react-native-paper";
 import { MenuView } from "@react-native-menu/menu";
 import { constants } from "../../utils";
-import * as FileSystem from "expo-file-system";
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
-
+import RefreshableWrapper from "react-native-fresh-refresh";
+import * as FileSystem from "expo-file-system";
+import RefreshView from "../../utils/refreshView";
+import Animated from "react-native-reanimated";
 
 const ClosedCameras = (props) => {
   const [filteredDataSource] = useMMKVObject("user.Media.Feed", storage);
@@ -35,7 +37,7 @@ const ClosedCameras = (props) => {
   const [startDownload, setStartDownload] = useState(false);
   const [count, setCount] = useState(0);
   const [user] = useMMKVObject("user.Data", storage);
-  const [progress, setProgress] = useState(0);
+  const AnimatedFlatList = Animated.FlatList;
 
   const _refresh = async () => {
     serRefreshing(true);
@@ -45,30 +47,32 @@ const ClosedCameras = (props) => {
     }, 1500);
   };
 
-   const handleDownloadAction = async (fileUris) => {
-    let totalSize = 0;
-    let savedSize = 0;
-    setStartDownload(true)
+  const handleDownloadAction = async (array) => {
     Alert.alert(i18n.t('DownloadingEventFiles'),i18n.t('Theventfiles'));
-    // Calculate total size of files
-    for (const uri of fileUris) {
-      const statResult = await RNFS.stat(uri);
-      totalSize += statResult.size;
-    }
+    setStartDownload(true)
+    JSON.parse(array).map(async (item) => {
+        FileSystem.downloadAsync(
+          item.file_name,
+          FileSystem.documentDirectory + item.file_name.split("/").pop()
+        )
+          .then(async ({ uri }) => {
+              await CameraRoll.saveAsset(uri, {
+                type: 'auto',
+            });
+              setCount(count - 1);
+              FileSystem.deleteAsync(uri);
 
-    for (const uri of fileUris) {
-      await CameraRoll.saveAsset(uri);
-
-      // Update progress
-      const statResult = await RNFS.stat(uri);
-      savedSize += statResult.size;
-      setProgress((savedSize / totalSize) * 100);
-    }
-      if (progress >= 100){
-        setProgress(0)
+          })
+          .catch((error) => {
+            setStartDownload(false)
+            console.log(error.message);
+          });
+      });
+      if (count <= 0){
         setStartDownload(false)
       }
   };
+
 
   const _deleteFeedItemIndex = (UUID) => {
     filteredDataSource.forEach((res, index) => {
@@ -269,7 +273,7 @@ const ClosedCameras = (props) => {
         style={{marginTop:-50}}
         animating={startDownload}
         hidesWhenStopped={true}
-      />  <ProgressBar progress={progress} color="#0000ff" />: 
+      /> : 
         <MenuView
           key={item.UUID}
           title={item.title.toUpperCase()}
@@ -316,9 +320,8 @@ const ClosedCameras = (props) => {
           _refresh();
         }}
       >
-      <FlatList
+      <AnimatedFlatList
         extraData={filteredDataSource}
-
         ListEmptyComponent={
           <EmptyStateView
             imageSource={require("../../../assets/4320872.png")}
