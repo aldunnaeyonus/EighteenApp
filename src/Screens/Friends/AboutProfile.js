@@ -27,7 +27,7 @@ const AboutProfile = (props) => {
                               }}
                             />
                           </View>
-                          {props.isPro == "1" &&
+                          {props.route.params.items.isPro == "1" &&
             <View style={{ position: "absolute" }}>
               <View
                 style={{
