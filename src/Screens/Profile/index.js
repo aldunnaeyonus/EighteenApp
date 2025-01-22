@@ -63,7 +63,7 @@ const Profile = (props) => {
       await axiosPull._pullUser(user.user_id, "Profile");
     }
     pullData();
-  }, [isFocused, version, user, props]);
+  }, [isFocused, version, user, props, uploading]);
 
   const pro = useCallback(() => {
     props.navigation.navigate("GetPro");
