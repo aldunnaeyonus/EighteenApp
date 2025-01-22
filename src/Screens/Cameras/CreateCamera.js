@@ -355,11 +355,9 @@ const CreateCamera = (props) => {
     formData.append("purchases", switch3 ? "1" : "0");
     formData.append(
       "length",
-      String(
-        isPro
+      isPro
           ? constants.camera_time_text_PRO[selectedIndex]
           : constants.camera_time_text[selectedIndex]
-      )
     );
     formData.append(
       "cameras",
@@ -435,7 +433,7 @@ const CreateCamera = (props) => {
     setTimeout(async () => {
       setIsAI(false);
       props.navigation.goBack()
-    }, 3500);
+    }, 1500);
   };
 
   return (
