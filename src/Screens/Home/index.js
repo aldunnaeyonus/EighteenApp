@@ -318,7 +318,7 @@ const Home = (props) => {
     return () => {
       clearInterval(timeout);
     };
-  }, [isFocused, timeout]);
+  }, [isFocused, timeout, uploading]);
 
   const goToFriend = async (friendID) => {
     await axiosPull._pullFriendCameraFeed(props.friendID, "user", user.user_id);
