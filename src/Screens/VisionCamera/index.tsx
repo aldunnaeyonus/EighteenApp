@@ -231,8 +231,7 @@ const VisionCamera = (props: {
       path,
       uploading
     );
-    props.navigation.pop(1);
-
+          props.navigation.goBack()
   };
 
   const onMediaCaptured = useCallback(
