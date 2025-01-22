@@ -19,7 +19,7 @@ import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
 const Image = createImageProgress(FastImage);
 import Progress from "react-native-progress";
-import { storage, updateStorage } from "../../context/components/Storage";
+import { storage } from "../../context/components/Storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useMMKVObject } from "react-native-mmkv";
 import { openSettings } from "react-native-permissions";
@@ -28,6 +28,7 @@ import * as i18n from "../../../i18n";
 import ProfileHeader from "../SubViews/home/profileHeader";
 import { useIsFocused } from "@react-navigation/native";
 import Loading from "../SubViews/home/Loading";
+import hotUpdate  from 'react-native-ota-hot-update/src/index';
 
 const Profile = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
@@ -60,8 +61,8 @@ const Profile = (props) => {
           : user.user_handle.toUpperCase(),
     });
     const pullData = async () => {
-      const versions = await AsyncStorage.getItem("Version");
-      setVersion(versions)
+      const currentVersion = await hotUpdate.getCurrentVersion();
+      setVersion(currentVersion)
       await axiosPull._pullUser(user.user_id, "Profile");
     }
     pullData();

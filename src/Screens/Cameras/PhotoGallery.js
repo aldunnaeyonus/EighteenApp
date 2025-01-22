@@ -473,8 +473,10 @@ const PhotoGallery = (props) => {
                     numberOfLines={1}
                     key={"j" + image.image_id}
                     style={{
-                      color: "#fff",
-                      marginLeft: 5,
+                      color: "white",
+                      backgroundColor: "transparent",
+                      fontSize: 20,
+                      marginLeft: 10,
                       fontWeight: "bold",
                       marginTop: 40,
                     }}

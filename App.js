@@ -37,7 +37,7 @@ import Notifications from "./src/Screens/Profile/Notifications";
 import Abouts from "./src/Screens/Profile/About";
 import GetPro from "./src/Screens/Store/GetPro";
 import { axiosPull } from "./src/utils/axiosPull";
-import hotUpdate  from 'react-native-ota-hot-update';
+import hotUpdate  from 'react-native-ota-hot-update/src/index';
 import { constants } from "./src/utils";
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import NotifService from "./NotifService";
@@ -59,8 +59,8 @@ export default function App() {
     await AsyncStorage.setItem("Version", String(version));
   }
   
-  const startUpdate = (url, urlversion) => {
-    hotUpdate.downloadBundleUri(ReactNativeBlobUtil, url, urlversion, {
+  const startUpdate = async (url, urlversion) => {
+    await hotUpdate.downloadBundleUri(ReactNativeBlobUtil, url, urlversion, {
       updateSuccess: () => {
         updateVersion(urlversion);
         console.log('update success!');
@@ -75,6 +75,7 @@ export default function App() {
 const onCheckVersion = () => {
     fetch(constants.updateJSON).then(async (data) => {
       const result = await data.json();
+      const currentVersion = await hotUpdate.getCurrentVersion();
       if (parseInt(result?.version) > parseInt(currentVersion)) {
                 startUpdate(
                   Platform.OS === 'ios'

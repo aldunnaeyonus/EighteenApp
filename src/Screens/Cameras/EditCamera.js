@@ -1023,7 +1023,6 @@ const EditCamera = (props) => {
               </ListItem>
               {isPro && (
                 <>
-                  {" "}
                   <View style={[styles.dividerStyle]} />
                   <ListItem key="23">
                     <Icon
