@@ -508,7 +508,7 @@ const PhotoGallery = (props) => {
                     style={{
                       position: "absolute",
                       backgroundColor: "black",
-                      top: -200,
+                      top: 30,
                       left: 0,
                       bottom: 0,
                       right: 0,
