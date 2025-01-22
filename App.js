@@ -153,8 +153,9 @@ const onCheckVersion = async () => {
   };
 
   useEffect(() => {
+    new NotifService();
+
     const fetchData = async () => {
-      new NotifService();
       onCheckVersion();
       const owner = await AsyncStorage.getItem("user_id");
       setOwner(owner);
@@ -167,7 +168,8 @@ const onCheckVersion = async () => {
       }
     };
     fetchData();
-  }, [signIn, ready, isFocused]);
+  }, [signIn, ready, owner, isFocused]);
+
 
   if (!ready) {
     return null;
