@@ -349,6 +349,7 @@ const PhotoGallery = (props) => {
       animating,
       modalVisibleStatus,
       pickedImages,
+      uploading
     ])
   );
 
