@@ -397,44 +397,46 @@ const PhotoGallery = (props) => {
           {filteredDataSource.map((image) =>
             image.type == "video" ? (
               <View
-              key={"i" + image.image_id}
-              style={{
-                flex: 1,
-                height: "100%",
-                width: "100%",
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundColor: "transparent",
-              }}
-            >
-              <View
-                key={"g" + image.image_id}
+                key={"i" + image.image_id}
                 style={{
+                  flex: 1,
+                  height: "100%",
+                  width: "100%",
+                  justifyContent: "center",
+                  alignItems: "center",
                   backgroundColor: "transparent",
-                  position: "absolute",
-                  top: 0,
-                  zIndex: 2,
-                  height: 60,
-                  marginTop: 30,
-                  width: width,
-                  flexDirection: "row",
-                  opacity: 0.9,
                 }}
               >
+                <View
+                  key={"g" + image.image_id}
+                  style={{
+                    backgroundColor: "transparent",
+                    position: "absolute",
+                    top: 0,
+                    zIndex: 2,
+                    height: 60,
+                    marginTop: 30,
+                    width: width,
+                    flexDirection: "row",
+                    opacity: 0.9,
+                  }}
+                >
                   <Image
                     indicator={Progress}
-                    ref={(component) => (mediaPlayer = component)}
                     key={"k" + image.image_id}
                     style={{
-                      width: 30,
-                      height: 30,
-                      borderRadius: 15,
+                      width: 50,
+                      height: 50,
+                      borderRadius: 25,
                       marginTop: 30,
                       marginLeft: 2,
                       borderWidth: 0.5,
                       alignSelf: "auto",
                       overflow: "hidden",
+                      backgroundColor: "transparent",
                     }}
+                    showSpinner={true}
+                    spinnerColor={"rgba(0, 0, 0, 1.0)"}
                     source={{
                       priority: FastImage.priority.normal,
                       uri: image.icon,
