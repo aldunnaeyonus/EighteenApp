@@ -18,6 +18,7 @@ const ProfileHeader = (props) => {
               ]}
               resizeMode={FastImage.resizeMode.contain}
               source={{
+                cache: FastImage.cacheControl.web,
                 uri: props.avatar,
               }}
             />

@@ -82,6 +82,7 @@ const ChangeData = (props) => {
         >
           <EmptyStateView
             imageSource={{
+              cache: FastImage.cacheControl.web,
               uri: user.user_avatar,
             }}
             imageStyle={styles.imageStyle}

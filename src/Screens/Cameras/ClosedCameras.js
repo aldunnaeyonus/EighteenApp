@@ -184,6 +184,7 @@ const ClosedCameras = (props) => {
             key={item.illustration}
             source={{
               uri: item.illustration,
+              cache: FastImage.cacheControl.web,
               priority: FastImage.priority.normal,
             }}
             indicator={Progress}

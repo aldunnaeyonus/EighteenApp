@@ -36,9 +36,11 @@ const Loading = (props) => {
 
       indicator={Progress}
       source={{
+        cache: FastImage.cacheControl.web,
         uri: props.image
       }}
     />
+    
      <ActivityIndicator
             style={{marginLeft:15}}
             size={15}

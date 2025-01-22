@@ -144,9 +144,9 @@ const MediaPage = (props: {
       "-" +
       source.uri.split("/").pop(),
       type: constants.mimes(source.uri.split(".").pop()), // set MIME type
-      uri: source,
+      uri: source.uri,
     });
-    await CameraRoll.saveAsset(source);
+    await CameraRoll.saveAsset(source.uri);
 
     handleUpload(
       constants.url + "/camera/upload.php",

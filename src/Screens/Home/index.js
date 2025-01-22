@@ -356,6 +356,7 @@ const Home = (props) => {
               resizeMode={FastImage.resizeMode.contain}
               source={{
                 priority: FastImage.priority.normal,
+                cache: FastImage.cacheControl.web,
                 uri: qrCodeURL,
               }}
             />

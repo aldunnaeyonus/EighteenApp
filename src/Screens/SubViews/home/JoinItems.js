@@ -85,6 +85,7 @@ const JoinItems = (props) => {
           resizeMode={FastImage.resizeMode.cover}
           source={{
             priority: FastImage.priority.normal,
+            cache: FastImage.cacheControl.web,
             uri: props.item.item.illustration,
           }}
         />

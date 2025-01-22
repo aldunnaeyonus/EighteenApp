@@ -29,6 +29,7 @@ const MemberListItem = (props) => {
             source={{
               uri: props.item.item.user_avatar,
               priority: FastImage.priority.normal,
+              cache: FastImage.cacheControl.web,
             }}
             resizeMode={FastImage.resizeMode.contain}
             style={{

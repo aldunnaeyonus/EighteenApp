@@ -44,7 +44,10 @@ const WebViewer = (props) => {
               height:'100%',
               backgroundColor:'white'
             }}
-        source={{ uri: props.route.params.url }}
+        source={{ 
+          cache: FastImage.cacheControl.web,
+          uri: props.route.params.url 
+        }}
       />
     </SafeAreaProvider>
   );

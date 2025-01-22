@@ -32,6 +32,7 @@ import { createImageProgress } from "react-native-image-progress";
 const Image = createImageProgress(FastImage);
 import { useIsFocused } from "@react-navigation/native";
 import { ActivityIndicator, MD2Colors } from "react-native-paper";
+import Loading from "../SubViews/home/Loading";
 
 const Friends = (props) => {
   const [cameraData] = useMMKVObject(
@@ -42,6 +43,8 @@ const Friends = (props) => {
     `user.Feed.${props.route.params.userID}`,
     storage
   );
+    const [uploading] = useMMKVObject("uploadData", storage);
+  
   const [ready, setReady] = useState(false);
   const [refreshing, serRefreshing] = useState(false);
   const [isFriend, setisFriend] = useState(2);
@@ -383,7 +386,7 @@ const Friends = (props) => {
               )
             }
             ListHeaderComponent={
-              <FriendHeader
+              <><FriendHeader
                 id={props.route.params.userID}
                 name={friendData.friend_handle}
                 motto={friendData.friend_motto}
@@ -391,8 +394,12 @@ const Friends = (props) => {
                 join={friendData.friend_join}
                 create={friendData.friend_camera}
                 upload={friendData.friend_media}
-                isPro={friendData.friend_isPro}
-              />
+                isPro={friendData.friend_isPro} />
+                
+                <Loading
+                  message={uploading.message}
+                  flex={uploading.display}
+                  image={uploading.image} /></>
             }
             keyExtractor={(item) => item.UUID}
             renderItem={(item, index) =>
@@ -514,6 +521,7 @@ const Friends = (props) => {
                 }}
                 resizeMode={FastImage.resizeMode.contain}
                 source={{
+                  cache: FastImage.cacheControl.web,
                   priority: FastImage.priority.high,
                   uri: qrCodeURL,
                 }}

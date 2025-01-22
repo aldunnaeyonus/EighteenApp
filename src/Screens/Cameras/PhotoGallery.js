@@ -439,6 +439,7 @@ const PhotoGallery = (props) => {
                     spinnerColor={"rgba(0, 0, 0, 1.0)"}
                     source={{
                       priority: FastImage.priority.normal,
+                      cache: FastImage.cacheControl.web,
                       uri: image.icon,
                     }}
                   />
@@ -563,6 +564,7 @@ const PhotoGallery = (props) => {
                     spinnerColor={"rgba(0, 0, 0, 1.0)"}
                     source={{
                       priority: FastImage.priority.normal,
+                      cache: FastImage.cacheControl.web,
                       uri: image.icon,
                     }}
                   />
@@ -622,6 +624,7 @@ const PhotoGallery = (props) => {
                     resizeMode={FastImage.resizeMode.contain}
                     source={{
                       priority: FastImage.priority.normal,
+                      cache: FastImage.cacheControl.web,
                       uri: image.uri,
                     }}
                     key={"h" + props.image_id}

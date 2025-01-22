@@ -75,6 +75,7 @@ const FriendHeader = (props) => {
               }}
               resizeMode={FastImage.resizeMode.contain}
               source={{
+                cache: FastImage.cacheControl.web,
                 uri: props.user.user_avatar,
               }}
             />
@@ -155,6 +156,7 @@ const FriendHeader = (props) => {
                 }}
                 resizeMode={FastImage.resizeMode.contain}
                 source={{
+                  cache: FastImage.cacheControl.web,
                   uri: grids.friend_avatar,
                 }}
               />
