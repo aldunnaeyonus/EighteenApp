@@ -58,8 +58,9 @@ const Profile = (props) => {
           ? i18n.t("Profile Page")
           : user.user_handle.toUpperCase(),
     });
-    const pullData = async ()=> {
-      setVersion(await AsyncStorage.getItem("Version"))
+    const pullData = async () => {
+      conts versions = await AsyncStorage.getItem("Version");
+      setVersion(versions)
       await axiosPull._pullUser(user.user_id, "Profile");
     }
     pullData();
