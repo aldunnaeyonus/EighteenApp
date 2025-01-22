@@ -233,5 +233,6 @@
     "Seconds":" segundos",
     "getnotifications":"Snap Eighteen necesita acceso a las notificaciones para que pueda recibir actualizaciones.",
     "Update":"Actualización de Snap Eighteen",
-    "UpdateDesc":"El código del servidor se actualizó a través de OTA y entrará en vigor en la próxima apertura de Snap Eighteen."
+    "UpdateDesc":"El código del servidor se actualizó a través de OTA y entrará en vigor en la próxima apertura de Snap Eighteen.",
+    "Version Build":"Versión de compilación"
 }
