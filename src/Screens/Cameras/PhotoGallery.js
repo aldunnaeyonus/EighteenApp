@@ -497,7 +497,7 @@ const PhotoGallery = (props) => {
                     fullscreen={true}
                     fullscreenAutorotate={true}
                     fullscreenOrientation={"all"}
-                    ignoreSilentSwitch="ignore"
+                    ignoreSilentSwitch="obey"
                     playWhenInactive={false}
                     playInBackground={false}
                     ref={video}
@@ -511,6 +511,10 @@ const PhotoGallery = (props) => {
                       height: height, 
                       width: width,
                       top: 30,
+                      position: 'absolute',
+                      left: 0,
+                      bottom: 0,
+                      right: 0,
                     }}
                     controls={true}
                     source={{ uri: image.uri }}
