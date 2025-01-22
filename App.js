@@ -57,11 +57,16 @@ export default function App() {
   const [signIn, setSignIn] = useState(false);
   const [ready, setReady] = useState(false);
   const [owner, setOwner] = useState("0");
+  const [currentVersion, setCurrentVersion] = useState("0");
 
-  const startUpdate = async (url, urlversion) => {
-    await AsyncStorage.setItem("Version", String(urlversion));
+  const updateVersion = async (version) => {
+    await AsyncStorage.setItem("Version", String(version));
+  }
+  
+  const startUpdate = (url, urlversion) => {
     hotUpdate.downloadBundleUri(ReactNativeBlobUtil, url, urlversion, {
       updateSuccess: () => {
+        updateVersion(urlversion);
         console.log('update success!');
       },
       updateFail(message) {
@@ -71,8 +76,7 @@ export default function App() {
     });
   };
 
-const onCheckVersion = async () => {
-  const currentVersion = ((await AsyncStorage.getItem("Version") == null) ? result?.version : await AsyncStorage.getItem("Version"));
+const onCheckVersion = () => {
     fetch(constants.updateJSON).then(async (data) => {
       const result = await data.json();
       if (parseInt(result?.version) > parseInt(currentVersion)) {
@@ -159,7 +163,8 @@ const onCheckVersion = async () => {
       onCheckVersion();
       const owner = await AsyncStorage.getItem("user_id");
       setOwner(owner);
-
+      const version = ((await AsyncStorage.getItem("Version") == null) ? "0" : await AsyncStorage.getItem("Version"));
+      setCurrentVersion(version);
       const logedIn = await AsyncStorage.getItem("logedIn");
       setSignIn(stringToBoolean(logedIn));
       setReady(true);
@@ -168,7 +173,7 @@ const onCheckVersion = async () => {
       }
     };
     fetchData();
-  }, [signIn, ready, owner, isFocused]);
+  }, [signIn, ready, owner, isFocused, currentVersion]);
 
 
   if (!ready) {
