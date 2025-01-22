@@ -31,6 +31,7 @@ import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
 const Image = createImageProgress(FastImage);
 import { useIsFocused } from "@react-navigation/native";
+import { ActivityIndicator, MD2Colors } from "react-native-paper";
 
 const Friends = (props) => {
   const [cameraData] = useMMKVObject(
@@ -55,6 +56,7 @@ const Friends = (props) => {
   );
   var timeout;
   const isFocused = useIsFocused();
+  const [isLoading, setIsLoading] = useState(true);
 
   const _autoJoin = async (owner, pin, end, id) => {
     const data = {
@@ -312,6 +314,7 @@ const Friends = (props) => {
         ),
       });
       setReady(true);
+      setIsLoading(false);
     };
     fetchData();
 
@@ -333,6 +336,7 @@ const Friends = (props) => {
     props.route.params.userID,
     props.unsubscribe,
     user.user_id,
+    isLoading
   ]);
 
   if (!ready) {
@@ -349,6 +353,17 @@ const Friends = (props) => {
         }}
         edges={["bottom", "left", "right"]}
       >
+      <ActivityIndicator
+        size={80}
+        style={{
+          position: "absolute",
+          top: Dimensions.get("window").height / 3.5,
+          left: Dimensions.get("window").width / 2 - 40,
+        }}
+        animating={isLoading}
+        hidesWhenStopped={true}
+        color={MD2Colors.orange900}
+      />
         <RefreshableWrapper
           contentOffset={contentOffset}
           managedLoading={true}
