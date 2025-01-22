@@ -156,7 +156,7 @@ const MediaPage = (props: {
       props.route.params.pin,
       props.route.params.owner,
       i18n.t("Uploading") + " " + i18n.t("PleaseWait"),
-      `file://${path}`,
+      source,
       uploading
     );
     await axiosPull._pullFriendCameraFeed(
@@ -178,7 +178,7 @@ const MediaPage = (props: {
     }
     setTimeout(() => {
       setAnimating(false);
-      props.navigation.pop(3);
+      props.navigation.pop(2);
     }, 500);
   };
 
