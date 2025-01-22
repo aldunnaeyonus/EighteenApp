@@ -42,15 +42,15 @@ const MemberListItem = (props) => {
               backgroundColor: "#f2f2f2",
             }}
           />
-          {props.item.item.friend_isPro == "1" && (
+          {props.item.item.isPro == "1" && (
             <View style={{ position: "absolute" }}>
               <View
                 style={{
                   marginTop: 50,
-                  marginLeft: 50,
+                  marginLeft: 55,
                   backgroundColor: "transparent",
-                  width: 20,
-                  height: 20,
+                  width: 50,
+                  height: 50,
                   justifyContent: "center",
                 }}
               >
@@ -58,8 +58,8 @@ const MemberListItem = (props) => {
                   style={{
                     marginLeft: 4,
                     marginTop: 1,
-                    width: 17,
-                    height: 17,
+                    width: 20,
+                    height: 20,
                     textAlignVertical: "center",
                     textAlignVertical: "center",
                   }}

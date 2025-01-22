@@ -3,17 +3,19 @@ import {
     View,
     Text,
     Dimensions,
-    Image
   } from "react-native";
 const { width: ScreenWidth } = Dimensions.get("window");
 import { ActivityIndicator, MD2Colors } from "react-native-paper";
-
+import FastImage from "react-native-fast-image";
+import { createImageProgress } from "react-native-image-progress";
+const Image = createImageProgress(FastImage);
+import Progress from "react-native-progress";
 const Loading = (props) => {
 
   return (
     <View
     style={{
-      display:props.flex == undefined ? "none" : props.flex == "none" ? 'none' : props.flex,
+      display:props.flex == "flex" ? 'flex' : 'none',
       margin:5,
       flex:1,
       height: 40,
@@ -31,10 +33,8 @@ const Loading = (props) => {
         height: 40,
         borderRadius:6
       }}
-      defaultSource={{
-        source: require("../../../../assets/adaptive-icon.png")
-      }}
 
+      indicator={Progress}
       source={{
         uri: props.image
       }}

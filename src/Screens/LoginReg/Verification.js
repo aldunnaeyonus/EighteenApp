@@ -107,10 +107,7 @@ const Verification = (props) => {
       );
       if (response[0].errorResponse == "Member") {
         storage.set("user.Data", JSON.stringify(response[0]));
-        storage.set(
-          "uploadData",
-          JSON.stringify([{ message: "", display: "none", image: "" }])
-        );
+        storage.set("uploadData", JSON.stringify({"message": "", "display":"none", "image":""}));
         storage.set("user.Join.Feed", JSON.stringify([]));
         storage.set("user.Friend.Feed", JSON.stringify([]));
         storage.set("uploadData", JSON.stringify(["message"]));

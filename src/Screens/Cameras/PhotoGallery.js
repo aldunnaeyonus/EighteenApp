@@ -498,9 +498,11 @@ const PhotoGallery = (props) => {
                     fullscreenAutorotate={true}
                     fullscreenOrientation={"all"}
                     ignoreSilentSwitch="obey"
+                    showNotificationControls={true}
                     playWhenInactive={false}
                     playInBackground={false}
                     ref={video}
+                    controls={true}
                     key={"m" + image.image_id}
                     repeat={false}
                     muted={videoPlayMute}
@@ -510,13 +512,7 @@ const PhotoGallery = (props) => {
                       backgroundColor: "black",
                       height: height, 
                       width: width,
-                      top: 30,
-                      position: 'absolute',
-                      left: 0,
-                      bottom: 0,
-                      right: 0,
                     }}
-                    controls={true}
                     source={{ uri: image.uri }}
                   />
                 </VisibilitySensor>

@@ -417,11 +417,7 @@ const Home = (props) => {
           }
           ListHeaderComponent={
             <>
-                <Loading
-                  message={uploading.message}
-                  flex={uploading.display}
-                  image={uploading.image}
-                />
+
 
               <FriendHeader
                 _createCamera={_createCamera}
@@ -430,6 +426,11 @@ const Home = (props) => {
                 _gotoAllFriends={_gotoAllFriends}
                 goToFriend={goToFriend}
               />
+                 <Loading
+                  message={uploading.message}
+                  flex={uploading.display}
+                  image={uploading.image}
+                />
             </>
           }
           keyExtractor={(item, index) => index}

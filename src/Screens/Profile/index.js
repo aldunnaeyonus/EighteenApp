@@ -19,7 +19,7 @@ import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
 const Image = createImageProgress(FastImage);
 import Progress from "react-native-progress";
-import { storage } from "../../context/components/Storage";
+import { storage, updateStorage } from "../../context/components/Storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useMMKVObject } from "react-native-mmkv";
 import { openSettings } from "react-native-permissions";
@@ -52,6 +52,7 @@ const Profile = (props) => {
   });
 
   useEffect(() => {
+
     props.navigation.setOptions({
       title:
         user.user_id == null
@@ -59,7 +60,7 @@ const Profile = (props) => {
           : user.user_handle.toUpperCase(),
     });
     const pullData = async () => {
-      conts versions = await AsyncStorage.getItem("Version");
+      const versions = await AsyncStorage.getItem("Version");
       setVersion(versions)
       await axiosPull._pullUser(user.user_id, "Profile");
     }
