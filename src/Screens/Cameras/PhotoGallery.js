@@ -507,12 +507,10 @@ const PhotoGallery = (props) => {
                     resizeMode={"contain"}
                     paused={videoPlayPause}
                     style={{
-                      position: "absolute",
                       backgroundColor: "black",
+                      height: height, 
+                      width: width,
                       top: 30,
-                      left: 0,
-                      bottom: 0,
-                      right: 0,
                     }}
                     controls={true}
                     source={{ uri: image.uri }}
