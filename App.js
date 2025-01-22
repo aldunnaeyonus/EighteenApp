@@ -59,7 +59,7 @@ export default function App() {
   const [owner, setOwner] = useState("0");
 
   const startUpdate = async (url, urlversion) => {
-    await AsyncStorage.setItem("Version", ""+urlversion);
+    await AsyncStorage.setItem("Version", String(urlversion));
     hotUpdate.downloadBundleUri(ReactNativeBlobUtil, url, urlversion, {
       updateSuccess: () => {
         console.log('update success!');
@@ -72,7 +72,7 @@ export default function App() {
   };
 
 const onCheckVersion = async () => {
-  const currentVersion = await AsyncStorage.getItem("Version") == null ? result?.version : await AsyncStorage.getItem("Version");
+  const currentVersion = ((await AsyncStorage.getItem("Version") == null) ? result?.version : await AsyncStorage.getItem("Version"));
     fetch(constants.updateJSON).then(async (data) => {
       const result = await data.json();
       if (parseInt(result?.version) > parseInt(currentVersion)) {
