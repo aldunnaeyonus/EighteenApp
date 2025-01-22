@@ -137,7 +137,7 @@ const MediaPage = (props: {
     formData.append("device", Platform.OS);
     formData.append("camera", "1");
     var fileName =
-      "SNAP18-camera" +
+      "SNAP18-camera-" +
       props.route.params.pin +
       "-" +
       Date.now() +
