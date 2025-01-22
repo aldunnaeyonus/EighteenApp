@@ -278,8 +278,7 @@ const PhotoGallery = (props) => {
             )
           ) : (
             <>
-              {filteredDataSource[0].share == "1" &&
-              props.route.params.owner == props.route.params.user ? (
+              {filteredDataSource[0].share == "1" || props.route.params.owner == props.route.params.user ? (
                 <TouchableOpacity
                   onPress={async () => {
                     _gotoShare(
