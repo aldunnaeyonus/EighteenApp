@@ -101,7 +101,6 @@ const onCheckVersion = () => {
     if (isConnected) {
       unsubscribe();
     }
-    setI18nConfig();
   }, [isConnected]);
 
   const config = {
@@ -158,7 +157,7 @@ const onCheckVersion = () => {
 
   useEffect(() => {
     new NotifService();
-
+    setI18nConfig();
     const fetchData = async () => {
       onCheckVersion();
       const owner = await AsyncStorage.getItem("user_id");
