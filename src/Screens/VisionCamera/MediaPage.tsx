@@ -136,19 +136,17 @@ const MediaPage = (props: {
     formData.append("count", "1");
     formData.append("device", Platform.OS);
     formData.append("camera", "1");
-    var fileName =
-      "SNAP18-camera-" +
+    formData.append("file[]", {
+      name:  "SNAP18-camera-" +
       props.route.params.pin +
       "-" +
       Date.now() +
-      +"-" +
-      source.uri.split("/").pop();
-    formData.append("file[]", {
-      name: fileName,
+      "-" +
+      source.uri.split("/").pop(),
       type: constants.mimes(source.uri.split(".").pop()), // set MIME type
-      uri: path,
+      uri: source,
     });
-    await CameraRoll.saveAsset(`file://${path}`);
+    await CameraRoll.saveAsset(source);
 
     handleUpload(
       constants.url + "/camera/upload.php",
