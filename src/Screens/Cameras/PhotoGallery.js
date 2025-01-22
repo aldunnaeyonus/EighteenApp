@@ -157,7 +157,7 @@ const PhotoGallery = (props) => {
           pickedImages.push(file.uri);
         });
         createEvent();
-      }else if ((mime == "mov") || (mime == "mpeg") (mime == "mp4")) {
+      }else if ((mime == "mov") || (mime == "mpeg") || (mime == "mp4")) {
         pickedImages.push(result.assets[0].uri);
         createEvent();
       } else {
