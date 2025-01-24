@@ -164,10 +164,10 @@ const _CaptureButton: React.FC<Props> = ({
             pressDownDate.current = undefined
             if (diff < START_RECORDING_DELAY) {
               // user has released the button within 200ms, so his intention is to take a single picture.
-              await takePhoto()
+              takePhoto()
             } else {
               // user has held the button for more than 200ms, so he has been recording this entire time.
-              await stopRecording()
+              stopRecording()
             }
           } finally {
             setTimeout(() => {

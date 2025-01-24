@@ -155,7 +155,7 @@ const MediaPage = (props: {
       props.route.params.pin,
       props.route.params.owner,
       i18n.t("Uploading") + " " + i18n.t("PleaseWait"),
-      source,
+      source.uri,
       uploading
     );
 
