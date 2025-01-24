@@ -14,6 +14,7 @@ import { storage } from "../../context/components/Storage";
 import { handleUpload } from "../SubViews/upload";
 import * as i18n from "../../../i18n";
 import { ActivityIndicator } from "react-native-paper";
+import FastImage from "react-native-fast-image";
 
 const ChangeData = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
