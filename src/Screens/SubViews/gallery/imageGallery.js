@@ -19,7 +19,7 @@ const ImageGallery = (props) => {
         indicator={Progress}
         key={props.index}
         source={{
-          cache: FastImage.cacheControl.web,
+          cache: FastImage.cacheControl.immutable,
           priority: FastImage.priority.high,
           uri:
             props.item.item.type == "video"

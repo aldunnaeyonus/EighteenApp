@@ -51,7 +51,8 @@ const Loading = (props) => {
                       width: 40,
                     }}
                     source={{ 
-                      cache: FastImage.cacheControl.web,
+                      cache: FastImage.cacheControl.immutable,
+                      priority: FastImage.priority.high,
                       uri: props.image 
                     
                     }}
@@ -67,7 +68,8 @@ const Loading = (props) => {
       }}
       indicator={Progress}
       source={{
-        cache: FastImage.cacheControl.web,
+        cache: FastImage.cacheControl.immutable,
+        priority: FastImage.priority.high,
         uri: props.image
       }}
     />

@@ -87,8 +87,8 @@ const ListItem = (props) => {
           }}
           resizeMode={FastImage.resizeMode.cover}
           source={{
-            priority: FastImage.priority.normal,
-            cache: FastImage.cacheControl.web,
+            priority: FastImage.priority.high,
+            cache: FastImage.cacheControl.immutable,
             uri: props.item.item.illustration,
           }}
         />

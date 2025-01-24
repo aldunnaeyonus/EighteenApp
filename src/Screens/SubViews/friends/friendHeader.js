@@ -18,8 +18,8 @@ const FriendHeader = (props) => {
                 { width: 70, height: 70, overflow: "hidden" },
               ]}
               source={{
-                cache: FastImage.cacheControl.web,
-                priority: FastImage.priority.normal,
+                cache: FastImage.cacheControl.immutable,
+                priority: FastImage.priority.high,
                 uri: props.avatar,
               }}
             />

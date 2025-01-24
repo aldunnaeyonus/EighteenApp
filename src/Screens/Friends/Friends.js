@@ -521,7 +521,7 @@ const Friends = (props) => {
                 }}
                 resizeMode={FastImage.resizeMode.contain}
                 source={{
-                  cache: FastImage.cacheControl.web,
+                  cache: FastImage.cacheControl.immutable,
                   priority: FastImage.priority.high,
                   uri: qrCodeURL,
                 }}

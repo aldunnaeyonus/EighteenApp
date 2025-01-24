@@ -826,7 +826,7 @@ const CreateCamera = (props) => {
                         source={{
                           uri: image,
                           priority: FastImage.priority.high,
-                          cacheControl: FastImage.cacheControl.web,
+                          cacheControl: FastImage.cacheControl.immutable,
                         }}
                       />
                     ) : (

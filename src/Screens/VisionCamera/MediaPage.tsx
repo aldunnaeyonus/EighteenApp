@@ -22,7 +22,6 @@ import { ActivityIndicator } from "react-native-paper";
 import { handleUpload } from "../SubViews/upload";
 import * as i18n from "../../../i18n";
 import { useFocusEffect } from "@react-navigation/native";
-import { axiosPull } from "../../utils/axiosPull";
 import { storage, updateItemFeed } from "../../context/components/Storage";
 import { useMMKVObject } from "react-native-mmkv";
 
@@ -159,11 +158,6 @@ const MediaPage = (props: {
       source,
       uploading
     );
-    await axiosPull._pullFriendCameraFeed(
-      props.route.params.owner,
-      "user",
-      props.route.params.user
-    );
 
     if (props.route.params.owner != props.route.params.user) {
       setCredits(String(parseInt(credits) - 1));
@@ -174,12 +168,11 @@ const MediaPage = (props: {
         `user.Camera.Friend.Feed.${props.route.params.owner}`,
         "1"
       );
-      props.route.params.credits = credits;
     }
     setTimeout(() => {
       setAnimating(false);
       props.navigation.pop(2);
-    }, 500);
+    }, 1000);
   };
 
   return (

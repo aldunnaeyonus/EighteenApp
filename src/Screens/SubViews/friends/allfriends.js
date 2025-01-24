@@ -28,8 +28,8 @@ const AllFriendsListItem = (props) => {
               indicator={Progress}
               source={{
                 uri: props.item.item.friend_avatar,
-                priority: FastImage.priority.normal,
-                cache: FastImage.cacheControl.web,
+                priority: FastImage.priority.high,
+                cache: FastImage.cacheControl.immutable,
               }}
               resizeMode={FastImage.resizeMode.contain}
               style={{

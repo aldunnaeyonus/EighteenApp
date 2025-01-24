@@ -438,8 +438,8 @@ const PhotoGallery = (props) => {
                     showSpinner={true}
                     spinnerColor={"rgba(0, 0, 0, 1.0)"}
                     source={{
-                      priority: FastImage.priority.normal,
-                      cache: FastImage.cacheControl.web,
+                      priority: FastImage.priority.high,
+                      cache: FastImage.cacheControl.immutable,
                       uri: image.icon,
                     }}
                   />
@@ -517,7 +517,8 @@ const PhotoGallery = (props) => {
                       width: width,
                     }}
                     source={{ 
-                      cache: FastImage.cacheControl.web,
+                      cache: FastImage.cacheControl.immutable,
+                      priority: FastImage.priority.high,
                       uri: image.uri }}
                   />
                 </VisibilitySensor>
@@ -565,8 +566,8 @@ const PhotoGallery = (props) => {
                     showSpinner={true}
                     spinnerColor={"rgba(0, 0, 0, 1.0)"}
                     source={{
-                      priority: FastImage.priority.normal,
-                      cache: FastImage.cacheControl.web,
+                      priority: FastImage.priority.high,
+                      cache: FastImage.cacheControl.immutable,
                       uri: image.icon,
                     }}
                   />
@@ -625,8 +626,8 @@ const PhotoGallery = (props) => {
                     style={{ marginTop: 30, height: height, width: width }}
                     resizeMode={FastImage.resizeMode.contain}
                     source={{
-                      priority: FastImage.priority.normal,
-                      cache: FastImage.cacheControl.web,
+                      priority: FastImage.priority.high,
+                      cache: FastImage.cacheControl.immutable,
                       uri: image.uri,
                     }}
                     key={"h" + props.image_id}
