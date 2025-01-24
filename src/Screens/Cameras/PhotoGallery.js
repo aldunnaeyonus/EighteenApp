@@ -516,7 +516,9 @@ const PhotoGallery = (props) => {
                       height: height, 
                       width: width,
                     }}
-                    source={{ uri: image.uri }}
+                    source={{ 
+                      cache: FastImage.cacheControl.web,
+                      uri: image.uri }}
                   />
                 </VisibilitySensor>
               </View>

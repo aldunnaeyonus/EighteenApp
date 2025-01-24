@@ -46,11 +46,15 @@ const Loading = (props) => {
                     resizeMode={"cover"}
                     paused={true}
                     style={{
-                      borderRadius:6
+                      borderRadius:6,
                       height: 40, 
                       width: 40,
                     }}
-                    source={{ uri: props.image }}
+                    source={{ 
+                      cache: FastImage.cacheControl.web,
+                      uri: props.image 
+                    
+                    }}
                   />
     :
      <Image
