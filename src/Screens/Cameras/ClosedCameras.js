@@ -290,7 +290,7 @@ const ClosedCameras = (props) => {
               handleDownloadAction(array);
             }
           }}
-          actions={constants.historyActions(item.UUID)}
+          actions={user.isPro == "1" ? constants.historyActionsPro(item.UUID): constants.historyActions(item.UUID)}
           shouldOpenOnLongPress={false}
           themeVariant="light"
         >

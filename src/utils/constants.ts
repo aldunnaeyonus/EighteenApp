@@ -19,7 +19,7 @@ export const ANDROID_DISPLAY = Object.freeze({
   calendar: 'calendar',
 });
 
-export const historyActions = (UUID: String) => [
+export const historyActionsPro = (UUID: String) => [
   {
     id: "Delete-" + UUID,
     title: i18n.t('Delete Event'),
@@ -37,6 +37,23 @@ export const historyActions = (UUID: String) => [
   {
     id: "Save-" + UUID,
     title: i18n.t('SaveDevice'),
+    titleColor: "black",
+  },
+];
+
+export const historyActions = (UUID: String) => [
+  {
+    id: "Delete-" + UUID,
+    title: i18n.t('Delete Event'),
+    titleColor: "red",
+    subtitle:i18n.t('Willdeleteeverything'),
+    attributes: {
+      destructive: true,
+    },
+  },
+  {
+    id: "Download-" + UUID,
+    title: i18n.t('DownloadMediaLink'),
     titleColor: "black",
   },
 ];
@@ -297,5 +314,6 @@ export const constants = {
   media_amount,
   urldata,
   updateJSON,
-  mimes
+  mimes,
+  historyActionsPro
 };
