@@ -76,6 +76,7 @@ const PhotoGallery = (props) => {
   };
 
   const createEvent = async () => {
+    setAnimating(false);
     var formData = new FormData();
     formData.append("pin", props.route.params.pin);
     formData.append("owner", props.route.params.owner);
@@ -121,7 +122,6 @@ const PhotoGallery = (props) => {
       );
     }
 
-    setAnimating(false);
     setPickedImages([]);
   };
 
