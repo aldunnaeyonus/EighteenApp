@@ -3,26 +3,18 @@ import {
   View,
   Platform,
   TouchableOpacity,
-  Dimensions,
   Text,
   Modal,
   Share,
 } from "react-native";
 import React, { useState, useRef, useCallback } from "react";
 import { constants } from "../../utils";
-const { height, width } = Dimensions.get("window");
-import Carousel from "react-native-looped-carousel";
-import Video from "react-native-video";
-import VisibilitySensor from "@svanboxel/visibility-sensor-react-native";
 import { Icon } from "react-native-elements";
 import * as ImagePicker from "expo-image-picker";
 import FormData from "form-data";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
 import { storage, updateItemFeed } from "../../context/components/Storage";
 import FastImage from "react-native-fast-image";
-import { createImageProgress } from "react-native-image-progress";
-const Image = createImageProgress(FastImage);
-import Progress from "react-native-progress";
 import Animated from "react-native-reanimated";
 import moment from "moment";
 import GalleryHeader from "../SubViews/gallery/listHeader";
@@ -37,8 +29,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import PhotoEditor from "@baronha/react-native-photo-editor";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 const stickers = [];
-import Zoom from "react-native-zoom-reanimated";
 import Loading from "../SubViews/home/Loading";
+import ImageGalleryView from "../SubViews/gallery/imageGalleryView";
 
 const PhotoGallery = (props) => {
   const [filteredDataSource] = useMMKVObject(
@@ -46,12 +38,10 @@ const PhotoGallery = (props) => {
     storage
   );
   const AnimatedFlatlist = Animated.FlatList;
-  const [videoPlayPause, setVideoPlayPause] = useState(true);
-  const [videoPlayMute] = useState(true);
   const [animating, setAnimating] = useState(false);
   const [pagerIndex, setPageIndex] = useState(0);
-  const video = useRef();
   const photo = useRef();
+  const newphoto = useRef();
   const [pickedImages, setPickedImages] = useState([]);
   const [credits, setCredits] = useState(
     props.route.params.owner == props.route.params.user
@@ -374,274 +364,96 @@ const PhotoGallery = (props) => {
     setPageIndex(index);
   };
   return modalVisibleStatus ? (
-    <SafeAreaProvider>
-      <SafeAreaView
-        style={{
-          backgroundColor: "black",
-          height: "100%",
-          width: "100%",
-        }}
-        edges={["bottom", "left", "right"]}
-      >
-        <Carousel
-          pageInfoBackgroundColor={"#fff"}
-          doubleTapZoomEnabled={true}
-          style={{ width, height }}
-          currentPage={pagerIndex}
-          useNativeDriver={false}
-          autoplay={false}
-          isLooped={false}
-          pageInfo={true}
-          swipe={true}
-        >
-          {filteredDataSource.map((image) =>
-            image.type == "video" ? (
-              <View
-                key={"i" + image.image_id}
-                style={{
-                  flex: 1,
-                  height: "100%",
-                  width: "100%",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  backgroundColor: "transparent",
-                }}
-              >
-                <View
-                  key={"g" + image.image_id}
-                  style={{
-                    backgroundColor: "transparent",
-                    position: "absolute",
-                    top: 0,
-                    zIndex: 2,
-                    height: 60,
-                    marginTop: 30,
-                    width: width,
-                    flexDirection: "row",
-                    opacity: 0.9,
-                  }}
-                >
-                  <Image
-                    indicator={Progress}
-                    key={"k" + image.image_id}
-                    style={{
-                      width: 50,
-                      height: 50,
-                      borderRadius: 25,
-                      marginTop: 30,
-                      marginLeft: 2,
-                      borderWidth: 0.5,
-                      alignSelf: "auto",
-                      overflow: "hidden",
-                      backgroundColor: "transparent",
-                    }}
-                    showSpinner={true}
-                    spinnerColor={"rgba(0, 0, 0, 1.0)"}
-                    source={{
-                      priority: FastImage.priority.high,
-                      cache: FastImage.cacheControl.immutable,
-                      uri: image.icon,
-                    }}
-                  />
-                  {image.isPro == "1" && (
-                    <View style={{ position: "absolute" }}>
-                      <View
-                        style={{
-                          marginTop: 62,
-                          marginLeft: 35,
-                          backgroundColor: "transparent",
-                          width: 20,
-                          height: 20,
-                          justifyContent: "center",
-                        }}
-                      >
-                        <FastImage
-                          style={{
-                            marginLeft: 4,
-                            marginTop: 1,
-                            width: 17,
-                            height: 17,
-                            textAlignVertical: "center",
-                            textAlignVertical: "center",
-                          }}
-                          resizeMode={FastImage.resizeMode.contain}
-                          source={require("../../../assets/verified.png")}
-                        />
-                      </View>
-                    </View>
-                  )}
-                  <Text
-                    numberOfLines={1}
-                    key={"j" + image.image_id}
-                    style={{
-                      color: "white",
-                      backgroundColor: "transparent",
-                      fontSize: 20,
-                      marginLeft: 10,
-                      fontWeight: "bold",
-                      marginTop: 40,
-                    }}
-                  >
-                    {image.userName}
-                  </Text>
-                </View>
-                <VisibilitySensor
-                  style={{
-                    flex: 1,
-                    backgroundColor: "transparent",
-                  }}
-                  onChange={(isVisible) => {
-                    return isVisible
-                      ? setVideoPlayPause(true)
-                      : setVideoPlayPause(true);
-                  }}
-                >
-                  <Video
-                    fullscreen={true}
-                    fullscreenAutorotate={true}
-                    fullscreenOrientation={"all"}
-                    ignoreSilentSwitch="obey"
-                    showNotificationControls={true}
-                    playWhenInactive={false}
-                    playInBackground={false}
-                    ref={video}
-                    controls={true}
-                    key={"m" + image.image_id}
-                    repeat={false}
-                    muted={videoPlayMute}
-                    resizeMode={"contain"}
-                    paused={videoPlayPause}
-                    style={{
-                      backgroundColor: "black",
-                      height: height, 
-                      width: width,
-                    }}
-                    source={{ 
-                      cache: FastImage.cacheControl.immutable,
-                      priority: FastImage.priority.high,
-                      uri: image.uri }}
-                  />
-                </VisibilitySensor>
-              </View>
-            ) : (
-              <View
-                key={"i" + image.image_id}
-                style={{
-                  flex: 1,
-                  height: "100%",
-                  width: "100%",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  backgroundColor: "transparent",
-                }}
-              >
-                <View
-                  key={"g" + image.image_id}
-                  style={{
-                    backgroundColor: "transparent",
-                    position: "absolute",
-                    top: 0,
-                    zIndex: 2,
-                    height: 60,
-                    marginTop: 30,
-                    width: width,
-                    flexDirection: "row",
-                    opacity: 0.9,
-                  }}
-                >
-                  <Image
-                    indicator={Progress}
-                    key={"f" + image.image_id}
-                    style={{
-                      width: 50,
-                      height: 50,
-                      borderRadius: 25,
-                      marginTop: 30,
-                      marginLeft: 2,
-                      borderWidth: 0.5,
-                      alignSelf: "auto",
-                      overflow: "hidden",
-                      backgroundColor: "transparent",
-                    }}
-                    showSpinner={true}
-                    spinnerColor={"rgba(0, 0, 0, 1.0)"}
-                    source={{
-                      priority: FastImage.priority.high,
-                      cache: FastImage.cacheControl.immutable,
-                      uri: image.icon,
-                    }}
-                  />
-                  {image.isPro == "1" && (
-                    <View style={{ position: "absolute" }}>
-                      <View
-                        style={{
-                          marginTop: 62,
-                          marginLeft: 35,
-                          backgroundColor: "transparent",
-                          width: 20,
-                          height: 20,
-                          justifyContent: "center",
-                        }}
-                      >
-                        <FastImage
-                          style={{
-                            marginLeft: 4,
-                            marginTop: 1,
-                            width: 17,
-                            height: 17,
-                            textAlignVertical: "center",
-                            textAlignVertical: "center",
-                          }}
-                          resizeMode={FastImage.resizeMode.contain}
-                          source={require("../../../assets/verified.png")}
-                        />
-                      </View>
-                    </View>
-                  )}
-                  <Text
-                    numberOfLines={1}
-                    key={"e" + image.image_id}
-                    style={{
-                      color: "white",
-                      backgroundColor: "transparent",
-                      fontSize: 20,
-                      marginLeft: 10,
-                      fontWeight: "bold",
-                      marginTop: 40,
-                    }}
-                  >
-                    {image.userName}
-                  </Text>
-                </View>
-                <Zoom
-                  doubleTapConfig={{
-                    defaultScale: 5,
-                    minZoomScale: 1,
-                    maxZoomScale: 10,
-                  }}
-                >
-                  <Image
-                    indicator={Progress}
-                    ref={(component) => (mediaPlayer = component)}
-                    style={{ marginTop: 30, height: height, width: width }}
-                    resizeMode={FastImage.resizeMode.contain}
-                    source={{
-                      priority: FastImage.priority.high,
-                      cache: FastImage.cacheControl.immutable,
-                      uri: image.uri,
-                    }}
-                    key={"h" + props.image_id}
-                  ></Image>
-                </Zoom>
-              </View>
-            )
-          )}
-        </Carousel>
-      </SafeAreaView>
-    </SafeAreaProvider>
+        <AnimatedFlatlist
+            ref={newphoto}
+            extraData={filteredDataSource}
+            initialScrollIndex={pagerIndex}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
+            scrollEventThrottle={16}
+            pagingEnabled={true}
+            horizontal={true}
+            onScrollToIndexFailed={({
+              index,
+            }) => {
+              newphoto.current?.scrollToOffset({
+                offset: index * 1000,
+                animated: true,
+              });
+              const wait = new Promise((resolve) => setTimeout(resolve, 500));
+              wait.then(() => {
+                newphoto.current?.scrollToIndex({ index, animated: true });
+              });
+            }}
+            style={{ backgroundColor: "black"}}
+            numColumns={1}
+            data={filteredDataSource}
+            keyExtractor={(item) => item.image_id}
+            renderItem={(item, index) => (
+              <ImageGalleryView
+              item={item}
+              index={index}
+              showModalFunction={showModalFunction}
+            />
+            )}
+          />
   ) : (
-    <>
-      <Modal
+      <SafeAreaProvider>
+        <SafeAreaView
+          style={{
+            backgroundColor: "transparent",
+            height: "100%",
+            width: "100%",
+          }}
+          edges={["bottom", "left", "right"]}
+        >
+          <AnimatedFlatlist
+            extraData={filteredDataSource}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
+            scrollEventThrottle={16}
+            ListHeaderComponent={
+              !modalVisibleStatus && (
+                <>
+                  <GalleryHeader
+                    UUID={props.route.params.UUID}
+                    image={props.route.params.illustration}
+                    title={props.route.params.title}
+                    endEventTime={endEventTime}
+                  />
+
+                  <Loading
+                    message={uploading.message}
+                    flex={uploading.display}
+                    image={uploading.image}
+                  />
+                </>
+              )
+            }
+            ListEmptyComponent={
+              <EmptyStateView
+                imageSource={require("../../../assets/2802783.png")}
+                imageStyle={style.imageStyle}
+                headerText={props.route.params.title.toUpperCase()}
+                subHeaderText={i18n.t("A gallery")}
+                headerTextStyle={style.headerTextStyle}
+                subHeaderTextStyle={style.subHeaderTextStyle}
+              />
+            }
+            ref={photo}
+            style={{ backgroundColor: "white", marginTop: -3 }}
+            numColumns={3}
+            data={filteredDataSource}
+            keyExtractor={(item) => item.image_id}
+            renderItem={(item, index) => (
+              <ImageGallery
+                item={item}
+                index={index}
+                showModalFunction={showModalFunction}
+              />
+            )}
+          />
+          <Modal
         animationType="slide"
         transparent={true}
         visible={modalUpload}
@@ -791,64 +603,8 @@ const PhotoGallery = (props) => {
           </TouchableOpacity>
         </View>
       </Modal>
-      <SafeAreaProvider>
-        <SafeAreaView
-          style={{
-            backgroundColor: "transparent",
-            height: "100%",
-            width: "100%",
-          }}
-          edges={["bottom", "left", "right"]}
-        >
-          <AnimatedFlatlist
-            extraData={filteredDataSource}
-            showsHorizontalScrollIndicator={false}
-            showsVerticalScrollIndicatorr={false}
-            scrollEventThrottle={16}
-            ListHeaderComponent={
-              !modalVisibleStatus && (
-                <>
-                  <GalleryHeader
-                    UUID={props.route.params.UUID}
-                    image={props.route.params.illustration}
-                    title={props.route.params.title}
-                    endEventTime={endEventTime}
-                  />
-
-                  <Loading
-                    message={uploading.message}
-                    flex={uploading.display}
-                    image={uploading.image}
-                  />
-                </>
-              )
-            }
-            ListEmptyComponent={
-              <EmptyStateView
-                imageSource={require("../../../assets/2802783.png")}
-                imageStyle={style.imageStyle}
-                headerText={props.route.params.title.toUpperCase()}
-                subHeaderText={i18n.t("A gallery")}
-                headerTextStyle={style.headerTextStyle}
-                subHeaderTextStyle={style.subHeaderTextStyle}
-              />
-            }
-            ref={photo}
-            style={{ backgroundColor: "white", marginTop: -3 }}
-            numColumns={3}
-            data={filteredDataSource}
-            keyExtractor={(item) => item.image_id}
-            renderItem={(item, index) => (
-              <ImageGallery
-                item={item}
-                index={index}
-                showModalFunction={showModalFunction}
-              />
-            )}
-          />
         </SafeAreaView>
       </SafeAreaProvider>
-    </>
   );
 };
 
