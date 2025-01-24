@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
-import { Text, LogBox, Platform } from "react-native";
+import { Text, LogBox, Platform, Dimensions } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
@@ -42,6 +42,7 @@ import { constants } from "./src/utils";
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import NotifService from "./NotifService";
 import TempCamera from "./src/Screens/Cameras/TempCamera";
+import { ActivityIndicator, MD2Colors } from "react-native-paper";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -173,7 +174,15 @@ const onCheckVersion = () => {
 
 
   if (!ready) {
-    return null;
+    return (
+      <FastImage
+      style={{
+        flex: 1,
+      }}
+      resizeMode={FastImage.resizeMode.contain}
+      source={require("./assets/splash.png")}
+    />
+    );
   }
 
   return (

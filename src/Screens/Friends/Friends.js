@@ -343,7 +343,19 @@ const Friends = (props) => {
   ]);
 
   if (!ready) {
-    return null;
+    return (
+      <ActivityIndicator
+      size={80}
+      style={{
+        position: "absolute",
+        top: Dimensions.get("window").height / 3.5,
+        left: Dimensions.get("window").width / 2 - 40,
+      }}
+      animating={isLoading}
+      hidesWhenStopped={true}
+      color={MD2Colors.orange900}
+    />
+    );
   }
 
   return (
@@ -556,17 +568,6 @@ const Friends = (props) => {
             </TouchableOpacity>
           </View>
         </Modal>
-        <ActivityIndicator
-        size={80}
-        style={{
-          position: "absolute",
-          top: Dimensions.get("window").height / 3.5,
-          left: Dimensions.get("window").width / 2 - 40,
-        }}
-        animating={isLoading}
-        hidesWhenStopped={true}
-        color={MD2Colors.orange900}
-      />
       </SafeAreaView>
     </SafeAreaProvider>
   );
