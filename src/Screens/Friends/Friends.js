@@ -343,6 +343,10 @@ const Friends = (props) => {
   ]);
 
   if (!ready) {
+    props.navigation.setOptions({
+      title: i18n.t("Loading"),
+    })
+    
     return (
       <ActivityIndicator
       size={80}
