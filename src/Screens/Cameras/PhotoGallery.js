@@ -6,6 +6,7 @@ import {
   Text,
   Modal,
   Share,
+  Dimensions
 } from "react-native";
 import React, { useState, useRef, useCallback } from "react";
 import { constants } from "../../utils";
@@ -15,6 +16,9 @@ import FormData from "form-data";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
 import { storage, updateItemFeed } from "../../context/components/Storage";
 import FastImage from "react-native-fast-image";
+import { createImageProgress } from "react-native-image-progress";
+const Image = createImageProgress(FastImage);
+import Progress from "react-native-progress";
 import Animated from "react-native-reanimated";
 import moment from "moment";
 import GalleryHeader from "../SubViews/gallery/listHeader";
@@ -37,10 +41,13 @@ const PhotoGallery = (props) => {
     `user.Gallery.Friend.Feed.${props.route.params.pin}`,
     storage
   );
+  const { width } = Dimensions.get("window");
+  
   const AnimatedFlatlist = Animated.FlatList;
   const [animating, setAnimating] = useState(false);
   const [pagerIndex, setPageIndex] = useState(0);
   const photo = useRef();
+  const bottomPhoto = useRef();
   const newphoto = useRef();
   const [pickedImages, setPickedImages] = useState([]);
   const [credits, setCredits] = useState(
@@ -64,7 +71,27 @@ const PhotoGallery = (props) => {
     });
     FastImage.preload(presloadImages);
   };
+  const [activeIndex, setActiveIndex] = useState(0);
 
+  const scrollToActiveIndex = (index) => {
+    setActiveIndex(index)
+    newphoto?.current?.scrollToOffset({
+      offset: index *width,
+      animated: true
+    })
+    if (index * (80 + 10) - 80 / 2 > width / 2){
+        bottomPhoto?.current.scrollToOffset({
+          offset: index * (80 +10) - width / 2 + 80 / 2,
+          animated: true
+        })
+    }else {
+      bottomPhoto?.current.scrollToOffset({
+        offset: 0,
+        animated: true
+      })
+    }
+  }
+  
   const createEvent = async () => {
     setAnimating(false);
     var formData = new FormData();
@@ -358,45 +385,90 @@ const PhotoGallery = (props) => {
     parseInt(props.route.params.end) - moment().unix(),
     parseInt(props.route.params.start)
   );
-
   const showModalFunction = async (visible, index) => {
     setModalVisibleStatus(visible);
     setPageIndex(index);
   };
+
   return modalVisibleStatus ? (
-        <AnimatedFlatlist
-            ref={newphoto}
-            extraData={filteredDataSource}
-            initialScrollIndex={pagerIndex}
-            showsHorizontalScrollIndicator={false}
-            showsVerticalScrollIndicator={false}
-            scrollEventThrottle={16}
-            pagingEnabled={true}
-            horizontal={true}
-            onScrollToIndexFailed={({
-              index,
-            }) => {
-              newphoto.current?.scrollToOffset({
-                offset: index * 1000,
-                animated: true,
-              });
-              const wait = new Promise((resolve) => setTimeout(resolve, 500));
-              wait.then(() => {
-                newphoto.current?.scrollToIndex({ index, animated: true });
-              });
-            }}
-            style={{ backgroundColor: "black"}}
-            numColumns={1}
-            data={filteredDataSource}
-            keyExtractor={(item) => item.image_id}
-            renderItem={(item, index) => (
-              <ImageGalleryView
-              item={item}
-              index={index}
-              showModalFunction={showModalFunction}
-            />
-            )}
-          />
+        <View style={{width:'100%', height:'100%'}}>
+          <AnimatedFlatlist
+      ref={newphoto}
+      extraData={filteredDataSource}
+      initialScrollIndex={pagerIndex}
+      showsHorizontalScrollIndicator={false}
+      showsVerticalScrollIndicator={false}
+      onMomentumScrollEnd={ev => {
+        scrollToActiveIndex(Math.floor(ev.nativeEvent.contentOffset.x / width))
+      }}
+      pagingEnabled={true}
+      horizontal={true}
+      onScrollToIndexFailed={({index}) => {
+        scrollToActiveIndex(index)
+      }}
+      style={{ backgroundColor: "black" }}
+      numColumns={1}
+      data={filteredDataSource}
+      keyExtractor={(item) => item.image_id}
+      renderItem={(item, index) => (
+        <ImageGalleryView
+          item={item}
+          index={index}
+          showModalFunction={showModalFunction} />
+      )} />
+      
+      <AnimatedFlatlist
+        ref={bottomPhoto}
+        data={filteredDataSource} 
+        horizontal={true}
+        keyExtractor={(item) => item.image_id}
+        style={{position:'absolute', bottom:40}}
+        extraData={filteredDataSource}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{paddingHorizontal:10}}
+        onScrollToIndexFailed={({index}) => {
+          scrollToActiveIndex(index)
+        }}
+        renderItem={({item, index}) => {
+          return (
+          <TouchableOpacity
+          onPress={()=> {
+            scrollToActiveIndex(index)
+          }}
+          >
+             <FastImage 
+        progress={Progress}
+        resizeMode={FastImage.resizeMode.cover}
+        source={{
+          cache: FastImage.cacheControl.immutable,
+          priority: FastImage.priority.high,
+          uri:
+            item.type == "video"
+              ? item.videoThumbnail
+              : item.thumbnail,
+        }}
+        style={{ width: 80, height: 80, borderRadius:12, marginRight:10, borderWidth:2, borderColor: activeIndex === index ? 'white' : 'transparent'}}
+        >
+           {item.type === "video" && (
+                    <Icon
+                      type="material-community"
+                      name="play-box-outline"
+                      size={30}
+                      containerStyle={{
+                        width: 50,
+                        height: 50,
+                        top: 25,
+                        left: 12.5,
+                      }}
+                      color="white"
+                    />
+                  )}
+                  </FastImage> 
+        </TouchableOpacity>
+   ) }}
+        />
+        </View>
   ) : (
       <SafeAreaProvider>
         <SafeAreaView

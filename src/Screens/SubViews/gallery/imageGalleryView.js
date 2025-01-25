@@ -233,7 +233,7 @@ const ImageGalleryView = (props) => {
             <Image
               indicator={Progress}
               ref={(component) => (mediaPlayer = component)}
-              style={{ marginTop: 30, height: height, width: width }}
+              style={{ marginTop: 0, height: height, width: width }}
               resizeMode={FastImage.resizeMode.contain}
               source={{
                 priority: FastImage.priority.high,
