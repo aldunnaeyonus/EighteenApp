@@ -130,8 +130,7 @@ const Verification = (props) => {
   },[props.route.params.email, resendTimer, canResend, isLoading]
   );
 
-  const resendCode = useCallback = (() => {
-    const execute = async () =>{
+  const resendCode = (async () => {
     setCanResend(false);
     setResendTimer(180);
     const data = {
@@ -141,8 +140,7 @@ const Verification = (props) => {
     await axiosPull.postData("/register/checkUsername.php", data);
     Alert.alert(i18n.t("Resend Code"), i18n.t("Anewverificationcode"));
   }
-  execute();
-  }, [props.route.params.email, resendTimer, canResend]);
+);
 
   return (
     <KeyboardAwareScrollView style={{ backgroundColor: "#fff" }}>

@@ -15,7 +15,7 @@ import Video from "react-native-video";
 const Loading = (props) => {
   const video = useRef();
   const photo = useRef();
-  const mime = props.image.split(".").pop().toLowerCase();
+  const mime = String(props.image).split(".").pop().toLowerCase();
 
   return (
     <View
