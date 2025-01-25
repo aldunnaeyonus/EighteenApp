@@ -76,7 +76,7 @@ const PhotoGallery = (props) => {
   const scrollToActiveIndex = (index) => {
     setActiveIndex(index)
     newphoto?.current?.scrollToOffset({
-      offset: index *width,
+      offset: index * width,
       animated: true
     })
     if (index * (80 + 10) - 80 / 2 > width / 2){

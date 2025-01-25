@@ -8,8 +8,12 @@ import { View, Text, TouchableOpacity } from "react-native";
 import styles from "../../../styles/SliderEntry.style";
 import CameraLens from "../camera/cameraView";
 import * as i18n from "../../../../i18n";
+import { useMMKVObject } from "react-native-mmkv";
+import { storage } from "../../../context/components/Storage";
 
 const MemberListItem = (props) => {
+  const [user] = useMMKVObject("user.Data", storage);
+
   return (
     <View style={styles.slideInnerContaineMember}>
       <TouchableOpacity
@@ -34,8 +38,8 @@ const MemberListItem = (props) => {
             resizeMode={FastImage.resizeMode.contain}
             style={{
               overflow:'hidden',
-              height: 70,
-              width: 70,
+              height: 60,
+              width: 60,
               borderRadius: 40,
               borderWidth: 1,
               margin: 15,
@@ -43,6 +47,7 @@ const MemberListItem = (props) => {
               backgroundColor: "#f2f2f2",
             }}
           />
+          
           {props.item.item.isPro == "1" && (
             <View style={{ position: "absolute" }}>
               <View
@@ -57,8 +62,8 @@ const MemberListItem = (props) => {
               >
                 <FastImage
                   style={{
-                    marginLeft: 4,
-                    marginTop: 1,
+                    marginLeft: -5,
+                    marginTop: -5,
                     width: 20,
                     height: 20,
                     textAlignVertical: "center",
@@ -101,16 +106,27 @@ const MemberListItem = (props) => {
               {i18n.t("Joined")}:{" "}
               {moment.unix(parseInt(props.item.item.user_joined)).format("LLL")}
             </Text>
+            
           </View>
-          
-        </View>
-        <CameraLens
+          <TouchableOpacity
+             onPress={async () => {
+              ((user.isPro == "1" && props.item.item.credits == 0) ? props.moreCredits(props.item.item.user_id, props.pin, props.UUID) : null)
+              }}
+              >
+          <CameraLens
             credits={props.item.item.credits}
             tCredits={props.item.item.tCredits}
           />
-      </TouchableOpacity>
+                  </TouchableOpacity>
+
+        </View>
+        
+        </TouchableOpacity>
+
+
     </View>
   );
 };
 
 export default MemberListItem;
+         

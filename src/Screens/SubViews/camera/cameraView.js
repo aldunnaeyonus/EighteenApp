@@ -6,13 +6,11 @@ const CameraLens = (props) => {
 return (
     <View
               style={{
-                position: "absolute",
                 opacity: 0.7,
-                top: 5,
-                right: 5,
-                height: 50,
-                flexDirection: "row",
-                width: 45,
+                height: 60,
+                marginLeft:30,
+                flexDirection: "column",
+                width: 75,
                 borderColor:'lightgrey',
                 borderWidth:0.5,
                 backgroundColor: "hsl(200, 8%, 94%)",
@@ -21,24 +19,12 @@ return (
                 justifyContent: "center",
               }}
             >
+
               <Text
                 style={{
-                  right: -24,
-                  top: -15,
-                  fontSize: 12,
-                  fontWeight: '300',
-                  color: "#3D4849",
-                }}
-              >
-                {parseInt(props.credits) == 0
-                  ? "--"
-                  : parseInt(props.credits) - 1}
-              </Text>
-              <Text
-                style={{
-                  right: 7,
-                  fontSize: 17,
+                  fontSize: 23,
                   fontWeight: '700',
+                  textAlign:'center',
                   color: "#3D4849",
                 }}
               >
@@ -46,17 +32,14 @@ return (
               </Text>
               <Text
                 style={{
-                  right:5,
-                  top: 15,
-                  fontSize: 12,
-                  fontWeight: '300',
+                  fontSize: 10,
+                  marginTop:5,
+                  fontWeight: '700',
+                  textAlign:'center',
                   color: "#3D4849",
                 }}
               >
-                {parseInt(props.credits) ==
-                parseInt(props.tCredits)
-                  ? "0"
-                  : parseInt(props.credits) + 1}
+                Shots Left
               </Text>
             </View>
 );

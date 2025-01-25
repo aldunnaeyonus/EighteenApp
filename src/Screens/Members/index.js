@@ -23,6 +23,17 @@ const JoinedMembers = (props) => {
   const [refreshing, setRefreshing] = useState(false);
   const { toast } = useToast();
 
+  const moreCredits = async (user, pin, UUID) => {
+    const data = {
+      owner: user,
+      pin: pin,
+    };
+    console.log(data)
+    await axiosPull.postData("/camera/addShots.php", data);
+    await axiosPull._pullCameraFeed(owner, "owner");
+    await axiosPull._pullMembersFeed(pin, owner, UUID)
+  }
+
   const _removeUser = (user_id, pin, UUID, name, title) => {
     Alert.alert(
       i18n.t("Remove Member"),
@@ -108,7 +119,7 @@ const JoinedMembers = (props) => {
         });
       }
       props.navigation.setOptions({
-        title: props.route.params.title.toUpperCase(),
+        title: String(props.route.params.title).toUpperCase(),
       });
       var timeout = setInterval(async () => {
         await axiosPull._pullMembersFeed(
@@ -165,9 +176,10 @@ const JoinedMembers = (props) => {
               index={index}
               _removeUser={_removeUser}
               goToFriend={goToFriend}
+              moreCredits={moreCredits}
               pin={props.route.params.pin}
               UUID={props.route.params.UUID}
-              title={props.route.params.title.toUpperCase()}
+              title={String(props.route.params.title).toUpperCase()}
             />
           )}
         />

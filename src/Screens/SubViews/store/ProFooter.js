@@ -9,27 +9,12 @@ const ProFooter = (props) => {
       style={{
         width: width,
         marginTop: 10,
+        marginBottom: 30,
         justifyContent: "center",
         alignContent: "center",
         alignItems: "center",
       }}
     >
-      <TouchableOpacity
-        onPress={() => {
-          props.openSubscriptions();
-        }}
-      >
-        <Text
-          style={{
-            textAlign: "center",
-            color: "#ea5504",
-            fontWeight: "bold",
-            marginBottom: 10,
-          }}
-        >
-          {i18n.t("Cancel anytime")}
-        </Text>
-      </TouchableOpacity>
       <Text style={{ textAlign: "center", color: "grey" }}>
         <TouchableOpacity
           onPress={() => {

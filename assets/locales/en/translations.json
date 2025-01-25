@@ -236,5 +236,21 @@
     "getnotifications":"Snap Eighteen needs access to notifications so you can receive updates.",
     "Update":"Snap Eighteen Update",
     "UpdateDesc":"The backend code was updated via OTA and will take effect on the next opening of Snap Eighteen.",
-    "Version Build":"Version Build"
+    "Version Build":"Version Build", 
+    "Pro1":"You'll get access to:",
+    "Pro2":"Verified Badge",
+    "Pro3":"As a valued Snap Eighteen Pro member, you'll unlocked exclusive benefits. To showcase your membership and enhance your profile visibility.\n\nThis badge instantly signals your Snap Eighteen Pro status to other users, fostering connections and highlighting your status within the community.",
+    "Pro4":"Custom AI Images",
+    "Pro5":"In the realm of AI image generation, a new dimension has emerged: the AI generator description option. This powerful tool allows users to provide detailed textual descriptions to guide the AI's creative process, resulting in images that are more tailored to their specific needs and preferences. Unlike the basic version, which relies solely on random inputs, AI Images with pre-defined text offer greater control and precision, enabling users to craft truly unique and personalized visual experiences.",
+    "Pro6":"Edit Events",
+    "Pro7":"As a Pro member, you enjoy the flexibility to edit your events even after they've begun. This empowers you to adapt to unexpected changes, whether it's adjusting the schedule, modifying details, or accommodating unforeseen circumstances. This dynamic editing capability ensures your events always reflect the most accurate and up-to-date information.",
+    "Pro8":"Custom Event Options",
+    "Pro9":"As a Pro member, you unlock a suite of advanced event creation controls. Tailor your events with precision: \n\nMedia Mastery: Elevate your content with the ability to limit media uploads from 1 to a generous 18 files, ensuring a curated and focused experience.\n\nCamera Control: Seamlessly accommodate larger groups with an expanded camera limit, scaling from 10 to an impressive 1000 devices.\n\nSocial Sharing Power: Empower your audience with the option to easily share event highlights across their social networks. Toggle this feature on or off to maintain control over content distribution.\n\nExtended Event Horizons: Extend the reach of your events with a flexible duration of up to a full month, providing ample time for engagement and interaction.",
+    "Pro10":"Direct Media Download",
+    "Pro11":"Experience a streamlined workflow after your event concludes. Instead of waiting for a download link to arrive in your email, you can now directly download the recorded media to your device. This convenient feature saves you time and effort, allowing you to quickly access and utilize your valuable content.",
+    "Pro12":"Longer Event History",
+    "Pro13":"As a Pro member, you gain exclusive access to your event history for an extended period – a full 60 days after your event concludes. This valuable feature allows you to revisit key moments, analyze performance, or simply relive cherished experiences with greater flexibility and peace of mind.",
+    "Pro14":"Give Member Credits",
+    "Pro15":"To incentivize continued engagement and ensure a vibrant community, we have implemented a system where users with low credit balances can receive a boost from the owner, if they are a Pro Member. This allows them to continue uploading moments and actively participating in the platform's sharing ecosystem.",
+    "Subscribed":"Subscribed"
 }

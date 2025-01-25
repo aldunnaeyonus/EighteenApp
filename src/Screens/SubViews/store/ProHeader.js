@@ -12,7 +12,7 @@ const ProHeader = (props) => {
     <View
       key={props}
       style={{
-        height: 400,
+        height: 250,
         width: width,
       }}
     >
@@ -21,12 +21,10 @@ const ProHeader = (props) => {
         key={"1"}
         source={require("../../../../assets/decour.jpeg")}
         style={{
-          height: 400,
+          height: 250,
           width: width,
           backgroundColor: "#f2f2f2",
           overflow: "hidden",
-          borderBottomLeftRadius: 30,
-          borderBottomRightRadius: 30,
         }}
       ></Image>
       <View

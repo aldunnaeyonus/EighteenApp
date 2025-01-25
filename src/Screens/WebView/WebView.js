@@ -45,8 +45,7 @@ const WebViewer = (props) => {
               backgroundColor:'white'
             }}
         source={{ 
-          cache: FastImage.cacheControl.immutable,
-          priority: FastImage.priority.high,
+      
           uri: props.route.params.url 
         }}
       />

@@ -2,6 +2,8 @@ import React from "react";
 import { Dimensions, View, Text, TouchableOpacity, Platform, Image } from "react-native";
 const { width } = Dimensions.get("window");
 import * as i18n from "../../../../i18n";
+import { ListItem } from "@rneui/themed";
+import { Icon } from "react-native-elements";
 
 const ProMain = (props) => {
   const Owned = props.owned.find((item) => item === props.item.item.productId);
@@ -12,59 +14,158 @@ const ProMain = (props) => {
       style={{
         width: width,
         marginTop: 30,
-        justifyContent: "center",
-        alignContent: "center",
-        alignItems: "center",
+
       }}
     >
        <View
             style={{
-              flexDirection: "row",
               justifyContent: "center",
               alignContent: "center",
               alignItems: "center",
             }}
           >
-       <Image
-                    style={{
-                      width: 450,
-                      height: 250,
-                    }}
-                    resizeMode="contain"
-                    source={require('../../../../assets/compare.png')}
-                  />
-      </View>
-      {!isOwned ? (
-        <>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              alignContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Text
-              style={{
-                fontFamily: "HelveticaNeue",
-                fontSize: 22,
-                fontWeight: "bold",
-                textAlign: "center",
-                marginTop:30
-              }}
-            >
-              {Platform.OS == "ios" ? props.item.item.localizedPrice : props.item.item.subscriptionOfferDetails[1].pricingPhases.pricingPhaseList[0].formattedPrice}{"\n"}{i18n.t("monthly")}
+      <Text style={{ fontFamily: 'HelveticaNeue-Medium', textAlign: "center", color:'grey' }}> {Platform.OS == "ios" ? props.item.item.localizedPrice : props.item.item.subscriptionOfferDetails[1].pricingPhases.pricingPhaseList[0].formattedPrice} {i18n.t("monthly")} - {" "}
+              <Text
+                style={{
+                  fontFamily: 'HelveticaNeue-Medium',
+                  color: "#ea5504",
+                  fontWeight: "600",
+                }}
+                onPress={() => {
+                  props.openSubscriptions();
+                }}
+              >
+                {i18n.t("Cancel anytime")}
+              </Text>
             </Text>
-          </View>
+      </View>
+      <View
+            
+          >
+      <Text style={{  textAlign: "left", color:'black', fontSize:17, marginTop:20, marginLeft:10, marginBottom:10, fontWeight:'bold' }}>{i18n.t("Pro1")}</Text>
+
+                <ListItem>
+                <Image
+                  style={{
+                    width: 25,
+                    height: 25,
+                  }}
+                  source={require("../../../../assets/verified.png")}
+                />
+                <ListItem.Content>
+                  <ListItem.Title style={{fontFamily: 'HelveticaNeue-Medium',fontSize: 18,color: '#000', marginBottom:10}}>{i18n.t("Pro2")}</ListItem.Title>
+                  <ListItem.Subtitle>{i18n.t("Pro3")}</ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+      
+              <ListItem>
+                <Icon
+                  type="material-community"
+                  name="chip"
+                  size={25}
+                  color="#3D4849"
+                  containerStyle={{
+                    width: 28,
+                    height: 28,
+                  }}
+                />
+                <ListItem.Content>
+                  <ListItem.Title style={{fontFamily: 'HelveticaNeue-Medium',fontSize: 18,color: '#000', marginBottom:10}}>{i18n.t("Pro4")}</ListItem.Title>
+                  <ListItem.Subtitle>{i18n.t("Pro5")}</ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+              <ListItem>
+                <Icon
+                  type="material"
+                  name="edit"
+                  size={25}
+                  color="#3D4849"
+                  containerStyle={{
+                    width: 28,
+                    height: 28,
+                  }}
+                />
+                <ListItem.Content>
+                  <ListItem.Title style={{fontFamily: 'HelveticaNeue-Medium',fontSize: 18,color: '#000', marginBottom:10}}>{i18n.t("Pro6")}</ListItem.Title>
+                  <ListItem.Subtitle>{i18n.t("Pro7")}</ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+              <ListItem>
+                <Icon
+                  type="material"
+                  name="display-settings"
+                  size={25}
+                  color="#3D4849"
+                  containerStyle={{
+                    width: 28,
+                    height: 28,
+                  }}
+                />
+                <ListItem.Content>
+                  <ListItem.Title style={{fontFamily: 'HelveticaNeue-Medium',fontSize: 18,color: '#000', marginBottom:10}}>{i18n.t("Pro8")}</ListItem.Title>
+                  <ListItem.Subtitle>{i18n.t("Pro9")}</ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+              <ListItem>
+                <Icon
+                  type="material-community"
+                  name="download-box-outline"
+                  size={25}
+                  color="#3D4849"
+                  containerStyle={{
+                    width: 28,
+                    height: 28,
+                  }}
+                />
+                <ListItem.Content>
+                  <ListItem.Title style={{fontFamily: 'HelveticaNeue-Medium',fontSize: 18,color: '#000', marginBottom:10}}>{i18n.t("Pro10")}</ListItem.Title>
+                  <ListItem.Subtitle>{i18n.t("Pro11")}</ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+              <ListItem>
+                <Icon
+                  type="material"
+                  name="history"
+                  size={25}
+                  color="#3D4849"
+                  containerStyle={{
+                    width: 28,
+                    height: 28,
+                  }}
+                />
+                <ListItem.Content>
+                  <ListItem.Title style={{fontFamily: 'HelveticaNeue-Medium',fontSize: 18,color: '#000', marginBottom:10}}>{i18n.t("Pro12")}</ListItem.Title>
+                  <ListItem.Subtitle>{i18n.t("Pro13")}</ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+              <ListItem>
+                <Icon
+                  type="material"
+                  name="generating-tokens"
+                  size={25}
+                  color="#3D4849"
+                  containerStyle={{
+                    width: 28,
+                    height: 28,
+                  }}
+                />
+                <ListItem.Content>
+                  <ListItem.Title style={{fontFamily: 'HelveticaNeue-Medium',fontSize: 18,color: '#000', marginBottom:10}}>{i18n.t("Pro14")}</ListItem.Title>
+                  <ListItem.Subtitle>{i18n.t("Pro15")}</ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+      </View>
+
+     {!isOwned ? (
+        <>
+
           <TouchableOpacity
             style={{
-              flexDirection: "row",
-              marginTop: 20,
-              width: 300,
+              width: '90%',
               backgroundColor: "#e35504",
               borderRadius: 12,
               padding: 10,
-              marginBottom: 20,
+              margin: 20,
               alignItems: "center",
               justifyContent: "center",
             }}
@@ -88,13 +189,14 @@ const ProMain = (props) => {
       ) : (
         <Text
           style={{
+            
             fontFamily: "HelveticaNeue",
             fontSize: 22,
             fontWeight: "bold",
             textAlign: "center",
           }}
         >
-          Subscribed
+        {i18n.t("Subscribed")}
         </Text>
       )}
     </View>
