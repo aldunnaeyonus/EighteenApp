@@ -391,6 +391,7 @@ const PhotoGallery = (props) => {
   };
 
 useEffect(() => {
+  if (pagerIndex != 0){
     newphoto?.current?.scrollToIndex({
       animated: true,
       offset: pagerIndex * width,
@@ -399,6 +400,7 @@ useEffect(() => {
       animated: true,
       offset: pagerIndex * width,
     });
+  }
   setPageIndex(0)
   }, [pagerIndex]);
 
