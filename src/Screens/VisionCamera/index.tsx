@@ -73,10 +73,7 @@ const VisionCamera = (props: {
       ? "99"
       : props.route.params.credits
   );
-  const [cameraData] = useMMKVObject(
-    `user.Camera.Friend.Feed.${props.route.params.owner}`,
-    storage
-  );
+
   const { hasPermission, requestPermission } = useCameraPermission();
   const {
     hasPermission: microphonePermission,
@@ -295,7 +292,7 @@ const VisionCamera = (props: {
               onUIRotationChanged={setUiRotation}
               enableZoomGesture={true}
               photo={true}
-              isMirrored={false}
+              isMirrored={true}
               video={true}
               audio={true}
               device={device}

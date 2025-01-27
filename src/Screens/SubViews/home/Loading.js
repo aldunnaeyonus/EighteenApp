@@ -24,7 +24,7 @@ const Loading = (props) => {
       margin:5,
       flex:1,
       height: 40,
-      borderRadius:6
+      borderRadius:6,
       overflow:'hidden',
       width: ScreenWidth,
       flexDirection:'row',

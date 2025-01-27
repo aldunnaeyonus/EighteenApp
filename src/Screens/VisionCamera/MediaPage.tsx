@@ -189,7 +189,7 @@ const MediaPage = (props: {
       {type === "video" && (
         <Video
           source={source}
-          style={{StyleSheet.absoluteFill}}
+          style={StyleSheet.absoluteFill}
           paused={isVideoPaused}
           resizeMode="cover"
           poster="cover"
