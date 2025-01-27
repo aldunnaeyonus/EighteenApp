@@ -189,7 +189,7 @@ const MediaPage = (props: {
       {type === "video" && (
         <Video
           source={source}
-          style={StyleSheet.absoluteFill}
+          style={{[StyleSheet.absoluteFill, styles.video]}}
           paused={isVideoPaused}
           resizeMode="cover"
           poster="cover"
@@ -293,6 +293,9 @@ const styles = StyleSheet.create({
       width: 0,
     },
     textShadowRadius: 1,
+  },
+   video: {
+    transform: [{ rotate: '180deg' }], // This flips the video
   },
 });
 
