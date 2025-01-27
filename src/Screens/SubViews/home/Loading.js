@@ -25,7 +25,7 @@ const Loading = (props) => {
       flex:1,
       height: 40,
       borderRadius:6
-      overFlow:'hidden',
+      overflow:'hidden',
       width: ScreenWidth,
       flexDirection:'row',
       alignContent:'center',
@@ -49,7 +49,7 @@ const Loading = (props) => {
                     paused={true}
                     style={{
                       borderRadius:6,
-                      overFlow:'hidden',
+                      overflow:'hidden',
                       height: 40, 
                       width: 40,
                     }}
@@ -67,7 +67,7 @@ const Loading = (props) => {
         width: 40,
         height: 40,
         borderRadius:6,
-        overFlow:'hidden',
+        overflow:'hidden',
       }}
       indicator={Progress}
       source={{
