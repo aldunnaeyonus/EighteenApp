@@ -24,6 +24,8 @@ const Loading = (props) => {
       margin:5,
       flex:1,
       height: 40,
+      borderRadius:6
+      overflow:'hidden',
       width: ScreenWidth,
       flexDirection:'row',
       alignContent:'center',
@@ -47,6 +49,7 @@ const Loading = (props) => {
                     paused={true}
                     style={{
                       borderRadius:6,
+                      overflow:'hidden',
                       height: 40, 
                       width: 40,
                     }}
@@ -60,11 +63,11 @@ const Loading = (props) => {
     :
      <Image
      ref={photo}
-     blurRadius={3}
       style={{
         width: 40,
         height: 40,
-        borderRadius:6
+        borderRadius:6,
+        overflow:'hidden',
       }}
       indicator={Progress}
       source={{

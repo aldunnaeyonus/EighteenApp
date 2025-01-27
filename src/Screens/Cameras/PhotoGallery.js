@@ -79,9 +79,9 @@ const PhotoGallery = (props) => {
       offset: index * width,
       animated: true
     })
-    if (index * (80 + 10) - 80 / 2 > width / 2){
+    if ((index * ((80 + 10) - (80 / 2))) > (width / 2)){
         bottomPhoto?.current.scrollToOffset({
-          offset: index * (80 +10) - width / 2 + 80 / 2,
+          offset: (pagerIndex * (80 + 10) - (width / 2) + (80 / 2)),
           animated: true
         })
     }else {
@@ -389,6 +389,20 @@ const PhotoGallery = (props) => {
     setModalVisibleStatus(visible);
     setPageIndex(index);
   };
+
+useEffect(() => {
+  if (pagerIndex != 0){
+    newphoto?.current?.scrollToIndex({
+      animated: true,
+      offset: pagerIndex * width,
+    });
+      bottomPhoto?.current?.scrollToIndex({
+      animated: true,
+      offset: (pagerIndex * (80 + 10) - (width / 2) + (80 / 2)),
+    });
+  }
+  setPageIndex(0)
+  }, [pagerIndex]);
 
   return modalVisibleStatus ? (
         <View style={{width:'100%', height:'100%'}}>
