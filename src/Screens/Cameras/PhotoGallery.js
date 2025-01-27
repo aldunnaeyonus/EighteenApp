@@ -395,6 +395,10 @@ useEffect(() => {
       animated: true,
       offset: pagerIndex * width,
     });
+      bottomPhoto?.current?.scrollToIndex({
+      animated: true,
+      offset: pagerIndex * width,
+    });
   setPageIndex(0)
   }, [pagerIndex]);
 
