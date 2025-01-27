@@ -62,7 +62,6 @@ const Loading = (props) => {
     :
      <Image
      ref={photo}
-     blurRadius={3}
       style={{
         width: 40,
         height: 40,
