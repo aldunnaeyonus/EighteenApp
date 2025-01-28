@@ -410,10 +410,12 @@ const onMomentumScrollBegin = () => {
 };
 
 const onMomentumScrollEnd = useCallback((ev) => {
+  //event.nativeEvent.layoutMeasurement.width
     if (canMomentum.current) {
-       const index = Math.floor(
-           ev.nativeEvent.contentOffset.x.toFixed(0) / width.toFixed(0)
-       )
+        const index = Math.floor(
+            Math.floor(event.nativeEvent.contentOffset.x) /
+            Math.floor(event.nativeEvent.layoutMeasurement.width)
+        );
        scrollToActiveIndex(index)
        setActiveIndex(index)
     }
