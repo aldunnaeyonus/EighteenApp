@@ -397,18 +397,6 @@ const onMomentumScrollBegin = () => {
   canMomentum.current = true;
 };
 
-const onMomentumScrollEnd = () => {
-  if (canMomentum.current) {
-    // console.log('onMomentumScrollEnd');
-  }
-
-  canMomentum.current = false;
-};
-
-const onMomentumScrollBegin = () => {
-  canMomentum.current = true;
-};
-
 const onMomentumScrollEnd = useCallback((ev) => {
   //event.nativeEvent.layoutMeasurement.width
     if (canMomentum.current) {
@@ -421,23 +409,18 @@ const onMomentumScrollEnd = useCallback((ev) => {
     }
     canMomentum.current = false;
    }, [])
+const getItemLayout = (data, index) => (
+    {length: WIDTH, offset: WIDTH * index, index}
+  );
+}
 
   return modalVisibleStatus ? (
         <View style={{width:'100%', height:'100%'}}>
           <AnimatedFlatlist
       ref={newphoto}
+      getItemLayout={getItemLayout}
       extraData={filteredDataSource}
       initialScrollIndex={pagerIndex}
-      onScrollToIndexFailed={({index}) => {
-        newphoto?.current?.scrollToOffset({
-          offset: Math.round(index * width),
-          animated: true
-        })
-      }}
-      getItemLayout={(data, index)} = > {
-        {length: width, offset: width * index, index}
-      }
-      onMomentumScrollBegin={onMomentumScrollBegin}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
       onMomentumScrollEnd={onMomentumScrollEnd}
@@ -446,6 +429,7 @@ const onMomentumScrollEnd = useCallback((ev) => {
       style={{ backgroundColor: "black" }}
       numColumns={1}
       data={filteredDataSource}
+      debug={true}
       keyExtractor={(item) => item.image_id}
       renderItem={(item, index) => (
         <ImageGalleryView
@@ -457,16 +441,9 @@ const onMomentumScrollEnd = useCallback((ev) => {
       <AnimatedFlatlist
         ref={bottomPhoto}
         data={filteredDataSource} 
+        getItemLayout={getItemLayout}
         horizontal={true}
         initialScrollIndex={pagerIndex}
-        onScrollToIndexFailed={({index}) => {
-          if ((index * (80 + 10) - 80 / 2) > (width / 2)){
-            bottomPhoto?.current.scrollToOffset({
-              offset: (index * (80 + 10) - (width / 2) + (80 / 2)),
-              animated: true
-            })
-      }
-        }}
         keyExtractor={(item) => item.image_id}
         style={{position:'absolute', bottom:40}}
         extraData={filteredDataSource}
