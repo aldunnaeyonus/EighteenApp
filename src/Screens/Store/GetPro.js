@@ -184,7 +184,6 @@ const GetPro = (props) => {
     handleGetSubscriptions();
   }, [isFocused]);
 
-  console.log(subscriptions);
   return (
     <SafeAreaProvider>
       <SafeAreaView

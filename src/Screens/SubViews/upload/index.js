@@ -40,7 +40,6 @@ export const handleUpload = async (
       },
     })
       .then(async function (response) {
-        console.log(response[0]);
         switch (action) {
           case "create":
             await axiosPull._pullCameraFeed(user, "owner");

@@ -39,7 +39,6 @@ export const deleteItemIndex = (data, id, container) => {
       }
       newArray.push(array)
     });
-    console.log(newArray);
     storage.set(container, JSON.stringify(newArray));
   };
 

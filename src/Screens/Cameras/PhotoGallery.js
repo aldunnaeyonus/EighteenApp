@@ -79,8 +79,6 @@ const PhotoGallery = (props) => {
       offset: index * width,
       animated: true
     })
-    console.log("scrollToActiveIndex Index: ",index)
-    console.log("scrollToActiveIndex: ", Math.floor(index * width));
     if (index * (80 + 10) - 80 / 2 > width / 2){
         bottomPhoto?.current.scrollToOffset({
           offset: index * (80 + 10) - width / 2 + 80 / 2,
@@ -388,9 +386,11 @@ const PhotoGallery = (props) => {
     parseInt(props.route.params.end) - moment().unix(),
     parseInt(props.route.params.start)
   );
+
   const showModalFunction = async (visible, index) => {
     setModalVisibleStatus(visible);
     setPageIndex(index);
+    setActiveIndex(index)
   };
 
 const onMomentumScrollBegin = () => {
@@ -398,41 +398,40 @@ const onMomentumScrollBegin = () => {
 };
 
 const onMomentumScrollEnd = useCallback((ev) => {
-  //event.nativeEvent.layoutMeasurement.width
     if (canMomentum.current) {
         const index = Math.floor(
-            Math.floor(ev.nativeEvent.contentOffset.x) /
-            Math.floor(ev.nativeEvent.layoutMeasurement.width)
+            Math.floor(ev.nativeEvent.contentOffset.x) / width
         );
-       scrollToActiveIndex(index)
-       setActiveIndex(index)
+        scrollToActiveIndex(index)
+        setActiveIndex(index)
     }
     canMomentum.current = false;
-   }, [])
+   }, []);
+
 const getItemLayout = (data, index) => (
-    {length: WIDTH, offset: WIDTH * index, index}
+    {length: width, offset: width * index, index}
   );
-}
+
+  const getItemLayoutBottom = (data, index) => (
+    {length: 80, offset: index * (80 + 10) - width / 2 + 80 / 2, index}
+  );
 
   return modalVisibleStatus ? (
-        <View style={{width:'100%', height:'100%'}} 
-        onLayout={() => {
-        newphoto?.scrollToIndex({index: pagerIndex}); 
-        bottomPhoto?.scrollToIndex({index: pagerIndex})
-        }}>
+        <View style={{width:'100%', height:'100%'}}>
      <AnimatedFlatlist
       ref={newphoto}
       getItemLayout={getItemLayout}
       extraData={filteredDataSource}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
+      initialScrollIndex={pagerIndex}
+      onMomentumScrollBegin={onMomentumScrollBegin}
       onMomentumScrollEnd={onMomentumScrollEnd}
       pagingEnabled={true}
       horizontal={true}
       style={{ backgroundColor: "black" }}
       numColumns={1}
       data={filteredDataSource}
-      debug={true}
       keyExtractor={(item) => item.image_id}
       renderItem={(item, index) => (
         <ImageGalleryView
@@ -444,8 +443,9 @@ const getItemLayout = (data, index) => (
       <AnimatedFlatlist
         ref={bottomPhoto}
         data={filteredDataSource} 
-        getItemLayout={getItemLayout}
+        getItemLayout={getItemLayoutBottom}
         horizontal={true}
+        initialScrollIndex={pagerIndex}
         keyExtractor={(item) => item.image_id}
         style={{position:'absolute', bottom:40}}
         extraData={filteredDataSource}

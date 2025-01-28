@@ -29,7 +29,6 @@ export const AITexttoImage = async (prompt) => {
   await axios
     .request(options)
     .then(function (response) {
-      console.log("Response: " + response.data[0]);
       return response.data[0];
     })
     .catch(function (error) {
@@ -43,7 +42,6 @@ export const postData = async (endpoint, datas) => {
 };
 
 export const _getProStatus = async (id, os) => {
-  console.log("_getProStatus")
   const data = {
     user: id,
   };
@@ -57,7 +55,6 @@ export const _getProStatus = async (id, os) => {
 };
 
 export const _pullCameraFeed = async (owner_ID, type) => {
-  console.log("_pullCameraFeed")
   const data = {
     owner: owner_ID,
     user: owner_ID,
@@ -75,12 +72,10 @@ export const _pullUser = async (id, screen) => {
     owner: id,
   };
   const response = await postData("/users/index.php", data);
-  console.log(screen)
   storage.set("user.Data", JSON.stringify(response[0]));
 };
 
 export const _pullGalleryArray = async (pin) => {
-  console.log("_pullGalleryArray")
   const data = {
     pin: pin,
   };
@@ -89,7 +84,6 @@ export const _pullGalleryArray = async (pin) => {
 };
 
 export const _pullGalleryFeed = async (pin) => {
-  console.log("_pullGalleryFeed")
   const data = {
     pin: pin,
   };
@@ -101,7 +95,6 @@ export const _pullGalleryFeed = async (pin) => {
 };
 
 export const _pullFriendCameraFeed = async (owner_ID, type, myID) => {
-  console.log("_pullFriendCameraFeed")
   const data = {
     owner: owner_ID,
     user: myID,
@@ -116,7 +109,6 @@ export const _pullFriendCameraFeed = async (owner_ID, type, myID) => {
 };
 
 export const _pullFriendsFeed = async (id) => {
-  console.log("_pullFriendsFeed")
   const data = {
     owner: id,
   };
@@ -130,7 +122,6 @@ export const _pullFriendsFeed = async (id) => {
 };
 
 export const _pullFriendFeed = async (id) => {
-  console.log("_pullFriendFeed")
 
   const data = {
     owner: id,
@@ -140,7 +131,6 @@ export const _pullFriendFeed = async (id) => {
 };
 
 export const _pullHistoryFeed = async (owner) => {
-  console.log("_pullHistoryFeed")
   const data = {
     owner: owner,
   };
@@ -150,7 +140,6 @@ export const _pullHistoryFeed = async (owner) => {
 };
 
 export const _pullMembersFeed = async (pin, owner, UUID) => {
-  console.log("_pullMembersFeed")
   const data = {
     owner: owner,
     pin: pin,

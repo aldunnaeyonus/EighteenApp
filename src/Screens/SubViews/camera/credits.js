@@ -10,7 +10,6 @@ const CreditsFont = (props) => {
   let second = "";
 
   const number = splitNumberIntoDigits(props.credits);
-     console.log(String(props.credits).length);
      
   if (parseInt(props.credits) < 0) {
     first = "numeric-0";
