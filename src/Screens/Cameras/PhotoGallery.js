@@ -415,12 +415,15 @@ const getItemLayout = (data, index) => (
 }
 
   return modalVisibleStatus ? (
-        <View style={{width:'100%', height:'100%'}}>
-          <AnimatedFlatlist
+        <View style={{width:'100%', height:'100%'}} 
+        onLayout={() => {
+        newphoto?.scrollToIndex({index: pagerIndex}); 
+        bottomPhoto?.scrollToIndex({index: pagerIndex})
+        }}>
+     <AnimatedFlatlist
       ref={newphoto}
       getItemLayout={getItemLayout}
       extraData={filteredDataSource}
-      initialScrollIndex={pagerIndex}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
       onMomentumScrollEnd={onMomentumScrollEnd}
@@ -443,7 +446,6 @@ const getItemLayout = (data, index) => (
         data={filteredDataSource} 
         getItemLayout={getItemLayout}
         horizontal={true}
-        initialScrollIndex={pagerIndex}
         keyExtractor={(item) => item.image_id}
         style={{position:'absolute', bottom:40}}
         extraData={filteredDataSource}
