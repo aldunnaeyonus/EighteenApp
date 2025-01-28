@@ -292,7 +292,7 @@ const VisionCamera = (props: {
               onUIRotationChanged={setUiRotation}
               enableZoomGesture={true}
               photo={true}
-              isMirrored={true}
+              isMirrored={cameraPosition == "front" ? true : false}
               video={true}
               audio={true}
               device={device}

@@ -39,7 +39,7 @@ const PhotoGallery = (props) => {
     `user.Gallery.Friend.Feed.${props.route.params.pin}`,
     storage
   );
-  const { width } = Dimensions.get("window");
+  const { width } = Dimensions.get("screen");
   
   const AnimatedFlatlist = Animated.FlatList;
   const [animating, setAnimating] = useState(false);
@@ -71,12 +71,15 @@ const PhotoGallery = (props) => {
   };
   const [activeIndex, setActiveIndex] = useState(0);
 
+
   const scrollToActiveIndex = (index) => {
     setActiveIndex(index)
     newphoto?.current?.scrollToOffset({
       offset: index * width,
       animated: true
     })
+    console.log("scrollToActiveIndex Index: ",index)
+    console.log("scrollToActiveIndex: ", Math.floor(index * width));
     if (index * (80 + 10) - 80 / 2 > width / 2){
         bottomPhoto?.current.scrollToOffset({
           offset: index * (80 + 10) - width / 2 + 80 / 2,
@@ -87,8 +90,8 @@ const PhotoGallery = (props) => {
         offset: 0,
         animated: true
       })
-    }
   }
+}
   
   const createEvent = async () => {
     setAnimating(false);
@@ -193,6 +196,7 @@ const PhotoGallery = (props) => {
 
   const openGalleryModal = useCallback(() => {
     setModalVisibleStatus(!modalVisibleStatus);
+        setActiveIndex(0)
   }, [modalVisibleStatus]);
 
   const openCloseModal = useCallback(() => {
@@ -394,16 +398,25 @@ const PhotoGallery = (props) => {
       ref={newphoto}
       extraData={filteredDataSource}
       initialScrollIndex={pagerIndex}
+      onScrollToIndexFailed={({index}) => {
+        setActiveIndex(index)
+        newphoto?.current?.scrollToOffset({
+          offset: Math.floor(index * width),
+          animated: true
+        })
+        console.log("onScrollToIndexFailed Index: ", index);
+        console.log("onScrollToIndexFailed: ", Math.floor(index * width));
+
+      }}
+
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
       onMomentumScrollEnd={ev => {
         scrollToActiveIndex(Math.floor(ev.nativeEvent.contentOffset.x / width))
+        console.log("onMomentumScrollEnd: ", Math.floor(ev.nativeEvent.contentOffset.x))
       }}
       pagingEnabled={true}
       horizontal={true}
-      onScrollToIndexFailed={({index}) => {
-        scrollToActiveIndex(index)
-      }}
       style={{ backgroundColor: "black" }}
       numColumns={1}
       data={filteredDataSource}
@@ -419,15 +432,21 @@ const PhotoGallery = (props) => {
         ref={bottomPhoto}
         data={filteredDataSource} 
         horizontal={true}
+        initialScrollIndex={pagerIndex}
+        onScrollToIndexFailed={({index}) => {
+          if (index * (80 + 10) - 80 / 2 > width / 2){
+            bottomPhoto?.current.scrollToOffset({
+              offset: index * (80 + 10) - width / 2 + 80 / 2,
+              animated: true
+            })
+      }
+        }}
         keyExtractor={(item) => item.image_id}
         style={{position:'absolute', bottom:40}}
         extraData={filteredDataSource}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingHorizontal:10}}
-        onScrollToIndexFailed={({index}) => {
-          scrollToActiveIndex(index)
-        }}
         renderItem={({item, index}) => {
           return (
           <TouchableOpacity
