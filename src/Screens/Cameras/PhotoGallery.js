@@ -40,7 +40,8 @@ const PhotoGallery = (props) => {
     storage
   );
   const { width } = Dimensions.get("screen");
-  
+  const canMomentum = useRef(false);
+
   const AnimatedFlatlist = Animated.FlatList;
   const [animating, setAnimating] = useState(false);
   const [pagerIndex, setPageIndex] = useState(0);
@@ -392,6 +393,33 @@ const PhotoGallery = (props) => {
     setPageIndex(index);
   };
 
+const onMomentumScrollBegin = () => {
+  canMomentum.current = true;
+};
+
+const onMomentumScrollEnd = () => {
+  if (canMomentum.current) {
+    // console.log('onMomentumScrollEnd');
+  }
+
+  canMomentum.current = false;
+};
+
+const onMomentumScrollBegin = () => {
+  canMomentum.current = true;
+};
+
+const onMomentumScrollEnd = useCallback((ev) => {
+    if (canMomentum.current) {
+       const index = Math.floor(
+           ev.nativeEvent.contentOffset.x.toFixed(0) / width.toFixed(0)
+       )
+       scrollToActiveIndex(index)
+       setActiveIndex(index)
+    }
+    canMomentum.current = false;
+   }, [])
+
   return modalVisibleStatus ? (
         <View style={{width:'100%', height:'100%'}}>
           <AnimatedFlatlist
@@ -399,22 +427,18 @@ const PhotoGallery = (props) => {
       extraData={filteredDataSource}
       initialScrollIndex={pagerIndex}
       onScrollToIndexFailed={({index}) => {
-        setActiveIndex(index)
         newphoto?.current?.scrollToOffset({
-          offset: Math.floor(index * width),
+          offset: Math.round(index * width),
           animated: true
         })
-        console.log("onScrollToIndexFailed Index: ", index);
-        console.log("onScrollToIndexFailed: ", Math.floor(index * width));
-
       }}
-
+      getItemLayout={(data, index)} = > {
+        {length: width, offset: width * index, index}
+      }
+      onMomentumScrollBegin={onMomentumScrollBegin}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
-      onMomentumScrollEnd={ev => {
-        scrollToActiveIndex(Math.floor(ev.nativeEvent.contentOffset.x / width))
-        console.log("onMomentumScrollEnd: ", Math.floor(ev.nativeEvent.contentOffset.x))
-      }}
+      onMomentumScrollEnd={onMomentumScrollEnd}
       pagingEnabled={true}
       horizontal={true}
       style={{ backgroundColor: "black" }}
@@ -434,9 +458,9 @@ const PhotoGallery = (props) => {
         horizontal={true}
         initialScrollIndex={pagerIndex}
         onScrollToIndexFailed={({index}) => {
-          if (index * (80 + 10) - 80 / 2 > width / 2){
+          if ((index * (80 + 10) - 80 / 2) > (width / 2)){
             bottomPhoto?.current.scrollToOffset({
-              offset: index * (80 + 10) - width / 2 + 80 / 2,
+              offset: (index * (80 + 10) - (width / 2) + (80 / 2)),
               animated: true
             })
       }
