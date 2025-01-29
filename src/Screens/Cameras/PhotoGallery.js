@@ -40,21 +40,15 @@ const PhotoGallery = (props) => {
     storage
   );
   const { width } = Dimensions.get("screen");
-  const canMomentum = useRef(false);
-
   const AnimatedFlatlist = Animated.FlatList;
   const [animating, setAnimating] = useState(false);
-  const [pagerIndex, setPageIndex] = useState(0);
   const photo = useRef();
-  const bottomPhoto = useRef();
-  const newphoto = useRef();
   const [pickedImages, setPickedImages] = useState([]);
   const [credits, setCredits] = useState(
     props.route.params.owner == props.route.params.user
       ? "99"
       : props.route.params.credits
   );
-  const [modalVisibleStatus, setModalVisibleStatus] = useState(false);
   const [modalUpload, setModalUpload] = useState(false);
   const { toast } = useToast();
   const [cameraData] = useMMKVObject(
@@ -62,35 +56,6 @@ const PhotoGallery = (props) => {
     storage
   );
   const [uploading] = useMMKVObject("uploadData", storage);
-
-  const preLoad = () => {
-    let presloadImages = [];
-    filteredDataSource.map((image) => {
-      presloadImages.push({ uri: image.uri });
-    });
-    FastImage.preload(presloadImages);
-  };
-  const [activeIndex, setActiveIndex] = useState(0);
-
-
-  const scrollToActiveIndex = (index) => {
-    setActiveIndex(index)
-    newphoto?.current?.scrollToOffset({
-      offset: index * width,
-      animated: true
-    })
-    if (index * (80 + 10) - 80 / 2 > width / 2){
-        bottomPhoto?.current.scrollToOffset({
-          offset: index * (80 + 10) - width / 2 + 80 / 2,
-          animated: true
-        })
-    }else {
-      bottomPhoto?.current.scrollToOffset({
-        offset: 0,
-        animated: true
-      })
-  }
-}
   
   const createEvent = async () => {
     setAnimating(false);
@@ -142,20 +107,6 @@ const PhotoGallery = (props) => {
     setPickedImages([]);
   };
 
-  const _gotoShare = async (image) => {
-    const shareOptions = {
-      title: "Snap Eighteen",
-      url: image,
-      message: props.route.params.title,
-    };
-    try {
-      const ShareResponse = await Share.share(shareOptions);
-      console.log("Result =>", ShareResponse);
-    } catch (error) {
-      console.log("Error =>", error);
-    }
-  };
-
   const pickImageChooser = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsMultipleSelection: true,
@@ -193,11 +144,6 @@ const PhotoGallery = (props) => {
     }
   };
 
-  const openGalleryModal = useCallback(() => {
-    setModalVisibleStatus(!modalVisibleStatus);
-        setActiveIndex(0)
-  }, [modalVisibleStatus]);
-
   const openCloseModal = useCallback(() => {
     setModalUpload(true);
   }, [modalUpload]);
@@ -226,9 +172,6 @@ const PhotoGallery = (props) => {
       }
       props.navigation.setOptions({
         headerLeft: () =>
-          modalVisibleStatus ? (
-            <></>
-          ) : (
             <TouchableOpacity
               onPress={() => {
                 props.navigation.goBack();
@@ -249,7 +192,6 @@ const PhotoGallery = (props) => {
             </TouchableOpacity>
           ),
         headerRight: () =>
-          !modalVisibleStatus ? (
             credits > 0 ? (
               <TouchableOpacity
                 onPress={() => {
@@ -293,78 +235,13 @@ const PhotoGallery = (props) => {
                   }}
                 />
               </TouchableOpacity>
-            )
-          ) : (
-            <>
-              {filteredDataSource[0].share == "1" || props.route.params.owner == props.route.params.user ? (
-                <TouchableOpacity
-                  onPress={async () => {
-                    _gotoShare(
-                      filteredDataSource[
-                        parseInt(await AsyncStorage.getItem("current"))
-                      ].uri
-                    );
-                  }}
-                >
-                  <Icon
-                    type="material-community"
-                    size={30}
-                    name="share"
-                    color="#fff"
-                    containerStyle={{
-                      padding: 7,
-                      height: animating ? "0%" : "100%",
-                      backgroundColor: "rgba(0, 0, 0, 0.60)",
-                      borderRadius: 22,
-                    }}
-                  />
-                </TouchableOpacity>
-              ) : (
-                <></>
-              )}
-              <TouchableOpacity
-                onPress={() => {
-                  openGalleryModal();
-                }}
-              >
-                <Icon
-                  type="material-community"
-                  size={30}
-                  name="close-circle-outline"
-                  color="#fff"
-                  containerStyle={{
-                    padding: 7,
-                    height: animating ? "0%" : "100%",
-                    backgroundColor: "rgba(0, 0, 0, 0.60)",
-                    borderRadius: 22,
-                  }}
-                />
-              </TouchableOpacity>
-            </>
           ),
       });
-      var timeout = setInterval(async () => {
-        await axiosPull._pullGalleryFeed(props.route.params.pin);
-      }, 15000);
-      const fetchData = async () => {
-        await axiosPull._pullGalleryFeed(props.route.params.pin);
-        preLoad();
-      };
-      fetchData();
-      return async () => {
-        clearInterval(timeout);
-        if (props.route.params.pin == "user") {
-          storage.delete("user.Gallery.Friend.Feed." + props.route.params.pin);
-          await AsyncStorage.setItem("current", "0");
-        }
-      };
     }, [
       props,
-      modalVisibleStatus,
       credits,
       modalUpload,
       animating,
-      modalVisibleStatus,
       pickedImages,
       uploading
     ])
@@ -387,111 +264,11 @@ const PhotoGallery = (props) => {
     parseInt(props.route.params.start)
   );
 
-  const showModalFunction = async (visible, index) => {
-    setModalVisibleStatus(visible);
-    setPageIndex(index);
-    setActiveIndex(index)
+  const showModalFunction = (visible, index) => {
+
   };
 
-const onMomentumScrollBegin = () => {
-  canMomentum.current = true;
-};
-
-const onMomentumScrollEnd = useCallback((ev) => {
-    if (canMomentum.current) {
-        const index = Math.floor(
-            Math.floor(ev.nativeEvent.contentOffset.x) / width
-        );
-        scrollToActiveIndex(index)
-        setActiveIndex(index)
-    }
-    canMomentum.current = false;
-   }, []);
-
-const getItemLayout = (data, index) => (
-    {length: width, offset: width * index, index}
-  );
-
-  const getItemLayoutBottom = (data, index) => (
-    {length: 80, offset: index * (80 + 10) - width / 2 + 80 / 2, index}
-  );
-
-  return modalVisibleStatus ? (
-        <View style={{width:'100%', height:'100%'}}>
-     <AnimatedFlatlist
-      ref={newphoto}
-      getItemLayout={getItemLayout}
-      extraData={filteredDataSource}
-      showsHorizontalScrollIndicator={false}
-      showsVerticalScrollIndicator={false}
-      initialScrollIndex={pagerIndex}
-      onMomentumScrollBegin={onMomentumScrollBegin}
-      onMomentumScrollEnd={onMomentumScrollEnd}
-      pagingEnabled={true}
-      horizontal={true}
-      style={{ backgroundColor: "black" }}
-      numColumns={1}
-      data={filteredDataSource}
-      keyExtractor={(item) => item.image_id}
-      renderItem={(item, index) => (
-        <ImageGalleryView
-          item={item}
-          index={index}
-          showModalFunction={showModalFunction} />
-      )} />
-      
-      <AnimatedFlatlist
-        ref={bottomPhoto}
-        data={filteredDataSource} 
-        getItemLayout={getItemLayoutBottom}
-        horizontal={true}
-        initialScrollIndex={pagerIndex}
-        keyExtractor={(item) => item.image_id}
-        style={{position:'absolute', bottom:40}}
-        extraData={filteredDataSource}
-        showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingHorizontal:10}}
-        renderItem={({item, index}) => {
-          return (
-          <TouchableOpacity
-          onPress={()=> {
-            scrollToActiveIndex(index)
-          }}
-          >
-             <FastImage 
-        progress={Progress}
-        resizeMode={FastImage.resizeMode.cover}
-        source={{
-          cache: FastImage.cacheControl.immutable,
-          priority: FastImage.priority.high,
-          uri:
-            item.type == "video"
-              ? item.videoThumbnail
-              : item.thumbnail,
-        }}
-        style={{ width: 80, height: 80, borderRadius:12, marginRight:10, borderWidth:2, borderColor: activeIndex === index ? 'white' : 'transparent'}}
-        >
-           {item.type === "video" && (
-                    <Icon
-                      type="material-community"
-                      name="play-box-outline"
-                      size={30}
-                      containerStyle={{
-                        width: 50,
-                        height: 50,
-                        top: 25,
-                        left: 12.5,
-                      }}
-                      color="white"
-                    />
-                  )}
-                  </FastImage> 
-        </TouchableOpacity>
-   ) }}
-        />
-        </View>
-  ) : (
+  return  (
       <SafeAreaProvider>
         <SafeAreaView
           style={{
