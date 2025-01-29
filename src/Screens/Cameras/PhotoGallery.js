@@ -237,6 +237,21 @@ const PhotoGallery = (props) => {
               </TouchableOpacity>
           ),
       });
+      var timeout = setInterval(async () => {
+        await axiosPull._pullGalleryFeed(props.route.params.pin);
+      }, 15000);
+      const fetchData = async () => {
+        await axiosPull._pullGalleryFeed(props.route.params.pin);
+        preLoad();
+      };
+      fetchData();
+      return async () => {
+        clearInterval(timeout);
+        if (props.route.params.pin == "user") {
+          storage.delete("user.Gallery.Friend.Feed." + props.route.params.pin);
+          await AsyncStorage.setItem("current", "0");
+        }
+      };
     }, [
       props,
       credits,
