@@ -17,6 +17,7 @@ import { MenuProvider } from "react-native-popup-menu";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { AlertProvider } from "./src/context/alerts/AuthContext";
 import MediaGallery from "./src/Screens/Cameras/PhotoGallery";
+import MediaViewer from "./src/Screens/Cameras/PhotoViewer";
 import Profile from "./src/Screens/Profile";
 import ChangeAvatar from "./src/Screens/Profile/ChangeAvatar";
 import WebView from "./src/Screens/WebView/WebView";
@@ -479,6 +480,26 @@ const onCheckVersion = () => {
                 )}
               </Stack.Screen>
 
+                        <Stack.Screen
+                name="MediaViewer"
+                options={{
+                  title: i18n.t(""),
+                  headerShown: true,
+                  gestureEnabled: false,
+                  headerTransparent: true,
+                  headerBackTitleVisible: false,
+                }}
+              >
+                {(props) => (
+                  <MediaViewer
+                    {...props}
+                    UUID={owner}
+                    loggedIn={signIn}
+                    unsubscribe={isConnected}
+                  />
+                )}
+              </Stack.Screen>
+                      
               <Stack.Screen
                 name="CreateCamera"
                 options={{
