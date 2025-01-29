@@ -114,7 +114,7 @@ const ImageGalleryView = (props) => {
           >
               <CachedVideoPlayer
                 url={props.item.item.uri}
-                fileName="String(props.item.item.uri).split("/).pop(1)"
+                fileName="String(props.item.item.uri).split("/).pop()"
                   />
             <Video
               fullscreen={true}
