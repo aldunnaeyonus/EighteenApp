@@ -114,32 +114,8 @@ const ImageGalleryView = (props) => {
           >
               <CachedVideoPlayer
                 url={props.item.item.uri}
-                fileName="String(props.item.item.uri).split("/).pop()"
-                  />
-            <Video
-              fullscreen={true}
-              fullscreenAutorotate={true}
-              fullscreenOrientation={"all"}
-              ignoreSilentSwitch="obey"
-              showNotificationControls={true}
-              playWhenInactive={false}
-              playInBackground={false}
-              ref={video}
-              controls={true}
-              repeat={false}
-              muted={videoPlayMute}
-              resizeMode={"contain"}
-              paused={videoPlayPause}
-              style={{
-                backgroundColor: "black",
-                height: height, 
-                width: width,
-              }}
-              source={{ 
-                cache: FastImage.cacheControl.immutable,
-                priority: FastImage.priority.high,
-                uri: props.item.item.uri }}
-            />
+                fileName={String(props.item.item.uri).split("/").pop()}
+              />
           </VisibilitySensor>
         </View>
       ) : (
