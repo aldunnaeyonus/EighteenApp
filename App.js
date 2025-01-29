@@ -488,6 +488,8 @@ const onCheckVersion = () => {
                   gestureEnabled: false,
                   headerTransparent: true,
                   headerBackTitleVisible: false,
+                  animation: 'fade',
+                  animationDuration: 500,
                 }}
               >
                 {(props) => (
