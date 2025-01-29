@@ -399,7 +399,7 @@ const ListItem = (props) => {
             {props.item.item.cameras != (props.isPro == "1" ? 1000 : 18) && (
                 <Text
                 onPress={() => {
-                  props._addMax(props.item.item.pin, props.item.item.owner);
+                  props._addMax(props.item.item.pin, props.item.item.owner, props.isPro);
                 }}
                   style={{
                     justifyContent: "center",

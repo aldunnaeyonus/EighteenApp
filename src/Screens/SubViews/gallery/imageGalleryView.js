@@ -1,4 +1,4 @@
-import React, {useRef,useState} from "react";
+import React, {useState} from "react";
 import { Dimensions, View, Text } from "react-native";
 import { createImageProgress } from "react-native-image-progress";
 import FastImage from "react-native-fast-image";
@@ -6,12 +6,10 @@ const Image = createImageProgress(FastImage);
 import Progress from "react-native-progress";
 const { width, height } = Dimensions.get("window");
 import Zoom from "react-native-zoom-reanimated";
-import Video from "react-native-video";
 import VisibilitySensor from "@svanboxel/visibility-sensor-react-native";
 import CachedVideoPlayer from '../camera/CachedVideoPlayer';
 
 const ImageGalleryView = (props) => {
-    const video = useRef();
     const [videoPlayPause, setVideoPlayPause] = useState(true);
     const [videoPlayMute] = useState(true);
 
@@ -31,7 +29,7 @@ const ImageGalleryView = (props) => {
             style={{
               backgroundColor: "transparent",
               position: "absolute",
-              top: 0,
+              top: 62,
               zIndex: 2,
               height: 60,
               marginTop: 30,
@@ -135,7 +133,7 @@ const ImageGalleryView = (props) => {
             style={{
               backgroundColor: "transparent",
               position: "absolute",
-              top: 0,
+              top: 62,
               zIndex: 2,
               height: 60,
               marginTop: 30,

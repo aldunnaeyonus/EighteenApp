@@ -190,11 +190,11 @@ const Home = (props) => {
     });
   };
 
-  const _addMax = async (pin, owner) => {
+  const _addMax = async (pin, owner, pro) => {
     const data = {
       owner: owner,
       pin: pin,
-      isPro: user.isPro,
+      isPro: pro,
     };
     await axiosPull.postData("/camera/maxCamera.php", data);
     await axiosPull._pullCameraFeed(owner, "owner");
@@ -321,7 +321,7 @@ const Home = (props) => {
   }, [isFocused, timeout, uploading]);
 
   const goToFriend = async (friendID) => {
-    await axiosPull._pullFriendCameraFeed(props.friendID, "user", user.user_id);
+    await axiosPull._pullFriendCameraFeed(friendID, "user", user.user_id);
     props.navigation.navigate("Friends", {
       userID: friendID,
     });

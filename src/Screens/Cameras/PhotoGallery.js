@@ -5,8 +5,6 @@ import {
   TouchableOpacity,
   Text,
   Modal,
-  Share,
-  Dimensions
 } from "react-native";
 import React, { useState, useRef, useCallback } from "react";
 import { constants } from "../../utils";
@@ -15,8 +13,6 @@ import * as ImagePicker from "expo-image-picker";
 import FormData from "form-data";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
 import { storage, updateItemFeed } from "../../context/components/Storage";
-import FastImage from "react-native-fast-image";
-import Progress from "react-native-progress";
 import Animated from "react-native-reanimated";
 import moment from "moment";
 import GalleryHeader from "../SubViews/gallery/listHeader";
@@ -32,14 +28,12 @@ import PhotoEditor from "@baronha/react-native-photo-editor";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 const stickers = [];
 import Loading from "../SubViews/home/Loading";
-import ImageGalleryView from "../SubViews/gallery/imageGalleryView";
 
 const PhotoGallery = (props) => {
   const [filteredDataSource] = useMMKVObject(
     `user.Gallery.Friend.Feed.${props.route.params.pin}`,
     storage
   );
-  const { width } = Dimensions.get("screen");
   const AnimatedFlatlist = Animated.FlatList;
   const [animating, setAnimating] = useState(false);
   const photo = useRef();
@@ -56,7 +50,6 @@ const PhotoGallery = (props) => {
     storage
   );
   const [uploading] = useMMKVObject("uploadData", storage);
-  
   const createEvent = async () => {
     setAnimating(false);
     var formData = new FormData();
@@ -171,7 +164,7 @@ const PhotoGallery = (props) => {
         });
       }
       props.navigation.setOptions({
-        headerLeft: () =>
+        headerLeft: () => (
             <TouchableOpacity
               onPress={() => {
                 props.navigation.goBack();
@@ -190,8 +183,8 @@ const PhotoGallery = (props) => {
                 }}
               />
             </TouchableOpacity>
-          ),
-        headerRight: () =>
+        ),
+        headerRight: () => (
             credits > 0 || props.route.params.owner == props.route.params.user ? (
               <TouchableOpacity
                 onPress={() => {
@@ -235,7 +228,8 @@ const PhotoGallery = (props) => {
                   }}
                 />
               </TouchableOpacity>
-          ),
+          )
+        ),
       });
       var timeout = setInterval(async () => {
         await axiosPull._pullGalleryFeed(props.route.params.pin);
@@ -247,7 +241,7 @@ const PhotoGallery = (props) => {
       fetchData();
       return async () => {
         clearInterval(timeout);
-        if (props.route.params.pin == "user") {
+        if (props.route.params.type == "user") {
           storage.delete("user.Gallery.Friend.Feed." + props.route.params.pin);
           await AsyncStorage.setItem("current", "0");
         }
@@ -283,6 +277,12 @@ const PhotoGallery = (props) => {
      props.navigation.navigate("MediaViewer", {
       index: index,
       data: filteredDataSource,
+      pin: props.route.params.pin,
+      title: props.route.params.title,
+      owner: props.route.params.owner,
+      user: props.route.params.user,
+      type: props.route.params.type,
+      pagerIndex: index
     });
   };
 
@@ -302,7 +302,6 @@ const PhotoGallery = (props) => {
             showsVerticalScrollIndicator={false}
             scrollEventThrottle={16}
             ListHeaderComponent={
-              !modalVisibleStatus && (
                 <>
                   <GalleryHeader
                     UUID={props.route.params.UUID}
@@ -317,7 +316,6 @@ const PhotoGallery = (props) => {
                     image={uploading.image}
                   />
                 </>
-              )
             }
             ListEmptyComponent={
               <EmptyStateView

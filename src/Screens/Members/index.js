@@ -29,8 +29,8 @@ const JoinedMembers = (props) => {
       pin: pin,
     };
     await axiosPull.postData("/camera/addShots.php", data);
-    await axiosPull._pullCameraFeed(owner, "owner");
-    await axiosPull._pullMembersFeed(pin, owner, UUID)
+    await axiosPull._pullCameraFeed(user, "owner");
+    await axiosPull._pullMembersFeed(pin, user, UUID)
   }
 
   const _removeUser = (user_id, pin, UUID, name, title) => {

@@ -12,11 +12,13 @@ import {
   useMicrophonePermission,
   useCameraDevice,
   useCameraFormat,
+  useLocationPermission,
   Camera,
   PhotoFile,
   TakePhotoOptions,
   runAtTargetFps,
   useFrameProcessor,
+  CameraProps,
   VideoFile,
 } from "react-native-vision-camera";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -24,6 +26,7 @@ import Reanimated, {
   Extrapolation,
   interpolate,
   useAnimatedGestureHandler,
+  useAnimatedProps,
   useSharedValue,
 } from "react-native-reanimated";
 import { CaptureButton } from "./CaptureButton";
@@ -39,6 +42,7 @@ import CreditsFont from "../SubViews/camera/camerCredits";
 import * as i18n from "../../../i18n";
 import { storage } from "../../context/components/Storage";
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
+import { usePreferredCameraDevice } from './hooks/usePreferredCameraDevice'
 
 const ReanimatedCamera = Reanimated.createAnimatedComponent(Camera);
 Reanimated.addWhitelistedNativeProps({
@@ -49,6 +53,7 @@ import PhotoEditor from "@baronha/react-native-photo-editor";
 const stickers: never[] = [];
 import { handleUpload } from "../SubViews/upload";
 import { useMMKVObject } from "react-native-mmkv";
+import { ViewStyle } from "react-native";
 
 const VisionCamera = (props: {
   route: {
@@ -68,11 +73,16 @@ const VisionCamera = (props: {
 }) => {
   momentDurationFormatSetup(moment);
   const [uiRotation, setUiRotation] = useState(0);
+
+  const uiStyle: ViewStyle = {
+    transform: [{ rotate: `${uiRotation}deg` }]
+  }
   const [credits, setCredits] = useState(
     props.route.params.user == props.route.params.owner
       ? "99"
       : props.route.params.credits
   );
+  const location = useLocationPermission()
 
   const { hasPermission, requestPermission } = useCameraPermission();
   const {
@@ -84,7 +94,12 @@ const VisionCamera = (props: {
   const [cameraPosition, setCameraPosition] = useState<"front" | "back">(
     "back"
   );
-  const device = useCameraDevice(cameraPosition);
+  const [preferredDevice] = usePreferredCameraDevice()
+  let device = useCameraDevice(cameraPosition);
+  if (preferredDevice != null && preferredDevice.position === cameraPosition) {
+    // override default device with the one selected by the user in settings
+    device = preferredDevice
+  }
   const [isCameraInitialized, setIsCameraInitialized] = useState(false);
   const [uploading] = useMMKVObject("uploadData", storage);
 
@@ -274,6 +289,18 @@ const VisionCamera = (props: {
     return <ActivityIndicator />;
   }
 
+  useEffect(() => {
+    location.requestPermission()
+  }, [location])
+
+  const cameraAnimatedProps = useAnimatedProps<CameraProps>(() => {
+    const z = Math.max(Math.min(zoom.value, maxZoom), minZoom)
+    return {
+      zoom: z,
+    }
+  }, [maxZoom, minZoom, zoom])
+  const videoHdr = format?.supportsVideoHdr && enableHdr
+
   return (
     <View style={{ flex: 1, backgroundColor: "black" }}>
       <PinchGestureHandler onGestureEvent={onPinchGesture} enabled={isActive}>
@@ -284,18 +311,23 @@ const VisionCamera = (props: {
           <TapGestureHandler onEnded={onDoubleTap} numberOfTaps={2}>
             <ReanimatedCamera
               ref={camera}
+              device={device}
               style={StyleSheet.absoluteFill}
               isActive={isActive}
               onInitialized={onInitialized}
               outputOrientation="device"
+              videoHdr={videoHdr}
               photoQualityBalance="balanced"
-              onUIRotationChanged={setUiRotation}
+              onUIRotationChanged={(degrees) => setUiRotation(degrees)}
               enableZoomGesture={true}
               photo={true}
               isMirrored={cameraPosition == "front" ? true : false}
               video={true}
+              animatedProps={cameraAnimatedProps}
               audio={true}
-              device={device}
+              exposure={0}
+              enableLocation={location.hasPermission}
+              lowLightBoost={canToggleNightMode}
               frameProcessor={frameProcessor}
             />
           </TapGestureHandler>

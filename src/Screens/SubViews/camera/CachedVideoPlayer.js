@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { View, ActivityIndicator, Text } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { View, Dimensions } from 'react-native';
 import Video from 'react-native-video';
 import RNFS from 'react-native-fs';
 import { ActivityIndicator, MD2Colors } from "react-native-paper";
@@ -8,6 +8,7 @@ const { width, height } = Dimensions.get("window");
 const CachedVideoPlayer = ({ url, fileName, videoPlayPause, videoPlayMute }) => {
   const [videoPath, setVideoPath] = useState(null);
   const [loading, setLoading] = useState(true);
+  const video = useRef();
 
   useEffect(() => {
     const fetchVideo = async () => {

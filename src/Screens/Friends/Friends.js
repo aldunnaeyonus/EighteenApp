@@ -70,8 +70,8 @@ const Friends = (props) => {
       id: id,
     };
     await axiosPull.postData("/camera/autoJoin.php", data);
-    await axiosPull._pullFriendFeed(props.owner);
-    await axiosPull._pullFriendCameraFeed(props.owner, "user", user.user_id);
+    await axiosPull._pullFriendFeed(owner);
+    await axiosPull._pullFriendCameraFeed(owner, "user", user.user_id);
   };
 
   const _repotPost = async (pin, owner, title) => {
