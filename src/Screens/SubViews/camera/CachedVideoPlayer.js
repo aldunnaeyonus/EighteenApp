@@ -44,12 +44,28 @@ const CachedVideoPlayer = ({ url, fileName }) => {
   }
 
   return (
-    <Video
-      source={{ uri: videoPath }}
-      style={{ width: '100%', height: 200 }}
-      controls
-      resizeMode="contain"
-    />
+            <Video
+              fullscreen={true}
+              fullscreenAutorotate={true}
+              fullscreenOrientation={"all"}
+              ignoreSilentSwitch="obey"
+              showNotificationControls={true}
+              playWhenInactive={false}
+              playInBackground={false}
+              ref={video}
+              controls={true}
+              repeat={false}
+              muted={videoPlayMute}
+              resizeMode={"contain"}
+              paused={videoPlayPause}
+              style={{
+                backgroundColor: "black",
+                height: height, 
+                width: width,
+              }}
+              source={{ 
+                uri:videoPath }}
+            />
   );
 };
 
