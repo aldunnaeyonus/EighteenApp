@@ -264,7 +264,7 @@ const PhotoGallery = (props) => {
     parseInt(props.route.params.start)
   );
 
-  const showModalFunction = (visible, index) => {
+  const showModalFunction = (index) => {
 
   };
 
