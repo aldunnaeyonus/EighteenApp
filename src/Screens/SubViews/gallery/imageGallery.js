@@ -12,7 +12,7 @@ const ImageGallery = (props) => {
     <TouchableOpacity
       activeOpacity={0.5}
       onPress={() => {
-        props.showModalFunction(true, props.item.index);
+        props.showModalFunction(props.item.index);
       }}
     >
       <Image
