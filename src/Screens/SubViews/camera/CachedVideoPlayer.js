@@ -16,17 +16,23 @@ const CachedVideoPlayer = ({ url, fileName, videoPlayPause, videoPlayMute }) => 
       try {
         const path = `${RNFS.CachesDirectoryPath}/${fileName}`;
         const fileExists = await RNFS.exists(path);
-        
+
         if (!fileExists) {
           await RNFS.downloadFile({ fromUrl: url, toFile: path }).promise;
+          if (await RNFS.isResumable(fileName)) {
+            RNFS.resumeDownload(fileName).promise;
         }
-        
+        }
         setVideoPath(path);
       } catch (err) {
-        console.error('Error downloading video:', err);
+        await RNFS.downloadFile({ fromUrl: url, toFile: path }).promise;
+        if (await RNFS.isResumable(fileName)) {
+          RNFS.resumeDownload(fileName).promise;
+      }
       } finally {
         setLoading(false);
       }
+      
     };
 
     fetchVideo();
@@ -34,9 +40,9 @@ const CachedVideoPlayer = ({ url, fileName, videoPlayPause, videoPlayMute }) => 
 
   if (loading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', height: height, width: width }}>
        <ActivityIndicator
-      size={80}
+      size={40}
       animating={loading}
       hidesWhenStopped={true}
       color={MD2Colors.orange900}
@@ -46,6 +52,16 @@ const CachedVideoPlayer = ({ url, fileName, videoPlayPause, videoPlayMute }) => 
   }
 
   return (
+     <View
+              style={{
+                flex: 1,
+                height: height,
+                width: width,
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "transparent",
+              }}
+            >
             <Video
               fullscreen={true}
               fullscreenAutorotate={true}
@@ -67,7 +83,7 @@ const CachedVideoPlayer = ({ url, fileName, videoPlayPause, videoPlayMute }) => 
               }}
               source={{ 
                 uri:videoPath }}
-            />
+            /></View>
   );
 };
 

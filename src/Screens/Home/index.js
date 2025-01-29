@@ -321,7 +321,6 @@ const Home = (props) => {
   }, [isFocused, timeout, uploading]);
 
   const goToFriend = async (friendID) => {
-    await axiosPull._pullFriendCameraFeed(friendID, "user", user.user_id);
     props.navigation.navigate("Friends", {
       userID: friendID,
     });

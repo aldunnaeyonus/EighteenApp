@@ -10,7 +10,6 @@ import { storage } from "../../context/components/Storage";
 import FastImage from "react-native-fast-image";
 import Progress from "react-native-progress";
 import Animated from "react-native-reanimated";
-import { axiosPull } from "../../utils/axiosPull";
 import { useToast } from "react-native-styled-toast";
 import { useMMKVObject } from "react-native-mmkv";
 import { useFocusEffect } from "@react-navigation/native";

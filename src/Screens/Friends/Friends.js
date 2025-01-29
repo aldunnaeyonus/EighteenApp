@@ -47,12 +47,12 @@ const Friends = (props) => {
   
   const [ready, setReady] = useState(false);
   const [refreshing, serRefreshing] = useState(false);
-  const [isFriend, setisFriend] = useState(2);
+  const [isFriend, setisFriend] = useState("2");
   const contentOffset = useSharedValue(0);
   const AnimatedFlatlist = Animated.FlatList;
   const [user] = useMMKVObject("user.Data", storage);
   const { toast } = useToast();
-  const actionSheetRef = useRef(0);
+  const actionSheetRef = useRef();
   const [modalVisable, setmodalVisable] = useState(false);
   const [qrCodeURL] = useState(
     constants.url + "/friendQRCode.php?owner=" + props.route.params.userID
