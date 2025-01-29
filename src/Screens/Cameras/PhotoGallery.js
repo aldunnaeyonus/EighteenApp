@@ -192,7 +192,7 @@ const PhotoGallery = (props) => {
             </TouchableOpacity>
           ),
         headerRight: () =>
-            credits > 0 ? (
+            credits > 0 || props.route.params.owner == props.route.params.user ? (
               <TouchableOpacity
                 onPress={() => {
                   openCloseModal();
