@@ -115,6 +115,8 @@ const ImageGalleryView = (props) => {
               <CachedVideoPlayer
                 url={props.item.item.uri}
                 fileName={String(props.item.item.uri).split("/").pop()}
+                videoPlayPause={videoPlayPause}
+                videoPlayMute={videoPlayMute}
               />
           </VisibilitySensor>
         </View>
