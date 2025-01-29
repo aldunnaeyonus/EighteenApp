@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, ActivityIndicator, Text } from 'react-native';
 import Video from 'react-native-video';
 import RNFS from 'react-native-fs';
+import { ActivityIndicator, MD2Colors } from "react-native-paper";
 
 const CachedVideoPlayer = ({ url, fileName }) => {
   const [videoPath, setVideoPath] = useState(null);
