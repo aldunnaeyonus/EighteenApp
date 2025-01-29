@@ -8,6 +8,7 @@ const { width, height } = Dimensions.get("window");
 import Zoom from "react-native-zoom-reanimated";
 import Video from "react-native-video";
 import VisibilitySensor from "@svanboxel/visibility-sensor-react-native";
+import CachedVideoPlayer from '../camera/CachedVideoPlayer';
 
 const ImageGalleryView = (props) => {
     const video = useRef();
@@ -111,6 +112,10 @@ const ImageGalleryView = (props) => {
                 : setVideoPlayPause(true);
             }}
           >
+              <CachedVideoPlayer
+                url={props.item.item.uri}
+                fileName="String(props.item.item.uri).split("/).pop(1)"
+                  />
             <Video
               fullscreen={true}
               fullscreenAutorotate={true}
