@@ -4,7 +4,7 @@ import Video from 'react-native-video';
 import RNFS from 'react-native-fs';
 import { ActivityIndicator, MD2Colors } from "react-native-paper";
 
-const CachedVideoPlayer = ({ url, fileName }) => {
+const CachedVideoPlayer = ({ url, fileName, videoPlayPause, videoPlayMute }) => {
   const [videoPath, setVideoPath] = useState(null);
   const [loading, setLoading] = useState(true);
 
