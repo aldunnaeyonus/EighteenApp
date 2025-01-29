@@ -301,6 +301,8 @@ const VisionCamera = (props: {
   }, [maxZoom, minZoom, zoom])
   const videoHdr = format?.supportsVideoHdr && enableHdr
 
+  if (device == null) return null
+
   return (
     <View style={{ flex: 1, backgroundColor: "black" }}>
       <PinchGestureHandler onGestureEvent={onPinchGesture} enabled={isActive}>
