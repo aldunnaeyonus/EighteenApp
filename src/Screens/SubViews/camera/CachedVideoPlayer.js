@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Dimensions } from 'react-native';
-import Video from 'react-native-video';
+import { View, Dimensions,  StyleSheet} from 'react-native';
+import Video, {OnVideoErrorData} from 'react-native-video';
 import RNFS from 'react-native-fs';
 import { ActivityIndicator, MD2Colors } from "react-native-paper";
 const { width, height } = Dimensions.get("window");
@@ -40,7 +40,7 @@ const CachedVideoPlayer = ({ url, fileName, videoPlayPause, videoPlayMute }) => 
 
   if (loading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', height: height, width: width }}>
+      <View style={StyleSheet.absoluteFill}>
        <ActivityIndicator
       size={40}
       animating={loading}
@@ -51,6 +51,10 @@ const CachedVideoPlayer = ({ url, fileName, videoPlayPause, videoPlayMute }) => 
     );
   }
 
+  const onMediaLoadError = useCallback((error) => {
+    console.error(`failed to load media: ${JSON.stringify(error)}`);
+  }, []);
+
   return (
      <View
               style={{
@@ -59,7 +63,7 @@ const CachedVideoPlayer = ({ url, fileName, videoPlayPause, videoPlayMute }) => 
                 width: width,
                 justifyContent: "center",
                 alignItems: "center",
-                backgroundColor: "transparent",
+                backgroundColor: "black",
               }}
             >
             <Video
@@ -76,13 +80,9 @@ const CachedVideoPlayer = ({ url, fileName, videoPlayPause, videoPlayMute }) => 
               muted={videoPlayMute}
               resizeMode={"contain"}
               paused={videoPlayPause}
-              style={{
-                backgroundColor: "black",
-                height: height, 
-                width: width,
-              }}
-              source={{ 
-                uri:videoPath }}
+              style={StyleSheet.absoluteFill}
+              source={{ uri:videoPath }}
+              onError={onMediaLoadError}
             /></View>
   );
 };
