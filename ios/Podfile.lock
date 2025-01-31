@@ -1044,8 +1044,6 @@ PODS:
     - Yoga
   - react-native-netinfo (11.4.1):
     - React-Core
-  - react-native-orientation-locker (1.7.0):
-    - React-Core
   - react-native-ota-hot-update (2.0.6):
     - DoubleConversion
     - glog
@@ -1625,7 +1623,6 @@ DEPENDENCIES:
   - "react-native-menu (from `../node_modules/@react-native-menu/menu`)"
   - react-native-mmkv (from `../node_modules/react-native-mmkv`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
-  - react-native-orientation-locker (from `../node_modules/react-native-orientation-locker/react-native-orientation-locker.podspec`)
   - react-native-ota-hot-update (from `../node_modules/react-native-ota-hot-update`)
   - "react-native-photo-editor (from `../node_modules/@baronha/react-native-photo-editor`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -1786,8 +1783,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-mmkv"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
-  react-native-orientation-locker:
-    :path: "../node_modules/react-native-orientation-locker/react-native-orientation-locker.podspec"
   react-native-ota-hot-update:
     :path: "../node_modules/react-native-ota-hot-update"
   react-native-photo-editor:
@@ -1935,7 +1930,6 @@ SPEC CHECKSUMS:
   react-native-menu: b7e42b26d3014c993db0f0ae3d5fcc523d5585bd
   react-native-mmkv: 5ce966e593ccb67b6e612498ee933fa284973ed9
   react-native-netinfo: f0a9899081c185db1de5bb2fdc1c88c202a059ac
-  react-native-orientation-locker: 5819fd23ca89cbac0d736fb4314745f62716d517
   react-native-ota-hot-update: 679983fef4fd8621429c9dec9b6f2db2179ea7b4
   react-native-photo-editor: df7a23b0f31379ca5f64671f7d9fc42dbdd68722
   react-native-safe-area-context: 851c62c48dce80ccaa5637b6aa5991a1bc36eca9
@@ -1987,6 +1981,6 @@ SPEC CHECKSUMS:
   VisionCamera: 88df4dae7196c93ecd331f105f0e5d7d95702cb3
   Yoga: 950bbfd7e6f04790fdb51149ed51df41f329fcc8
 
-PODFILE CHECKSUM: 622645f6d494ef30991710870d9ed0e4c34f9661
+PODFILE CHECKSUM: 7adb54fb978b105820c151b813e5bafb42b0c7bf
 
 COCOAPODS: 1.15.2

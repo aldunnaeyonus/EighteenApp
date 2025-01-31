@@ -43,7 +43,6 @@ import { constants } from "./src/utils";
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import NotifService from "./NotifService";
 import TempCamera from "./src/Screens/Cameras/TempCamera";
-import Orientation from 'react-native-orientation-locker';
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -169,8 +168,6 @@ const onCheckVersion = () => {
       if (signIn) {
         await axiosPull._getProStatus(owner, Platform.OS);
       }
-      Orientation.lockToPortrait();
-
     };
     fetchData();
   }, [signIn, ready, owner, currentVersion]);
