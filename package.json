@@ -34,7 +34,6 @@
     "@react-navigation/native-stack": "^6.11.0",
     "@rneui/base": "^4.0.0-rc.8",
     "@rneui/themed": "^4.0.0-rc.8",
-    "@shopify/react-native-skia": "^1.11.2",
     "@svanboxel/visibility-sensor-react-native": "^1.0.2",
     "@tttstudios/react-native-empty-state": "^0.1.2",
     "@types/react-native-background-timer": "^2.0.2",

@@ -1079,29 +1079,6 @@ PODS:
     - SDWebImageWebPCoder (~> 0.8.4)
   - react-native-safe-area-context (4.11.0):
     - React-Core
-  - react-native-skia (1.11.2):
-    - DoubleConversion
-    - glog
-    - RCT-Folly (= 2024.01.01.00)
-    - RCTRequired
-    - RCTTypeSafety
-    - React
-    - React-callinvoker
-    - React-Codegen
-    - React-Core
-    - React-debug
-    - React-Fabric
-    - React-featureflags
-    - React-graphics
-    - React-ImageManager
-    - React-jsi
-    - React-NativeModulesApple
-    - React-RCTFabric
-    - React-rendererdebug
-    - React-utils
-    - ReactCommon/turbomodule/bridging
-    - ReactCommon/turbomodule/core
-    - Yoga
   - react-native-video (6.8.0):
     - DoubleConversion
     - glog
@@ -1652,7 +1629,6 @@ DEPENDENCIES:
   - react-native-ota-hot-update (from `../node_modules/react-native-ota-hot-update`)
   - "react-native-photo-editor (from `../node_modules/@baronha/react-native-photo-editor`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
-  - "react-native-skia (from `../node_modules/@shopify/react-native-skia`)"
   - react-native-video (from `../node_modules/react-native-video`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - react-native-worklets-core (from `../node_modules/react-native-worklets-core`)
@@ -1818,8 +1794,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@baronha/react-native-photo-editor"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
-  react-native-skia:
-    :path: "../node_modules/@shopify/react-native-skia"
   react-native-video:
     :path: "../node_modules/react-native-video"
   react-native-webview:
@@ -1965,7 +1939,6 @@ SPEC CHECKSUMS:
   react-native-ota-hot-update: 679983fef4fd8621429c9dec9b6f2db2179ea7b4
   react-native-photo-editor: df7a23b0f31379ca5f64671f7d9fc42dbdd68722
   react-native-safe-area-context: 851c62c48dce80ccaa5637b6aa5991a1bc36eca9
-  react-native-skia: 209c0f1f7abe1100e77e0e83a13aab7bdc274df1
   react-native-video: 9ed7b676be4d50722a5e81b37dcb5215bf2f027c
   react-native-webview: 401a2d84eafa8eac2dda9d0a6e1fd7efd275142c
   react-native-worklets-core: 70cdc1159c927bb8111a7d643b3eae4507148504
