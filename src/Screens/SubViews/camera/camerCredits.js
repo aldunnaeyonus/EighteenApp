@@ -1,6 +1,7 @@
 import React from "react";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { constants } from "../../../utils";
 
 const CreditsFont = (props) => {
   function splitNumberIntoDigits(number) {
@@ -25,31 +26,48 @@ const CreditsFont = (props) => {
 
   return (
     <View
-      style={{
+      style={[props.newStyle, {
         width: 30,
+        flexDirection: "column",
+      }]}
+    >
+      <View
+      style={{
         flexDirection: "row",
         marginLeft: -6,
+        width: 30,
+      }}>
+      <MaterialCommunityIcons
+        style={{
+          marginRight: -8,
+        }}
+        name={first}
+        size={30}
+        color="white" />
+      <MaterialCommunityIcons
+        style={{
+          marginLeft: -8,
+        }}
+        name={second}
+        size={30}
+        color="white" />
+    </View>
+    <View
+      style={{
+        width: 30,
+        marginLeft:2
       }}
     >
-      <>
-        <MaterialCommunityIcons
+        <Text
           style={{
-            marginRight: -8,
+            color: "white",
+            textAlign: "center",
+            fontSize: 8,
           }}
-          name={first}
-          size={30}
-          color="white"
-        />
-        <MaterialCommunityIcons
-          style={{
-            marginLeft: -8,
-          }}
-          name={second}
-          size={30}
-          color="white"
-        />
-      </>
-    </View>
+        >
+          Credits
+        </Text>
+      </View></View>
   );
 };
 export default CreditsFont;

@@ -277,7 +277,7 @@ const ListItem = (props) => {
             }}
             type="material-community"
             size={25}
-            name="qrcode-scan"
+            name="qrcode"
             color="#fff"
           />
           <Icon

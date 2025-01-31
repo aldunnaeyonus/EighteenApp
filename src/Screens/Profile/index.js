@@ -188,7 +188,7 @@ const Profile = (props) => {
               padding: 15,
               alignItems: "center",
               justifyContent: "center",
-              marginbottom: 20,
+              marginBottom: 20,
             }}
             onPress={() => setmodalVisable(false)}
           >
@@ -285,7 +285,7 @@ const Profile = (props) => {
             >
               <Icon
                 type="material-community"
-                name="qrcode-scan"
+                name="qrcode"
                 size={20}
                 color="#3D4849"
                 containerStyle={{
@@ -303,57 +303,6 @@ const Profile = (props) => {
             </ListItem>
 
             <View style={[styles.dividerTableStyle]} />
-            <ListItem
-              containerStyle={{ paddingVertical: 5 }}
-              key="11"
-              onPress={() => {
-                //props.navigation.navigate("Languages");
-              }}
-            >
-              <Icon
-                type="material-community"
-                name="translate"
-                size={20}
-                color="#3D4849"
-                containerStyle={{
-                  width: 28,
-                  height: 28,
-                  borderRadius: 6,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              />
-              <ListItem.Content>
-                <ListItem.Title>{i18n.t("Languages")}</ListItem.Title>
-              </ListItem.Content>
-              <View
-                style={{
-                  marginTop: -5,
-                  marginLeft: 65,
-                  backgroundColor: "#3D4849",
-                  width: 22,
-                  height: 22,
-                  borderRadius: 11,
-                  borderWidth: 1,
-                  borderColor: "#3D4849",
-                  justifyContent: "center",
-                }}
-              >
-                <Text
-                  style={{
-                    color: "#fff",
-                    textAlignVertical: "center",
-                    textAlign: "center",
-                    fontSize: 12,
-                    fontWeight: "bold",
-                  }}
-                >
-                  {constants.languages.length}
-                </Text>
-              </View>
-            </ListItem>
-            <View style={[styles.dividerTableStyle]} />
-
             <InfoText text={i18n.t("Profile Settings")} />
             <View>
               <View style={[styles.dividerTableStyle]} />

@@ -4,7 +4,7 @@ import { createImageProgress } from "react-native-image-progress";
 import FastImage from "react-native-fast-image";
 const Image = createImageProgress(FastImage);
 import Progress from "react-native-progress";
-const { width, height } = Dimensions.get("window");
+const { width, height } = Dimensions.get("screen");
 import Zoom from "react-native-zoom-reanimated";
 import VisibilitySensor from "@svanboxel/visibility-sensor-react-native";
 import CachedVideoPlayer from '../camera/CachedVideoPlayer';
@@ -12,14 +12,15 @@ import CachedVideoPlayer from '../camera/CachedVideoPlayer';
 const ImageGalleryView = (props) => {
     const [videoPlayPause, setVideoPlayPause] = useState(true);
     const [videoPlayMute] = useState(true);
+   
 
-  return (
+    return (
     props.item.item.type == "video" ? (
         <View
           style={{
             flex: 1,
-            height: "100%",
-            width: "100%",
+            height: height,
+            width: width,
             justifyContent: "center",
             alignItems: "center",
             backgroundColor: "transparent",
@@ -29,7 +30,7 @@ const ImageGalleryView = (props) => {
             style={{
               backgroundColor: "transparent",
               position: "absolute",
-              top: 62,
+              top: 0,
               zIndex: 2,
               height: 60,
               marginTop: 30,
@@ -40,11 +41,11 @@ const ImageGalleryView = (props) => {
             <Image
               indicator={Progress}
               style={{
-                width: 50,
-                height: 50,
+                width: 30,
+                height: 30,
                 borderRadius: 25,
-                marginTop: 30,
-                marginLeft: 2,
+                marginTop: 10,
+                marginLeft: 10,
                 borderWidth: 0.5,
                 alignSelf: "auto",
                 overflow: "hidden",
@@ -62,7 +63,7 @@ const ImageGalleryView = (props) => {
               <View style={{ position: "absolute" }}>
                 <View
                   style={{
-                    marginTop: 62,
+                    marginTop: 42,
                     marginLeft: 35,
                     backgroundColor: "transparent",
                     width: 20,
@@ -72,12 +73,10 @@ const ImageGalleryView = (props) => {
                 >
                   <FastImage
                     style={{
-                      marginLeft: 4,
-                      marginTop: 1,
-                      width: 17,
-                      height: 17,
-                      textAlignVertical: "center",
-                      textAlignVertical: "center",
+                      marginLeft: -5,
+                      marginTop: -30,
+                      width: 10,
+                      height: 10,
                     }}
                     resizeMode={FastImage.resizeMode.contain}
                     source={require("../../../../assets/verified.png")}
@@ -90,10 +89,10 @@ const ImageGalleryView = (props) => {
               style={{
                 color: "white",
                 backgroundColor: "transparent",
-                fontSize: 20,
+                fontSize: 15,
                 marginLeft: 10,
                 fontWeight: "bold",
-                marginTop: 40,
+                marginTop: 15,
               }}
             >
               {props.item.item.userName}
@@ -112,6 +111,8 @@ const ImageGalleryView = (props) => {
           >
               <CachedVideoPlayer
                 url={props.item.item.uri}
+                height={height}
+                width={width}
                 fileName={String(props.item.item.uri).split("/").pop()}
                 videoPlayPause={videoPlayPause}
                 videoPlayMute={videoPlayMute}
@@ -122,8 +123,8 @@ const ImageGalleryView = (props) => {
         <View
           style={{
             flex: 1,
-            height: "100%",
-            width: "100%",
+            height: height,
+            width: width,
             justifyContent: "center",
             alignItems: "center",
             backgroundColor: "transparent",
@@ -133,7 +134,7 @@ const ImageGalleryView = (props) => {
             style={{
               backgroundColor: "transparent",
               position: "absolute",
-              top: 62,
+              top: 0,
               zIndex: 2,
               height: 60,
               marginTop: 30,
@@ -145,11 +146,11 @@ const ImageGalleryView = (props) => {
             <Image
               indicator={Progress}
               style={{
-                width: 50,
-                height: 50,
+                width: 30,
+                height: 30,
                 borderRadius: 25,
-                marginTop: 30,
-                marginLeft: 2,
+                marginTop: 10,
+                marginLeft: 10,
                 borderWidth: 0.5,
                 alignSelf: "auto",
                 overflow: "hidden",
@@ -177,12 +178,10 @@ const ImageGalleryView = (props) => {
                 >
                   <FastImage
                     style={{
-                      marginLeft: 4,
-                      marginTop: 1,
-                      width: 17,
-                      height: 17,
-                      textAlignVertical: "center",
-                      textAlignVertical: "center",
+                      marginLeft: -5,
+                      marginTop: -70,
+                      width: 10,
+                      height: 10,
                     }}
                     resizeMode={FastImage.resizeMode.contain}
                     source={require("../../../../assets/verified.png")}
@@ -195,10 +194,10 @@ const ImageGalleryView = (props) => {
               style={{
                 color: "white",
                 backgroundColor: "transparent",
-                fontSize: 20,
+                fontSize: 15,
                 marginLeft: 10,
                 fontWeight: "bold",
-                marginTop: 40,
+                marginTop: 15,
               }}
             >
               {props.item.item.userName}

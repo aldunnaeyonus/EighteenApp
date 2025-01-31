@@ -627,7 +627,7 @@ const EditCamera = (props) => {
               padding: 15,
               alignItems: "center",
               justifyContent: "center",
-              marginbottom: 20,
+              marginBottom: 20,
             }}
             onPress={() => {
               setModalUpload(false);

@@ -6,7 +6,6 @@ import {
   Text,
   Platform,
 } from "react-native";
-import { ActivityIndicator } from "react-native-paper";
 import {
   useCameraPermission,
   useMicrophonePermission,
@@ -18,7 +17,7 @@ import {
   TakePhotoOptions,
   runAtTargetFps,
   useFrameProcessor,
-  CameraProps,
+  CameraProps, 
   VideoFile,
 } from "react-native-vision-camera";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -43,7 +42,7 @@ import * as i18n from "../../../i18n";
 import { storage } from "../../context/components/Storage";
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
 import { usePreferredCameraDevice } from './hooks/usePreferredCameraDevice'
-
+import { ActivityIndicator } from "react-native-paper";
 const ReanimatedCamera = Reanimated.createAnimatedComponent(Camera);
 Reanimated.addWhitelistedNativeProps({
   zoom: true,
@@ -77,7 +76,7 @@ const VisionCamera = (props: {
   const uiStyle: ViewStyle = {
     transform: [{ rotate: `${uiRotation}deg` }]
   }
-  const [credits, setCredits] = useState(
+  const [credits] = useState(
     props.route.params.user == props.route.params.owner
       ? "99"
       : props.route.params.credits
@@ -144,7 +143,7 @@ const VisionCamera = (props: {
 
   const SCALE_FULL_ZOOM = 3;
   const MAX_ZOOM_FACTOR = 10;
-
+ 
   useEffect(() => {
     if (!hasPermission) {
       requestPermission();
@@ -195,6 +194,8 @@ const VisionCamera = (props: {
     { photoAspectRatio: screenAspectRatio },
     { photoResolution: "max" },
   ]);
+
+
   const [enableHdr, setEnableHdr] = useState(false);
   const [enableNightMode, setEnableNightMode] = useState(false);
 
@@ -243,7 +244,7 @@ const VisionCamera = (props: {
       path,
       uploading
     );
-          props.navigation.goBack()
+    props.navigation.goBack()
   };
 
   const onMediaCaptured = useCallback(
@@ -301,8 +302,44 @@ const VisionCamera = (props: {
   }, [maxZoom, minZoom, zoom])
   const videoHdr = format?.supportsVideoHdr && enableHdr
 
-  if (device == null) return null
-
+  if (device == null) return (
+     <View style={[StyleSheet.absoluteFill, {backgroundColor:'black'}]}>
+       <View
+        style={[uiStyle]}
+      >
+      <Text
+        style={{
+          color: "white",
+          textAlign: "center",
+          fontWeight: "600",
+          fontSize: 20,
+          top: constants.SAFE_AREA_PADDING.paddingBottom + 45,
+        }}
+      >
+       No Camera Device
+      </Text>
+      </View>
+        <View
+        style={[uiStyle, {
+          position: "absolute",
+          right: 10,
+          top: 50,
+          padding: 10,
+          borderRadius: 5,
+          backgroundColor: "rgba(0, 0, 0, 0.60)",
+          gap: 30,
+        }]}
+      >
+        <Ionicons
+          name={"close"}
+          onPress={() => props.navigation.goBack()}
+          size={30}
+          color="white"
+        />
+      </View>
+ 
+          </View>
+  )
   return (
     <View style={{ flex: 1, backgroundColor: "black" }}>
       <PinchGestureHandler onGestureEvent={onPinchGesture} enabled={isActive}>
@@ -313,6 +350,7 @@ const VisionCamera = (props: {
           <TapGestureHandler onEnded={onDoubleTap} numberOfTaps={2}>
             <ReanimatedCamera
               ref={camera}
+              {...props}
               device={device}
               style={StyleSheet.absoluteFill}
               isActive={isActive}
@@ -328,6 +366,7 @@ const VisionCamera = (props: {
               animatedProps={cameraAnimatedProps}
               audio={true}
               exposure={0}
+              format={format}
               enableLocation={location.hasPermission}
               lowLightBoost={canToggleNightMode}
               frameProcessor={frameProcessor}
@@ -335,6 +374,9 @@ const VisionCamera = (props: {
           </TapGestureHandler>
         </Reanimated.View>
       </PinchGestureHandler>
+      <View
+
+      >
       <Text
         style={{
           color: "white",
@@ -356,6 +398,7 @@ const VisionCamera = (props: {
       >
         {endEventTime}
       </Text>
+      </View>
       <View
         style={{
           position: "absolute",
@@ -369,7 +412,9 @@ const VisionCamera = (props: {
       >
         <Ionicons
           name={"close"}
-          onPress={() => props.navigation.goBack()}
+          onPress={() => {
+            props.navigation.goBack();
+          }}
           size={30}
           color="white"
         />
@@ -378,6 +423,7 @@ const VisionCamera = (props: {
           onPress={() =>
             setFlash((curValue) => (curValue === "off" ? "on" : "off"))
           }
+          style={[uiStyle]}
           size={30}
           color="white"
         />
@@ -385,6 +431,7 @@ const VisionCamera = (props: {
           name={"camera-reverse-outline"}
           onPress={onFlipCameraPressed}
           size={30}
+          style={[uiStyle]}
           color="white"
         />
         {supportsHdr && (
@@ -392,6 +439,7 @@ const VisionCamera = (props: {
             name={enableHdr ? "hdr" : "hdr-off"}
             color="white"
             size={30}
+            style={[uiStyle]}
             onPress={() => setEnableHdr((h) => !h)}
           />
         )}
@@ -400,22 +448,13 @@ const VisionCamera = (props: {
             name={enableNightMode ? "moon" : "moon-outline"}
             color="white"
             size={30}
+            style={[uiStyle]}
             onPress={() => setEnableNightMode(!enableNightMode)}
             disabledOpacity={0.4}
           />
         )}
-        <CreditsFont credits={credits} />
-        <Text
-          style={{
-            color: "white",
-            textAlign: "center",
-            fontSize: 10,
-            top: constants.SAFE_AREA_PADDING.paddingBottom - 45,
-          }}
-        >
-          Credits
-        </Text>
-      </View>
+        <CreditsFont credits={credits} newStyle={uiStyle}/>
+      </View>    
       <CaptureButton
         style={{
           position: "absolute",

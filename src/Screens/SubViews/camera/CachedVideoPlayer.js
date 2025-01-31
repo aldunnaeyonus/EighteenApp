@@ -1,15 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Dimensions,  StyleSheet} from 'react-native';
-import Video, {OnVideoErrorData} from 'react-native-video';
+import { View, StyleSheet, Dimensions } from 'react-native';
+import Video  from 'react-native-video';
 import RNFS from 'react-native-fs';
 import { ActivityIndicator, MD2Colors } from "react-native-paper";
-const { width, height } = Dimensions.get("window");
+const { width, height } = Dimensions.get("screen");
 
 const CachedVideoPlayer = ({ url, fileName, videoPlayPause, videoPlayMute }) => {
   const [videoPath, setVideoPath] = useState(null);
   const [loading, setLoading] = useState(true);
   const video = useRef();
-
   useEffect(() => {
     const fetchVideo = async () => {
       setLoading(true);
@@ -51,38 +50,27 @@ const CachedVideoPlayer = ({ url, fileName, videoPlayPause, videoPlayMute }) => 
     );
   }
 
-  const onMediaLoadError = useCallback((error) => {
-    console.error(`failed to load media: ${JSON.stringify(error)}`);
-  }, []);
-
   return (
      <View
-              style={{
-                flex: 1,
-                height: height,
-                width: width,
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundColor: "black",
-              }}
+     style={{flex:1, width:width, height:height}}
+
             >
             <Video
               fullscreen={true}
               fullscreenAutorotate={true}
               fullscreenOrientation={"all"}
               ignoreSilentSwitch="obey"
-              showNotificationControls={true}
               playWhenInactive={false}
               playInBackground={false}
               ref={video}
-              controls={true}
               repeat={false}
               muted={videoPlayMute}
               resizeMode={"contain"}
+              poster="contain"
+              controls={true}
               paused={videoPlayPause}
-              style={StyleSheet.absoluteFill}
+              style={{flex:1, width:width, height:height}}
               source={{ uri:videoPath }}
-              onError={onMediaLoadError}
             /></View>
   );
 };

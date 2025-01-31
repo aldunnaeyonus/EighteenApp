@@ -102,7 +102,7 @@ close={'Close Button'}
                   padding: 15,
                   alignItems: "center",
                   justifyContent: "center",
-                  marginbottom: 20,
+                  marginBottom: 20,
                 }}
                 onPress={() => {
                   props.negative(props.actionID);
@@ -129,7 +129,7 @@ close={'Close Button'}
                 padding: 15,
                 alignItems: "center",
                 justifyContent: "center",
-                marginbottom: 20,
+                marginBottom: 20,
               }}
               onPress={() => {
                 setModalUpload(false);

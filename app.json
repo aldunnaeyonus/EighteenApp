@@ -19,6 +19,11 @@
       }
     },
     "plugins": [
+      [
+        "react-native-vision-camera", {
+          "enableCodeScanner": true
+        }
+      ],
         "./withAndroidStrategiesPlugin.js",
         "react-native-iap",
       [

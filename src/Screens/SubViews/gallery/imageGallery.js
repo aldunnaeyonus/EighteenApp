@@ -30,7 +30,7 @@ const ImageGallery = (props) => {
         style={{
           backgroundColor: "#f2f2f2",
           borderColor: "#fff",
-          borderWidth: 0.5,
+          borderWidth: 2.0,
           height: width / 4.0,
           width: width / 3.0,
         }}
@@ -39,12 +39,12 @@ const ImageGallery = (props) => {
           <Icon
             type="material-community"
             name="play-box-outline"
-            size={30}
+            size={20}
             containerStyle={{
               width: 50,
               height: 50,
               top: 5,
-              right: 6,
+              right: 10,
             }}
             color="white"
           />

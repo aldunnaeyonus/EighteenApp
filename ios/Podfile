@@ -36,6 +36,8 @@ install! 'cocoapods',
   :deterministic_uuids => false
 pod 'SDWebImage', :modular_headers => true
 pod 'SDWebImageWebPCoder', :modular_headers => true
+pod 'react-native-orientation-locker', :path => '../node_modules/react-native-orientation-locker/react-native-orientation-locker.podspec'
+
 prepare_react_native_project!
 # @generated begin setup - expo prebuild (DO NOT MODIFY) sync-fe2ec4bcce9bb0cad9cbe2eb17d31f8ab9648324
 setup_permissions([

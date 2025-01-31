@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
-import { Text, LogBox, Platform, Dimensions } from "react-native";
+import { Text, LogBox, Platform } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
@@ -43,7 +43,7 @@ import { constants } from "./src/utils";
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import NotifService from "./NotifService";
 import TempCamera from "./src/Screens/Cameras/TempCamera";
-import { ActivityIndicator, MD2Colors } from "react-native-paper";
+import Orientation from 'react-native-orientation-locker';
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -169,6 +169,8 @@ const onCheckVersion = () => {
       if (signIn) {
         await axiosPull._getProStatus(owner, Platform.OS);
       }
+      Orientation.lockToPortrait();
+
     };
     fetchData();
   }, [signIn, ready, owner, currentVersion]);
@@ -488,6 +490,7 @@ const onCheckVersion = () => {
                   gestureEnabled: false,
                   headerTransparent: true,
                   headerBackTitleVisible: false,
+                  headerShown: false,
                   animation: 'fade',
                   animationDuration: 500,
                 }}

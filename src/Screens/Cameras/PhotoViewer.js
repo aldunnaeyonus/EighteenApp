@@ -85,77 +85,7 @@ const PhotoViewer = (props) => {
           hideAccent: true,
         });
       }
-      props.navigation.setOptions({
-        headerLeft: () => (
-            <TouchableOpacity
-              onPress={() => {
-                props.navigation.goBack();
-              }}
-            >
-              <Icon
-                type="material"
-                size={30}
-                name="arrow-back-ios-new"
-                color="#fff"
-                containerStyle={{
-                  padding: 7,
-                  height: "100%",
-                  backgroundColor: "rgba(0, 0, 0, 0.60)",
-                  borderRadius: 22,
-                }}
-              />
-            </TouchableOpacity>
-          ),
-        headerRight: () => (
-          <>
-          {filteredDataSource[0].share == "1" || props.route.params.owner == props.route.params.user ? (
-            <TouchableOpacity
-              onPress={async () => {
-                _gotoShare(
-                  filteredDataSource[
-                    parseInt(await AsyncStorage.getItem("current"))
-                  ].uri
-                );
-              }}
-            >
-              <Icon
-                type="material-community"
-                size={30}
-                name="share"
-                color="#fff"
-                containerStyle={{
-                  padding: 7,
-                  height: "100%",
-                  backgroundColor: "rgba(0, 0, 0, 0.60)",
-                  borderRadius: 22,
-                }}
-              />
-            </TouchableOpacity>
-          ) : (
-            <></>
-          )}
-              <TouchableOpacity
-                onPress={() => {
-                  props.navigation.goBack();
-                }}
-              >
-                <Icon
-                  type="material-community"
-                  size={30}
-                  name="close-circle-outline"
-                  color="#fff"
-                  containerStyle={{
-                    padding: 7,
-                    height: "100%",
-                    backgroundColor: "rgba(0, 0, 0, 0.60)",
-                    borderRadius: 22,
-                  }}
-                />
-              </TouchableOpacity>
-              </>
-          ),
-      });
-    }, [props.route.params.owner])
+    }, [props.unsubscribe])
   );
 
 const onMomentumScrollBegin = () => {
@@ -240,11 +170,11 @@ const getItemLayout = (data, index) => (
                     <Icon
                       type="material-community"
                       name="play-box-outline"
-                      size={30}
+                      size={20}
                       containerStyle={{
                         width: 50,
                         height: 50,
-                        top: 25,
+                        top: 30,
                         left: 12.5,
                       }}
                       color="white"
@@ -254,6 +184,51 @@ const getItemLayout = (data, index) => (
         </TouchableOpacity>
    ) }}
         />
+        <View
+        style={{
+          position: "absolute",
+          right: 10,
+          zIndex:2,
+          top: 40,
+          padding: 10,
+          borderRadius: 5,
+          backgroundColor: "rgba(0, 0, 0, 0.40)",
+          gap: 20,
+        }}
+      >
+         <TouchableOpacity
+              onPress={() => {
+                props.navigation.goBack();
+              }}
+            >
+        <Icon
+          name={"close"}
+          size={30}
+          onPress={props.navigation.goBack}
+          color="white"
+        />
+       </TouchableOpacity>
+       {filteredDataSource[0].share == "0" || props.route.params.owner == props.route.params.user && (
+       
+       <TouchableOpacity
+              onPress={async () => {
+                _gotoShare(
+                  filteredDataSource[
+                    parseInt(await AsyncStorage.getItem("current"))
+                  ].uri
+                );
+              }}
+            >
+              <Icon
+                type="material-community"
+                size={30}
+                name="share"
+                color="#fff"
+              />
+            </TouchableOpacity>
+       )}
+
+      </View>
         </View>
   )
 };

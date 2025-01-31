@@ -6,7 +6,6 @@ import {
   PermissionsAndroid,
   Platform,
   Image,
-  Text,
 } from "react-native";
 import type { OnVideoErrorData, OnLoadData } from "react-native-video";
 import Video from "react-native-video";
@@ -92,23 +91,7 @@ const MediaPage = (props: {
   const onMediaLoadError = useCallback((error: OnVideoErrorData) => {
     console.error(`failed to load media: ${JSON.stringify(error)}`);
   }, []);
-
-  const durationAsString = (end: any, start: any) => {
-    return start >= moment().unix()
-      ? i18n.t("Event Starts in:") +
-          moment
-            .duration(parseInt(start) - moment().unix(), "seconds")
-            .format("d [days], h [hrs], m [min]")
-      : i18n.t("Event Ends in:") +
-          moment
-            .duration(parseInt(end), "seconds")
-            .format("d [days], h [hrs], m [min]");
-  };
-
-  let endEventTime = durationAsString(
-    parseInt(props.route.params.end) - moment().unix(),
-    parseInt(props.route.params.start)
-  );
+  const [isRotated, setIsRotated] = useState(false);
 
   const source = useMemo(() => ({ uri: `file://${path}` }), [path]);
   const screenStyle = useMemo(
@@ -197,7 +180,7 @@ const MediaPage = (props: {
           automaticallyWaitsToMinimizeStalling={false}
           disableFocus={true}
           repeat={false}
-          controls={false}
+          controls={true}
           playWhenInactive={true}
           ignoreSilentSwitch="obey"
           onReadyForDisplay={onMediaLoadEnd}
@@ -208,36 +191,8 @@ const MediaPage = (props: {
       <View
         style={{
           position: "absolute",
-          top: 0,
-        }}
-      >
-        <Text
-          style={{
-            color: "white",
-            textAlign: "center",
-            fontWeight: "600",
-            fontSize: 20,
-            top: constants.SAFE_AREA_PADDING.paddingBottom + 45,
-          }}
-        >
-          {props.route.params.title}
-        </Text>
-        <Text
-          style={{
-            color: "white",
-            textAlign: "center",
-            fontSize: 15,
-            top: constants.SAFE_AREA_PADDING.paddingBottom + 45,
-          }}
-        >
-          {endEventTime}
-        </Text>
-      </View>
-      <View
-        style={{
-          position: "absolute",
           right: 10,
-          top: 50,
+          top: 110,
           padding: 10,
           borderRadius: 5,
           backgroundColor: "rgba(0, 0, 0, 0.40)",
@@ -247,7 +202,9 @@ const MediaPage = (props: {
         <Ionicons
           name={"close"}
           size={30}
-          onPress={props.navigation.goBack}
+          onPress={()=>{
+            props.navigation.goBack();
+          }}
           color="white"
         />
         {animating ? (

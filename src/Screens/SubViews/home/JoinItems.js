@@ -128,130 +128,7 @@ const JoinItems = (props) => {
             {endEventTime}
           </Text>
         </View>
-        <View style={styles.imageUserNameContainer}>
-            <Icon
-              containerStyle={{
-                alignSelf: "flex-end",
-                width: 40,
-                height: 40,
-                marginRight: 5,
-                marginTop: 10,
-                borderTopRightRadius: 5,
-                borderTopLeftRadius: 5,
-                backgroundColor: "rgba(0, 0, 0, 0.60)",
-              }}
-              type="material-community"
-              size={30}
-              name="menu-open"
-              color="#fff"
-            />
-          <Icon
-            onPress={() => {
-              
-            }}
-            containerStyle={{
-              alignSelf: "flex-end",
-              width: 40,
-              height: 40,
-              marginRight: 5,
-              marginTop: 0,
-              backgroundColor: "rgba(0, 0, 0, 0.60)",
-            }}
-            type="entypo"
-            size={25}
-            name="images"
-            color="#fff"
-          />
-          <Icon
-            onPress={() => {
-              
-            }}
-            containerStyle={{
-              alignSelf: "flex-end",
-              width: 40,
-              height: 40,
-              marginRight: 5,
-              marginTop: 0,
-              backgroundColor: "rgba(0, 0, 0, 0.60)",
-            }}
-            type="font-awesome"
-            size={25}
-            name="camera-retro"
-            color="#fff"
-          />
-          <Icon
-            onPress={() => {
-             
-            }}
-            containerStyle={{
-              alignSelf: "flex-end",
-              width: 40,
-              height: 40,
-              marginRight: 5,
-              marginTop: 0,
-              backgroundColor: "rgba(0, 0, 0, 0.60)",
-            }}
-            type="material-community"
-            size={25}
-            name="qrcode-scan"
-            color="#fff"
-          />
-          <Icon
-            onPress={() => {
-             
-            }}
-            containerStyle={{
-              alignSelf: "flex-end",
-              width: 40,
-              height: 40,
-              marginRight: 5,
-              marginTop: 0,
-              backgroundColor: "rgba(0, 0, 0, 0.60)",
-            }}
-            type="material-community"
-            size={25}
-            name="account-group-outline"
-            color="#fff"
-          />
-          {props.isPro != "1" && (
-            <Icon
-              onPress={() => {
-               
-              }}
-              containerStyle={{
-                alignSelf: "flex-end",
-                width: 40,
-                height: 40,
-                marginRight: 5,
-                marginTop: 0,
-                backgroundColor: "rgba(0, 0, 0, 0.60)",
-              }}
-              type="ionicon"
-              size={25}
-              name="storefront-outline"
-              color="#fff"
-            />
-          )}
-          <Icon
-            onPress={() => {
-              
-            }}
-            containerStyle={{
-              alignSelf: "flex-end",
-              width: 40,
-              height: 40,
-              marginRight: 5,
-              marginTop: 0,
-              borderBottomRightRadius: 5,
-              borderBottomLeftRadius: 5,
-              backgroundColor: "rgba(0, 0, 0, 0.60)",
-            }}
-            type="material-community"
-            size={25}
-            name="share"
-            color="#fff"
-          />
-        </View>
+       
 
         <View
           style={{
@@ -330,7 +207,7 @@ const JoinItems = (props) => {
                 position:'absolute',
                 transform: [{ rotate: '-7.5deg'}],
                 top:60,
-                left:57,
+                left:51,
                 color: "black",
                 fontSize: 16,
                 fontWeight: "600",

@@ -182,7 +182,7 @@ const Handle = (props) => {
               alignItems: "center",
               justifyContent: "center",
               borderColor: "#e35504",
-              marginbottom: 20,
+              marginBottom: 20,
             }}
             onPress={() => { 
               checkHandle();
