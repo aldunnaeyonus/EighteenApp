@@ -141,7 +141,7 @@ const getItemLayout = (data, index) => (
         horizontal={true}
         initialScrollIndex={props.route.params.pagerIndex}
         keyExtractor={(item) => item.image_id}
-        style={{position:'absolute', bottom:40}}
+        style={{position:'absolute', bottom:80}}
         extraData={filteredDataSource}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
