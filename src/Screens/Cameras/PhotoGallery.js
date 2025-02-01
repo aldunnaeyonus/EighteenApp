@@ -251,9 +251,13 @@ const PhotoGallery = (props) => {
         }
       };
     }, [
-      props,
+      props.route.params.title,
+      props.route.params.pin,
+      props.route.params.owner,
+      props.route.params.type,
+      props.route.params.user,
+      props.unsubscribe,
       credits,
-      modalUpload,
       animating,
       pickedImages,
       uploading

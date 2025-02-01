@@ -71,8 +71,7 @@ export default function App() {
   };
 
 const onCheckVersion = () => {
-  if (Platform.OS === 'ios'){
-
+  if (Platform.OS == 'ios'){
     fetch(constants.updateJSON).then(async (data) => {
       const result = await data.json();
       const currentVersion = await hotUpdate.getCurrentVersion();
@@ -86,7 +85,7 @@ const onCheckVersion = () => {
         };
     });
   }
-  
+
   };
 
   useEffect(() => {

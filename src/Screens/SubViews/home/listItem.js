@@ -23,9 +23,9 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { getLocales } from 'expo-localization';
 
 const ListItem = (props) => {
-    let [localLang] = useState(getLocales()[0].languageCode)
-  
+  let [localLang] = useState(getLocales()[0].languageCode)
   let FACES = JSON.parse(JSON.stringify(props.item.item.joinedAvatars));
+
   useFocusEffect(
     useCallback(() => {
       if (props.item.item.end - moment().unix() <= 0) {
@@ -48,7 +48,7 @@ const ListItem = (props) => {
   const durationAsString = (end, start) => {
     return parseInt(start) > moment().unix()
       ? i18n.t("Event Starts in:") +
-          moment.duration(parseInt(start) - moment().unix(), "seconds").locale(localLang).humanize(true): i18n.t("Event Ends in:") + moment.duration(parseInt(end), "seconds").locale(localLang).humanize(true);
+          moment.duration(parseInt(start) - moment().unix(), "seconds").locale(localLang).humanize(true) : i18n.t("Event Ends in:") + moment.duration(parseInt(end), "seconds").locale(localLang).humanize(true);
   };
 
   let endEventTime = durationAsString(

@@ -401,13 +401,11 @@ const Home = (props) => {
           {device == null ? (
           <Text>No Camera Device</Text>
         ) : (
-          <><Camera
+          <Camera
                   style={[StyleSheet.absoluteFill, { overflow: 'hidden', borderRadius: 20 }]}
                   device={device}
                   isActive={true}
                   codeScanner={codeScanner} />
-                  <Text>Android not clipping bounds and is incorrect.</Text>
-                  </>
           )}
         <Image style={[StyleSheet.absoluteFill, { overflow:'hidden', borderRadius: 20}]} source={require('../../../assets/scan.png')}/>
           </View>
