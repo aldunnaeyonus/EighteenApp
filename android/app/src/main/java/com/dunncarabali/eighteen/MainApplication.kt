@@ -29,11 +29,8 @@ class MainApplication : Application(), ReactApplication {
           }
 
           override fun getJSMainModuleName(): String = ".expo/.virtual-metro-entry"
-          override fun getJSBundleFile(): String? {
-                      return OtaHotUpdate.bundleJS
-                      }
+          override fun getJSBundleFile(): String = OtaHotUpdate.bundleJS
           override fun getUseDeveloperSupport(): Boolean = BuildConfig.DEBUG
-
           override val isNewArchEnabled: Boolean = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED
           override val isHermesEnabled: Boolean = BuildConfig.IS_HERMES_ENABLED
       }

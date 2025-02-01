@@ -14,8 +14,8 @@
     "pod-install": "cd ios && RCT_NEW_ARCH_ENABLED=1 bundle exec pod install cd .. && npx patch-package --use-yarn",
     "build": "node --max_old_space_size=4096 node_modules/.bin/react-scripts start",
     "postinstall": "npx patch-package",
-    "export-android": "npx react-native bundle --platform='android' --entry-file='index.js' --bundle-output='./android/app/src/main/assets/index.android.bundle' --sourcemap-output './android/app/src/main/assets/sourcemap.js' --dev=false --assets-dest='./android/app/src/main/res'",
-    "export-ios": "npx react-native bundle --entry-file='index.js' --bundle-output='./ios/SnapEighteen/main.jsbundle' --dev=false --platform='ios' --sourcemap-output './ios/SnapEighteen/sourcemap.js' --assets-dest='./ios/SnapEighteen/'"
+    "export-android": "mkdir -p android/output && npx expo export:embed --platform android --entry-file node_modules/expo/AppEntry.js --bundle-output android/output/index.android.bundle --dev false --assets-dest android/output --sourcemap-output android/sourcemap.js && cd android && find output -type f | zip index.android.bundle.zip -@ && zip sourcemap.zip sourcemap.js && cd .. && rm -rf android/output && rm -rf android/sourcemap.js",
+    "export-ios": "mkdir -p ios/output && npx expo export:embed --platform ios --entry-file node_modules/expo/AppEntry.js --bundle-output ios/output/main.jsbundle --dev false --assets-dest ios/output --sourcemap-output ios/sourcemap.js && cd ios && find output -type f | zip main.jsbundle.zip -@ && zip sourcemap.zip sourcemap.js && cd .. && rm -rf ios/output && rm -rf ios/sourcemap.js"
   },
   "dependencies": {
     "@baronha/react-native-photo-editor": "^1.1.6",
