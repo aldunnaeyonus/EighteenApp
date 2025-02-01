@@ -436,7 +436,7 @@ const Home = (props) => {
                 color: "#fff",
               }}
             >
-              Close
+              {i18n.t("Close")}
             </Text>
           </TouchableOpacity>
         </View>
@@ -491,8 +491,8 @@ const Home = (props) => {
                 color: "#fff",
               }}
             >
-              Close
-            </Text>
+              {i18n.t("Close")}
+              </Text>
           </TouchableOpacity>
         </View>
       </Modal>

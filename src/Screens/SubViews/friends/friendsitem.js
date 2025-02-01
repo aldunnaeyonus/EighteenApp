@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import {
   View,
   Text,
@@ -20,10 +20,12 @@ import { useIsFocused } from "@react-navigation/native";
 import * as i18n from "../../../../i18n";
 import CreditsFont from "../camera/credits";
 import FacePile from "react-native-face-pile";
+import { getLocales } from 'expo-localization';
 
 const FriendListItem = (props) => {
   const isFocused = useIsFocused();
   let FACES = JSON.parse(JSON.stringify(props.item.item.joinedAvatars));
+  let [localLang] = useState(getLocales()[0].languageCode)
 
   useEffect(() => {
     if (props.item.item.end - moment().unix() <= 0) {
@@ -35,7 +37,7 @@ const FriendListItem = (props) => {
   }, [isFocused, props]);
 
   const startDate = (date) => {
-    return moment.unix(parseInt(date)).format("LLL");
+    return moment.unix(parseInt(date)).locale(localLang).format("LLL");
   };
 
   let eventStart = startDate(props.item.item.start);
@@ -45,12 +47,12 @@ const FriendListItem = (props) => {
     return parseInt(start) >= moment().unix()
       ? i18n.t("Event Starts in:") +
           moment
-            .duration(parseInt(start) - moment().unix(), "seconds")
-            .format("d [days], h [hrs], m [min]")
+            .duration(parseInt(start) - moment().unix(), "seconds").locale(localLang)
+            .humanize(true)
       : i18n.t("Event Ends in:") +
           moment
-            .duration(parseInt(end), "seconds")
-            .format("d [days], h [hrs], m [min]");
+            .duration(parseInt(end), "seconds").locale(localLang)
+            .humanize(true);
   };
 
   let endEventTime = durationAsString(

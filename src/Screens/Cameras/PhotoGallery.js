@@ -28,6 +28,7 @@ import PhotoEditor from "@baronha/react-native-photo-editor";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 const stickers = [];
 import Loading from "../SubViews/home/Loading";
+import { getLocales } from 'expo-localization';
 
 const PhotoGallery = (props) => {
   const [filteredDataSource] = useMMKVObject(
@@ -49,6 +50,8 @@ const PhotoGallery = (props) => {
     `user.Camera.Friend.Feed.${props.route.params.owner}`,
     storage
   );
+    let [localLang] = useState(getLocales()[0].languageCode)
+
   const [uploading] = useMMKVObject("uploadData", storage);
   const createEvent = async () => {
     setAnimating(false);
@@ -261,12 +264,12 @@ const PhotoGallery = (props) => {
     return parseInt(start) >= moment().unix()
       ? i18n.t("Event Starts in:") +
           moment
-            .duration(parseInt(start) - moment().unix(), "seconds")
-            .format("d [days], h [hrs], m [min]")
+            .duration(parseInt(start) - moment().unix(), "seconds").locale(localLang)
+            .humanize(true)
       : i18n.t("Event Ends in:") +
           moment
-            .duration(parseInt(end), "seconds")
-            .format("d [days], h [hrs], m [min]");
+            .duration(parseInt(end), "seconds").locale(localLang)
+            .humanize(true);
   };
 
   let endEventTime = durationAsString(
@@ -486,7 +489,7 @@ const PhotoGallery = (props) => {
                 color: "#fff",
               }}
             >
-              Close
+              {i18n.t("Close")}
             </Text>
           </TouchableOpacity>
         </View>

@@ -10,6 +10,8 @@ const loadTranslations = async (locale) => {
   const response = await fetch(`${constants.url}/translations/${locale}.json`);
   const translation = await response.json();
   i18n.translations = {[locale]: translation};
+  i18n.enableFallback = true
+  i18n.defaultLocale = DEFAULT_LANGUAGE
   i18n.store(translation);
 }
 
@@ -21,7 +23,7 @@ export const translate = memoize(
 
 export const t = translate;
 
-export const setI18nConfig = (codeLang = i18n.locale) => {
+export const setI18nConfig = (codeLang) => {
   const fallback = {languageTag: DEFAULT_LANGUAGE, isRTL: false};
   const lang = codeLang ? {languageTag: codeLang, isRTL: false} : null;
   const {languageTag, isRTL} = lang ? lang : fallback;

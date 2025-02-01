@@ -208,8 +208,30 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
-				Base,
 				es,
+				it,
+				da,
+				nl,
+				de,
+				el,
+				hu,
+				ja,
+				cs,
+				fi,
+				fr,
+				pl,
+				ro,
+				sk,
+				sv,
+				uk,
+				tr,
+				vi,
+				hi,
+				ar,
+				zh,
+				pt,
+				ko,
+				nb,
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;

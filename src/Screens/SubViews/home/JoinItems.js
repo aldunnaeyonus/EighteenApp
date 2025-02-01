@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback,useState } from "react";
 import {
   View,
   Text,
@@ -10,15 +10,15 @@ import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
 const Image = createImageProgress(FastImage);
 import Progress from "react-native-progress";
-import { Icon } from "react-native-elements";
-import styles from "../../../styles/SliderEntry.style";
 const { width: ScreenWidth } = Dimensions.get("window");
 import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../../i18n";
 import FacePile from "react-native-face-pile";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-
+import { getLocales } from 'expo-localization';
 const JoinItems = (props) => {
+    let [localLang] = useState(getLocales()[0].languageCode)
+  
   let FACES = JSON.parse(JSON.stringify(props.item.item.joinedAvatars));
   useFocusEffect(
     useCallback(() => {
@@ -33,7 +33,7 @@ const JoinItems = (props) => {
   );
 
   const startDate = (date) => {
-    return moment.unix(parseInt(date)).format("LLL");
+    return moment.unix(parseInt(date)).locale(localLang).format("LLL");
   };
 
   let eventStart = startDate(props.item.item.start);
@@ -43,12 +43,12 @@ const JoinItems = (props) => {
     return parseInt(start) > moment().unix()
       ? i18n.t("Event Starts in:") +
           moment
-            .duration(parseInt(start) - moment().unix(), "seconds")
-            .format("d [days], h [hrs], m [min]")
+            .duration(parseInt(start) - moment().unix(), "seconds").locale(localLang)
+            .humanize(true)
       : i18n.t("Event Ends in:") +
           moment
-            .duration(parseInt(end), "seconds")
-            .format("d [days], h [hrs], m [min]");
+            .duration(parseInt(end), "seconds").locale(localLang)
+            .humanize(true);
   };
 
   let endEventTime = durationAsString(

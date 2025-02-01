@@ -641,7 +641,7 @@ const EditCamera = (props) => {
                 color: "#fff",
               }}
             >
-              Close
+              {i18n.t("Close")}
             </Text>
           </TouchableOpacity>
         </View>

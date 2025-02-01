@@ -1,4 +1,4 @@
-import React from "react";
+import React,  { useState } from "react";
 import {
     StyleSheet,
     Dimensions,
@@ -12,9 +12,13 @@ import {
   const Image = createImageProgress(FastImage);
   import moment from "moment";
   import 'moment/min/moment-with-locales'
+  import { getLocales } from 'expo-localization';
 
 
 const AboutProfile = (props) => {
+      let [localLang] = useState(getLocales()[0].languageCode)
+  
+      
   return (
                  <View style={{ width: "100%", height:'100%', backgroundColor: "#fff" }}>
                    <View style={style.leftContainer}>
@@ -100,7 +104,7 @@ const AboutProfile = (props) => {
               />
               <ListItem.Content>
               <ListItem.Title>{i18n.t('Account Time Zone:')}</ListItem.Title>
-              <ListItem.Subtitle>{ props.route.params.items.friend_privacy == "1" ? "Hidden" : props.route.params.items.friend_tz}</ListItem.Subtitle>
+              <ListItem.Subtitle>{ props.route.params.items.friend_privacy == "1" ? i18n.t("Hidden") : props.route.params.items.friend_tz}</ListItem.Subtitle>
               </ListItem.Content>
               </ListItem>
               <ListItem
@@ -122,7 +126,7 @@ const AboutProfile = (props) => {
               />
               <ListItem.Content>
               <ListItem.Title>{i18n.t('Account Created:')}</ListItem.Title>
-              <ListItem.Subtitle>{moment.unix(parseInt(props.route.params.items.friend_joined)).format('LLL')}</ListItem.Subtitle>
+              <ListItem.Subtitle>{moment.unix(parseInt(props.route.params.items.friend_joined)).locale(localLang).format('LLL')}</ListItem.Subtitle>
               </ListItem.Content>
               </ListItem>
                 </View>

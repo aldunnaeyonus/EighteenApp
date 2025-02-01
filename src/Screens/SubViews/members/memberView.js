@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import moment from "moment";
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
@@ -10,8 +10,11 @@ import CameraLens from "../camera/cameraView";
 import * as i18n from "../../../../i18n";
 import { useMMKVObject } from "react-native-mmkv";
 import { storage } from "../../../context/components/Storage";
+import { getLocales } from 'expo-localization';
 
 const MemberListItem = (props) => {
+    let [localLang] = useState(getLocales()[0].languageCode)
+  
   const [user] = useMMKVObject("user.Data", storage);
 
   return (
@@ -104,7 +107,7 @@ const MemberListItem = (props) => {
               numberOfLines={1}
             >
               {i18n.t("Joined")}:{" "}
-              {moment.unix(parseInt(props.item.item.user_joined)).format("LLL")}
+              {moment.unix(parseInt(props.item.item.user_joined)).locale(localLang).format("LLL")}
             </Text>
             
           </View>

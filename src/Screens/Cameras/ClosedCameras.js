@@ -2,7 +2,6 @@ import {
   StyleSheet,
   Text,
   View,
-  FlatList,
   Dimensions,
   Alert,
 } from "react-native";
@@ -29,6 +28,7 @@ import RefreshableWrapper from "react-native-fresh-refresh";
 import * as FileSystem from "expo-file-system";
 import RefreshView from "../../utils/refreshView";
 import Animated from "react-native-reanimated";
+import { getLocales } from 'expo-localization';
 
 const ClosedCameras = (props) => {
   const [filteredDataSource] = useMMKVObject("user.Media.Feed", storage);
@@ -38,6 +38,7 @@ const ClosedCameras = (props) => {
   const [count, setCount] = useState(0);
   const [user] = useMMKVObject("user.Data", storage);
   const AnimatedFlatList = Animated.FlatList;
+  let [localLang] = useState(getLocales()[0].languageCode)
 
   const _refresh = async () => {
     serRefreshing(true);
@@ -242,27 +243,29 @@ const ClosedCameras = (props) => {
               style={styles.whiteIcon2}
             />
             <Text style={{ marginTop: 5 }}>
-              Ended: {moment.unix(item.end).format("LLL")}
+              Ended: {moment.unix(item.end).locale(localLang).format("LLL")}
             </Text>
           </View>
 
           <View
             style={{
-              height: 27,
+              height: 'auto',
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "flex-start",
-              width: ScreenWidth,
+              width: ScreenWidth - 150,
             }}
           >
             <Text
               style={{
                 color: "#3D4849",
+                numberOfLines: 2,
+                height:'auto',
                 fontSize: 13,
               }}
             >
               {i18n.t("Media:")} {item.media_count} | {i18n.t("Claim by")}
-              {moment.unix(item.end).add(1, "M").format("LLL")}
+              {moment.unix(item.end).locale(localLang).add(1, "M").format("LLL")}
             </Text>
           </View>
         </View>
@@ -354,7 +357,7 @@ const ClosedCameras = (props) => {
                 color: "grey",
               }}
             >
-              {i18n.t("After 30 days")}
+              {(user.isPro == "1") ? i18n.t("After 90 days") : i18n.t("After 30 days") }
             </Text>
           </View>
         }

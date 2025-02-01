@@ -43,6 +43,7 @@ import { constants } from "./src/utils";
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import NotifService from "./NotifService";
 import TempCamera from "./src/Screens/Cameras/TempCamera";
+import { getLocales } from 'expo-localization';
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -55,8 +56,7 @@ export default function App() {
   const [ready, setReady] = useState(false);
   const [owner, setOwner] = useState("0");
   const [currentVersion, setCurrentVersion] = useState("0");
-
-
+  let [localLang] = useState(getLocales()[0].languageCode)
   const updateVersion = async (version) => {
     await AsyncStorage.setItem("Version", String(version));
   }
@@ -158,7 +158,7 @@ const onCheckVersion = () => {
     const fetchData = async () => {
       new NotifService();
       onCheckVersion();
-      setI18nConfig(i18n.locale);
+      setI18nConfig(localLang);
       const owner = await AsyncStorage.getItem("user_id");
       setOwner(owner);
       const version = ((await AsyncStorage.getItem("Version") == null) ? "0" : await AsyncStorage.getItem("Version"));
@@ -170,7 +170,7 @@ const onCheckVersion = () => {
       }
       setTimeout(() => {
         setReady(true);
-      }, 1500);
+      }, 2000);
     };
     fetchData();
   }, [signIn, ready, owner, currentVersion]);
@@ -213,7 +213,7 @@ const onCheckVersion = () => {
                 name="TempCameraPage"
                 options={{
                   gestureEnabled: false,
-                  title: i18n.t(""),
+                  title: "",
                   headerShown: false,
                 }}
               >
@@ -231,7 +231,7 @@ const onCheckVersion = () => {
                 name="Begin"
                 options={{
                   gestureEnabled: false,
-                  title: i18n.t(""),
+                  title: "",
                   headerShown: false,
                 }}
               >
@@ -247,7 +247,7 @@ const onCheckVersion = () => {
               <Stack.Screen
                 name="Friends"
                 options={{
-                  title: i18n.t(""),
+                  title: "",
                   headerShown: true,
                   gestureEnabled: false,
                   headerTintColor: "#000",
@@ -260,7 +260,7 @@ const onCheckVersion = () => {
                 name="Handle"
                 options={{
                   gestureEnabled: false,
-                  title: i18n.t(""),
+                  title: "",
                   headerShown: false,
                 }}
               >
@@ -347,7 +347,7 @@ const onCheckVersion = () => {
               <Stack.Screen
                 name="GetPro"
                 options={{
-                  title: i18n.t(""),
+                  title: "",
                   headerShown: true,
                   gestureEnabled: false,
                   headerTransparent: true,
@@ -385,7 +385,7 @@ const onCheckVersion = () => {
               <Stack.Screen
                 name="WebView"
                 options={{
-                  title: i18n.t(""),
+                  title: "",
                   gestureEnabled: false,
                   headerTintColor: "#000",
                   headerBackTitleVisible: false,
@@ -409,7 +409,7 @@ const onCheckVersion = () => {
                 name="Verification"
                 options={{
                   gestureEnabled: false,
-                  title: i18n.t(""),
+                  title: "",
                   headerShown: true,
                   gestureEnabled: false,
                   headerTransparent: true,
@@ -445,7 +445,7 @@ const onCheckVersion = () => {
               <Stack.Screen
                 name="JoinedMembers"
                 options={{
-                  title: i18n.t(""),
+                  title: "",
                   headerShown: true,
                   gestureEnabled: false,
                   headerTintColor: "#000",
@@ -465,7 +465,7 @@ const onCheckVersion = () => {
               <Stack.Screen
                 name="MediaGallery"
                 options={{
-                  title: i18n.t(""),
+                  title: "",
                   headerShown: true,
                   gestureEnabled: false,
                   headerTransparent: true,
@@ -485,7 +485,7 @@ const onCheckVersion = () => {
                         <Stack.Screen
                 name="MediaViewer"
                 options={{
-                  title: i18n.t(""),
+                  title: "",
                   headerShown: true,
                   gestureEnabled: false,
                   headerTransparent: true,
@@ -587,7 +587,7 @@ const onCheckVersion = () => {
                 name="VisionCameraMediaPage"
                 options={{
                   gestureEnabled: false,
-                  title: i18n.t(""),
+                  title: "",
                   headerShown: false,
                 }}
               >

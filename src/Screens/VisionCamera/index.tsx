@@ -53,6 +53,8 @@ const stickers: never[] = [];
 import { handleUpload } from "../SubViews/upload";
 import { useMMKVObject } from "react-native-mmkv";
 import { ViewStyle } from "react-native";
+import { getLocales } from 'expo-localization';
+
 
 const VisionCamera = (props: {
   route: {
@@ -82,6 +84,7 @@ const VisionCamera = (props: {
       : props.route.params.credits
   );
   const location = useLocationPermission()
+  let [localLang] = useState(getLocales()[0].languageCode)
 
   const { hasPermission, requestPermission } = useCameraPermission();
   const {
@@ -106,12 +109,12 @@ const VisionCamera = (props: {
     return start >= moment().unix()
       ? i18n.t("Event Starts in:") +
           moment
-            .duration(parseInt(start) - moment().unix(), "seconds")
-            .format("d [days], h [hrs], m [min]")
+            .duration(parseInt(start) - moment().unix(), "seconds").locale(String(localLang))
+            .humanize(true)
       : i18n.t("Event Ends in:") +
           moment
-            .duration(parseInt(end), "seconds")
-            .format("d [days], h [hrs], m [min]");
+            .duration(parseInt(end), "seconds").locale(String(localLang))
+            .humanize(true);
   };
   let endEventTime = durationAsString(
     parseInt(props.route.params.end) - moment().unix(),
