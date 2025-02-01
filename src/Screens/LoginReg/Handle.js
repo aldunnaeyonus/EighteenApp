@@ -11,6 +11,7 @@ import { ActivityIndicator } from "react-native-paper";
 import * as i18n from "../../../i18n";
 import * as RNLocalize from "react-native-localize";
 import { getLocales } from 'expo-localization';
+import { storage } from "../../context/components/Storage";
 
 const Handle = (props) => {
   const [handleStatus, setHandleStatus] = useState("");
@@ -61,6 +62,18 @@ const Handle = (props) => {
     },
     [email]
   );
+
+  useEffect(() => {
+  storage.set("uploadData", JSON.stringify({"message": "", "display":"none", "image":""}));
+  storage.set("user.Join.Feed", JSON.stringify([]));
+  storage.set("user.Friend.Feed", JSON.stringify([]));
+  storage.set("uploadData", JSON.stringify(["message"]));
+  storage.set("user.Camera.Feed", JSON.stringify([]));
+  storage.set("user.Camera.Friend.Feed", JSON.stringify([]));
+  storage.set("user.Member.Join.Feed", JSON.stringify([]));
+  storage.set("user.AllFriend.Feed", JSON.stringify([]));
+  }, []);
+
 
   const checkHandle = useCallback(() => {
     const execute = async ()=>{

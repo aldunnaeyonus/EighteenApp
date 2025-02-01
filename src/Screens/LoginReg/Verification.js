@@ -107,14 +107,6 @@ const Verification = (props) => {
       );
       if (response[0].errorResponse == "Member") {
         storage.set("user.Data", JSON.stringify(response[0]));
-        storage.set("uploadData", JSON.stringify({"message": "", "display":"none", "image":""}));
-        storage.set("user.Join.Feed", JSON.stringify([]));
-        storage.set("user.Friend.Feed", JSON.stringify([]));
-        storage.set("uploadData", JSON.stringify(["message"]));
-        storage.set("user.Camera.Feed", JSON.stringify([]));
-        storage.set("user.Camera.Friend.Feed", JSON.stringify([]));
-        storage.set("user.Member.Join.Feed", JSON.stringify([]));
-        storage.set("user.AllFriend.Feed", JSON.stringify([]));
         await AsyncStorage.setItem("current", "0");
         await AsyncStorage.setItem("logedIn", "1");
         await AsyncStorage.setItem("user_id", response[0].user_id);
