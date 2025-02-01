@@ -453,8 +453,8 @@ const Home = (props) => {
             <Image
               indicator={Progress}
               style={{
-                width: 300,
-                height: 300,
+                width: ScreenWidth - 100,
+                height: ScreenWidth - 100,
                 backgroundColor: "white",
                 alignSelf: "auto",
               }}

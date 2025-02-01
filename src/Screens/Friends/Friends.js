@@ -155,14 +155,15 @@ const Friends = (props) => {
   };
 
   const addMember = async () => {
-    const data = { friend: props.route.params.userID, owner: user.user_id };
+    const data = { user: props.route.params.userID, owner: user.user_id };
     await axiosPull.postData("/users/add.php", data);
     await axiosPull._pullFriendCameraFeed(
       props.route.params.userID,
       "user",
       user.user_id
     );
-    const results = await axiosPull.postData("/users/check.php", data);
+    const datas = { friend: props.route.params.userID, owner: user.user_id };
+    const results = await axiosPull.postData("/users/check.php", datas);
     setisFriend(results[0]["response"]);
     Alert.alert(i18n.t("SnapEighteen"), i18n.t("FreiendsNow"));
     await axiosPull._pullFriendFeed(props.route.params.userID);
