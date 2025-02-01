@@ -1,14 +1,8 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  Alert,
-} from "react-native";
+import { StyleSheet, Text, View, Dimensions, Alert } from "react-native";
 import React, { useState, useCallback } from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
-import moment from "moment/min/moment-with-locales"
+import moment from "moment/min/moment-with-locales";
 const { width: ScreenWidth } = Dimensions.get("window");
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
@@ -20,7 +14,7 @@ import { useMMKVObject } from "react-native-mmkv";
 import { axiosPull } from "../../utils/axiosPull";
 import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../i18n";
-import { ActivityIndicator  } from "react-native-paper";
+import { ActivityIndicator } from "react-native-paper";
 import { MenuView } from "@react-native-menu/menu";
 import { constants } from "../../utils";
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
@@ -28,7 +22,7 @@ import RefreshableWrapper from "react-native-fresh-refresh";
 import * as FileSystem from "expo-file-system";
 import RefreshView from "../../utils/refreshView";
 import Animated from "react-native-reanimated";
-import { getLocales } from 'expo-localization';
+import { getLocales } from "expo-localization";
 
 const ClosedCameras = (props) => {
   const [filteredDataSource] = useMMKVObject("user.Media.Feed", storage);
@@ -38,7 +32,7 @@ const ClosedCameras = (props) => {
   const [count, setCount] = useState(0);
   const [user] = useMMKVObject("user.Data", storage);
   const AnimatedFlatList = Animated.FlatList;
-  let [localLang] = useState(getLocales()[0].languageCode)
+  let [localLang] = useState(getLocales()[0].languageCode);
 
   const _refresh = async () => {
     serRefreshing(true);
@@ -49,31 +43,29 @@ const ClosedCameras = (props) => {
   };
 
   const handleDownloadAction = async (array) => {
-    Alert.alert(i18n.t('DownloadingEventFiles'),i18n.t('Theventfiles'));
-    setStartDownload(true)
+    Alert.alert(i18n.t("DownloadingEventFiles"), i18n.t("Theventfiles"));
+    setStartDownload(true);
     JSON.parse(array).map(async (item) => {
-        FileSystem.downloadAsync(
-          item.file_name,
-          FileSystem.documentDirectory + item.file_name.split("/").pop()
-        )
-          .then(async ({ uri }) => {
-              await CameraRoll.saveAsset(uri, {
-                type: 'auto',
-            });
-              setCount(count - 1);
-              FileSystem.deleteAsync(uri);
-
-          })
-          .catch((error) => {
-            setStartDownload(false)
-            console.log(error.message);
+      FileSystem.downloadAsync(
+        item.file_name,
+        FileSystem.documentDirectory + item.file_name.split("/").pop()
+      )
+        .then(async ({ uri }) => {
+          await CameraRoll.saveAsset(uri, {
+            type: "auto",
           });
-      });
-      if (count <= 0){
-        setStartDownload(false)
-      }
+          setCount(count - 1);
+          FileSystem.deleteAsync(uri);
+        })
+        .catch((error) => {
+          setStartDownload(false);
+          console.log(error.message);
+        });
+    });
+    if (count <= 0) {
+      setStartDownload(false);
+    }
   };
-
 
   const _deleteFeedItemIndex = (UUID) => {
     filteredDataSource.forEach((res, index) => {
@@ -157,8 +149,9 @@ const ClosedCameras = (props) => {
       pin: pin,
       id: UUID,
       name: title,
+      locale: localLang,
     };
-    Alert.alert("",i18n.t("j11"));
+    Alert.alert("", i18n.t("j11"));
     await axiosPull.postData("/camera/compress.php", data);
     await axiosPull._pullHistoryFeed(user.user_id);
     setdisable(false);
@@ -249,7 +242,7 @@ const ClosedCameras = (props) => {
 
           <View
             style={{
-              height: 'auto',
+              height: "auto",
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "flex-start",
@@ -260,63 +253,71 @@ const ClosedCameras = (props) => {
               style={{
                 color: "#3D4849",
                 numberOfLines: 2,
-                height:'auto',
+                height: "auto",
                 fontSize: 13,
               }}
             >
               {i18n.t("Media:")} {item.media_count} | {i18n.t("Claim by")}
-              {moment.unix(item.end).locale(localLang).add(1, "M").format("LLL")}
+              {moment
+                .unix(item.end)
+                .locale(localLang)
+                .add(1, "M")
+                .format("LLL")}
             </Text>
           </View>
         </View>
-        {
-        startDownload ?
-        <ActivityIndicator
-        color="black"
-        size={"small"}
-        style={{marginTop:-50}}
-        animating={startDownload}
-        hidesWhenStopped={true}
-      /> : 
-        <MenuView
-          key={item.UUID}
-          title={item.title.toUpperCase()}
-          isAnchoredToRight={true}
-          onPressAction={async ({ nativeEvent }) => {
-            if (nativeEvent.event == "Delete-" + item.UUID) {
-              _deleteFeedItem(item.UUID, item.owner, item.pin);
-            } else if (nativeEvent.event == "Download-" + item.UUID) {
-              actionFeed(item.pin, item.UUID, item.title);
-            } else if (nativeEvent.event == "Save-" + item.UUID) {
-              const array = await axiosPull._pullGalleryArray(item.pin);
-              setCount(parseInt(JSON.parse(array).length));
-              handleDownloadAction(array);
-            }
-          }}
-          actions={user.isPro == "1" ? constants.historyActionsPro(item.UUID): constants.historyActions(item.UUID)}
-          shouldOpenOnLongPress={false}
-          themeVariant="light"
-        >
-          <Icon
-            containerStyle={{
-              alignSelf: "center",
-              marginRight: 0,
-              marginTop: 0,
-              color: "#3D4849",
-            }}
-            type="material-community"
-            size={25}
-            name="menu"
-            color="#3D4849"
+        {startDownload ? (
+          <ActivityIndicator
+            color="black"
+            size={"small"}
+            style={{ marginTop: -50 }}
+            animating={startDownload}
+            hidesWhenStopped={true}
           />
-        </MenuView>
-  }
+        ) : (
+          <MenuView
+            key={item.UUID}
+            title={item.title.toUpperCase()}
+            isAnchoredToRight={true}
+            onPressAction={async ({ nativeEvent }) => {
+              if (nativeEvent.event == "Delete-" + item.UUID) {
+                _deleteFeedItem(item.UUID, item.owner, item.pin);
+              } else if (nativeEvent.event == "Download-" + item.UUID) {
+                actionFeed(item.pin, item.UUID, item.title);
+              } else if (nativeEvent.event == "Save-" + item.UUID) {
+                const array = await axiosPull._pullGalleryArray(item.pin);
+                setCount(parseInt(JSON.parse(array).length));
+                handleDownloadAction(array);
+              }
+            }}
+            actions={
+              user.isPro == "1"
+                ? constants.historyActionsPro(item.UUID)
+                : constants.historyActions(item.UUID)
+            }
+            shouldOpenOnLongPress={false}
+            themeVariant="light"
+          >
+            <Icon
+              containerStyle={{
+                alignSelf: "center",
+                marginRight: 0,
+                marginTop: 0,
+                color: "#3D4849",
+              }}
+              type="material-community"
+              size={25}
+              name="menu"
+              color="#3D4849"
+            />
+          </MenuView>
+        )}
       </View>
     );
   };
   return (
     <View style={styles.container}>
-        <RefreshableWrapper
+      <RefreshableWrapper
         defaultAnimationEnabled={true}
         Loader={() => <RefreshView />}
         isLoading={refreshing}
@@ -324,44 +325,46 @@ const ClosedCameras = (props) => {
           _refresh();
         }}
       >
-      <AnimatedFlatList
-        extraData={filteredDataSource}
-        ListEmptyComponent={
-          <EmptyStateView
-            imageSource={require("../../../assets/4320872.png")}
-            imageStyle={styles.imageStyle}
-            headerText={i18n.t("Download Media")}
-            subHeaderText={i18n.t("Ended")}
-            headerTextStyle={styles.headerTextStyle}
-            subHeaderTextStyle={styles.subHeaderTextStyle}
-          />
-        }
-        style={{ flex: 1 }}
-        data={filteredDataSource}
-        keyExtractor={(item) => item.UUID}
-        renderItem={Item}
-        ListFooterComponent={
-          <View
-            style={{
-              flex: 1,
-              marginTop: 0,
-              width: "100%",
-              alignItems: "center",
-            }}
-          >
-            <Text
+        <AnimatedFlatList
+          extraData={filteredDataSource}
+          ListEmptyComponent={
+            <EmptyStateView
+              imageSource={require("../../../assets/4320872.png")}
+              imageStyle={styles.imageStyle}
+              headerText={i18n.t("Download Media")}
+              subHeaderText={i18n.t("Ended")}
+              headerTextStyle={styles.headerTextStyle}
+              subHeaderTextStyle={styles.subHeaderTextStyle}
+            />
+          }
+          style={{ flex: 1 }}
+          data={filteredDataSource}
+          keyExtractor={(item) => item.UUID}
+          renderItem={Item}
+          ListFooterComponent={
+            <View
               style={{
-                padding: 20,
-                fontSize: 15,
-                textAlign: "center",
-                color: "grey",
+                flex: 1,
+                marginTop: 0,
+                width: "100%",
+                alignItems: "center",
               }}
             >
-              {(user.isPro == "1") ? i18n.t("After 90 days") : i18n.t("After 30 days") }
-            </Text>
-          </View>
-        }
-      />
+              <Text
+                style={{
+                  padding: 20,
+                  fontSize: 15,
+                  textAlign: "center",
+                  color: "grey",
+                }}
+              >
+                {user.isPro == "1"
+                  ? i18n.t("After 90 days")
+                  : i18n.t("After 30 days")}
+              </Text>
+            </View>
+          }
+        />
       </RefreshableWrapper>
     </View>
   );
