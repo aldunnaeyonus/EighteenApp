@@ -36,7 +36,7 @@ import {
   TapGestureHandler,
 } from "react-native-gesture-handler";
 import momentDurationFormatSetup from "moment-duration-format";
-import moment from "moment";
+import moment from "moment/min/moment-with-locales"
 import CreditsFont from "../SubViews/camera/camerCredits";
 import * as i18n from "../../../i18n";
 import { storage } from "../../context/components/Storage";

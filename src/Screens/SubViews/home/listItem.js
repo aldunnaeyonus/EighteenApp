@@ -6,7 +6,7 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-import moment from "moment";
+import moment from "moment/min/moment-with-locales"
 import { MenuView } from "@react-native-menu/menu";
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
@@ -48,7 +48,7 @@ const ListItem = (props) => {
   const durationAsString = (end, start) => {
     return parseInt(start) > moment().unix()
       ? i18n.t("Event Starts in:") +
-          moment.duration(parseInt(start) - moment().unix(), "seconds").locale(localLang).humanize({precision: 4}): i18n.t("Event Ends in:") + moment.duration(parseInt(end), "seconds").locale(localLang).humanize(true);
+          moment.duration(parseInt(start) - moment().unix(), "seconds").locale(localLang).humanize(true): i18n.t("Event Ends in:") + moment.duration(parseInt(end), "seconds").locale(localLang).humanize(true);
   };
 
   let endEventTime = durationAsString(

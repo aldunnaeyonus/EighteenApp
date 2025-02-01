@@ -8,7 +8,7 @@ import {
 import React, { useState, useCallback } from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
-import moment from "moment";
+import moment from "moment/min/moment-with-locales"
 const { width: ScreenWidth } = Dimensions.get("window");
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";

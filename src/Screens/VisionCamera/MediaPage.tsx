@@ -15,7 +15,7 @@ import { CameraRoll } from "@react-native-camera-roll/camera-roll";
 import { useIsFocused } from "@react-navigation/core";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import momentDurationFormatSetup from "moment-duration-format";
-import moment from "moment";
+import moment from "moment/min/moment-with-locales"
 import FormData from "form-data";
 import { ActivityIndicator } from "react-native-paper";
 import { handleUpload } from "../SubViews/upload";

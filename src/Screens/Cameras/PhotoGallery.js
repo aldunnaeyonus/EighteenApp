@@ -14,7 +14,7 @@ import FormData from "form-data";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
 import { storage, updateItemFeed } from "../../context/components/Storage";
 import Animated from "react-native-reanimated";
-import moment from "moment";
+import moment from "moment/min/moment-with-locales"
 import GalleryHeader from "../SubViews/gallery/listHeader";
 import ImageGallery from "../SubViews/gallery/imageGallery";
 import { axiosPull } from "../../utils/axiosPull";
@@ -286,6 +286,7 @@ const PhotoGallery = (props) => {
       owner: props.route.params.owner,
       user: props.route.params.user,
       type: props.route.params.type,
+      share: props.route.params.camera_add_social,
       pagerIndex: index
     });
   };

@@ -10,8 +10,7 @@ import {
   import FastImage from "react-native-fast-image";
   import { createImageProgress } from "react-native-image-progress";
   const Image = createImageProgress(FastImage);
-  import moment from "moment";
-  import 'moment/min/moment-with-locales'
+  import moment from "moment/min/moment-with-locales"
   import { getLocales } from 'expo-localization';
 
 

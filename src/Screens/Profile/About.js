@@ -10,17 +10,16 @@ import {
   import FastImage from "react-native-fast-image";
   import { createImageProgress } from "react-native-image-progress";
   const Image = createImageProgress(FastImage);
-  import moment from "moment";
-  import 'moment/min/moment-with-locales'
   import { storage } from "../../context/components/Storage";
   import { useMMKVObject } from "react-native-mmkv";
   import { getLocales } from 'expo-localization';
+  import moment from "moment/min/moment-with-locales"
 
 const Abouts = () => {
   const [user] = useMMKVObject("user.Data", storage);
       let [localLang] = useState(getLocales()[0].languageCode)
 
-  return (
+      return (
                  <View style={{ width: "100%", height:'100%', backgroundColor: "#fff" }}>
                    <View style={style.leftContainer}>
                           <View style={[style.containers, {width: 70 + 6, height: 70 + 6}]}>
@@ -127,7 +126,7 @@ const Abouts = () => {
               />
               <ListItem.Content>
               <ListItem.Title>{i18n.t('Account Created:')}</ListItem.Title>
-              <ListItem.Subtitle>{moment.unix(parseInt(user.user_joined)).locale(localLang).format('LLL')}</ListItem.Subtitle>
+              <ListItem.Subtitle>{moment.unix(user.user_joined).locale(localLang).format("LLL")}</ListItem.Subtitle>
               </ListItem.Content>
               </ListItem>
                 </View>

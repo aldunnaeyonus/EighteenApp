@@ -6,22 +6,16 @@ import {
 } from "react-native";
 import React, { useState, useRef, useCallback } from "react";
 import { Icon } from "react-native-elements";
-import { storage } from "../../context/components/Storage";
 import FastImage from "react-native-fast-image";
 import Progress from "react-native-progress";
 import Animated from "react-native-reanimated";
 import { useToast } from "react-native-styled-toast";
-import { useMMKVObject } from "react-native-mmkv";
 import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../i18n";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ImageGalleryView from "../SubViews/gallery/imageGalleryView";
 
 const PhotoViewer = (props) => {
-  const [filteredDataSource] = useMMKVObject(
-    `user.Gallery.Friend.Feed.${props.route.params.pin}`,
-    storage
-  );
   const { width } = Dimensions.get("screen");
   const canMomentum = useRef(false);
   const AnimatedFlatlist = Animated.FlatList;
@@ -62,7 +56,6 @@ const PhotoViewer = (props) => {
       console.log("Error =>", error);
     }
   };
-
   useFocusEffect(
     useCallback(() => {
       if (!props.unsubscribe) {
@@ -116,7 +109,7 @@ const getItemLayout = (data, index) => (
      <AnimatedFlatlist
       ref={newphoto}
       getItemLayout={getItemLayout}
-      extraData={filteredDataSource}
+      extraData={props.route.params.data}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
       initialScrollIndex={props.route.params.pagerIndex}
@@ -126,7 +119,7 @@ const getItemLayout = (data, index) => (
       horizontal={true}
       style={{ backgroundColor: "black" }}
       numColumns={1}
-      data={filteredDataSource}
+      data={props.route.params.data}
       keyExtractor={(item) => item.image_id}
       renderItem={(item, index) => (
         <ImageGalleryView
@@ -136,13 +129,13 @@ const getItemLayout = (data, index) => (
       
       <AnimatedFlatlist
         ref={bottomPhoto}
-        data={filteredDataSource} 
+        data={props.route.params.data} 
         getItemLayout={getItemLayoutBottom}
         horizontal={true}
         initialScrollIndex={props.route.params.pagerIndex}
         keyExtractor={(item) => item.image_id}
-        style={{position:'absolute', bottom:80}}
-        extraData={filteredDataSource}
+        style={{position:'absolute', bottom:80, width:width}}
+        extraData={props.route.params.data}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingHorizontal:10}}
@@ -184,6 +177,8 @@ const getItemLayout = (data, index) => (
         </TouchableOpacity>
    ) }}
         />
+
+
         <View
         style={{
           position: "absolute",
@@ -208,7 +203,7 @@ const getItemLayout = (data, index) => (
           color="white"
         />
        </TouchableOpacity>
-       {filteredDataSource[0].share == "0" || props.route.params.owner == props.route.params.user && (
+       { props.route.params.share == "0" || props.route.params.owner == props.route.params.user && (
        
        <TouchableOpacity
               onPress={async () => {
