@@ -44,6 +44,7 @@ import ReactNativeBlobUtil from 'react-native-blob-util';
 import NotifService from "./NotifService";
 import TempCamera from "./src/Screens/Cameras/TempCamera";
 import { getLocales } from 'expo-localization';
+import { StyleSheet } from "react-native";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -55,16 +56,11 @@ export default function App() {
   const [signIn, setSignIn] = useState(false);
   const [ready, setReady] = useState(false);
   const [owner, setOwner] = useState("0");
-  const [currentVersion, setCurrentVersion] = useState("0");
   let [localLang] = useState(getLocales()[0].languageCode)
-  const updateVersion = async (version) => {
-    await AsyncStorage.setItem("Version", String(version));
-  }
   
   const startUpdate = async (url, urlversion) => {
     await hotUpdate.downloadBundleUri(ReactNativeBlobUtil, url, urlversion, {
       updateSuccess: () => {
-        updateVersion(urlversion);
         console.log('update success!');
       },
       updateFail(message) {
@@ -157,12 +153,16 @@ const onCheckVersion = () => {
   useEffect(() => {
     const fetchData = async () => {
       new NotifService();
-      onCheckVersion();
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
       setI18nConfig(localLang);
+      onCheckVersion();
       const owner = await AsyncStorage.getItem("user_id");
       setOwner(owner);
-      const version = ((await AsyncStorage.getItem("Version") == null) ? "0" : await AsyncStorage.getItem("Version"));
-      setCurrentVersion(version);
       const logedIn = await AsyncStorage.getItem("logedIn");
       setSignIn(stringToBoolean(logedIn));
       if (signIn) {
@@ -173,15 +173,13 @@ const onCheckVersion = () => {
       }, 2000);
     };
     fetchData();
-  }, [signIn, ready, owner, currentVersion]);
+  }, [signIn, ready]);
 
 
   if (!ready) {
     return (
       <FastImage
-      style={{
-        flex: 1,
-      }}
+      style={[StyleSheet.absoluteFill]}
       resizeMode={FastImage.resizeMode.contain}
       source={require("./assets/splash.png")}
     />

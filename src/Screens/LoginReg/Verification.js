@@ -121,7 +121,7 @@ const Verification = (props) => {
         setTimeout(() => {
           setIsLoading(false);
           props.navigation.navigate("Home");
-        }, 1000);
+        }, 1500);
       } else {
         setIsLoading(false);
         setHandleStatus(i18n.t("The verification code"));

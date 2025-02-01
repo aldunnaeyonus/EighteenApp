@@ -17,7 +17,6 @@ import { createImageProgress } from "react-native-image-progress";
 const Image = createImageProgress(FastImage);
 import Progress from "react-native-progress";
 const { width: ScreenWidth } = Dimensions.get("window");
-const { height: ScreenHeight } = Dimensions.get("window");
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Icon } from "react-native-elements";
 import { storage } from "../../context/components/Storage";
@@ -51,6 +50,7 @@ const Home = (props) => {
   const AnimatedFlatList = Animated.FlatList;
   const isFocused = useIsFocused();
   const [uploading] = useMMKVObject("uploadData", storage);
+
   var timeout;
   const triggerProfileFunction = async () => {
     props.navigation.navigate("Profile");
@@ -402,14 +402,13 @@ const Home = (props) => {
           <Text>No Camera Device</Text>
         ) : (
           <Camera
-            style={[StyleSheet.absoluteFill, {overflow:'hidden', borderRadius: 4}]}
+            style={[StyleSheet.absoluteFill, { overflow:'hidden', borderRadius: 20}]}
             device={device}
             isActive={true}
             codeScanner={codeScanner}
-          >
-            </Camera>
+          />
           )}
-        <Image style={{flex:1, width: ScreenWidth - 50, height:ScreenHeight - 50}} source={require('../../../assets/scan.png')}/>
+        <Image style={[StyleSheet.absoluteFill]} source={require('../../../assets/scan.png')}/>
           </View>
           <TouchableOpacity
             style={{
@@ -572,6 +571,7 @@ const style = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    overflow:'hidden',
   },
   qrmodalView: {
     width: ScreenWidth - 50,
@@ -579,7 +579,7 @@ const style = StyleSheet.create({
     overflow:'hidden',
     backgroundColor: "white",
     borderRadius: 20,
-    padding: 35,
+    zIndex:100,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
