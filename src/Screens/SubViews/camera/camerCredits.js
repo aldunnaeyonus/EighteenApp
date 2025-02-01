@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { constants } from "../../../utils";
+import * as i18n from "../../../../i18n";
 
 const CreditsFont = (props) => {
   function splitNumberIntoDigits(number) {
@@ -65,7 +65,7 @@ const CreditsFont = (props) => {
             fontSize: 8,
           }}
         >
-          Credits
+          {i18n.t("Credits")}
         </Text>
       </View></View>
   );

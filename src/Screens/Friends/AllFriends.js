@@ -16,7 +16,7 @@ import RefreshView from "../../utils/refreshView";
 import { SearchBar } from "react-native-elements";
 
 const AllFriends = (props) => {
-  const [friendData] = useMMKVObject("user.Friend.Feed", storage);
+  const [friendData] = useMMKVObject("user.AllFriend.Feed", storage);
   const AnimatedFlatlist = Animated.FlatList;
   const { toast } = useToast();
   const [user] = useMMKVObject("user.Data", storage);
@@ -30,14 +30,14 @@ const AllFriends = (props) => {
 
   const _refresh = async () => {
     serRefreshing(true);
-    await axiosPull._pullFriendsFeed(user.user_id);
+    await axiosPull._pullFriendsFeedABC(user.user_id);
     setTimeout(() => {
       serRefreshing(false);
     }, 1500);
   };
 
   const _clear = async () => {
-    await _pullFriendsFeed(user.user_id);
+    await _pullFriendsFeedABC(user.user_id);
   };
 
   useFocusEffect(
@@ -63,7 +63,7 @@ const AllFriends = (props) => {
         });
       }
       const fetchData = async () => {
-        await axiosPull._pullFriendsFeed(user.user_id);
+        await axiosPull._pullFriendsFeedABC(user.user_id);
       };
       fetchData();
     }, [props, user, refreshing])

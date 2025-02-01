@@ -7,9 +7,6 @@ import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
 import com.facebook.react.defaults.DefaultReactActivityDelegate
-import com.otahotupdate.OtaHotUpdate
-import android.content.Intent;
-import android.content.res.Configuration;
 import expo.modules.ReactActivityDelegateWrapper
 
 class MainActivity : ReactActivity() {
@@ -20,14 +17,6 @@ class MainActivity : ReactActivity() {
     setTheme(R.style.AppTheme);
     super.onCreate(null)
   }
-    
- @Override
-   public void onConfigurationChanged(Configuration newConfig) {
-      super.onConfigurationChanged(newConfig);
-      Intent intent = new Intent("onConfigurationChanged");
-      intent.putExtra("newConfig", newConfig);
-       this.sendBroadcast(intent);
-   }
 
   /**
    * Returns the name of the main component registered from JavaScript. This is used to schedule

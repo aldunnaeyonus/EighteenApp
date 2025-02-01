@@ -108,6 +108,18 @@ export const _pullFriendCameraFeed = async (owner_ID, type, myID) => {
   storage.set(`user.Camera.Friend.Feed.${owner_ID}`, JSON.stringify(myData));
 };
 
+export const _pullFriendsFeedABC = async (id) => {
+  const data = {
+    owner: id,
+  };
+  const response = await postData("/users/friends.php", data);
+  const myData = []
+    .concat(response)
+    .sort((a, b) => (a.friend_handle > b.friend_handle ? -1 : 1));
+
+  storage.set("user.AllFriend.Feed", JSON.stringify(myData));
+};
+
 export const _pullFriendsFeed = async (id) => {
   const data = {
     owner: id,
@@ -164,5 +176,6 @@ export const axiosPull = {
   _pullFriendsFeed,
   _getProStatus,
   _pullGalleryArray,
-  _pullFriendFeed
+  _pullFriendFeed,
+  _pullFriendsFeedABC
 };

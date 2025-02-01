@@ -142,7 +142,7 @@ const FriendHeader = (props) => {
             >
               <Image
                 key={"bb" + grids.UUID}
-                ref={(friends) => friends + parseInt(props.user.user_id)}
+                ref={(friends) => friends + parseInt(props.user.friendID)}
                 indicator={Progress}
                 style={{
                   height: 70,

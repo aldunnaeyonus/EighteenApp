@@ -114,6 +114,7 @@ const Verification = (props) => {
         storage.set("user.Camera.Feed", JSON.stringify([]));
         storage.set("user.Camera.Friend.Feed", JSON.stringify([]));
         storage.set("user.Member.Join.Feed", JSON.stringify([]));
+        storage.set("user.AllFriend.Feed", JSON.stringify([]));
         await AsyncStorage.setItem("current", "0");
         await AsyncStorage.setItem("logedIn", "1");
         await AsyncStorage.setItem("user_id", response[0].user_id);

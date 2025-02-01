@@ -332,7 +332,7 @@ const Home = (props) => {
     props.navigation.setOptions({
       headerLeft: () =>  (
       <Icon
-      containerStyle={{ zIndex: 0 }}
+      containerStyle={{ zIndex: 0, marginRight:20 }}
       type="material-community"
       name="qrcode-scan"
       size={30}
@@ -523,8 +523,6 @@ const Home = (props) => {
           }
           ListHeaderComponent={
             <>
-
-
               <FriendHeader
                 _createCamera={_createCamera}
                 user={user}

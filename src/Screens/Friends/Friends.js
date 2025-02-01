@@ -343,11 +343,13 @@ const Friends = (props) => {
   ]);
 
   if (!ready) {
-    props.navigation.setOptions({
+    const accessPage = () => props.navigation.setOptions({
       title: i18n.t("Loading"),
     })
-    
+    accessPage()
+
     return (
+      
       <ActivityIndicator
       size={80}
       style={{

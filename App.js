@@ -56,6 +56,7 @@ export default function App() {
   const [owner, setOwner] = useState("0");
   const [currentVersion, setCurrentVersion] = useState("0");
 
+
   const updateVersion = async (version) => {
     await AsyncStorage.setItem("Version", String(version));
   }
@@ -154,20 +155,22 @@ const onCheckVersion = () => {
   };
 
   useEffect(() => {
-    new NotifService();
-    setI18nConfig();
     const fetchData = async () => {
+      new NotifService();
       onCheckVersion();
+      setI18nConfig(i18n.locale);
       const owner = await AsyncStorage.getItem("user_id");
       setOwner(owner);
       const version = ((await AsyncStorage.getItem("Version") == null) ? "0" : await AsyncStorage.getItem("Version"));
       setCurrentVersion(version);
       const logedIn = await AsyncStorage.getItem("logedIn");
       setSignIn(stringToBoolean(logedIn));
-      setReady(true);
       if (signIn) {
         await axiosPull._getProStatus(owner, Platform.OS);
       }
+      setTimeout(() => {
+        setReady(true);
+      }, 1500);
     };
     fetchData();
   }, [signIn, ready, owner, currentVersion]);
