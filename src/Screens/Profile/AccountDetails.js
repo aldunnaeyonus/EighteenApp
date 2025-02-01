@@ -77,8 +77,8 @@ const AccountDetails = (props) => {
     <ScrollView style={{ backgroundColor: "white" }}>
       <ListItem key="0">
         <Icon
-          type="font-awesome-5"
-          name="hashtag"
+          type="material-community"
+          name="signature-text"
           size={20}
           color="#3D4849"
           containerStyle={{
