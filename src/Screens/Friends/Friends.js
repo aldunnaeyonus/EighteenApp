@@ -344,11 +344,6 @@ const Friends = (props) => {
   ]);
 
   if (!ready) {
-    const accessPage = () => props.navigation.setOptions({
-      title: i18n.t("Loading"),
-    })
-    accessPage()
-
     return (
       
       <ActivityIndicator

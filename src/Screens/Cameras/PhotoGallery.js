@@ -246,7 +246,6 @@ const PhotoGallery = (props) => {
       return async () => {
         clearInterval(timeout);
         if (props.route.params.type == "user") {
-          storage.delete("user.Gallery.Friend.Feed." + props.route.params.pin);
           await AsyncStorage.setItem("current", "0");
         }
       };

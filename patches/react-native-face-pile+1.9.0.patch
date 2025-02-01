@@ -1,94 +1,68 @@
 diff --git a/node_modules/react-native-face-pile/src/index.js b/node_modules/react-native-face-pile/src/index.js
-index 76562d7..5f8270f 100644
+index 76562d7..fcdb4c6 100644
 --- a/node_modules/react-native-face-pile/src/index.js
 +++ b/node_modules/react-native-face-pile/src/index.js
-@@ -1,6 +1,11 @@
- import React, { PureComponent } from 'react'
- import PropTypes from 'prop-types'
--import { View, Text, Image, StyleSheet, Animated } from 'react-native'
-+import { View, Text, StyleSheet, Animated } from 'react-native'
-+import FastImage from "react-native-fast-image";
-+import { createImageProgress } from "react-native-image-progress";
-+const Image = createImageProgress(FastImage);
-+import Progress from "react-native-progress";
-+
- 
- const styles = StyleSheet.create({
-   container: {
-@@ -11,11 +16,12 @@ const styles = StyleSheet.create({
-     alignSelf: 'center'
-   },
-   circleImage: {
--    borderWidth: 2,
--    borderColor: 'white'
-+    borderWidth: 1,
-+    borderColor: 'black',
-+    overflow:'hidden'
-   },
-   overflow: {
--    backgroundColor: '#b6c0ca',
-+    backgroundColor: "rgba(234, 85, 4, 0.80)",
-     justifyContent: 'center',
-     alignItems: 'center',
-     marginLeft: 18
-@@ -26,6 +32,12 @@ const styles = StyleSheet.create({
-     letterSpacing: -1,
-     marginLeft: 3,
-     fontWeight: 'bold'
-+  },
-+  overflowLabelEmpty: {
-+    color: '#fff',
-+    fontSize: 14,
-+    marginLeft: -2,
-+    fontWeight: 'bold'
+@@ -103,6 +103,53 @@ export default class FacePile extends PureComponent {
+     hideOverflow: false,
    }
- })
  
-@@ -40,6 +52,7 @@ class Circle extends PureComponent {
-         style={{ marginRight: -marginRight }}
-       >
-         <Image
-+          indicator={Progress}
-           style={[
-             styles.circleImage,
-             {
-@@ -49,7 +62,11 @@ class Circle extends PureComponent {
-             },
-             imageStyle
-           ]}
--          source={{ uri: face.imageUrl }}
-+          source={{ 
-+            priority: FastImage.priority.normal,
-+            cache: FastImage.cacheControl.web,
-+            uri: face.imageUrl 
-+          }}
-         />
-       </Animated.View>
-     )
-@@ -136,14 +153,14 @@ export default class FacePile extends PureComponent {
-         >
-           <Text
-             style={[
--              styles.overflowLabel,
-+              overflow > 0 ? styles.overflowLabel : styles.overflowLabelEmpty,
-               {
-                 fontSize: circleSize * 0.7
-               },
-               overflowLabelStyle
-             ]}
-           >
--            +{overflow}
-+            { overflow > 0 ? "+" : ""} {overflow}
-           </Text>
-         </View>
-       </View>
-@@ -174,7 +191,8 @@ export default class FacePile extends PureComponent {
++  _renderOverflowCircleZero = overflow => {
++    const {
++      circleStyle,
++      overflowStyle,
++      overflowLabelStyle,
++      circleSize,
++      offset
++    } = this.props
++    
++    const innerCircleSize = circleSize * 1.8
++    const marginLeft = (circleSize * offset) - circleSize / 1.6
++
++    return (
++      <View
++        style={[
++          styles.circle,
++          circleStyle
++        ]}
++      >
++        <View
++          style={[
++            styles.overflow,
++            {
++              width: innerCircleSize,
++              height: innerCircleSize,
++              borderRadius: circleSize,
++              marginLeft: marginLeft
++            },
++            overflowStyle
++          ]}
++        >
++          <Text
++            style={[
++              styles.overflowLabel,
++              {
++                fontSize: circleSize * 0.7
++              },
++              overflowLabelStyle
++            ]}
++          >
++            {overflow}
++          </Text>
++        </View>
++      </View>
++    )
++  }
++
+   _renderOverflowCircle = overflow => {
+     const {
+       circleStyle,
+@@ -174,7 +221,8 @@ export default class FacePile extends PureComponent {
  
      return (
        <View style={[styles.container, containerStyle]}>
 -        {overflow > 0 && !hideOverflow && this._renderOverflowCircle(overflow)}
-+        {facesToRender.length > numFaces ? this._renderOverflowCircle(overflow) : <></>}
-+        {facesToRender.length == 0 ? this._renderOverflowCircle(overflow) : <></>}
++        {overflow > 0 && this._renderOverflowCircle(overflow)}
++        {facesToRender <= 0 && this._renderOverflowCircleZero(overflow)}
          {Array.isArray(facesToRender) && facesToRender.map(this._renderFace)}
        </View>
      )
