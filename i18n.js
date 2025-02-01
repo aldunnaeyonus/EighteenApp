@@ -7,7 +7,6 @@ export const DEFAULT_LANGUAGE = 'en';
 const i18n = new I18n();
 
 const loadTranslations = async (locale) => {
-  console.log("locale:", locale)
   const response = await fetch(`${constants.url}/translations/${locale}.json`);
   const translation = await response.json();
   i18n.translations = {[locale]: translation};
