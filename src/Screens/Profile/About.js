@@ -104,7 +104,7 @@ const Abouts = () => {
               />
               <ListItem.Content>
               <ListItem.Title>{i18n.t('Account Time Zone:')}</ListItem.Title>
-              <ListItem.Subtitle>{ user.privacy == "1" ? "Hidden" : user.tz}</ListItem.Subtitle>
+              <ListItem.Subtitle>{ user.privacy == "1" ? i18n.t("Hidden") : user.tz}</ListItem.Subtitle>
               </ListItem.Content>
               </ListItem>
               <ListItem

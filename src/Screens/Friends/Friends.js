@@ -155,7 +155,7 @@ const Friends = (props) => {
   };
 
   const addMember = async () => {
-    const data = { owner: props.route.params.userID, user: user.user_id };
+    const data = { friend: props.route.params.userID, owner: user.user_id };
     await axiosPull.postData("/users/add.php", data);
     await axiosPull._pullFriendCameraFeed(
       props.route.params.userID,

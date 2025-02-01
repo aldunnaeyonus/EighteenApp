@@ -1,4 +1,4 @@
-import { View, Text, TextInput, NativeModules, Platform } from "react-native";
+import { View, Text, TextInput, Platform } from "react-native";
 import { TouchableOpacity } from "react-native";
 import React, { useState, useEffect, useCallback } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -10,6 +10,7 @@ import { useToast } from "react-native-styled-toast";
 import { ActivityIndicator } from "react-native-paper";
 import * as i18n from "../../../i18n";
 import * as RNLocalize from "react-native-localize";
+import { getLocales } from 'expo-localization';
 
 const Handle = (props) => {
   const [handleStatus, setHandleStatus] = useState("");
@@ -17,10 +18,7 @@ const Handle = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [disable, setDisable] = useState(true);
   const { toast } = useToast();
-  let deviceLanguage =
-    Platform.OS === "ios"
-      ? NativeModules.SettingsManager.settings.AppleLocale
-      : NativeModules.I18nManager.localeIdentifier;
+  let deviceLanguage = getLocales()[0].languageCode;
       
   useEffect(() => {
     if (!props.unsubscribe) {

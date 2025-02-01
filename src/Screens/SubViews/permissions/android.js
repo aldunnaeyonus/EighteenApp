@@ -11,7 +11,6 @@ const AndroidPermissions = () => {
   const [camera, setCamera] = useState("");
   const [mic, setMic] = useState("");
   const [photo, setPhoto] = useState("");
-  const [video, setVideo] = useState("");
   const [accuracy, setAccuracy] = useState("");
   const [notifications, setnotifications] = useState("");
 
@@ -20,14 +19,12 @@ const AndroidPermissions = () => {
       checkPhoto();
       checkCamera();
       checkMic();
-      checkVideo();
       checkAccuracy();
       checkNotifiations();
       if (
         camera == "granted" &&
         mic == "granted" &&
         photo == "granted" &&
-        video == "granted" &&
         accuracy == "granted" &&
         notifications == "granted"
       ) {
@@ -35,7 +32,7 @@ const AndroidPermissions = () => {
       } else {
         this.permModal.openModal();
       }
-    }, [camera, mic, photo, video, accuracy, notifications])
+    }, [camera, mic, photo, accuracy, notifications])
   );
 
   const checkAccuracy = () => {
@@ -56,12 +53,6 @@ const AndroidPermissions = () => {
     });
   };
 
-  const checkVideo = () => {
-    check(PERMISSIONS.ANDROID.READ_MEDIA_VIDEO).then((status) => {
-      setVideo(status);
-    });
-  };
-
   const checkMic = () => {
     check(PERMISSIONS.ANDROID.RECORD_AUDIO).then((status) => {
       setMic(status);
@@ -78,12 +69,14 @@ const AndroidPermissions = () => {
     <PermissionModal
       panGestureEnabled={false}
       closeOnOverlayTap={false}
-      ref={(ref) => (this.permModal = ref)}
+      ref={(ref) => (permModal = ref)}
       title={i18n.t("Permissions")}
       subtitle={i18n.t("PermissionsText")}
     >
       <PermissionItem
         title={i18n.t("Camera")}
+        iconContainerBackgroundColor={'transparent'}
+        example={1}
         iconStatusColor={camera == "granted" ? "green" : "red"}
         subtitle={i18n.t("To access camera")}
         source={require("../../../../assets/camera.png")}
@@ -96,6 +89,8 @@ const AndroidPermissions = () => {
 
       <PermissionItem
         title={i18n.t("Notifications")}
+        iconContainerBackgroundColor={'transparent'}
+        example={2}
         iconStatusColor={notifications == "granted" ? "green" : "red"}
         subtitle={i18n.t("getnotifications")}
         source={require("../../../../assets/push-notifications.png")}
@@ -108,6 +103,8 @@ const AndroidPermissions = () => {
 
       <PermissionItem
         title={i18n.t("Location")}
+        iconContainerBackgroundColor={'transparent'}
+        example={3}
         iconStatusColor={accuracy == "granted" ? "green" : "red"}
         subtitle={i18n.t("Location Status")}
         source={require("../../../../assets/location.png")}
@@ -120,6 +117,8 @@ const AndroidPermissions = () => {
 
       <PermissionItem
         title={i18n.t("Photo Library")}
+        iconContainerBackgroundColor={'transparent'}
+        example={4}
         iconStatusColor={photo == "granted" ? "green" : "red"}
         subtitle={i18n.t("To access photo")}
         source={require("../../../../assets/photo.png")}
@@ -131,19 +130,9 @@ const AndroidPermissions = () => {
       />
 
       <PermissionItem
-        title={i18n.t("Video Library")}
-        iconStatusColor={video == "granted" ? "green" : "red"}
-        subtitle={i18n.t("To access video")}
-        source={require("../../../../assets/video.png")}
-        onPress={() => {
-          request(PERMISSIONS.ANDROID.READ_MEDIA_VIDEO).then((status) => {
-            setVideo(status);
-          });
-        }}
-      />
-
-      <PermissionItem
         title={i18n.t("Microphone")}
+        iconContainerBackgroundColor={'transparent'}
+        example={6}
         iconStatusColor={mic == "granted" ? "green" : "red"}
         subtitle={i18n.t("To access microphone")}
         source={require("../../../../assets/mic.png")}

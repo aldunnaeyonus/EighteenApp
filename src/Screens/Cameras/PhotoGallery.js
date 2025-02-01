@@ -333,7 +333,7 @@ const PhotoGallery = (props) => {
               />
             }
             ref={photo}
-            style={{ backgroundColor: "white", marginTop: -3 }}
+            style={{ backgroundColor: "white", marginTop: 0 }}
             numColumns={3}
             data={filteredDataSource}
             keyExtractor={(item) => item.image_id}

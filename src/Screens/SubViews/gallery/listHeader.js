@@ -19,7 +19,7 @@ const GalleryHeader = (props) => {
         indicator={Progress}
         style={{
           width: width,
-          height: 351,
+          height: 350,
         }}
         resizeMode={FastImage.resizeMode.cover}
         source={{

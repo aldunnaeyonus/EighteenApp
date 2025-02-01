@@ -4,13 +4,14 @@ import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
 const Image = createImageProgress(FastImage);
 import Progress from "react-native-progress";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Dimensions } from "react-native";
 import styles from "../../../styles/SliderEntry.style";
 import CameraLens from "../camera/cameraView";
 import * as i18n from "../../../../i18n";
 import { useMMKVObject } from "react-native-mmkv";
 import { storage } from "../../../context/components/Storage";
 import { getLocales } from 'expo-localization';
+const { width } = Dimensions.get("window");
 
 const MemberListItem = (props) => {
     let [localLang] = useState(getLocales()[0].languageCode)
@@ -82,6 +83,7 @@ const MemberListItem = (props) => {
             style={{
               flexDirection: "column",
               marginBottom: 0,
+              width: width - 200
             }}
           >
             <Text
@@ -104,7 +106,7 @@ const MemberListItem = (props) => {
                 color: "grey",
                 textAlign: "left",
               }}
-              numberOfLines={1}
+              numberOfLines={2}
             >
               {i18n.t("Joined")}:{" "}
               {moment.unix(parseInt(props.item.item.user_joined)).locale(localLang).format("LLL")}
