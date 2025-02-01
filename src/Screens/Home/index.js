@@ -392,7 +392,7 @@ const Home = (props) => {
      
       <Modal
         visible={modalQRCodeVisable}
-        animationType="slide"
+        animationType="fade"
         transparent={true}
         onRequestClose={() => setmodalQRCodeVisable(false)}
       >
@@ -401,14 +401,15 @@ const Home = (props) => {
           {device == null ? (
           <Text>No Camera Device</Text>
         ) : (
-          <Camera
-            style={[StyleSheet.absoluteFill, { overflow:'hidden', borderRadius: 20}]}
-            device={device}
-            isActive={true}
-            codeScanner={codeScanner}
-          />
+          <><Camera
+                  style={[StyleSheet.absoluteFill, { overflow: 'hidden', borderRadius: 20 }]}
+                  device={device}
+                  isActive={true}
+                  codeScanner={codeScanner} />
+                  <Text>Android not clipping bounds and is incorrect.</Text>
+                  </>
           )}
-        <Image style={[StyleSheet.absoluteFill]} source={require('../../../assets/scan.png')}/>
+        <Image style={[StyleSheet.absoluteFill, { overflow:'hidden', borderRadius: 20}]} source={require('../../../assets/scan.png')}/>
           </View>
           <TouchableOpacity
             style={{
