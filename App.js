@@ -39,7 +39,7 @@ import Abouts from "./src/Screens/Profile/About";
 import GetPro from "./src/Screens/Store/GetPro";
 import { axiosPull } from "./src/utils/axiosPull";
 import hotUpdate  from 'react-native-ota-hot-update/src/index';
-import { constants } from "./src/utils";
+import { constants } from "./src/utils/constants";
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import NotifService from "./NotifService";
 import TempCamera from "./src/Screens/Cameras/TempCamera";
@@ -159,7 +159,7 @@ const onCheckVersion = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      setI18nConfig(localLang);
+      setI18nConfig(localLang, constants.url);
       if (Platform.OS == 'ios'){
       onCheckVersion();
       }

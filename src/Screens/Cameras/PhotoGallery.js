@@ -7,14 +7,14 @@ import {
   Modal,
 } from "react-native";
 import React, { useState, useRef, useCallback } from "react";
-import { constants } from "../../utils";
+import { constants } from "../../utils/constants";
 import { Icon } from "react-native-elements";
 import * as ImagePicker from "expo-image-picker";
 import FormData from "form-data";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
 import { storage, updateItemFeed } from "../../context/components/Storage";
 import Animated from "react-native-reanimated";
-import moment from "moment/min/moment-with-locales"
+import moment from "moment/min/moment-with-locales";
 import GalleryHeader from "../SubViews/gallery/listHeader";
 import ImageGallery from "../SubViews/gallery/imageGallery";
 import { axiosPull } from "../../utils/axiosPull";
@@ -28,7 +28,7 @@ import PhotoEditor from "@baronha/react-native-photo-editor";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 const stickers = [];
 import Loading from "../SubViews/home/Loading";
-import { getLocales } from 'expo-localization';
+import { getLocales } from "expo-localization";
 
 const PhotoGallery = (props) => {
   const [filteredDataSource] = useMMKVObject(
@@ -50,7 +50,7 @@ const PhotoGallery = (props) => {
     `user.Camera.Friend.Feed.${props.route.params.owner}`,
     storage
   );
-    let [localLang] = useState(getLocales()[0].languageCode)
+  let [localLang] = useState(getLocales()[0].languageCode);
 
   const [uploading] = useMMKVObject("uploadData", storage);
   const createEvent = async () => {
@@ -64,7 +64,7 @@ const PhotoGallery = (props) => {
     formData.append("device", Platform.OS);
     formData.append("camera", "0");
     pickedImages.map((image) => {
-    formData.append("file[]", {
+      formData.append("file[]", {
         type: constants.mimes(image.split(".").pop()), // set MIME type
         name:
           "SNAP18-gallary-" +
@@ -121,7 +121,7 @@ const PhotoGallery = (props) => {
           pickedImages.push(file.uri);
         });
         createEvent();
-      }else if ((mime == "mov") || (mime == "mpeg") || (mime == "mp4")) {
+      } else if (mime == "mov" || mime == "mpeg" || mime == "mp4") {
         pickedImages.push(result.assets[0].uri);
         createEvent();
       } else {
@@ -169,15 +169,36 @@ const PhotoGallery = (props) => {
 
       props.navigation.setOptions({
         headerLeft: () => (
+          <TouchableOpacity
+            onPress={() => {
+              props.navigation.goBack();
+            }}
+          >
+            <Icon
+              type="material"
+              size={30}
+              name="arrow-back-ios-new"
+              color="#fff"
+              containerStyle={{
+                padding: 7,
+                height: animating ? "0%" : "100%",
+                backgroundColor: "rgba(0, 0, 0, 0.60)",
+                borderRadius: 22,
+              }}
+            />
+          </TouchableOpacity>
+        ),
+        headerRight: () =>
+          credits > 0 || props.route.params.owner == props.route.params.user ? (
             <TouchableOpacity
               onPress={() => {
-                props.navigation.goBack();
+                openCloseModal();
               }}
             >
               <Icon
-                type="material"
+                type="material-community"
                 size={30}
-                name="arrow-back-ios-new"
+                name="account-box-multiple-outline"
                 color="#fff"
                 containerStyle={{
                   padding: 7,
@@ -187,53 +208,31 @@ const PhotoGallery = (props) => {
                 }}
               />
             </TouchableOpacity>
-        ),
-        headerRight: () => (
-            credits > 0 || props.route.params.owner == props.route.params.user ? (
-              <TouchableOpacity
-                onPress={() => {
-                  openCloseModal();
+          ) : (
+            <TouchableOpacity
+              onPress={() => {
+                props.navigation.navigate("Purchase", {
+                  pin: props.route.params.pin,
+                  owner: props.route.params.owner,
+                  type: "user",
+                  eventName: props.route.params.title,
+                });
+              }}
+            >
+              <Icon
+                type="ionicon"
+                size={30}
+                name="storefront-outline"
+                color="#fff"
+                containerStyle={{
+                  padding: 7,
+                  height: animating ? "0%" : "100%",
+                  backgroundColor: "rgba(0, 0, 0, 0.60)",
+                  borderRadius: 22,
                 }}
-              >
-                <Icon
-                  type="material-community"
-                  size={30}
-                  name="account-box-multiple-outline"
-                  color="#fff"
-                  containerStyle={{
-                    padding: 7,
-                    height: animating ? "0%" : "100%",
-                    backgroundColor: "rgba(0, 0, 0, 0.60)",
-                    borderRadius: 22,
-                  }}
-                />
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                onPress={() => {
-                  props.navigation.navigate("Purchase", {
-                    pin: props.route.params.pin,
-                    owner: props.route.params.owner,
-                    type: "user",
-                    eventName: props.route.params.title,
-                  });
-                }}
-              >
-                <Icon
-                  type="ionicon"
-                  size={30}
-                  name="storefront-outline"
-                  color="#fff"
-                  containerStyle={{
-                    padding: 7,
-                    height: animating ? "0%" : "100%",
-                    backgroundColor: "rgba(0, 0, 0, 0.60)",
-                    borderRadius: 22,
-                  }}
-                />
-              </TouchableOpacity>
-          )
-        ),
+              />
+            </TouchableOpacity>
+          ),
       });
       var timeout = setInterval(async () => {
         await axiosPull._pullGalleryFeed(props.route.params.pin);
@@ -259,7 +258,7 @@ const PhotoGallery = (props) => {
       credits,
       animating,
       pickedImages,
-      uploading
+      uploading,
     ])
   );
 
@@ -267,11 +266,13 @@ const PhotoGallery = (props) => {
     return parseInt(start) >= moment().unix()
       ? i18n.t("Event Starts in:") +
           moment
-            .duration(parseInt(start) - moment().unix(), "seconds").locale(localLang)
+            .duration(parseInt(start) - moment().unix(), "seconds")
+            .locale(localLang)
             .humanize(true)
       : i18n.t("Event Ends in:") +
           moment
-            .duration(parseInt(end), "seconds").locale(localLang)
+            .duration(parseInt(end), "seconds")
+            .locale(localLang)
             .humanize(true);
   };
 
@@ -281,7 +282,7 @@ const PhotoGallery = (props) => {
   );
 
   const showModalFunction = (index) => {
-     props.navigation.navigate("MediaViewer", {
+    props.navigation.navigate("MediaViewer", {
       index: index,
       data: filteredDataSource,
       pin: props.route.params.pin,
@@ -290,81 +291,101 @@ const PhotoGallery = (props) => {
       user: props.route.params.user,
       type: props.route.params.type,
       share: props.route.params.camera_add_social,
-      pagerIndex: index
+      pagerIndex: index,
     });
   };
 
-  return  (
-      <SafeAreaProvider>
-        <SafeAreaView
-          style={{
-            backgroundColor: "transparent",
-            height: "100%",
-            width: "100%",
-          }}
-          edges={["bottom", "left", "right"]}
-        >
-          <AnimatedFlatlist
-            extraData={filteredDataSource}
-            showsHorizontalScrollIndicator={false}
-            showsVerticalScrollIndicator={false}
-            scrollEventThrottle={16}
-            ListHeaderComponent={
-                <>
-                  <GalleryHeader
-                    UUID={props.route.params.UUID}
-                    image={props.route.params.illustration}
-                    title={props.route.params.title}
-                    endEventTime={endEventTime}
-                  />
-
-                  <Loading
-                    message={uploading.message}
-                    flex={uploading.display}
-                    image={uploading.image}
-                  />
-                </>
-            }
-            ListEmptyComponent={
-              <EmptyStateView
-                imageSource={require("../../../assets/2802783.png")}
-                imageStyle={style.imageStyle}
-                headerText={props.route.params.title.toUpperCase()}
-                subHeaderText={i18n.t("A gallery")}
-                headerTextStyle={style.headerTextStyle}
-                subHeaderTextStyle={style.subHeaderTextStyle}
-              />
-            }
-            ref={photo}
-            style={{ backgroundColor: "white", marginTop: 0 }}
-            numColumns={3}
-            data={filteredDataSource}
-            keyExtractor={(item) => item.image_id}
-            renderItem={(item, index) => (
-              <ImageGallery
-                item={item}
-                index={index}
-                showModalFunction={showModalFunction}
-              />
-            )}
-          />
-          <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalUpload}
-        onRequestClose={() => {
-          setModalUpload(!modalUpload);
+  return (
+    <SafeAreaProvider>
+      <SafeAreaView
+        style={{
+          backgroundColor: "transparent",
+          height: "100%",
+          width: "100%",
         }}
+        edges={["bottom", "left", "right"]}
       >
-        <View style={style.centeredView}>
-          <View style={style.modalView}>
-            <View
-              style={{
-                flexDirection: "column",
-                marginTop: -20,
-                marginBottom: 25,
-              }}
-            >
+        <AnimatedFlatlist
+          extraData={filteredDataSource}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          scrollEventThrottle={16}
+          ListHeaderComponent={
+            <>
+              <GalleryHeader
+                UUID={props.route.params.UUID}
+                image={props.route.params.illustration}
+                title={props.route.params.title}
+                endEventTime={endEventTime}
+              />
+
+              <Loading
+                message={uploading.message}
+                flex={uploading.display}
+                image={uploading.image}
+              />
+            </>
+          }
+          ListEmptyComponent={
+            <EmptyStateView
+              imageSource={require("../../../assets/2802783.png")}
+              imageStyle={style.imageStyle}
+              headerText={props.route.params.title.toUpperCase()}
+              subHeaderText={i18n.t("A gallery")}
+              headerTextStyle={style.headerTextStyle}
+              subHeaderTextStyle={style.subHeaderTextStyle}
+            />
+          }
+          ref={photo}
+          style={{ backgroundColor: "white", marginTop: 0 }}
+          numColumns={3}
+          data={filteredDataSource}
+          keyExtractor={(item) => item.image_id}
+          renderItem={(item, index) => (
+            <ImageGallery
+              item={item}
+              index={index}
+              showModalFunction={showModalFunction}
+            />
+          )}
+        />
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalUpload}
+          onRequestClose={() => {
+            setModalUpload(!modalUpload);
+          }}
+        >
+          <View style={style.centeredView}>
+            <View style={style.modalView}>
+              <View
+                style={{
+                  flexDirection: "column",
+                  marginTop: -20,
+                  marginBottom: 25,
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: 30,
+                    alignContent: "space-between",
+                  }}
+                >
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      fontSize: 20,
+                      fontWeight: 500,
+                    }}
+                  >
+                    {i18n.t("Make a Selection")}
+                  </Text>
+                </View>
+              </View>
               <View
                 style={{
                   flexDirection: "row",
@@ -374,132 +395,112 @@ const PhotoGallery = (props) => {
                   alignContent: "space-between",
                 }}
               >
-                <Text
+                <View style={{ flexDirection: "column" }}>
+                  <Icon
+                    type="material-community"
+                    size={30}
+                    name="image-outline"
+                    color={"#fff"}
+                    containerStyle={{
+                      height: 55,
+                      width: 55,
+                      alignContent: "center",
+                      justifyContent: "center",
+                      backgroundColor: "#ea5504",
+                      borderRadius: 22,
+                    }}
+                    onPress={() => {
+                      setTimeout(() => {
+                        pickImageChooser();
+                      }, 500);
+                      setModalUpload(false);
+                    }}
+                  />
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      marginTop: 10,
+                    }}
+                  >
+                    {i18n.t("Gallery")}
+                  </Text>
+                </View>
+                <View
                   style={{
-                    textAlign: "center",
-                    fontSize: 20,
-                    fontWeight: 500,
+                    flexDirection: "column",
                   }}
                 >
-                  {i18n.t("Make a Selection")}
-                </Text>
+                  <Icon
+                    type="material-community"
+                    size={30}
+                    name="camera-outline"
+                    color={"#fff"}
+                    containerStyle={{
+                      height: 55,
+                      width: 55,
+                      alignContent: "center",
+                      justifyContent: "center",
+                      backgroundColor: "rgba(250, 190, 0, 1)",
+                      borderRadius: 22,
+                    }}
+                    onPress={() => {
+                      props.navigation.navigate("CameraPage", {
+                        owner: props.route.params.owner,
+                        pin: props.route.params.pin,
+                        title: props.route.params.title,
+                        credits: credits,
+                        tCredits: "",
+                        UUID: props.route.params.UUID,
+                        end: props.route.params.end,
+                        camera_add_social: props.route.params.camera_add_social,
+                        start: props.route.params.start,
+                        user: props.route.params.user,
+                      });
+                      setModalUpload(false);
+                    }}
+                  />
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      marginTop: 10,
+                    }}
+                  >
+                    {i18n.t("Camera")}
+                  </Text>
+                </View>
               </View>
             </View>
-            <View
+            <TouchableOpacity
               style={{
+                marginTop: 20,
                 flexDirection: "row",
-                justifyContent: "center",
+                width: 250,
+                backgroundColor: "rgba(234, 85, 4, 1)",
+                borderRadius: 24,
+                padding: 15,
                 alignItems: "center",
-                gap: 30,
-                alignContent: "space-between",
+                justifyContent: "center",
+                marginBottom: 20,
+              }}
+              onPress={() => {
+                setModalUpload(false);
               }}
             >
-              <View style={{ flexDirection: "column" }}>
-                <Icon
-                  type="material-community"
-                  size={30}
-                  name="image-outline"
-                  color={"#fff"}
-                  containerStyle={{
-                    height: 55,
-                    width: 55,
-                    alignContent: "center",
-                    justifyContent: "center",
-                    backgroundColor: "#ea5504",
-                    borderRadius: 22,
-                  }}
-                  onPress={() => {
-                    setTimeout(() => {
-                      pickImageChooser();
-                    }, 500);
-                    setModalUpload(false);
-                  }}
-                />
-                <Text
-                  style={{
-                    textAlign: "center",
-                    marginTop: 10,
-                  }}
-                >
-                  {i18n.t("Gallery")}
-                </Text>
-              </View>
-              <View
+              <Text
                 style={{
-                  flexDirection: "column",
+                  textTransform: "uppercase",
+                  fontSize: 20,
+                  fontWeight: 600,
+                  color: "#fff",
                 }}
               >
-                <Icon
-                  type="material-community"
-                  size={30}
-                  name="camera-outline"
-                  color={"#fff"}
-                  containerStyle={{
-                    height: 55,
-                    width: 55,
-                    alignContent: "center",
-                    justifyContent: "center",
-                    backgroundColor: "rgba(250, 190, 0, 1)",
-                    borderRadius: 22,
-                  }}
-                  onPress={() => {
-                    props.navigation.navigate("CameraPage", {
-                      owner: props.route.params.owner,
-                      pin: props.route.params.pin,
-                      title: props.route.params.title,
-                      credits: credits,
-                      tCredits: "",
-                      UUID: props.route.params.UUID,
-                      end: props.route.params.end,
-                      camera_add_social: props.route.params.camera_add_social,
-                      start: props.route.params.start,
-                      user: props.route.params.user,
-                    });
-                    setModalUpload(false);
-                  }}
-                />
-                <Text
-                  style={{
-                    textAlign: "center",
-                    marginTop: 10,
-                  }}
-                >
-                  {i18n.t("Camera")}
-                </Text>
-              </View>
-            </View>
+                {i18n.t("Close")}
+              </Text>
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity
-            style={{
-              marginTop: 20,
-              flexDirection: "row",
-              width: 250,
-              backgroundColor: "rgba(234, 85, 4, 1)",
-              borderRadius: 24,
-              padding: 15,
-              alignItems: "center",
-              justifyContent: "center",
-              marginBottom: 20,
-            }}
-            onPress={() => {
-              setModalUpload(false);
-            }}
-          >
-            <Text
-              style={{
-                textTransform: "uppercase",
-                fontSize: 20,
-                fontWeight: 600,
-                color: "#fff",
-              }}
-            >
-              {i18n.t("Close")}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
-        </SafeAreaView>
-      </SafeAreaProvider>
+        </Modal>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 

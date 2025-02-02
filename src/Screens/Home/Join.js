@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { StyleSheet } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Animated from "react-native-reanimated";
 import { useToast } from "react-native-styled-toast";

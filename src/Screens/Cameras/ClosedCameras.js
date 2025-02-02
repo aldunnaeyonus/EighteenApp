@@ -16,7 +16,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../i18n";
 import { ActivityIndicator } from "react-native-paper";
 import { MenuView } from "@react-native-menu/menu";
-import { constants } from "../../utils";
+import { constants } from "../../utils/constants";
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
 import RefreshableWrapper from "react-native-fresh-refresh";
 import * as FileSystem from "expo-file-system";

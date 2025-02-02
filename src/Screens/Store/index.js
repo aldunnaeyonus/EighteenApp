@@ -10,7 +10,7 @@ import {
   useIAP,
   withIAPContext,
 } from "react-native-iap";
-import { constants, errorLog } from "../../utils";
+import { constants, errorLog } from "../../utils/constants";
 import { axiosPull } from "../../utils/axiosPull";
 import { useToast } from "react-native-styled-toast";
 import * as i18n from "../../../i18n";
@@ -66,11 +66,11 @@ const Products = (props) => {
 
   const handleBuyProduct = async (sku) => {
     try {
-      if (Platform.OS === 'ios') {
-        await requestPurchase({sku});
-    } else if (Platform.OS === 'android') {
+      if (Platform.OS === "ios") {
+        await requestPurchase({ sku });
+      } else if (Platform.OS === "android") {
         await requestPurchase({ skus: [sku] });
-    }
+      }
     } catch (error) {
       if (error instanceof PurchaseError) {
         errorLog({ message: `[${error.code}]: ${error.message}`, error });
@@ -159,7 +159,7 @@ const Products = (props) => {
         style={{ background: "white" }}
         showsVerticalScrollIndicatorr={false}
         data={products}
-        numColumns={(Platform.OS == "ios") ? 2 : 2}
+        numColumns={Platform.OS == "ios" ? 2 : 2}
         extraData={products}
         scrollEventThrottle={16}
         keyExtractor={(item) => item.productId}

@@ -80,8 +80,6 @@ const IOSPermissions = () => {
 
       <PermissionItem
         title={i18n.t("Location")}
-        iconContainerBackgroundColor={'transparent'}
-        example={2}
         iconStatusColor={accuracy == "granted" ? "green" : "red"}
         subtitle={i18n.t("Location Status")}
         source={require("../../../../assets/location.png")}
@@ -94,8 +92,6 @@ const IOSPermissions = () => {
 
       <PermissionItem
         title={i18n.t("Microphone")}
-        iconContainerBackgroundColor={'transparent'}
-        example={3}
         iconStatusColor={mic == "granted" ? "green" : "red"}
         subtitle={i18n.t("To access microphone")}
         source={require("../../../../assets/mic.png")}
@@ -108,8 +104,6 @@ const IOSPermissions = () => {
 
       <PermissionItem
         title={i18n.t("Photo Library")}
-        iconContainerBackgroundColor={'transparent'}
-        example={4}
         iconStatusColor={photo == "granted" ? "green" : "red"}
         subtitle={i18n.t("To access photo")}
         source={require("../../../../assets/photo.png")}

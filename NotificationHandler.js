@@ -1,5 +1,5 @@
 import PushNotification from 'react-native-push-notification';
-import { constants } from "./src/utils";
+import { constants } from "./src/utils/constants";
 import DeviceInfo from 'react-native-device-info';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform } from "react-native";

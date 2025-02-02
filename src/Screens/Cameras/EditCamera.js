@@ -19,7 +19,7 @@ import {
   ANDROID_DISPLAY,
   IOS_DISPLAY,
   constants,
-} from "../../utils";
+} from "../../utils/constants";
 import * as ImagePicker from "expo-image-picker";
 import FormData from "form-data";
 import { storage } from "../../context/components/Storage";
@@ -253,7 +253,6 @@ const EditCamera = (props) => {
       setisEditing(false);
     }
     await AsyncStorage.removeItem("media.path");
-
   };
 
   const pickImage = async () => {
@@ -297,11 +296,11 @@ const EditCamera = (props) => {
       }
       const pickImage = async () => {
         const value = await AsyncStorage.getItem("media.path");
-      if (value != undefined){
-            editImage(value) 
-      }
-    }
-    pickImage();
+        if (value != undefined) {
+          editImage(value);
+        }
+      };
+      pickImage();
       props.navigation.setOptions({
         headerRight: () =>
           name.length > 0 && image.length > 0 ? (
@@ -582,39 +581,39 @@ const EditCamera = (props) => {
                   {i18n.t("Gallery")}
                 </Text>
               </View>
-               <View style={{ flexDirection: "column" }}>
-                              <Icon
-                                type="material-community"
-                                size={30}
-                                name="camera-outline"
-                                color={"#fff"}
-                                containerStyle={{
-                                  height: 55,
-                                  width: 55,
-                                  alignContent: "center",
-                                  justifyContent: "center",
-                                  backgroundColor: "#ea5504",
-                                  borderRadius: 22,
-                                }}
-                                onPress={() => {
-                                  setTimeout(() => {
-                                    setIsAI(false);
-                                    props.navigation.navigate("TempCameraPage", {
-                                      title: String(name),
-                                    });
-                                  }, 200);
-                                  setModalUpload(false);
-                                }}
-                              />
-                              <Text
-                                style={{
-                                  textAlign: "center",
-                                  marginTop: 10,
-                                }}
-                              >
-                                {i18n.t("Camera")}
-                              </Text>
-                            </View>
+              <View style={{ flexDirection: "column" }}>
+                <Icon
+                  type="material-community"
+                  size={30}
+                  name="camera-outline"
+                  color={"#fff"}
+                  containerStyle={{
+                    height: 55,
+                    width: 55,
+                    alignContent: "center",
+                    justifyContent: "center",
+                    backgroundColor: "#ea5504",
+                    borderRadius: 22,
+                  }}
+                  onPress={() => {
+                    setTimeout(() => {
+                      setIsAI(false);
+                      props.navigation.navigate("TempCameraPage", {
+                        title: String(name),
+                      });
+                    }, 200);
+                    setModalUpload(false);
+                  }}
+                />
+                <Text
+                  style={{
+                    textAlign: "center",
+                    marginTop: 10,
+                  }}
+                >
+                  {i18n.t("Camera")}
+                </Text>
+              </View>
             </View>
           </View>
           <TouchableOpacity

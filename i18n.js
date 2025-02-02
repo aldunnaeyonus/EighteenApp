@@ -1,13 +1,12 @@
 import {I18nManager} from 'react-native';
 import { I18n } from "i18n-js";
 import memoize from 'lodash.memoize';
-import { constants } from './src/utils';
 
 export const DEFAULT_LANGUAGE = 'en';
 const i18n = new I18n();
 
-const loadTranslations = async (locale) => {
-  const response = await fetch(`${constants.url}/translations/${locale}.json`);
+const loadTranslations = async (locale, url) => {
+  const response = await fetch(`${url}/translations/${locale}.json`);
   const translation = await response.json();
   i18n.translations = {[locale]: translation};
   i18n.enableFallback = true
@@ -23,13 +22,13 @@ export const translate = memoize(
 
 export const t = translate;
 
-export const setI18nConfig = (codeLang) => {
+export const setI18nConfig = (codeLang, url) => {
   const fallback = {languageTag: DEFAULT_LANGUAGE, isRTL: false};
   const lang = codeLang ? {languageTag: codeLang, isRTL: false} : null;
   const {languageTag, isRTL} = lang ? lang : fallback;
   translate.cache.clear();
   I18nManager.forceRTL(isRTL);
   i18n.locale = languageTag;
-  loadTranslations(languageTag);
+  loadTranslations(languageTag, url);
   return languageTag;
 };

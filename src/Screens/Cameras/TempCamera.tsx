@@ -1,10 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import {
-  View,
-  StyleSheet,
-  GestureResponderEvent,
-  Text,
-} from "react-native";
+import { View, StyleSheet, GestureResponderEvent, Text } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import {
   useCameraPermission,
@@ -26,7 +21,7 @@ import Reanimated, {
   useSharedValue,
 } from "react-native-reanimated";
 import { CaptureButton } from "../VisionCamera/CaptureButton";
-import { constants } from "../../utils";
+import { constants } from "../../utils/constants";
 import type { PinchGestureHandlerGestureEvent } from "react-native-gesture-handler";
 import {
   PinchGestureHandler,
@@ -65,7 +60,7 @@ const TempCamera = (props: {
   );
   const device = useCameraDevice(cameraPosition);
   const [isCameraInitialized, setIsCameraInitialized] = useState(false);
-  
+
   const camera = useRef<Camera>(null);
 
   const onFocusTap = useCallback(
@@ -158,9 +153,9 @@ const TempCamera = (props: {
   const onMediaCaptured = useCallback(
     async (media: PhotoFile | VideoFile, type: "photo" | "video") => {
       if (type == "photo") {
-        await AsyncStorage.setItem("media.path",  media.path);
-        props.navigation.goBack()
-      } 
+        await AsyncStorage.setItem("media.path", media.path);
+        props.navigation.goBack();
+      }
     },
     [props]
   );
@@ -220,8 +215,7 @@ const TempCamera = (props: {
           fontSize: 15,
           top: constants.SAFE_AREA_PADDING.paddingBottom + 45,
         }}
-      >
-      </Text>
+      ></Text>
       <View
         style={{
           position: "absolute",
@@ -270,7 +264,6 @@ const TempCamera = (props: {
             disabledOpacity={0.4}
           />
         )}
-       
       </View>
       <CaptureButton
         style={{

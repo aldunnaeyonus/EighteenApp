@@ -1,5 +1,5 @@
 import axios from "axios";
-import { constants } from ".";
+import { constants } from "./constants";
 import moment from "moment";
 import { storage } from "../context/components/Storage";
 

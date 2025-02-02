@@ -7,8 +7,7 @@ import {
   Modal,
   TouchableOpacity,
   ScrollView,
-  Linking,
-  Platform
+  Platform,
 } from "react-native";
 const { width: ScreenWidth } = Dimensions.get("window");
 import React, { useEffect, useState, useCallback } from "react";
@@ -16,7 +15,7 @@ import { ListItem, Icon } from "@rneui/themed";
 import InfoText from "../../utils/InfoText";
 import * as Application from "expo-application";
 import axios from "axios";
-import { constants } from "../../utils";
+import { constants } from "../../utils/constants";
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
 const Image = createImageProgress(FastImage);
@@ -30,8 +29,8 @@ import * as i18n from "../../../i18n";
 import ProfileHeader from "../SubViews/home/profileHeader";
 import { useIsFocused } from "@react-navigation/native";
 import Loading from "../SubViews/home/Loading";
-import hotUpdate  from 'react-native-ota-hot-update/src/index';
-import { feedbackTemplate } from "../../utils";
+import hotUpdate from "react-native-ota-hot-update/src/index";
+import email from "react-native-email";
 
 const Profile = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
@@ -40,23 +39,22 @@ const Profile = (props) => {
     constants.url + "/friendQRCode.php?owner=" + user.user_id
   );
   const isFocused = useIsFocused();
-  const [uploading] = useMMKVObject("uploadData", storage);
+  const [upload] = useMMKVObject("uploadData", storage);
   const [version, setVersion] = useState("0");
 
   const logout = useCallback(() => {
     FastImage.clearMemoryCache();
     FastImage.clearDiskCache();
-    const execute = async ()=>{
-    await AsyncStorage.removeItem("UUID");
-    await AsyncStorage.removeItem("logedIn");
-    await AsyncStorage.removeItem("user_id");
-    }
+    const execute = async () => {
+      await AsyncStorage.removeItem("UUID");
+      await AsyncStorage.removeItem("logedIn");
+      await AsyncStorage.removeItem("user_id");
+    };
     execute();
     props.navigation.navigate("Begin");
   });
 
   useEffect(() => {
-
     props.navigation.setOptions({
       title:
         user.user_id == null
@@ -65,11 +63,11 @@ const Profile = (props) => {
     });
     const pullData = async () => {
       const currentVersion = await hotUpdate.getCurrentVersion();
-      setVersion(currentVersion)
+      setVersion(currentVersion);
       await axiosPull._pullUser(user.user_id, "Profile");
-    }
+    };
     pullData();
-  }, [isFocused, version, user, props, uploading]);
+  }, [isFocused, version, user, props, upload]);
 
   const pro = useCallback(() => {
     props.navigation.navigate("GetPro");
@@ -83,14 +81,14 @@ const Profile = (props) => {
     props.navigation.navigate("Abouts");
   });
 
-  const privacy = useCallback( () => {
+  const privacy = useCallback(() => {
     props.navigation.navigate("WebView", {
       url: constants.url + "/privacyPolicy.html",
       name: i18n.t("Privacy Policy"),
     });
   });
 
-  const terms = useCallback( () => {
+  const terms = useCallback(() => {
     props.navigation.navigate("WebView", {
       url: constants.url + "/termsUsePolicy.html",
       name: i18n.t("Terms & Use"),
@@ -107,6 +105,22 @@ const Profile = (props) => {
 
   const changeAvatar = async () => {
     props.navigation.navigate("ChangeAvatar");
+  };
+  const handleEmail = () => {
+    const to = [`${constants.verification_email}`]; // string or array of email addresses
+    email(to, {
+      subject: `Snap Eighteeen Request`,
+      body: `Describe what you need help with:
+
+                  --------------------------
+                  Build: ${version}
+                  App Version: ${Application.nativeApplicationVersion}
+                  Device: ${Platform.OS}
+                  User: ${user.user_handle}-${user.user_id}
+                  --------------------------
+                  `,
+      checkCanOpen: false, // Call Linking.canOpenURL prior to Linking.openURL
+    }).catch(console.error);
   };
 
   const preview = useCallback(() => {
@@ -129,21 +143,21 @@ const Profile = (props) => {
     );
   }, []);
 
-  const previewAction = useCallback( () => {
-    const execute = async()=>{
-    await axios
-      .post(
-        constants.url + "/users/delete.php",
-        {
-          id: user.user_id,
-        },
-        { headers: { "Content-Type": "application/json;charset=utf-8" } }
-      )
-      .then((response) => {
-        logout();
-      })
-      .catch((error) => {});
-    }
+  const previewAction = useCallback(() => {
+    const execute = async () => {
+      await axios
+        .post(
+          constants.url + "/users/delete.php",
+          {
+            id: user.user_id,
+          },
+          { headers: { "Content-Type": "application/json;charset=utf-8" } }
+        )
+        .then((response) => {
+          logout();
+        })
+        .catch((error) => {});
+    };
     execute();
   });
 
@@ -153,10 +167,10 @@ const Profile = (props) => {
 
   return (
     <ScrollView
-    style={{ width: "100%", backgroundColor: "#fff" }}
-    showsVerticalScrollIndicator={false}
-    showsHorizontalScrollIndicator={false}
-  >
+      style={{ width: "100%", backgroundColor: "#fff" }}
+      showsVerticalScrollIndicator={false}
+      showsHorizontalScrollIndicator={false}
+    >
       <Modal
         visible={modalVisable}
         animationType="slide"
@@ -208,87 +222,118 @@ const Profile = (props) => {
           </TouchableOpacity>
         </View>
       </Modal>
-        <View style={{ width: "100%", backgroundColor: "#fff" }}>
+      <View style={{ width: "100%", backgroundColor: "#fff" }}>
         <Loading
-                  message={uploading.message}
-                  flex={uploading.display}
-                  image={uploading.image}
+          message={upload.message}
+          flex={upload.display}
+          image={upload.image}
         />
 
-          <ProfileHeader
-            name={user.user_handle}
-            id={user.user_id}
-            motto={user.user_motto}
-            avatar={user.user_avatar}
-            join={user.joined}
-            create={user.created}
-            isPro={user.isPro}
-            upload={user.uploaded}
-          />
+        <ProfileHeader
+          name={user.user_handle}
+          id={user.user_id}
+          motto={user.user_motto}
+          avatar={user.user_avatar}
+          join={user.joined}
+          create={user.created}
+          isPro={user.isPro}
+          upload={user.uploaded}
+        />
 
+        <View>
+          <View style={[styles.dividerTableStyle]} />
+          <ListItem
+            containerStyle={{ paddingVertical: 5 }}
+            key="99"
+            onPress={() => {
+              pro();
+            }}
+          >
+            <FastImage
+              style={{
+                width: 25,
+                height: 25,
+                borderRadius: 6,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              resizeMode={FastImage.resizeMode.contain}
+              source={require("../../../assets/verified.png")}
+            />
+
+            <ListItem.Content>
+              <ListItem.Title>{i18n.t("GoPro")}</ListItem.Title>
+            </ListItem.Content>
+            <ListItem.Chevron />
+          </ListItem>
+          <View style={[styles.dividerTableStyle]} />
+          <ListItem
+            containerStyle={{ paddingVertical: 5 }}
+            key="1"
+            onPress={() => {
+              closedCameras();
+            }}
+          >
+            <Icon
+              type="material"
+              name="camera-roll"
+              size={20}
+              color="#3D4849"
+              containerStyle={{
+                width: 28,
+                height: 28,
+                borderRadius: 6,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            />
+            <ListItem.Content>
+              <ListItem.Title>{i18n.t("DownloadMedia")}</ListItem.Title>
+            </ListItem.Content>
+            <ListItem.Chevron />
+          </ListItem>
+          <View style={[styles.dividerTableStyle]} />
+          <ListItem
+            containerStyle={{ paddingVertical: 5 }}
+            key="10"
+            onPress={() => {
+              setmodalVisable(true);
+            }}
+          >
+            <Icon
+              type="material-community"
+              name="qrcode"
+              size={20}
+              color="#3D4849"
+              containerStyle={{
+                width: 28,
+                height: 28,
+                borderRadius: 6,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            />
+            <ListItem.Content>
+              <ListItem.Title>{i18n.t("Friend Code")}</ListItem.Title>
+            </ListItem.Content>
+            <ListItem.Chevron />
+          </ListItem>
+
+          <View style={[styles.dividerTableStyle]} />
+          <InfoText text={i18n.t("Profile Settings")} />
           <View>
             <View style={[styles.dividerTableStyle]} />
-              <ListItem
-                containerStyle={{ paddingVertical: 5 }}
-                key="99"
-                onPress={() => {
-                  pro();
-                }}
-              >
-                <FastImage
-                  style={{
-                    width: 25,
-                    height: 25,
-                    borderRadius: 6,
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                  resizeMode={FastImage.resizeMode.contain}
-                  source={require("../../../assets/verified.png")}
-                />
 
-                <ListItem.Content>
-                  <ListItem.Title>{i18n.t("GoPro")}</ListItem.Title>
-                </ListItem.Content>
-                <ListItem.Chevron />
-              </ListItem>
-            <View style={[styles.dividerTableStyle]} />
             <ListItem
               containerStyle={{ paddingVertical: 5 }}
-              key="1"
+              key="3"
               onPress={() => {
-                closedCameras();
-              }}
-            >
-              <Icon
-                type="material"
-                name="camera-roll"
-                size={20}
-                color="#3D4849"
-                containerStyle={{
-                  width: 28,
-                  height: 28,
-                  borderRadius: 6,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              />
-              <ListItem.Content>
-                <ListItem.Title>{i18n.t("DownloadMedia")}</ListItem.Title>
-              </ListItem.Content>
-              <ListItem.Chevron />
-            </ListItem>
-            <View style={[styles.dividerTableStyle]} />
-            <ListItem
-              containerStyle={{ paddingVertical: 5 }}
-              key="10"
-              onPress={() => {
-                setmodalVisable(true);
+                notifications();
               }}
             >
               <Icon
                 type="material-community"
-                name="qrcode"
+                name="message"
                 size={20}
                 color="#3D4849"
                 containerStyle={{
@@ -300,252 +345,21 @@ const Profile = (props) => {
                 }}
               />
               <ListItem.Content>
-                <ListItem.Title>{i18n.t("Friend Code")}</ListItem.Title>
+                <ListItem.Title>{i18n.t("Notifications")}</ListItem.Title>
               </ListItem.Content>
               <ListItem.Chevron />
             </ListItem>
-
-            <View style={[styles.dividerTableStyle]} />
-            <InfoText text={i18n.t("Profile Settings")} />
-            <View>
-              <View style={[styles.dividerTableStyle]} />
-
-              <ListItem
-                containerStyle={{ paddingVertical: 5 }}
-                key="3"
-                onPress={() => {
-                  notifications();
-                }}
-              >
-                <Icon
-                  type="material-community"
-                  name="message"
-                  size={20}
-                  color="#3D4849"
-                  containerStyle={{
-                    width: 28,
-                    height: 28,
-                    borderRadius: 6,
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                />
-                <ListItem.Content>
-                  <ListItem.Title>{i18n.t("Notifications")}</ListItem.Title>
-                </ListItem.Content>
-                <ListItem.Chevron />
-              </ListItem>
-              <View style={[styles.dividerTableStyleShort]} />
-              <ListItem
-                containerStyle={{ paddingVertical: 5 }}
-                key="12"
-                onPress={() => {
-                  changeAvatar();
-                }}
-              >
-                <Icon
-                  type="material-community"
-                  name="face-man-profile"
-                  size={20}
-                  color="#3D4849"
-                  containerStyle={{
-                    width: 28,
-                    height: 28,
-                    borderRadius: 6,
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                />
-                <ListItem.Content>
-                  <ListItem.Title>{i18n.t("Change Avatar")}</ListItem.Title>
-                </ListItem.Content>
-                <ListItem.Chevron />
-              </ListItem>
-              <View style={[styles.dividerTableStyleShort]} />
-
-              <ListItem
-                containerStyle={{ paddingVertical: 5 }}
-                key="14"
-                onPress={() => {
-                  accountDetails();
-                }}
-              >
-                <Icon
-                  type="material-community"
-                  name="account-edit-outline"
-                  size={20}
-                  color="#3D4849"
-                  containerStyle={{
-                    width: 28,
-                    height: 28,
-                    borderRadius: 6,
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                />
-                <ListItem.Content>
-                  <ListItem.Title>{i18n.t("Edit Account")}</ListItem.Title>
-                </ListItem.Content>
-                <ListItem.Chevron />
-              </ListItem>
-              <View style={[styles.dividerTableStyle]} />
-              <ListItem
-                containerStyle={{ paddingVertical: 5 }}
-                key="4"
-                onPress={() => {
-                  about();
-                }}
-              >
-                <Icon
-                  type="material-community"
-                  name="shield-account-variant-outline"
-                  size={20}
-                  color="#3D4849"
-                  containerStyle={{
-                    width: 28,
-                    height: 28,
-                    borderRadius: 6,
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                />
-                <ListItem.Content>
-                  <ListItem.Title>{i18n.t("Account Details")}</ListItem.Title>
-                </ListItem.Content>
-                <ListItem.Chevron />
-              </ListItem>
-              <View style={[styles.dividerTableStyle]} />
-
-              <InfoText text={i18n.t("Account Actions")} />
-              <View style={[styles.dividerTableStyleShort]} />
-             
-              <ListItem
-                containerStyle={{ paddingVertical: 5 }}
-                key="17"
-                onPress={() => {
-                    openSettings();
-                }}
-              >
-                <Icon
-                  type="material"
-                  name="screen-lock-portrait"
-                  size={20}
-                  color="#3D4849"
-                  containerStyle={{
-                    width: 28,
-                    height: 28,
-                    borderRadius: 6,
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                />
-                <ListItem.Content>
-                  <ListItem.Title>{i18n.t("Permissions")}</ListItem.Title>
-                </ListItem.Content>
-                <ListItem.Chevron />
-              </ListItem>     
-              <View style={[styles.dividerTableStyleShort]} />
-              <ListItem
-                containerStyle={{ paddingVertical: 5 }}
-                key="22"
-                onPress={() => {
-                  Linking.openURL(`mailto:${constants.verification_email}?subject=Snap Eighteeen Request from ${user.user_handle}&body=
-                  Describe what you need help with:
-
-                  --------------------------
-                  Build: ${version}
-                  App Version: ${Application.nativeApplicationVersion}
-                  Device: ${Platform.OS}
-                  Username: ${user.user_handle}
-                  --------------------------`)
-                }}
-              >
-                <Icon
-                  type="material"
-                  name="support-agent"
-                  size={20}
-                  color="#3D4849"
-                  containerStyle={{
-                    width: 28,
-                    height: 28,
-                    borderRadius: 6,
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                />
-                <ListItem.Content>
-                  <ListItem.Title>{i18n.t("Support")}</ListItem.Title>
-                </ListItem.Content>
-                <ListItem.Chevron />
-              </ListItem>
-              <View style={[styles.dividerTableStyle]} />
-              <ListItem
-                containerStyle={{ paddingVertical: 5 }}
-                key="5"
-                onPress={() => {
-                  deleteAccount();
-                }}
-              >
-                <Icon
-                  type="ionicon"
-                  name="close-circle-outline"
-                  size={20}
-                  color="#FF3232"
-                  containerStyle={{
-                    width: 28,
-                    height: 28,
-                    borderRadius: 6,
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                />
-                <ListItem.Content>
-                  <ListItem.Title>{i18n.t("Delete/Remove")}</ListItem.Title>
-                </ListItem.Content>
-                <ListItem.Chevron />
-              </ListItem>
-              <View style={[styles.dividerTableStyleShort]} />
-
-              <ListItem
-                containerStyle={{ paddingVertical: 5 }}
-                key="6"
-                onPress={() => {
-                  logout();
-                }}
-              >
-                <Icon
-                  type="ionicon"
-                  name="power"
-                  size={20}
-                  color="#FF3232"
-                  containerStyle={{
-                    width: 28,
-                    height: 28,
-                    borderRadius: 6,
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                />
-                <ListItem.Content>
-                  <ListItem.Title>{i18n.t("Logout")}</ListItem.Title>
-                </ListItem.Content>
-                <ListItem.Chevron />
-              </ListItem>
-              <View style={[styles.dividerTableStyle]} />
-            </View>
-            <InfoText text={i18n.t("Policies")} />
-            <View style={[styles.dividerTableStyle]} />
-
+            <View style={[styles.dividerTableStyleShort]} />
             <ListItem
               containerStyle={{ paddingVertical: 5 }}
-              key="7"
+              key="12"
               onPress={() => {
-                privacy();
+                changeAvatar();
               }}
             >
               <Icon
-                type="material"
-                name="policy"
+                type="material-community"
+                name="face-man-profile"
                 size={20}
                 color="#3D4849"
                 containerStyle={{
@@ -557,7 +371,7 @@ const Profile = (props) => {
                 }}
               />
               <ListItem.Content>
-                <ListItem.Title>{i18n.t("Privacy Policy")}</ListItem.Title>
+                <ListItem.Title>{i18n.t("Change Avatar")}</ListItem.Title>
               </ListItem.Content>
               <ListItem.Chevron />
             </ListItem>
@@ -565,14 +379,14 @@ const Profile = (props) => {
 
             <ListItem
               containerStyle={{ paddingVertical: 5 }}
-              key="8"
+              key="14"
               onPress={() => {
-                terms();
+                accountDetails();
               }}
             >
               <Icon
-                type="material"
-                name="policy"
+                type="material-community"
+                name="account-edit-outline"
                 size={20}
                 color="#3D4849"
                 containerStyle={{
@@ -584,19 +398,21 @@ const Profile = (props) => {
                 }}
               />
               <ListItem.Content>
-                <ListItem.Title>{i18n.t("Terms & Use")}</ListItem.Title>
+                <ListItem.Title>{i18n.t("Edit Account")}</ListItem.Title>
               </ListItem.Content>
               <ListItem.Chevron />
             </ListItem>
             <View style={[styles.dividerTableStyle]} />
             <ListItem
               containerStyle={{ paddingVertical: 5 }}
-              key="9"
-              onPress={() => {}}
+              key="4"
+              onPress={() => {
+                about();
+              }}
             >
               <Icon
-                type="octicon"
-                name="versions"
+                type="material-community"
+                name="shield-account-variant-outline"
                 size={20}
                 color="#3D4849"
                 containerStyle={{
@@ -608,35 +424,225 @@ const Profile = (props) => {
                 }}
               />
               <ListItem.Content>
-                <ListItem.Title>{i18n.t("Version")}</ListItem.Title>
+                <ListItem.Title>{i18n.t("Account Details")}</ListItem.Title>
               </ListItem.Content>
-              <View
-                style={{
-                  marginTop: -5,
-                  marginLeft: 65,
-                  width: 75,
-                  height: 22,
-                  borderRadius: 11,
+              <ListItem.Chevron />
+            </ListItem>
+            <View style={[styles.dividerTableStyle]} />
 
+            <InfoText text={i18n.t("Account Actions")} />
+            <View style={[styles.dividerTableStyleShort]} />
+
+            <ListItem
+              containerStyle={{ paddingVertical: 5 }}
+              key="17"
+              onPress={() => {
+                openSettings();
+              }}
+            >
+              <Icon
+                type="material"
+                name="screen-lock-portrait"
+                size={20}
+                color="#3D4849"
+                containerStyle={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: 6,
+                  alignItems: "center",
                   justifyContent: "center",
                 }}
-              >
-                <Text
-                  style={{
-                    color: "#3D4849",
-                    textAlignVertical: "center",
-                    textAlign: "center",
-                    fontSize: 13,
-                    fontWeight: "bold",
-                  }}
-                >
-                  {Application.nativeApplicationVersion} ({version})
-                </Text>
-              </View>
+              />
+              <ListItem.Content>
+                <ListItem.Title>{i18n.t("Permissions")}</ListItem.Title>
+              </ListItem.Content>
+              <ListItem.Chevron />
             </ListItem>
+            <View style={[styles.dividerTableStyleShort]} />
+            <ListItem
+              containerStyle={{ paddingVertical: 5 }}
+              key="22"
+              onPress={() => {
+                handleEmail();
+              }}
+            >
+              <Icon
+                type="material"
+                name="support-agent"
+                size={20}
+                color="#3D4849"
+                containerStyle={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: 6,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              />
+              <ListItem.Content>
+                <ListItem.Title>{i18n.t("Support")}</ListItem.Title>
+              </ListItem.Content>
+              <ListItem.Chevron />
+            </ListItem>
+            <View style={[styles.dividerTableStyle]} />
+            <ListItem
+              containerStyle={{ paddingVertical: 5 }}
+              key="5"
+              onPress={() => {
+                deleteAccount();
+              }}
+            >
+              <Icon
+                type="ionicon"
+                name="close-circle-outline"
+                size={20}
+                color="#FF3232"
+                containerStyle={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: 6,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              />
+              <ListItem.Content>
+                <ListItem.Title>{i18n.t("Delete/Remove")}</ListItem.Title>
+              </ListItem.Content>
+              <ListItem.Chevron />
+            </ListItem>
+            <View style={[styles.dividerTableStyleShort]} />
+
+            <ListItem
+              containerStyle={{ paddingVertical: 5 }}
+              key="6"
+              onPress={() => {
+                logout();
+              }}
+            >
+              <Icon
+                type="ionicon"
+                name="power"
+                size={20}
+                color="#FF3232"
+                containerStyle={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: 6,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              />
+              <ListItem.Content>
+                <ListItem.Title>{i18n.t("Logout")}</ListItem.Title>
+              </ListItem.Content>
+              <ListItem.Chevron />
+            </ListItem>
+            <View style={[styles.dividerTableStyle]} />
           </View>
-          <View style={{ marginBottom: 25 }} />
+          <InfoText text={i18n.t("Policies")} />
+          <View style={[styles.dividerTableStyle]} />
+
+          <ListItem
+            containerStyle={{ paddingVertical: 5 }}
+            key="7"
+            onPress={() => {
+              privacy();
+            }}
+          >
+            <Icon
+              type="material"
+              name="policy"
+              size={20}
+              color="#3D4849"
+              containerStyle={{
+                width: 28,
+                height: 28,
+                borderRadius: 6,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            />
+            <ListItem.Content>
+              <ListItem.Title>{i18n.t("Privacy Policy")}</ListItem.Title>
+            </ListItem.Content>
+            <ListItem.Chevron />
+          </ListItem>
+          <View style={[styles.dividerTableStyleShort]} />
+
+          <ListItem
+            containerStyle={{ paddingVertical: 5 }}
+            key="8"
+            onPress={() => {
+              terms();
+            }}
+          >
+            <Icon
+              type="material"
+              name="policy"
+              size={20}
+              color="#3D4849"
+              containerStyle={{
+                width: 28,
+                height: 28,
+                borderRadius: 6,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            />
+            <ListItem.Content>
+              <ListItem.Title>{i18n.t("Terms & Use")}</ListItem.Title>
+            </ListItem.Content>
+            <ListItem.Chevron />
+          </ListItem>
+          <View style={[styles.dividerTableStyle]} />
+          <ListItem
+            containerStyle={{ paddingVertical: 5 }}
+            key="9"
+            onPress={() => {}}
+          >
+            <Icon
+              type="octicon"
+              name="versions"
+              size={20}
+              color="#3D4849"
+              containerStyle={{
+                width: 28,
+                height: 28,
+                borderRadius: 6,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            />
+            <ListItem.Content>
+              <ListItem.Title>{i18n.t("Version")}</ListItem.Title>
+            </ListItem.Content>
+            <View
+              style={{
+                marginTop: -5,
+                marginLeft: 65,
+                width: 75,
+                height: 22,
+                borderRadius: 11,
+
+                justifyContent: "center",
+              }}
+            >
+              <Text
+                style={{
+                  color: "#3D4849",
+                  textAlignVertical: "center",
+                  textAlign: "center",
+                  fontSize: 13,
+                  fontWeight: "bold",
+                }}
+              >
+                {Application.nativeApplicationVersion} ({version})
+              </Text>
+            </View>
+          </ListItem>
         </View>
+        <View style={{ marginBottom: 25 }} />
+      </View>
     </ScrollView>
   );
 };

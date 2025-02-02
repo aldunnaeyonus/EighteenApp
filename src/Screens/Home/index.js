@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
-import { constants } from "../../utils";
+import { constants } from "../../utils/constants";
 import "moment-duration-format";
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
@@ -34,7 +34,7 @@ import {
   Camera,
   useCameraDevice,
   useCodeScanner,
-} from 'react-native-vision-camera';
+} from "react-native-vision-camera";
 
 const Home = (props) => {
   const [cameraData, setcameraData] = useMMKVObject(
@@ -55,37 +55,37 @@ const Home = (props) => {
   const triggerProfileFunction = async () => {
     props.navigation.navigate("Profile");
   };
-  const device = useCameraDevice('back');
+  const device = useCameraDevice("back");
   const [isBarcodeScannerEnabled, setisBarcodeScannerEnabled] = useState(true);
 
   const codeScanner = useCodeScanner({
-    codeTypes: ['qr'],
-    onCodeScanned: codes => {
-      if (isBarcodeScannerEnabled){
-      setmodalQRCodeVisable(false)
-      const code = JSON.parse(JSON.stringify(codes[0].value));
-      if (code.includes('friends')){
-        let removeCode = code.replace('snapseighteenapp://friends/','');
-        let newCode = removeCode.split('/')
-        if (newCode[0] == user.user_id){
-          props.navigation.navigate("Profile");
-        }else{
-        props.navigation.navigate("Friends", {
-          userID: newCode[0],
-          type: newCode[1],
-        });
-      }
-      }else if (code.includes('join')){
-      let removeCode = code.replace('snapseighteenapp://join/','');
-      let newCode = removeCode.split('/')
-      props.navigation.navigate("Join", {
-        pin: newCode[0],
-        time: newCode[1],
-        owner: newCode[2]
-      });
-    }
+    codeTypes: ["qr"],
+    onCodeScanned: (codes) => {
+      if (isBarcodeScannerEnabled) {
+        setmodalQRCodeVisable(false);
+        const code = JSON.parse(JSON.stringify(codes[0].value));
+        if (code.includes("friends")) {
+          let removeCode = code.replace("snapseighteenapp://friends/", "");
+          let newCode = removeCode.split("/");
+          if (newCode[0] == user.user_id) {
+            props.navigation.navigate("Profile");
+          } else {
+            props.navigation.navigate("Friends", {
+              userID: newCode[0],
+              type: newCode[1],
+            });
+          }
+        } else if (code.includes("join")) {
+          let removeCode = code.replace("snapseighteenapp://join/", "");
+          let newCode = removeCode.split("/");
+          props.navigation.navigate("Join", {
+            pin: newCode[0],
+            time: newCode[1],
+            owner: newCode[2],
+          });
+        }
 
-      setisBarcodeScannerEnabled(false)
+        setisBarcodeScannerEnabled(false);
       }
     },
   });
@@ -330,19 +330,19 @@ const Home = (props) => {
 
   useEffect(() => {
     props.navigation.setOptions({
-      headerLeft: () =>  (
-      <Icon
-      containerStyle={{ zIndex: 0, marginRight:20 }}
-      type="material-community"
-      name="qrcode-scan"
-      size={30}
-      onPress={() => {
-        setisBarcodeScannerEnabled(true)
-        setmodalQRCodeVisable(true)
-      }}
-      color="#3D4849"
-    />
-  ),
+      headerLeft: () => (
+        <Icon
+          containerStyle={{ zIndex: 0, marginRight: 20 }}
+          type="material-community"
+          name="qrcode-scan"
+          size={30}
+          onPress={() => {
+            setisBarcodeScannerEnabled(true);
+            setmodalQRCodeVisable(true);
+          }}
+          color="#3D4849"
+        />
+      ),
       headerRight: () => (
         <Icon
           containerStyle={{ zIndex: 0 }}
@@ -389,7 +389,6 @@ const Home = (props) => {
     <SafeAreaProvider
       style={{ backgroundColor: "#fff", flex: 1, paddingBottom: 24 }}
     >
-     
       <Modal
         visible={modalQRCodeVisable}
         animationType="fade"
@@ -398,16 +397,26 @@ const Home = (props) => {
       >
         <View style={style.centeredView}>
           <View style={style.qrmodalView}>
-          {device == null ? (
-          <Text>No Camera Device</Text>
-        ) : (
-          <Camera
-                  style={[StyleSheet.absoluteFill, { overflow: 'hidden', borderRadius: 20 }]}
-                  device={device}
-                  isActive={true}
-                  codeScanner={codeScanner} />
-          )}
-        <Image style={[StyleSheet.absoluteFill, { overflow:'hidden', borderRadius: 20}]} source={require('../../../assets/scan.png')}/>
+            {device == null ? (
+              <Text>No Camera Device</Text>
+            ) : (
+              <Camera
+                style={[
+                  StyleSheet.absoluteFill,
+                  { overflow: "hidden", borderRadius: 20 },
+                ]}
+                device={device}
+                isActive={true}
+                codeScanner={codeScanner}
+              />
+            )}
+            <Image
+              style={[
+                StyleSheet.absoluteFill,
+                { overflow: "hidden", borderRadius: 20 },
+              ]}
+              source={require("../../../assets/scan.png")}
+            />
           </View>
           <TouchableOpacity
             style={{
@@ -423,7 +432,7 @@ const Home = (props) => {
             }}
             onPress={() => {
               setmodalQRCodeVisable(false);
-              setisBarcodeScannerEnabled(false)
+              setisBarcodeScannerEnabled(false);
             }}
           >
             <Text
@@ -490,7 +499,7 @@ const Home = (props) => {
               }}
             >
               {i18n.t("Close")}
-              </Text>
+            </Text>
           </TouchableOpacity>
         </View>
       </Modal>
@@ -528,11 +537,11 @@ const Home = (props) => {
                 _gotoAllFriends={_gotoAllFriends}
                 goToFriend={goToFriend}
               />
-                 <Loading
-                  message={uploading.message}
-                  flex={uploading.display}
-                  image={uploading.image}
-                />
+              <Loading
+                message={uploading.message}
+                flex={uploading.display}
+                image={uploading.image}
+              />
             </>
           }
           keyExtractor={(item, index) => index}
@@ -570,15 +579,15 @@ const style = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    overflow:'hidden',
+    overflow: "hidden",
   },
   qrmodalView: {
     width: ScreenWidth - 50,
-    height:ScreenWidth - 50,
-    overflow:'hidden',
+    height: ScreenWidth - 50,
+    overflow: "hidden",
     backgroundColor: "white",
     borderRadius: 20,
-    zIndex:100,
+    zIndex: 100,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {

@@ -9,13 +9,13 @@ import {
 } from "react-native";
 import type { OnVideoErrorData, OnLoadData } from "react-native-video";
 import Video from "react-native-video";
-import { constants } from "../../utils";
+import { constants } from "../../utils/constants";
 import { useIsForeground } from "./hooks/useIsForeground";
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
 import { useIsFocused } from "@react-navigation/core";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import momentDurationFormatSetup from "moment-duration-format";
-import moment from "moment/min/moment-with-locales"
+import moment from "moment/min/moment-with-locales";
 import FormData from "form-data";
 import { ActivityIndicator } from "react-native-paper";
 import { handleUpload } from "../SubViews/upload";
@@ -119,12 +119,13 @@ const MediaPage = (props: {
     formData.append("device", Platform.OS);
     formData.append("camera", "1");
     formData.append("file[]", {
-      name:  "SNAP18-camera-" +
-      props.route.params.pin +
-      "-" +
-      Date.now() +
-      "-" +
-      source.uri.split("/").pop(),
+      name:
+        "SNAP18-camera-" +
+        props.route.params.pin +
+        "-" +
+        Date.now() +
+        "-" +
+        source.uri.split("/").pop(),
       type: constants.mimes(source.uri.split(".").pop()), // set MIME type
       uri: source.uri,
     });
@@ -202,7 +203,7 @@ const MediaPage = (props: {
         <Ionicons
           name={"close"}
           size={30}
-          onPress={()=>{
+          onPress={() => {
             props.navigation.goBack();
           }}
           color="white"
@@ -251,8 +252,8 @@ const styles = StyleSheet.create({
     },
     textShadowRadius: 1,
   },
-   video: {
-    transform: [{ rotate: '180deg' }], // This flips the video
+  video: {
+    transform: [{ rotate: "180deg" }], // This flips the video
   },
 });
 

@@ -25,7 +25,7 @@ import FriendListItem from "../SubViews/friends/friendsitem";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
 import { ListItem } from "@rneui/themed";
 const { width: ScreenWidth } = Dimensions.get("window");
-import { constants } from "../../utils";
+import { constants } from "../../utils/constants";
 import Progress from "react-native-progress";
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
@@ -43,8 +43,8 @@ const Friends = (props) => {
     `user.Feed.${props.route.params.userID}`,
     storage
   );
-    const [uploading] = useMMKVObject("uploadData", storage);
-  
+  const [uploading] = useMMKVObject("uploadData", storage);
+
   const [ready, setReady] = useState(false);
   const [refreshing, serRefreshing] = useState(false);
   const [isFriend, setisFriend] = useState("2");
@@ -340,23 +340,22 @@ const Friends = (props) => {
     props.route.params.userID,
     props.unsubscribe,
     user.user_id,
-    isLoading
+    isLoading,
   ]);
 
   if (!ready) {
     return (
-      
       <ActivityIndicator
-      size={80}
-      style={{
-        position: "absolute",
-        top: Dimensions.get("window").height / 3.5,
-        left: Dimensions.get("window").width / 2 - 40,
-      }}
-      animating={isLoading}
-      hidesWhenStopped={true}
-      color={MD2Colors.orange900}
-    />
+        size={80}
+        style={{
+          position: "absolute",
+          top: Dimensions.get("window").height / 3.5,
+          left: Dimensions.get("window").width / 2 - 40,
+        }}
+        animating={isLoading}
+        hidesWhenStopped={true}
+        color={MD2Colors.orange900}
+      />
     );
   }
 
@@ -400,20 +399,24 @@ const Friends = (props) => {
               )
             }
             ListHeaderComponent={
-              <><FriendHeader
-                id={props.route.params.userID}
-                name={friendData.friend_handle}
-                motto={friendData.friend_motto}
-                avatar={friendData.friend_avatar}
-                join={friendData.friend_join}
-                create={friendData.friend_camera}
-                upload={friendData.friend_media}
-                isPro={friendData.friend_isPro} />
-                
+              <>
+                <FriendHeader
+                  id={props.route.params.userID}
+                  name={friendData.friend_handle}
+                  motto={friendData.friend_motto}
+                  avatar={friendData.friend_avatar}
+                  join={friendData.friend_join}
+                  create={friendData.friend_camera}
+                  upload={friendData.friend_media}
+                  isPro={friendData.friend_isPro}
+                />
+
                 <Loading
                   message={uploading.message}
                   flex={uploading.display}
-                  image={uploading.image} /></>
+                  image={uploading.image}
+                />
+              </>
             }
             keyExtractor={(item) => item.UUID}
             renderItem={(item, index) =>
@@ -565,7 +568,7 @@ const Friends = (props) => {
                   color: "#fff",
                 }}
               >
-              {i18n.t("Close")}
+                {i18n.t("Close")}
               </Text>
             </TouchableOpacity>
           </View>

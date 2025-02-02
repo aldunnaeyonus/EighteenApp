@@ -6,24 +6,24 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-import moment from "moment/min/moment-with-locales"
+import moment from "moment/min/moment-with-locales";
 import { MenuView } from "@react-native-menu/menu";
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
 const Image = createImageProgress(FastImage);
 import Progress from "react-native-progress";
 import { Icon } from "react-native-elements";
-import { constants } from "../../../utils";
+import { constants } from "../../../utils/constants";
 import styles from "../../../styles/SliderEntry.style";
 const { width: ScreenWidth } = Dimensions.get("window");
 import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../../i18n";
 import FacePile from "react-native-face-pile";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { getLocales } from 'expo-localization';
+import { getLocales } from "expo-localization";
 
 const ListItem = (props) => {
-  let [localLang] = useState(getLocales()[0].languageCode)
+  let [localLang] = useState(getLocales()[0].languageCode);
   let FACES = JSON.parse(JSON.stringify(props.item.item.joinedAvatars));
 
   useFocusEffect(
@@ -48,7 +48,15 @@ const ListItem = (props) => {
   const durationAsString = (end, start) => {
     return parseInt(start) > moment().unix()
       ? i18n.t("Event Starts in:") +
-          moment.duration(parseInt(start) - moment().unix(), "seconds").locale(localLang).humanize(true) : i18n.t("Event Ends in:") + moment.duration(parseInt(end), "seconds").locale(localLang).humanize(true);
+          moment
+            .duration(parseInt(start) - moment().unix(), "seconds")
+            .locale(localLang)
+            .humanize(true)
+      : i18n.t("Event Ends in:") +
+          moment
+            .duration(parseInt(end), "seconds")
+            .locale(localLang)
+            .humanize(true);
   };
 
   let endEventTime = durationAsString(
@@ -364,16 +372,16 @@ const ListItem = (props) => {
           }}
         >
           <TouchableOpacity
-          onPress={() => {
-            props._joinFeedItem(
-              props.item.item.UUID,
-              props.item.item.owner,
-              props.item.item.pin,
-              props.item.item.title
-            );
-          }}
+            onPress={() => {
+              props._joinFeedItem(
+                props.item.item.UUID,
+                props.item.item.owner,
+                props.item.item.pin,
+                props.item.item.title
+              );
+            }}
           >
-          <FacePile numFaces={3} faces={FACES} circleSize={15} />
+            <FacePile numFaces={3} faces={FACES} circleSize={15} />
           </TouchableOpacity>
           <Text
             style={{
@@ -394,19 +402,23 @@ const ListItem = (props) => {
             {parseInt(props.item.item.cameras) +
               parseInt(props.item.item.camera_cameras_extra)}{" "}
             {props.item.item.cameras != (props.isPro == "1" ? 1000 : 18) && (
-                <Text
+              <Text
                 onPress={() => {
-                  props._addMax(props.item.item.pin, props.item.item.owner, props.isPro);
+                  props._addMax(
+                    props.item.item.pin,
+                    props.item.item.owner,
+                    props.isPro
+                  );
                 }}
-                  style={{
-                    justifyContent: "center",
-                    color: "#ea5504",
-                    fontSize: 14,
-                    fontWeight: "600",
-                  }}
-                >
-                  ({i18n.t("Add Max")}){" "}
-                </Text>
+                style={{
+                  justifyContent: "center",
+                  color: "#ea5504",
+                  fontSize: 14,
+                  fontWeight: "600",
+                }}
+              >
+                ({i18n.t("Add Max")}){" "}
+              </Text>
             )}
             |{" "}
             <Text

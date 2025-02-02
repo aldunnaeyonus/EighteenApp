@@ -22,8 +22,6 @@ PODS:
     - ExpoModulesCore
   - ExpoLocalization (15.0.3):
     - ExpoModulesCore
-  - ExpoMailComposer (14.0.2):
-    - ExpoModulesCore
   - ExpoModulesCore (1.12.26):
     - DoubleConversion
     - glog
@@ -1585,7 +1583,6 @@ DEPENDENCIES:
   - ExpoImagePicker (from `../node_modules/expo-image-picker/ios`)
   - ExpoKeepAwake (from `../node_modules/expo-keep-awake/ios`)
   - ExpoLocalization (from `../node_modules/expo-localization/ios`)
-  - ExpoMailComposer (from `../node_modules/expo-mail-composer/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core`)
   - ExpoSecureStore (from `../node_modules/expo-secure-store/ios`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
@@ -1710,8 +1707,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-keep-awake/ios"
   ExpoLocalization:
     :path: "../node_modules/expo-localization/ios"
-  ExpoMailComposer:
-    :path: "../node_modules/expo-mail-composer/ios"
   ExpoModulesCore:
     :path: "../node_modules/expo-modules-core"
   ExpoSecureStore:
@@ -1894,7 +1889,6 @@ SPEC CHECKSUMS:
   ExpoImagePicker: 12a420923383ae38dccb069847218f27a3b87816
   ExpoKeepAwake: 3b8815d9dd1d419ee474df004021c69fdd316d08
   ExpoLocalization: f04eeec2e35bed01ab61c72ee1768ec04d093d01
-  ExpoMailComposer: 3b73ba608b6ae7d8effe64c58e25924962e3d8cc
   ExpoModulesCore: 1c82be0190e628998383a1e0ca5bdc3b22692f6a
   ExpoSecureStore: 060cebcb956b80ddae09821610ac1aa9e1ac74cd
   FBLazyVector: ac12dc084d1c8ec4cc4d7b3cf1b0ebda6dab85af

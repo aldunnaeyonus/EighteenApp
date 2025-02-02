@@ -18,7 +18,7 @@ import {
   ANDROID_DISPLAY,
   IOS_DISPLAY,
   constants,
-} from "../../utils";
+} from "../../utils/constants";
 import * as ImagePicker from "expo-image-picker";
 import FormData from "form-data";
 import { storage } from "../../context/components/Storage";
@@ -41,7 +41,6 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
 import NotifService from "../../../NotifService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 
 const CreateCamera = (props) => {
   var newDate = new Date();
@@ -275,11 +274,11 @@ const CreateCamera = (props) => {
       }
       const pickImage = async () => {
         const value = await AsyncStorage.getItem("media.path");
-      if (value != undefined){
-            editImage(value) 
-      }
-    }
-    pickImage();
+        if (value != undefined) {
+          editImage(value);
+        }
+      };
+      pickImage();
       props.navigation.setOptions({
         title: isPro == "1" ? i18n.t("CreatePro") : i18n.t("Create"),
         headerRight: () =>
@@ -356,8 +355,8 @@ const CreateCamera = (props) => {
     formData.append(
       "length",
       isPro
-          ? constants.camera_time_text_PRO[selectedIndex]
-          : constants.camera_time_text[selectedIndex]
+        ? constants.camera_time_text_PRO[selectedIndex]
+        : constants.camera_time_text[selectedIndex]
     );
     formData.append(
       "cameras",
@@ -428,11 +427,11 @@ const CreateCamera = (props) => {
       pin + "-end",
       constants.urldata + "/" + user.user_id + "/events/" + pin + "/" + fileName
     );
-     await CameraRoll.saveAsset(image);
+    await CameraRoll.saveAsset(image);
 
     setTimeout(async () => {
       setIsAI(false);
-      props.navigation.goBack()
+      props.navigation.goBack();
     }, 1500);
   };
 
@@ -569,7 +568,6 @@ const CreateCamera = (props) => {
                 >
                   {i18n.t("Gallery")}
                 </Text>
-               
               </View>
               <View style={{ flexDirection: "column" }}>
                 <Icon

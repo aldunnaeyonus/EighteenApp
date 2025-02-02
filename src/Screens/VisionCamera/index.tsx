@@ -17,7 +17,7 @@ import {
   TakePhotoOptions,
   runAtTargetFps,
   useFrameProcessor,
-  CameraProps, 
+  CameraProps,
   VideoFile,
 } from "react-native-vision-camera";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -29,19 +29,19 @@ import Reanimated, {
   useSharedValue,
 } from "react-native-reanimated";
 import { CaptureButton } from "./CaptureButton";
-import { constants } from "../../utils";
+import { constants } from "../../utils/constants";
 import type { PinchGestureHandlerGestureEvent } from "react-native-gesture-handler";
 import {
   PinchGestureHandler,
   TapGestureHandler,
 } from "react-native-gesture-handler";
 import momentDurationFormatSetup from "moment-duration-format";
-import moment from "moment/min/moment-with-locales"
+import moment from "moment/min/moment-with-locales";
 import CreditsFont from "../SubViews/camera/camerCredits";
 import * as i18n from "../../../i18n";
 import { storage } from "../../context/components/Storage";
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
-import { usePreferredCameraDevice } from './hooks/usePreferredCameraDevice'
+import { usePreferredCameraDevice } from "./hooks/usePreferredCameraDevice";
 import { ActivityIndicator } from "react-native-paper";
 const ReanimatedCamera = Reanimated.createAnimatedComponent(Camera);
 Reanimated.addWhitelistedNativeProps({
@@ -53,8 +53,7 @@ const stickers: never[] = [];
 import { handleUpload } from "../SubViews/upload";
 import { useMMKVObject } from "react-native-mmkv";
 import { ViewStyle } from "react-native";
-import { getLocales } from 'expo-localization';
-
+import { getLocales } from "expo-localization";
 
 const VisionCamera = (props: {
   route: {
@@ -76,15 +75,15 @@ const VisionCamera = (props: {
   const [uiRotation, setUiRotation] = useState(0);
 
   const uiStyle: ViewStyle = {
-    transform: [{ rotate: `${uiRotation}deg` }]
-  }
+    transform: [{ rotate: `${uiRotation}deg` }],
+  };
   const [credits] = useState(
     props.route.params.user == props.route.params.owner
       ? "99"
       : props.route.params.credits
   );
-  const location = useLocationPermission()
-  let [localLang] = useState(getLocales()[0].languageCode)
+  const location = useLocationPermission();
+  let [localLang] = useState(getLocales()[0].languageCode);
 
   const { hasPermission, requestPermission } = useCameraPermission();
   const {
@@ -96,11 +95,11 @@ const VisionCamera = (props: {
   const [cameraPosition, setCameraPosition] = useState<"front" | "back">(
     "back"
   );
-  const [preferredDevice] = usePreferredCameraDevice()
+  const [preferredDevice] = usePreferredCameraDevice();
   let device = useCameraDevice(cameraPosition);
   if (preferredDevice != null && preferredDevice.position === cameraPosition) {
     // override default device with the one selected by the user in settings
-    device = preferredDevice
+    device = preferredDevice;
   }
   const [isCameraInitialized, setIsCameraInitialized] = useState(false);
   const [uploading] = useMMKVObject("uploadData", storage);
@@ -109,11 +108,13 @@ const VisionCamera = (props: {
     return start >= moment().unix()
       ? i18n.t("Event Starts in:") +
           moment
-            .duration(parseInt(start) - moment().unix(), "seconds").locale(String(localLang))
+            .duration(parseInt(start) - moment().unix(), "seconds")
+            .locale(String(localLang))
             .humanize(true)
       : i18n.t("Event Ends in:") +
           moment
-            .duration(parseInt(end), "seconds").locale(String(localLang))
+            .duration(parseInt(end), "seconds")
+            .locale(String(localLang))
             .humanize(true);
   };
   let endEventTime = durationAsString(
@@ -146,7 +147,7 @@ const VisionCamera = (props: {
 
   const SCALE_FULL_ZOOM = 3;
   const MAX_ZOOM_FACTOR = 10;
- 
+
   useEffect(() => {
     if (!hasPermission) {
       requestPermission();
@@ -198,7 +199,6 @@ const VisionCamera = (props: {
     { photoResolution: "max" },
   ]);
 
-
   const [enableHdr, setEnableHdr] = useState(false);
   const [enableNightMode, setEnableNightMode] = useState(false);
 
@@ -247,7 +247,7 @@ const VisionCamera = (props: {
       path,
       uploading
     );
-    props.navigation.goBack()
+    props.navigation.goBack();
   };
 
   const onMediaCaptured = useCallback(
@@ -294,55 +294,56 @@ const VisionCamera = (props: {
   }
 
   useEffect(() => {
-    location.requestPermission()
-  }, [location])
+    location.requestPermission();
+  }, [location]);
 
   const cameraAnimatedProps = useAnimatedProps<CameraProps>(() => {
-    const z = Math.max(Math.min(zoom.value, maxZoom), minZoom)
+    const z = Math.max(Math.min(zoom.value, maxZoom), minZoom);
     return {
       zoom: z,
-    }
-  }, [maxZoom, minZoom, zoom])
-  const videoHdr = format?.supportsVideoHdr && enableHdr
+    };
+  }, [maxZoom, minZoom, zoom]);
+  const videoHdr = format?.supportsVideoHdr && enableHdr;
 
-  if (device == null) return (
-     <View style={[StyleSheet.absoluteFill, {backgroundColor:'black'}]}>
-       <View
-        style={[uiStyle]}
-      >
-      <Text
-        style={{
-          color: "white",
-          textAlign: "center",
-          fontWeight: "600",
-          fontSize: 20,
-          top: constants.SAFE_AREA_PADDING.paddingBottom + 45,
-        }}
-      >
-       No Camera Device
-      </Text>
-      </View>
+  if (device == null)
+    return (
+      <View style={[StyleSheet.absoluteFill, { backgroundColor: "black" }]}>
+        <View style={[uiStyle]}>
+          <Text
+            style={{
+              color: "white",
+              textAlign: "center",
+              fontWeight: "600",
+              fontSize: 20,
+              top: constants.SAFE_AREA_PADDING.paddingBottom + 45,
+            }}
+          >
+            No Camera Device
+          </Text>
+        </View>
         <View
-        style={[uiStyle, {
-          position: "absolute",
-          right: 10,
-          top: 50,
-          padding: 10,
-          borderRadius: 5,
-          backgroundColor: "rgba(0, 0, 0, 0.60)",
-          gap: 30,
-        }]}
-      >
-        <Ionicons
-          name={"close"}
-          onPress={() => props.navigation.goBack()}
-          size={30}
-          color="white"
-        />
+          style={[
+            uiStyle,
+            {
+              position: "absolute",
+              right: 10,
+              top: 50,
+              padding: 10,
+              borderRadius: 5,
+              backgroundColor: "rgba(0, 0, 0, 0.60)",
+              gap: 30,
+            },
+          ]}
+        >
+          <Ionicons
+            name={"close"}
+            onPress={() => props.navigation.goBack()}
+            size={30}
+            color="white"
+          />
+        </View>
       </View>
- 
-          </View>
-  )
+    );
   return (
     <View style={{ flex: 1, backgroundColor: "black" }}>
       <PinchGestureHandler onGestureEvent={onPinchGesture} enabled={isActive}>
@@ -377,30 +378,28 @@ const VisionCamera = (props: {
           </TapGestureHandler>
         </Reanimated.View>
       </PinchGestureHandler>
-      <View
-
-      >
-      <Text
-        style={{
-          color: "white",
-          textAlign: "center",
-          fontWeight: "600",
-          fontSize: 20,
-          top: constants.SAFE_AREA_PADDING.paddingBottom + 45,
-        }}
-      >
-        {props.route.params.title}
-      </Text>
-      <Text
-        style={{
-          color: "white",
-          textAlign: "center",
-          fontSize: 15,
-          top: constants.SAFE_AREA_PADDING.paddingBottom + 45,
-        }}
-      >
-        {endEventTime}
-      </Text>
+      <View>
+        <Text
+          style={{
+            color: "white",
+            textAlign: "center",
+            fontWeight: "600",
+            fontSize: 20,
+            top: constants.SAFE_AREA_PADDING.paddingBottom + 45,
+          }}
+        >
+          {props.route.params.title}
+        </Text>
+        <Text
+          style={{
+            color: "white",
+            textAlign: "center",
+            fontSize: 15,
+            top: constants.SAFE_AREA_PADDING.paddingBottom + 45,
+          }}
+        >
+          {endEventTime}
+        </Text>
       </View>
       <View
         style={{
@@ -456,8 +455,8 @@ const VisionCamera = (props: {
             disabledOpacity={0.4}
           />
         )}
-        <CreditsFont credits={credits} newStyle={uiStyle}/>
-      </View>    
+        <CreditsFont credits={credits} newStyle={uiStyle} />
+      </View>
       <CaptureButton
         style={{
           position: "absolute",

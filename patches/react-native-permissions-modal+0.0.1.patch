@@ -1,16 +1,30 @@
 diff --git a/node_modules/react-native-permissions-modal/lib/components/PermissionItem/PermissionItem.js b/node_modules/react-native-permissions-modal/lib/components/PermissionItem/PermissionItem.js
-index 948d68a..ac4cbbb 100644
+index 948d68a..b6c483f 100644
 --- a/node_modules/react-native-permissions-modal/lib/components/PermissionItem/PermissionItem.js
 +++ b/node_modules/react-native-permissions-modal/lib/components/PermissionItem/PermissionItem.js
-@@ -1,6 +1,6 @@
- import React from "react";
- import PropTypes from "prop-types";
--import { Text, View, Image } from "react-native";
-+import { Text, View } from "react-native";
- import Ripple from "react-native-material-ripple";
- /**
-  * ? Local Imports
-@@ -59,13 +59,5 @@ PermissionItem.propTypes = {
+@@ -14,15 +14,15 @@ const chevronIcon = require("../../local-assets/chevron.png");
+ 
+ const PermissionItem = props => {
+   const {
+-    title,
+-    source,
+-    subtitle,
++    title = "Location",
++    source = require("../../local-assets/placeholder.png"),
++    subtitle = "Give us the this permission to access full features",
+     iconComponent,
+     titleTextStyle,
+-    ImageComponent,
+-    iconStatusColor,
++    ImageComponent = Image,
++    iconStatusColor = "green",
+     subtitleTextStyle,
+-    iconContainerBackgroundColor
++    iconContainerBackgroundColor = "#f7f7f7"
+   } = props;
+   return (
+     <Ripple
+@@ -59,13 +59,4 @@ PermissionItem.propTypes = {
    iconContainerBackgroundColor: PropTypes.string
  };
  
@@ -22,17 +36,29 @@ index 948d68a..ac4cbbb 100644
 -  source: require("../../local-assets/placeholder.png"),
 -  subtitle: "Give us the this permission to access full features"
 -};
- 
+-
  export default PermissionItem;
 diff --git a/node_modules/react-native-permissions-modal/lib/components/PermissionModal/PermissionModal.js b/node_modules/react-native-permissions-modal/lib/components/PermissionModal/PermissionModal.js
-index a9a8523..1a66cc4 100644
+index a9a8523..ee22f47 100644
 --- a/node_modules/react-native-permissions-modal/lib/components/PermissionModal/PermissionModal.js
 +++ b/node_modules/react-native-permissions-modal/lib/components/PermissionModal/PermissionModal.js
-@@ -55,9 +55,3 @@ PermissionModal.propTypes = {
-   title: PropTypes.string,
+@@ -23,7 +23,11 @@ export default class PermissionModal extends React.PureComponent {
+   };
+ 
+   renderContent = () => {
+-    const { title, subtitle } = this.props;
++    const { 
++      title = "", 
++      subtitle = "" 
++    } = this.props;
++    
+     return (
+       <View style={styles.content}>
+         <View>
+@@ -56,8 +60,3 @@ PermissionModal.propTypes = {
    subtitle: PropTypes.string
  };
--
+ 
 -PermissionModal.defaultProps = {
 -  title: "Permissions",
 -  subtitle:

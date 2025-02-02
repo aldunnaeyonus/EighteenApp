@@ -53,5 +53,10 @@
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false"/>
+    <queries>
+      <intent>
+        <action android:name="android.intent.action.DIAL" />
+      </intent>
+</queries>
   </application>
 </manifest>
