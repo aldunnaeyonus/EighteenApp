@@ -594,10 +594,11 @@ const Profile = (props) => {
             </ListItem.Content>
             <ListItem.Chevron />
           </ListItem>
+          <InfoText text={i18n.t("AppData")} />
           <View style={[styles.dividerTableStyle]} />
           <ListItem
             containerStyle={{ paddingVertical: 5 }}
-            key="9"
+            key="24"
             onPress={() => {}}
           >
             <Icon
@@ -618,12 +619,10 @@ const Profile = (props) => {
             </ListItem.Content>
             <View
               style={{
-                marginTop: -5,
                 marginLeft: 65,
                 width: 75,
                 height: 22,
                 borderRadius: 11,
-
                 justifyContent: "center",
               }}
             >
