@@ -6,7 +6,6 @@ const Image = createImageProgress(FastImage);
 import Progress from "react-native-progress";
 const { width, height } = Dimensions.get("screen");
 import Zoom from "react-native-zoom-reanimated";
-import VisibilitySensor from "@svanboxel/visibility-sensor-react-native";
 import CachedVideoPlayer from '../camera/CachedVideoPlayer';
 
 const ImageGalleryView = (props) => {
@@ -15,7 +14,7 @@ const ImageGalleryView = (props) => {
    
 
     return (
-    props.item.item.type == "video" ? (
+    props.item.type == "video" ? (
         <View
           style={{
             flex: 1,
@@ -31,7 +30,6 @@ const ImageGalleryView = (props) => {
               backgroundColor: "transparent",
               position: "absolute",
               top: 0,
-              zIndex: 2,
               height: 60,
               marginTop: 30,
               width: width,
@@ -56,10 +54,10 @@ const ImageGalleryView = (props) => {
               source={{
                 priority: FastImage.priority.high,
                 cache: FastImage.cacheControl.immutable,
-                uri: props.item.item.icon,
+                uri: props.item.icon,
               }}
             />
-            {props.item.item.isPro == "1" && (
+            {props.item.isPro == "1" && (
               <View style={{ position: "absolute" }}>
                 <View
                   style={{
@@ -95,29 +93,17 @@ const ImageGalleryView = (props) => {
                 marginTop: 15,
               }}
             >
-              {props.item.item.userName}
+              {props.item.userName}
             </Text>
           </View>
-          <VisibilitySensor
-            style={{
-              flex: 1,
-              backgroundColor: "transparent",
-            }}
-            onChange={(isVisible) => {
-              return isVisible
-                ? setVideoPlayPause(true)
-                : setVideoPlayPause(true);
-            }}
-          >
               <CachedVideoPlayer
-                url={props.item.item.uri}
+                url={props.item.uri}
                 height={height}
                 width={width}
-                fileName={String(props.item.item.uri).split("/").pop()}
+                fileName={String(props.item.uri).split("/").pop()}
                 videoPlayPause={videoPlayPause}
                 videoPlayMute={videoPlayMute}
               />
-          </VisibilitySensor>
         </View>
       ) : (
         <View
@@ -161,10 +147,10 @@ const ImageGalleryView = (props) => {
               source={{
                 priority: FastImage.priority.high,
                 cache: FastImage.cacheControl.immutable,
-                uri: props.item.item.icon,
+                uri: props.item.icon,
               }}
             />
-            {props.item.item.isPro == "1" && (
+            {props.item.isPro == "1" && (
               <View style={{ position: "absolute" }}>
                 <View
                   style={{
@@ -200,7 +186,7 @@ const ImageGalleryView = (props) => {
                 marginTop: 15,
               }}
             >
-              {props.item.item.userName}
+              {props.item.userName}
             </Text>
           </View>
           <Zoom
@@ -212,13 +198,12 @@ const ImageGalleryView = (props) => {
           >
             <Image
               indicator={Progress}
-              ref={(component) => (mediaPlayer = component)}
               style={{ marginTop: 0, height: height, width: width }}
               resizeMode={FastImage.resizeMode.contain}
               source={{
                 priority: FastImage.priority.high,
                 cache: FastImage.cacheControl.immutable,
-                uri: props.item.item.uri,
+                uri: props.item.uri,
               }}
             ></Image>
           </Zoom>

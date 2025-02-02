@@ -2,18 +2,19 @@ import {
   View,
   TouchableOpacity,
   Share,
-  Dimensions
+  Dimensions,
+  FlatList
 } from "react-native";
 import React, { useState, useRef, useCallback } from "react";
 import { Icon } from "react-native-elements";
-import FastImage from "react-native-fast-image";
-import Progress from "react-native-progress";
 import Animated from "react-native-reanimated";
 import { useToast } from "react-native-styled-toast";
 import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../i18n";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import ImageGalleryView from "../SubViews/gallery/imageGalleryView";
+import VideoGalleryView from "../SubViews/gallery/videoGalleryView";
+import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
+
 
 const PhotoViewer = (props) => {
   const { width } = Dimensions.get("screen");
@@ -25,14 +26,18 @@ const PhotoViewer = (props) => {
   const [activeIndex, setActiveIndex] = useState(props.route.params.pagerIndex);
 
   const scrollToActiveIndex = (index) => {
+    console.log("scrollToActiveIndex")
+
     setActiveIndex(index)
     newphoto?.current?.scrollToOffset({
-      offset: index * width,
+      offset:  Math.floor(index * width),
       animated: true
     })
-    if (index * (80 + 10) - 80 / 2 > width / 2){
+    console.log("scrollToActiveInde: ",  index * width)
+
+    if ( index * (80 + 10) - 80 / 2 >  width / 2){
         bottomPhoto?.current.scrollToOffset({
-          offset: index * (80 + 10) - width / 2 + 80 / 2,
+          offset:  index * (80 + 10) - width / 2 + 80 / 2,
           animated: true
         })
     }else {
@@ -82,11 +87,16 @@ const PhotoViewer = (props) => {
   );
 
 const onMomentumScrollBegin = () => {
+  console.log("onMomentumScrollBegin")
   canMomentum.current = true;
 };
 
 const onMomentumScrollEnd = useCallback((ev) => {
+  console.log("onMomentumScrollEnd")
+
     if (canMomentum.current) {
+      console.log("canMomentum.current = true")
+
         const index = Math.floor(
             Math.floor(ev.nativeEvent.contentOffset.x) / width
         );
@@ -97,35 +107,41 @@ const onMomentumScrollEnd = useCallback((ev) => {
    }, []);
 
 const getItemLayout = (data, index) => (
-    {length: width, offset: width * index, index}
+    {length: width, offset:  width * index, index}
   );
 
   const getItemLayoutBottom = (data, index) => (
-    {length: 80, offset: index * (80 + 10) - width / 2 + 80 / 2, index}
+    {length: 80, offset:  index * (80 + 10) - width / 2 + 80 / 2, index}
   );
 
   return  (
-        <View style={{width:'100%', height:'100%'}}>
-     <AnimatedFlatlist
+    <SafeAreaProvider>
+      <SafeAreaView
+        style={{
+          backgroundColor: "transparent",
+          height: "100%",
+          width: "100%",
+        }}
+        edges={["left", "right"]}
+      >
+     <FlatList
       ref={newphoto}
       getItemLayout={getItemLayout}
       extraData={props.route.params.data}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
       initialScrollIndex={props.route.params.pagerIndex}
+      initialNumToRender={1}
       onMomentumScrollBegin={onMomentumScrollBegin}
       onMomentumScrollEnd={onMomentumScrollEnd}
       pagingEnabled={true}
       horizontal={true}
-      style={{ backgroundColor: "black" }}
+      style={{ backgroundColor: "black"}}
       numColumns={1}
       data={props.route.params.data}
       keyExtractor={(item) => item.image_id}
-      renderItem={(item, index) => (
-        <ImageGalleryView
-          item={item}
-          index={index}/>
-      )} />
+      renderItem={({item, index}) => <ImageGalleryView item={item} index={index}/>} 
+      />
       
       <AnimatedFlatlist
         ref={bottomPhoto}
@@ -139,43 +155,7 @@ const getItemLayout = (data, index) => (
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingHorizontal:10}}
-        renderItem={({item, index}) => {
-          return (
-          <TouchableOpacity
-          onPress={()=> {
-            scrollToActiveIndex(index)
-          }}
-          >
-             <FastImage 
-        progress={Progress}
-        resizeMode={FastImage.resizeMode.cover}
-        source={{
-          cache: FastImage.cacheControl.immutable,
-          priority: FastImage.priority.high,
-          uri:
-            item.type == "video"
-              ? item.videoThumbnail
-              : item.thumbnail,
-        }}
-        style={{ width: 80, height: 80, borderRadius:12, marginRight:10, borderWidth:2, borderColor: activeIndex === index ? 'white' : 'transparent'}}
-        >
-           {item.type === "video" && (
-                    <Icon
-                      type="material-community"
-                      name="play-box-outline"
-                      size={20}
-                      containerStyle={{
-                        width: 50,
-                        height: 50,
-                        top: 30,
-                        left: 12.5,
-                      }}
-                      color="white"
-                    />
-                  )}
-                  </FastImage> 
-        </TouchableOpacity>
-   ) }}
+        renderItem={({item, index}) => <VideoGalleryView item={item} index={index} scrollToActiveIndex={scrollToActiveIndex} activeIndex={activeIndex}/>}
         />
 
 
@@ -207,11 +187,7 @@ const getItemLayout = (data, index) => (
        
        <TouchableOpacity
               onPress={async () => {
-                _gotoShare(
-                  filteredDataSource[
-                    parseInt(await AsyncStorage.getItem("current"))
-                  ].uri
-                );
+                _gotoShare(props.route.params.data[activeIndex].uri );
               }}
             >
               <Icon
@@ -224,7 +200,8 @@ const getItemLayout = (data, index) => (
        )}
 
       </View>
-        </View>
+      </SafeAreaView>
+    </SafeAreaProvider>
   )
 };
 
