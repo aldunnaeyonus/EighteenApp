@@ -57,7 +57,6 @@ const Loading = (props) => {
                       cache: FastImage.cacheControl.immutable,
                       priority: FastImage.priority.high,
                       uri: props.image 
-                    
                     }}
                   />
     :

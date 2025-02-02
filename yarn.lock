@@ -6068,6 +6068,11 @@ expo-localization@~15.0.3:
   dependencies:
     rtl-detect "^1.0.2"
 
+expo-mail-composer@^14.0.2:
+  version "14.0.2"
+  resolved "https://registry.yarnpkg.com/expo-mail-composer/-/expo-mail-composer-14.0.2.tgz#d04d1e39549976cb709d9cd1e87c51b6963ccc46"
+  integrity sha512-f/OE2tz7XmuBXL8X+dlA/fIIBKYbWz2lbZF2VHGQFnI5MB0pebscz9jLudNS/vIM9RU/SmG25bI3x7oBoGkJIw==
+
 expo-modules-autolinking@1.11.3:
   version "1.11.3"
   resolved "https://registry.yarnpkg.com/expo-modules-autolinking/-/expo-modules-autolinking-1.11.3.tgz#bc64d278c04015014bb5802e3cfcd942d7c07168"

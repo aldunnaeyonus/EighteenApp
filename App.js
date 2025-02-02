@@ -71,7 +71,6 @@ export default function App() {
   };
 
 const onCheckVersion = () => {
-  if (Platform.OS == 'ios'){
     fetch(constants.updateJSON).then(async (data) => {
       const result = await data.json();
       const currentVersion = await hotUpdate.getCurrentVersion();
@@ -84,8 +83,6 @@ const onCheckVersion = () => {
                 );
         };
     });
-  }
-
   };
 
   useEffect(() => {
@@ -163,7 +160,9 @@ const onCheckVersion = () => {
   useEffect(() => {
     const fetchData = async () => {
       setI18nConfig(localLang);
+      if (Platform.OS == 'ios'){
       onCheckVersion();
+      }
       const owner = await AsyncStorage.getItem("user_id");
       setOwner(owner);
       const logedIn = await AsyncStorage.getItem("logedIn");
@@ -176,7 +175,7 @@ const onCheckVersion = () => {
       }, 2000);
     };
     fetchData();
-  }, [signIn, ready]);
+  }, [signIn, ready, owner]);
 
 
   if (!ready) {

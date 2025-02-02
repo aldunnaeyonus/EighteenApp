@@ -7,6 +7,8 @@ import {
   Modal,
   TouchableOpacity,
   ScrollView,
+  Linking,
+  Platform
 } from "react-native";
 const { width: ScreenWidth } = Dimensions.get("window");
 import React, { useEffect, useState, useCallback } from "react";
@@ -29,6 +31,7 @@ import ProfileHeader from "../SubViews/home/profileHeader";
 import { useIsFocused } from "@react-navigation/native";
 import Loading from "../SubViews/home/Loading";
 import hotUpdate  from 'react-native-ota-hot-update/src/index';
+import { feedbackTemplate } from "../../utils";
 
 const Profile = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
@@ -415,13 +418,12 @@ const Profile = (props) => {
 
               <InfoText text={i18n.t("Account Actions")} />
               <View style={[styles.dividerTableStyleShort]} />
+             
               <ListItem
                 containerStyle={{ paddingVertical: 5 }}
                 key="17"
                 onPress={() => {
-                  {
                     openSettings();
-                  }
                 }}
               >
                 <Icon
@@ -441,9 +443,42 @@ const Profile = (props) => {
                   <ListItem.Title>{i18n.t("Permissions")}</ListItem.Title>
                 </ListItem.Content>
                 <ListItem.Chevron />
+              </ListItem>     
+              <View style={[styles.dividerTableStyleShort]} />
+              <ListItem
+                containerStyle={{ paddingVertical: 5 }}
+                key="22"
+                onPress={() => {
+                  Linking.openURL(`mailto:${constants.verification_email}?subject=Snap Eighteeen Request from ${user.user_handle}&body=
+                  Describe what you need help with:
+
+                  --------------------------
+                  Build: ${version}
+                  App Version: ${Application.nativeApplicationVersion}
+                  Device: ${Platform.OS}
+                  Username: ${user.user_handle}
+                  --------------------------`)
+                }}
+              >
+                <Icon
+                  type="material"
+                  name="support-agent"
+                  size={20}
+                  color="#3D4849"
+                  containerStyle={{
+                    width: 28,
+                    height: 28,
+                    borderRadius: 6,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                />
+                <ListItem.Content>
+                  <ListItem.Title>{i18n.t("Support")}</ListItem.Title>
+                </ListItem.Content>
+                <ListItem.Chevron />
               </ListItem>
               <View style={[styles.dividerTableStyle]} />
-
               <ListItem
                 containerStyle={{ paddingVertical: 5 }}
                 key="5"

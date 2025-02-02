@@ -2,6 +2,7 @@ import { Dimensions, Platform } from 'react-native';
 import "moment-duration-format";
 import * as i18n from '../../i18n';
 
+
 export const MIN_MS = 60000;
 export const camera_time_text = ["8 Hours", "1 Day", "2 Days", "5 Days", "1 Week"];
 export const camera_time_text_PRO = ["1 Day", "2 Days", "1 Week", "2 Weeks", "1 Month"];
@@ -269,9 +270,22 @@ export const mask = (email: String)=>{
   return `${chunks[0].slice(0,3)}***@${chunks[1]}`;
 }
 
+export const feedbackTemplate = (version: String, build: String, userName: String) => { `
+Describe what you need help with:
+
+
+--------------------------
+Build: ${build}
+App Version: ${version}
+Device: ${Platform.OS}
+Username: ${userName}
+--------------------------
+`};
+
 export const constants = {
   productSkus,
   mask,
+  feedbackTemplate,
   covertNumber,
   remove_duplicates,
   historyActions,
