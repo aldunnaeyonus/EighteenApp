@@ -303,7 +303,7 @@ const PhotoGallery = (props) => {
           height: "100%",
           width: "100%",
         }}
-        edges={["bottom", "left", "right"]}
+        edges={["left", "right"]}
       >
         <AnimatedFlatlist
           extraData={filteredDataSource}
@@ -338,7 +338,7 @@ const PhotoGallery = (props) => {
           }
           ref={photo}
           style={{ backgroundColor: "white", marginTop: 0 }}
-          numColumns={3}
+          numColumns={4}
           data={filteredDataSource}
           keyExtractor={(item) => item.image_id}
           renderItem={(item, index) => (

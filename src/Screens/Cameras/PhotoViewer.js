@@ -26,15 +26,11 @@ const PhotoViewer = (props) => {
   const [activeIndex, setActiveIndex] = useState(props.route.params.pagerIndex);
 
   const scrollToActiveIndex = (index) => {
-    console.log("scrollToActiveIndex")
-
     setActiveIndex(index)
     newphoto?.current?.scrollToOffset({
-      offset:  Math.floor(index * width),
+      offset: index * width,
       animated: true
     })
-    console.log("scrollToActiveInde: ",  index * width)
-
     if ( index * (80 + 10) - 80 / 2 >  width / 2){
         bottomPhoto?.current.scrollToOffset({
           offset:  index * (80 + 10) - width / 2 + 80 / 2,
@@ -87,15 +83,11 @@ const PhotoViewer = (props) => {
   );
 
 const onMomentumScrollBegin = () => {
-  console.log("onMomentumScrollBegin")
   canMomentum.current = true;
 };
 
 const onMomentumScrollEnd = useCallback((ev) => {
-  console.log("onMomentumScrollEnd")
-
     if (canMomentum.current) {
-      console.log("canMomentum.current = true")
 
         const index = Math.floor(
             Math.floor(ev.nativeEvent.contentOffset.x) / width
@@ -129,13 +121,12 @@ const getItemLayout = (data, index) => (
       getItemLayout={getItemLayout}
       extraData={props.route.params.data}
       showsHorizontalScrollIndicator={false}
-      showsVerticalScrollIndicator={false}
       initialScrollIndex={props.route.params.pagerIndex}
       initialNumToRender={1}
       onMomentumScrollBegin={onMomentumScrollBegin}
       onMomentumScrollEnd={onMomentumScrollEnd}
-      pagingEnabled={true}
-      horizontal={true}
+      pagingEnabled
+      horizontal
       style={{ backgroundColor: "black"}}
       numColumns={1}
       data={props.route.params.data}
@@ -147,13 +138,12 @@ const getItemLayout = (data, index) => (
         ref={bottomPhoto}
         data={props.route.params.data} 
         getItemLayout={getItemLayoutBottom}
-        horizontal={true}
+        horizontal
         initialScrollIndex={props.route.params.pagerIndex}
         keyExtractor={(item) => item.image_id}
         style={{position:'absolute', bottom:80, width:width}}
         extraData={props.route.params.data}
         showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingHorizontal:10}}
         renderItem={({item, index}) => <VideoGalleryView item={item} index={index} scrollToActiveIndex={scrollToActiveIndex} activeIndex={activeIndex}/>}
         />

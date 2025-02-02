@@ -30,9 +30,9 @@ const ImageGallery = (props) => {
         style={{
           backgroundColor: "#f2f2f2",
           borderColor: "#fff",
-          borderWidth: 2.0,
+          borderWidth: 1.0,
           height: width / 4.0,
-          width: width / 3.0,
+          width: width / 4.0,
         }}
       >
         {props.item.item.type === "video" && (
