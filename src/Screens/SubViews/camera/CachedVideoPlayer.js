@@ -42,6 +42,7 @@ const CachedVideoPlayer = ({ url, fileName, videoPlayPause, videoPlayMute }) => 
       <View style={StyleSheet.absoluteFill}>
        <ActivityIndicator
       size={40}
+      style={StyleSheet.absoluteFill}
       animating={loading}
       hidesWhenStopped={true}
       color={MD2Colors.orange900}

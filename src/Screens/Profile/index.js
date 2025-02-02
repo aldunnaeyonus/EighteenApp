@@ -109,17 +109,17 @@ const Profile = (props) => {
   const handleEmail = () => {
     const to = [`${constants.verification_email}`]; // string or array of email addresses
     email(to, {
-      subject: `Snap Eighteeen Request`,
-      body: `Describe what you need help with:
+      subject: `${i18n.t("Email2")}`,
+      body: `${i18n.t("Email1")}<BR><BR>
 
-                  --------------------------
+                  --------------------------<BR>
                   Build: ${version}
-                  App Version: ${Application.nativeApplicationVersion}
-                  Device: ${Platform.OS}
-                  User: ${user.user_handle}-${user.user_id}
+                  App Version: ${Application.nativeApplicationVersion}<BR>
+                  Device: ${Platform.OS}<BR>
+                  User: ${user.user_handle}-${user.user_id}<BR>
                   --------------------------
                   `,
-      checkCanOpen: false, // Call Linking.canOpenURL prior to Linking.openURL
+      checkCanOpen: true, // Call Linking.canOpenURL prior to Linking.openURL
     }).catch(console.error);
   };
 
