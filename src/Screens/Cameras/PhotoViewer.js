@@ -99,11 +99,18 @@ const onMomentumScrollEnd = useCallback((ev) => {
    }, []);
 
 const getItemLayout = (data, index) => (
-    {length: width, offset:  width * index, index}
+    {
+      length: width, 
+      offset:  width * index, 
+      index}
   );
 
   const getItemLayoutBottom = (data, index) => (
-    {length: 80, offset:  index * (80 + 10) - width / 2 + 80 / 2, index}
+    {
+      length: 80, 
+      offset:  index * 80 + 10, 
+      index
+    }
   );
 
   return  (
@@ -122,13 +129,11 @@ const getItemLayout = (data, index) => (
       extraData={props.route.params.data}
       showsHorizontalScrollIndicator={false}
       initialScrollIndex={props.route.params.pagerIndex}
-      initialNumToRender={1}
       onMomentumScrollBegin={onMomentumScrollBegin}
       onMomentumScrollEnd={onMomentumScrollEnd}
       pagingEnabled
       horizontal
       style={{ backgroundColor: "black"}}
-      numColumns={1}
       data={props.route.params.data}
       keyExtractor={(item) => item.image_id}
       renderItem={({item, index}) => <ImageGalleryView item={item} index={index}/>} 
@@ -141,11 +146,11 @@ const getItemLayout = (data, index) => (
         horizontal
         initialScrollIndex={props.route.params.pagerIndex}
         keyExtractor={(item) => item.image_id}
-        style={{position:'absolute', bottom:80, width:width}}
+        style={{position:'absolute', bottom:90, width:width}}
         extraData={props.route.params.data}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{paddingHorizontal:10}}
-        renderItem={({item, index}) => <VideoGalleryView item={item} index={index} scrollToActiveIndex={scrollToActiveIndex} activeIndex={activeIndex}/>}
+        renderItem={({item, index}) => { return (<VideoGalleryView item={item} index={index} scrollToActiveIndex={scrollToActiveIndex} activeIndex={activeIndex}/>)}}
         />
 
 

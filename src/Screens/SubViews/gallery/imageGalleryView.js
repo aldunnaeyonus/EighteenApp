@@ -9,17 +9,16 @@ import Zoom from "react-native-zoom-reanimated";
 import CachedVideoPlayer from '../camera/CachedVideoPlayer';
 
 const ImageGalleryView = (props) => {
-    const [videoPlayPause, setVideoPlayPause] = useState(true);
+    const [videoPlayPause] = useState(true);
     const [videoPlayMute] = useState(true);
    
-
     return (
     props.item.type == "video" ? (
         <View
           style={{
             flex: 1,
-            height: height,
-            width: width,
+            height: '100%',
+            width: '100%',
             justifyContent: "center",
             alignItems: "center",
             backgroundColor: "transparent",

@@ -6,24 +6,12 @@ const Image = createImageProgress(FastImage);
 import Progress from "react-native-progress";
 import { Icon } from "react-native-elements";
 
-const VideoeGalleryView = (props) => {
+const VideoGalleryView = (props) => {
 
     return (
 
-        <View
-          style={{
-            flex: 1,
-            height: '100%',
-            width: '100%',
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "transparent",
-          }}
-        >
- <TouchableOpacity
-          onPress={()=> {
-            props.scrollToActiveIndex(props.index)
-          }}
+        <TouchableOpacity
+          onPress={()=> {props.scrollToActiveIndex(props.index) }}
           >
         <Image 
         progress={Progress}
@@ -53,7 +41,6 @@ const VideoeGalleryView = (props) => {
                   )}
                   </Image> 
         </TouchableOpacity>
-        </View>
     )
 };
-export default VideoeGalleryView;
+export default VideoGalleryView;
