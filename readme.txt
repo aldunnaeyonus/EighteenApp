@@ -11,7 +11,7 @@ Build Run iOS
    Build Run Android
     npx expo run:android --Builds on Machine
     eas build -p android -- Sends to Server
-    npx react-native bundle --platform='android' --entry-file='index.js' --bundle-output='./android/app/src/main/assets/index.android.bundle' --dev=false --assets-dest='./android/app/src/main/res'
+    npx react-native bundle --platform='android' --entry-file='index.js' --bundle-output='./android/app/src/main/assets/index.android.bundle' --dev=false --assets-dest='./android/app/src/main/res' && mkdir -p android/output && npx expo export:embed --platform android --entry-file='index.js' --bundle-output android/output/index.android.bundle --dev false --assets-dest android/output --sourcemap-output android/sourcemap.js && cd android && find output -type f | zip index.android.bundle.zip -@ && zip sourcemap.zip sourcemap.js && cd .. && rm -rf android/output && rm -rf android/sourcemap.js
     sudo npx react-native start
 
 curl 'http://localhost:8081/index.js.bundle?dev=false&minify=true' -o ios/main2.jsbundle
