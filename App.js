@@ -45,6 +45,8 @@ import NotifService from "./NotifService";
 import TempCamera from "./src/Screens/Cameras/TempCamera";
 import { getLocales } from 'expo-localization';
 import { StyleSheet } from "react-native";
+import { ToastProvider } from 'react-native-styled-toast'
+import {SheetProvider} from 'react-native-actions-sheet';
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -191,6 +193,9 @@ const onCheckVersion = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <AlertProvider>
+      <ToastProvider maxToasts={1} offset={65} position="TOP">
+         <SheetProvider context="global">
+          <MenuProvider>
         <NavigationContainer
           linking={linking}
           fallback={
@@ -203,7 +208,6 @@ const onCheckVersion = () => {
             />
           }
         >
-          <MenuProvider>
             <StatusBar style="auto" />
             <Stack.Navigator
               initialRouteName={signIn ? "Home" : "Begin"}
@@ -679,8 +683,10 @@ const onCheckVersion = () => {
                 )}
               </Stack.Screen>
             </Stack.Navigator>
-          </MenuProvider>
         </NavigationContainer>
+        </MenuProvider>
+              </SheetProvider>
+              </ToastProvider>
       </AlertProvider>
     </GestureHandlerRootView>
   );

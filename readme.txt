@@ -6,8 +6,8 @@ Build Web
 Build Run iOS
     npx expo run:ios --Builds on Machine
     eas build -p ios -- Sends to Server
-    npx react-native bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios' 
-
+    npx react-native bundle --entry-file='index.js' export:embed  --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios' && mkdir -p ios/output && npx expo export:embed --platform ios --entry-file node_modules/expo/AppEntry.js --bundle-output ios/output/main.jsbundle --dev false --assets-dest ios/output --sourcemap-output ios/sourcemap.js && cd ios && find output -type f | zip main.jsbundle.zip -@ && zip sourcemap.zip sourcemap.js && cd .. && rm -rf ios/output && rm -rf ios/sourcemap.js
+   
    Build Run Android
     npx expo run:android --Builds on Machine
     eas build -p android -- Sends to Server
