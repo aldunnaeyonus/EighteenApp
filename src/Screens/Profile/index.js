@@ -7,7 +7,6 @@ import {
   Modal,
   TouchableOpacity,
   ScrollView,
-  Platform,
 } from "react-native";
 const { width: ScreenWidth } = Dimensions.get("window");
 import React, { useEffect, useState, useCallback } from "react";
@@ -31,6 +30,8 @@ import { useIsFocused } from "@react-navigation/native";
 import Loading from "../SubViews/home/Loading";
 import hotUpdate from "react-native-ota-hot-update/src/index";
 import email from "react-native-email";
+import DeviceInfo from "react-native-device-info";
+import { getLocales } from "expo-localization";
 
 const Profile = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
@@ -110,13 +111,24 @@ const Profile = (props) => {
     const to = [`${constants.verification_email}`]; // string or array of email addresses
     email(to, {
       subject: `${i18n.t("Email2")}`,
-      body: `${i18n.t("Email1")}<BR><BR>
+      body: `${i18n.t("Email1")}
 
-                  --------------------------<BR>
+                  --------------------------
+                  //App
+                  App Name: ${DeviceInfo.getApplicationName()}
                   Build: ${version}
-                  App Version: ${Application.nativeApplicationVersion}<BR>
-                  Device: ${Platform.OS}<BR>
-                  User: ${user.user_handle}-${user.user_id}<BR>
+                  App Version: ${Application.nativeApplicationVersion}
+
+                  //Device
+                  OS: ${DeviceInfo.getSystemName()}
+                  Brand: ${DeviceInfo.getBrand()}
+                  Device: ${DeviceInfo.getDeviceId()}
+                  OS Version: ${DeviceInfo.getSystemVersion()}
+
+                  //User
+                  User: ${user.user_handle}-${user.user_id}
+                  Email: ${user.user_email}
+                  Language Code: ${getLocales()[0].languageCode}
                   --------------------------
                   `,
       checkCanOpen: true, // Call Linking.canOpenURL prior to Linking.openURL
