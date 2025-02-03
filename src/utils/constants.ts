@@ -179,7 +179,9 @@ export const CONTENT_SPACING = 15;
 export const url = "https://snapeighteen.com";
 export const updateJSON = "https://snapeighteen.com/update.json";
 export const urldata = "https://snapeighteen.com/dataFiles";
-export const verification_number = "+1 682.259.3773";
+export const flyerdataEvent = "https://snapeighteen.com/flyer.php?type=event&image=";
+export const flyerdataPersonal = "https://snapeighteen.com/flyer.php?type=friend&image=";
+export const verification_number = "+1682.259.3773";
 export const verification_email = 'support@snapeighteen.com';
 const SAFE_BOTTOM = 0;
 const SAFE_left = 0;
@@ -312,6 +314,8 @@ export const constants = {
   ANDROID_MODE,
   COMMON_MODES,
   IOS_DISPLAY,
+  flyerdataEvent,
+  flyerdataPersonal,
   ANDROID_EVT_TYPE,
   EVENT_TYPE_DISMISSED,
   EVENT_TYPE_SET,

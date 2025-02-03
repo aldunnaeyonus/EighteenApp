@@ -389,13 +389,14 @@ const Home = (props) => {
   };
   const fetchImage = async (qrCodeURL) => {
     try {
+      const flyer = constants.flyerdataEvent
       const path = `${RNFS.CachesDirectoryPath}/qrcodeEvent.png`;
       const fileExists = await RNFS.exists(path);
       if (!fileExists) {
-        await RNFS.downloadFile({ fromUrl: qrCodeURL, toFile: path }).promise;
+        await RNFS.downloadFile({ fromUrl: flyer+qrCodeURL, toFile: path }).promise;
       }else{
         await RNFS.unlink(path);
-        await RNFS.downloadFile({ fromUrl: qrCodeURL, toFile: path }).promise;
+        await RNFS.downloadFile({ fromUrl: flyer+qrCodeURL, toFile: path }).promise;
       }
       myAsyncPDFFunction(path);
     } catch (err) {
