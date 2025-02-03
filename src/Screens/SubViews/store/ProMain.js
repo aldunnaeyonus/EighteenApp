@@ -1,5 +1,5 @@
 import React from "react";
-import { Dimensions, View, Text, TouchableOpacity, Platform, Image } from "react-native";
+import { Dimensions, View, Text, TouchableOpacity, Platform, Image, Linking } from "react-native";
 const { width } = Dimensions.get("window");
 import * as i18n from "../../../../i18n";
 import { ListItem } from "@rneui/themed";
@@ -32,7 +32,10 @@ const ProMain = (props) => {
                   fontWeight: "600",
                 }}
                 onPress={() => {
-                  props.openSubscriptions();
+                  if (Platform.OS == "ios"{
+                    Linking.openURL('App-prefs:APPLE_ACCOUNT&path=SUBSCRIPTIONS');
+                  }else  if (Platform.OS == "android"{
+                  Linking.openURL('https://play.google.com/store/account/subscriptions');
                 }}
               >
                 {i18n.t("Cancel anytime")}
