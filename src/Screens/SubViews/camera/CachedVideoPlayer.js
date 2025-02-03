@@ -10,6 +10,38 @@ const CachedVideoPlayer = ({ url, fileName, videoPlayPause, videoPlayMute }) => 
   const [loading, setLoading] = useState(true);
   const video = useRef();
 
+  useEffect(() => {
+    const fetchVideo = async () => {
+      setLoading(true);
+      try {
+        const path = `${RNFS.CachesDirectoryPath}/${fileName}`;
+        const fileExists = await RNFS.exists(path);
+        if (!fileExists) {
+          await RNFS.downloadFile({ fromUrl: url, toFile: path }).promise;
+        }
+        setVideoPath(path);
+      } catch (err) {
+        await RNFS.downloadFile({ fromUrl: url, toFile: path }).promise;
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchVideo();
+  }, [url, fileName]);
+
+   if (loading) {
+    return (
+      <View style={StyleSheet.absoluteFill}>
+       <ActivityIndicator
+      size={40}
+      animating={loading}
+      hidesWhenStopped={true}
+      color={MD2Colors.orange900}
+    />
+      </View>
+    );
+  }
+
 
   return (
             <Video
@@ -22,7 +54,7 @@ const CachedVideoPlayer = ({ url, fileName, videoPlayPause, videoPlayMute }) => 
               controls={true}
               paused={videoPlayPause}
               style={{flex:1, width:width, height:height}}
-              source={{ uri:url }}
+              source={{ uri:videoPath }}
             />
   );
 };
