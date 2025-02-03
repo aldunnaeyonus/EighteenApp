@@ -236,13 +236,13 @@ const Profile = (props) => {
               }}
             />
           </View>
-                      <View style={{ flexDirection: "row", width:'100%',  marginTop: 20, marginbottom: 20,  justifyContent: "center" }}>
+                      <View style={{ flexDirection: "row", width:'100%', margin: 20, justifyContent: "center" }}>
           <TouchableOpacity
             style={{
               width: '40%',
               backgroundColor: "rgba(250, 190, 0, 1)",
               borderRadius: 24,
-              padding: 10,
+              padding: 15,
               alignItems: "center",
               justifyContent: "center",
             }}
@@ -264,7 +264,7 @@ const Profile = (props) => {
               width: '40%',
               backgroundColor: "rgba(234, 85, 4, 1)",
               borderRadius: 24,
-              padding: 10,
+              padding: 15,
               alignItems: "center",
               justifyContent: "center",
             }}
