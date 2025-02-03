@@ -57,6 +57,7 @@ const PhotoViewer = (props) => {
       console.log("Error =>", error);
     }
   };
+
   useFocusEffect(
     useCallback(() => {
       if (!props.unsubscribe) {

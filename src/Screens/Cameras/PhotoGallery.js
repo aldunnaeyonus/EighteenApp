@@ -144,6 +144,14 @@ const PhotoGallery = (props) => {
     setModalUpload(true);
   }, [modalUpload]);
 
+  const preLoadImages = () => {
+    let presloadImages = [];
+    filteredDataSource.map((image) => {
+      presloadImages.push({ uri: image.uri });
+    });
+    FastImage.preload(presloadImages);
+  };
+
   useFocusEffect(
     useCallback(() => {
       if (!props.unsubscribe) {
@@ -239,7 +247,7 @@ const PhotoGallery = (props) => {
       }, 15000);
       const fetchData = async () => {
         await axiosPull._pullGalleryFeed(props.route.params.pin);
-        preLoad();
+        preLoadImages();
       };
       fetchData();
       return async () => {
