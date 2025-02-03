@@ -162,9 +162,7 @@ const onCheckVersion = () => {
   useEffect(() => {
     const fetchData = async () => {
       setI18nConfig(localLang, constants.url);
-      if (Platform.OS == 'ios'){
       onCheckVersion();
-      }
       const owner = await AsyncStorage.getItem("user_id");
       setOwner(owner);
       const logedIn = await AsyncStorage.getItem("logedIn");
