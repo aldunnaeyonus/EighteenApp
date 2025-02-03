@@ -32,6 +32,7 @@ import hotUpdate from "react-native-ota-hot-update/src/index";
 import email from "react-native-email";
 import DeviceInfo from "react-native-device-info";
 import { getLocales } from "expo-localization";
+import RNFS from 'react-native-fs';
 
 const Profile = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
@@ -44,6 +45,7 @@ const Profile = (props) => {
   const [version, setVersion] = useState("0");
 
   const clearCache = useCallback(() => {
+  const cacheDir = RNFS.CachesDirectoryPath;
     Alert.alert(
       i18n.t("Delete Account"),
       i18n.t("Are you sure"),
@@ -56,8 +58,14 @@ const Profile = (props) => {
         {
           text: i18n.t("Clear"),
           onPress: () =>{
-                FastImage.clearMemoryCache();
-                FastImage.clearDiskCache();
+       try {
+           await RNFS.unlink(cacheDir);
+           console.log('Cache cleared successfully.');
+       } catch (error) {
+           console.error('Error clearing cache:', error);
+       }
+       FastImage.clearMemoryCache();
+       FastImage.clearDiskCache();
           },
           style: "destructive",
         },
