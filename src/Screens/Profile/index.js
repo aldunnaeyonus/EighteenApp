@@ -32,7 +32,9 @@ import hotUpdate from "react-native-ota-hot-update/src/index";
 import email from "react-native-email";
 import DeviceInfo from "react-native-device-info";
 import { getLocales } from "expo-localization";
-import RNFS from 'react-native-fs';
+import RNFS from "react-native-fs";
+import RNImageToPdf from "react-native-image-to-pdf";
+import RNPrint from "react-native-print";
 
 const Profile = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
@@ -45,7 +47,7 @@ const Profile = (props) => {
   const [version, setVersion] = useState("0");
 
   const clearCache = useCallback(() => {
-  const cacheDir = RNFS.CachesDirectoryPath;
+    const cacheDir = RNFS.CachesDirectoryPath;
     Alert.alert(
       i18n.t("Delete Account"),
       i18n.t("Are you sure"),
@@ -57,15 +59,15 @@ const Profile = (props) => {
         },
         {
           text: i18n.t("Clear"),
-          onPress: async () =>{
-       try {
-           await RNFS.unlink(cacheDir);
-           console.log('Cache cleared successfully.');
-       } catch (error) {
-           console.error('Error clearing cache:', error);
-       }
-       FastImage.clearMemoryCache();
-       FastImage.clearDiskCache();
+          onPress: async () => {
+            try {
+              await RNFS.unlink(cacheDir);
+              console.log("Cache cleared successfully.");
+            } catch (error) {
+              console.error("Error clearing cache:", error);
+            }
+            FastImage.clearMemoryCache();
+            FastImage.clearDiskCache();
           },
           style: "destructive",
         },
@@ -73,7 +75,7 @@ const Profile = (props) => {
       { cancelable: false }
     );
   }, []);
-  
+
   const logout = useCallback(() => {
     const execute = async () => {
       await AsyncStorage.removeItem("UUID");
@@ -206,8 +208,45 @@ const Profile = (props) => {
     preview();
   }, []);
 
-  const handlePrint = async () => {
-    //await printImageUrl(qrCodeURL);
+  const fetchImage = async (qrCode) => {
+    try {
+      const path = `${RNFS.CachesDirectoryPath}/qrcode.png`;
+      const fileExists = await RNFS.exists(path);
+      if (!fileExists) {
+        await RNFS.downloadFile({ fromUrl: qrCode, toFile: path }).promise;
+      }
+      myAsyncPDFFunction(path);
+    } catch (err) {
+      await RNFS.downloadFile({ fromUrl: qrCode, toFile: path }).promise;
+    } finally {
+    }
+  };
+
+  const myAsyncPDFFunction = async (url) => {
+    const path = `${RNFS.CachesDirectoryPath}/qrcode.pdf`;
+    const fileExists = await RNFS.exists(path);
+    if (!fileExists) {
+      try {
+        const options = {
+          imagePaths: [url],
+          name: "qrcode",
+          quality: 1.0, // optional compression paramter
+        };
+        const pdf = await RNImageToPdf.createPDFbyImages(options);
+        handlePrint(pdf.filePath);
+        RNFS.unlink(url)
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      handlePrint(path);
+      RNFS.unlink(url)
+    }
+  };
+
+  const handlePrint = async (url) => {
+    await RNPrint.print({ filePath: url });
+    RNFS.unlink(url)
   };
 
   return (
@@ -240,59 +279,63 @@ const Profile = (props) => {
               }}
             />
           </View>
-        <View style={{ 
-          flexDirection: "row", 
-          width:'100%', 
-          margin: 20, 
-          justifyContent: "center" 
-          }}>
-          <TouchableOpacity
+          <View
             style={{
-              width: '40%',
-              marginRight: 10,
-              backgroundColor: "rgba(250, 190, 0, 1)",
-              borderRadius: 24,
-              padding: 15,
-              alignItems: "center",
+              flexDirection: "row",
+              width: "100%",
+              margin: 20,
               justifyContent: "center",
             }}
-            onPress={() => setmodalVisable(false)}
           >
-            <Text
+            <TouchableOpacity
               style={{
-                textTransform: "uppercase",
-                fontSize: 20,
-                fontWeight: 600,
-                color: "#fff",
+                width: "40%",
+                marginRight: 10,
+                backgroundColor: "rgba(250, 190, 0, 1)",
+                borderRadius: 24,
+                padding: 15,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              onPress={() => setmodalVisable(false)}
+            >
+              <Text
+                style={{
+                  textTransform: "uppercase",
+                  fontSize: 20,
+                  fontWeight: 600,
+                  color: "#fff",
+                }}
+              >
+                {i18n.t("Close")}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                width: "40%",
+                marginLeft: 10,
+                backgroundColor: "rgba(234, 85, 4, 1)",
+                borderRadius: 24,
+                padding: 15,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              onPress={() => {
+                fetchImage();
               }}
             >
-              {i18n.t("Close")}
-            </Text>
-          </TouchableOpacity>
-               <TouchableOpacity
-            style={{
-              width: '40%',
-              marginLeft: 10,
-              backgroundColor: "rgba(234, 85, 4, 1)",
-              borderRadius: 24,
-              padding: 15,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-            onPress={() => {handlePrint();}}
-          >
-            <Text
-              style={{
-                textTransform: "uppercase",
-                fontSize: 20,
-                fontWeight: 600,
-                color: "#fff",
-              }}
-            >
-              {i18n.t("Print")}
-            </Text>
-          </TouchableOpacity>
-              </View>
+              <Text
+                style={{
+                  textTransform: "uppercase",
+                  fontSize: 20,
+                  fontWeight: 600,
+                  color: "#fff",
+                }}
+              >
+                {i18n.t("Print")}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </Modal>
       <View style={{ width: "100%", backgroundColor: "#fff" }}>
@@ -610,13 +653,13 @@ const Profile = (props) => {
               </ListItem.Content>
               <ListItem.Chevron />
             </ListItem>
-                 <View style={[styles.dividerTableStyleShort]} />
+            <View style={[styles.dividerTableStyleShort]} />
 
             <ListItem
               containerStyle={{ paddingVertical: 5 }}
               key="25"
               onPress={() => {
-               clearCache();
+                clearCache();
               }}
             >
               <Icon
