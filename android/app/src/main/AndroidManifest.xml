@@ -18,7 +18,8 @@
     <intent>
       <action android:name="android.intent.action.VIEW"/>
       <category android:name="android.intent.category.BROWSABLE"/>
-            <action android:name="android.intent.action.SENDTO" />
+      <category android:name="android.intent.category.APP_EMAIL"/>
+      <action android:name="android.intent.action.SENDTO" />
       <data android:scheme="https"/>
                <data android:scheme="mailto"/>
     </intent>
@@ -48,6 +49,7 @@
       <intent-filter>
         <action android:name="android.intent.action.VIEW"/>
         <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.APP_EMAIL"/>
             <action android:name="android.intent.action.SENDTO"/>
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="snapseighteenapp"/>
