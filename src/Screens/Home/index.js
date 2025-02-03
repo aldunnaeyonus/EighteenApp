@@ -385,6 +385,10 @@ const Home = (props) => {
     });
   };
 
+  const handlePrint = async () => {
+    //await printImageUrl(qrCodeURL);
+  };
+
   return (
     <SafeAreaProvider
       style={{ backgroundColor: "#fff", flex: 1, paddingBottom: 24 }}
@@ -448,7 +452,6 @@ const Home = (props) => {
           </TouchableOpacity>
         </View>
       </Modal>
-
       <Modal
         visible={modalVisable}
         animationType="slide"
@@ -473,59 +476,66 @@ const Home = (props) => {
               }}
             />
           </View>
-        <View style={{ flexDirection: "row", width:'100%', margin: 20, justifyContent: "center" }}>
-          <TouchableOpacity
-            style={{
-              width: '40%',
-              backgroundColor: "rgba(250, 190, 0, 1)",
-              borderRadius: 24,
-              padding: 15,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-            onPress={() => {
-              setQrCodeURL("");
-              setmodalVisable(false);
-            }}
-          >
-            <Text
-              style={{
-                textTransform: "uppercase",
-                fontSize: 20,
-                fontWeight: 600,
-                color: "#fff",
-              }}
-            >
-              {i18n.t("Close")}
-            </Text>
-          </TouchableOpacity>
-               </View>
-          <TouchableOpacity
-            style={{
-              width: '40%',
-              backgroundColor: "rgba(234, 85, 4, 1)",
-              borderRadius: 24,
-              padding: 15,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-            onPress={() => {
+           <View style={{ 
+                    flexDirection: "row", 
+                    width:'100%', 
+                    margin: 20, 
+                    justifyContent: "center" 
+                    }}>
+                    <TouchableOpacity
+                      style={{
+                        width: '40%',
+                        marginRight: 10,
+                        backgroundColor: "rgba(250, 190, 0, 1)",
+                        borderRadius: 24,
+                        padding: 15,
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                      onPress={() => {
+                        setQrCodeURL("");
+                        setmodalVisable(false);
+                      }}
+                    >
+                      <Text
+                        style={{
+                          textTransform: "uppercase",
+                          fontSize: 20,
+                          fontWeight: 600,
+                          color: "#fff",
+                        }}
+                      >
+                        {i18n.t("Close")}
+                      </Text>
+                    </TouchableOpacity>
+                         <TouchableOpacity
+                      style={{
+                        width: '40%',
+                        marginLeft: 10,
+                        backgroundColor: "rgba(234, 85, 4, 1)",
+                        borderRadius: 24,
+                        padding: 15,
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                      onPress={() => {
+                          handlePrint()
+                      }}
+                    >
+                      <Text
+                        style={{
+                          textTransform: "uppercase",
+                          fontSize: 20,
+                          fontWeight: 600,
+                          color: "#fff",
+                        }}
+                      >
+                        {i18n.t("Print")}
+                      </Text>
+                    </TouchableOpacity>
+                        </View>
+                  </View>
 
-            }}
-          >
-            <Text
-              style={{
-                textTransform: "uppercase",
-                fontSize: 20,
-                fontWeight: 600,
-                color: "#fff",
-              }}
-            >
-              {i18n.t("Print")}
-            </Text>
-          </TouchableOpacity>
-              </View>
-        </View>
       </Modal>
 
       <RefreshableWrapper

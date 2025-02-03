@@ -57,7 +57,7 @@ const Profile = (props) => {
         },
         {
           text: i18n.t("Clear"),
-          onPress: () =>{
+          onPress: async () =>{
        try {
            await RNFS.unlink(cacheDir);
            console.log('Cache cleared successfully.');
@@ -206,6 +206,10 @@ const Profile = (props) => {
     preview();
   }, []);
 
+  const handlePrint = async () => {
+    //await printImageUrl(qrCodeURL);
+  };
+
   return (
     <ScrollView
       style={{ width: "100%", backgroundColor: "#fff" }}
@@ -236,10 +240,16 @@ const Profile = (props) => {
               }}
             />
           </View>
-                      <View style={{ flexDirection: "row", width:'100%', margin: 20, justifyContent: "center" }}>
+        <View style={{ 
+          flexDirection: "row", 
+          width:'100%', 
+          margin: 20, 
+          justifyContent: "center" 
+          }}>
           <TouchableOpacity
             style={{
               width: '40%',
+              marginRight: 10,
               backgroundColor: "rgba(250, 190, 0, 1)",
               borderRadius: 24,
               padding: 15,
@@ -262,15 +272,14 @@ const Profile = (props) => {
                <TouchableOpacity
             style={{
               width: '40%',
+              marginLeft: 10,
               backgroundColor: "rgba(234, 85, 4, 1)",
               borderRadius: 24,
               padding: 15,
               alignItems: "center",
               justifyContent: "center",
             }}
-            onPress={() => {
-
-            }}
+            onPress={() => {handlePrint();}}
           >
             <Text
               style={{
@@ -614,7 +623,7 @@ const Profile = (props) => {
                 type="material"
                 name="cached"
                 size={20}
-                color="#FF3232"
+                color="#3D4849"
                 containerStyle={{
                   width: 28,
                   height: 28,
@@ -632,7 +641,6 @@ const Profile = (props) => {
           </View>
           <InfoText text={i18n.t("Policies")} />
           <View style={[styles.dividerTableStyle]} />
-
           <ListItem
             containerStyle={{ paddingVertical: 5 }}
             key="7"
@@ -685,6 +693,7 @@ const Profile = (props) => {
             </ListItem.Content>
             <ListItem.Chevron />
           </ListItem>
+          <View style={[styles.dividerTableStyle]} />
           <InfoText text={i18n.t("AppData")} />
           <View style={[styles.dividerTableStyle]} />
           <ListItem

@@ -32,10 +32,11 @@ const ProMain = (props) => {
                   fontWeight: "600",
                 }}
                 onPress={() => {
-                  if (Platform.OS == "ios"{
+                  if (Platform.OS == "ios") {
                     Linking.openURL('App-prefs:APPLE_ACCOUNT&path=SUBSCRIPTIONS');
-                  }else  if (Platform.OS == "android"{
+                  }else  if (Platform.OS == "android") {
                   Linking.openURL('https://play.google.com/store/account/subscriptions');
+                  }
                 }}
               >
                 {i18n.t("Cancel anytime")}
