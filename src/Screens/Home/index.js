@@ -473,17 +473,15 @@ const Home = (props) => {
               }}
             />
           </View>
+        <View style={{ flexDirection: "row", width:'100%', margin: 20, justifyContent: "center" }}>
           <TouchableOpacity
             style={{
-              marginTop: 20,
-              flexDirection: "row",
-              width: 250,
-              backgroundColor: "rgba(234, 85, 4, 1)",
+              width: '40%',
+              backgroundColor: "rgba(250, 190, 0, 1)",
               borderRadius: 24,
               padding: 15,
               alignItems: "center",
               justifyContent: "center",
-              marginbottom: 20,
             }}
             onPress={() => {
               setQrCodeURL("");
@@ -501,6 +499,32 @@ const Home = (props) => {
               {i18n.t("Close")}
             </Text>
           </TouchableOpacity>
+               </View>
+          <TouchableOpacity
+            style={{
+              width: '40%',
+              backgroundColor: "rgba(234, 85, 4, 1)",
+              borderRadius: 24,
+              padding: 15,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            onPress={() => {
+
+            }}
+          >
+            <Text
+              style={{
+                textTransform: "uppercase",
+                fontSize: 20,
+                fontWeight: 600,
+                color: "#fff",
+              }}
+            >
+              {i18n.t("Print")}
+            </Text>
+          </TouchableOpacity>
+              </View>
         </View>
       </Modal>
 
