@@ -136,15 +136,15 @@ const Profile = (props) => {
 
                   --------------------------
                   //App
-                  App Name: ${DeviceInfo.getApplicationName()}
+                  App: ${DeviceInfo.getApplicationName()}
                   Build: ${version}
-                  App Version: ${Application.nativeApplicationVersion}
+                  Version: ${Application.nativeApplicationVersion}
 
                   //Device
                   OS: ${DeviceInfo.getSystemName()}
                   Brand: ${DeviceInfo.getBrand()}
                   Device: ${DeviceInfo.getDeviceId()}
-                  OS Version: ${DeviceInfo.getSystemVersion()}
+                  Version: ${DeviceInfo.getSystemVersion()}
 
                   //User
                   User: ${user.user_handle}-${user.user_id}
