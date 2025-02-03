@@ -43,9 +43,30 @@ const Profile = (props) => {
   const [upload] = useMMKVObject("uploadData", storage);
   const [version, setVersion] = useState("0");
 
+  const clearCache = useCallback(() => {
+    Alert.alert(
+      i18n.t("Delete Account"),
+      i18n.t("Are you sure"),
+      [
+        {
+          text: i18n.t("Cancel"),
+          onPress: () => console.log("Cancel Pressed"),
+          style: "default",
+        },
+        {
+          text: i18n.t("Clear"),
+          onPress: () =>{
+                FastImage.clearMemoryCache();
+                FastImage.clearDiskCache();
+          },
+          style: "destructive",
+        },
+      ],
+      { cancelable: false }
+    );
+  }, []);
+  
   const logout = useCallback(() => {
-    FastImage.clearMemoryCache();
-    FastImage.clearDiskCache();
     const execute = async () => {
       await AsyncStorage.removeItem("UUID");
       await AsyncStorage.removeItem("logedIn");
@@ -546,6 +567,33 @@ const Profile = (props) => {
               />
               <ListItem.Content>
                 <ListItem.Title>{i18n.t("Logout")}</ListItem.Title>
+              </ListItem.Content>
+              <ListItem.Chevron />
+            </ListItem>
+                 <View style={[styles.dividerTableStyleShort]} />
+
+            <ListItem
+              containerStyle={{ paddingVertical: 5 }}
+              key="25"
+              onPress={() => {
+               clearCache();
+              }}
+            >
+              <Icon
+                type="material"
+                name="cached"
+                size={20}
+                color="#FF3232"
+                containerStyle={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: 6,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              />
+              <ListItem.Content>
+                <ListItem.Title>{i18n.t("ClearCache")}</ListItem.Title>
               </ListItem.Content>
               <ListItem.Chevron />
             </ListItem>
