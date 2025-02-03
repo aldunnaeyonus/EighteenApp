@@ -1,0 +1,35 @@
+diff --git a/node_modules/react-native-image-to-pdf/ios/RNImageToPdf.m b/node_modules/react-native-image-to-pdf/ios/RNImageToPdf.m
+index c30cfad..60d26dc 100644
+--- a/node_modules/react-native-image-to-pdf/ios/RNImageToPdf.m
++++ b/node_modules/react-native-image-to-pdf/ios/RNImageToPdf.m
+@@ -26,9 +26,10 @@ RCT_EXPORT_MODULE();
+ RCT_EXPORT_METHOD(createPDFbyImages:(NSDictionary *)options
+                   resolver:(RCTPromiseResolveBlock)resolve
+                   rejecter:(RCTPromiseRejectBlock)reject) {
++		dispatch_async(dispatch_get_main_queue(), ^{
+ 
+-    _resolveBlock = resolve;
+-    _rejectBlock = reject;
++			self->_resolveBlock = resolve;
++			self->_rejectBlock = reject;
+     
+     self.resultDict = [[NSMutableDictionary alloc] init];
+     self.imageViewArray = [[NSMutableArray alloc] init];
+@@ -55,13 +56,15 @@ RCT_EXPORT_METHOD(createPDFbyImages:(NSDictionary *)options
+         if (quality > 0) {
+             resizedImg = [self compress:resizedImg withQuality:quality];
+         }
+-        
+         UIImageView *imageView = [[UIImageView alloc] initWithImage:resizedImg];
+-        [self.imageViewArray addObject:imageView];
++			[self.imageViewArray addObject:imageView];
++		
+     }
+     
+     [self createPDFWithFilename:filename];
+     NSLog(@"PDF was created successfully");
++		});
++
+ }
+ 
+ - (CGSize)calculateSizeOn:(UIImage *)image usingMaxWidth:(long)maxWidth andMaxHeight:(long)maxHeight {
