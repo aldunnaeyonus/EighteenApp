@@ -35,6 +35,9 @@ import {
   useCameraDevice,
   useCodeScanner,
 } from "react-native-vision-camera";
+import RNFS from "react-native-fs";
+import RNImageToPdf from "react-native-image-to-pdf";
+import RNPrint from "react-native-print";
 
 const Home = (props) => {
   const [cameraData, setcameraData] = useMMKVObject(
@@ -384,9 +387,55 @@ const Home = (props) => {
       UUID: userID,
     });
   };
+  const fetchImage = async (qrCodeURL) => {
+    try {
+      const path = `${RNFS.CachesDirectoryPath}/qrcodeEvent.png`;
+      const fileExists = await RNFS.exists(path);
+      if (!fileExists) {
+        await RNFS.downloadFile({ fromUrl: qrCodeURL, toFile: path }).promise;
+      }else{
+        await RNFS.unlink(path);
+        await RNFS.downloadFile({ fromUrl: qrCodeURL, toFile: path }).promise;
+      }
+      myAsyncPDFFunction(path);
+    } catch (err) {
+      fetchImage(qrCodeURL);
+    } finally {
+    }
+  };
 
-  const handlePrint = async () => {
-    //await printImageUrl(qrCodeURL);
+  const myAsyncPDFFunction = async (url) => {
+    const path = `${RNFS.CachesDirectoryPath}/qrcodeEvent.pdf`;
+    const fileExists = await RNFS.exists(path);
+    const options = {
+      imagePaths: [url],
+      name: "qrcodeEvent",
+      quality: 1.0, // optional compression paramter
+    };
+    if (!fileExists) {
+      try {
+        const pdf = await RNImageToPdf.createPDFbyImages(options);
+        handlePrint(pdf.filePath);
+        RNFS.unlink(url)
+      } catch (e) {
+        console.log(e);
+        myAsyncPDFFunction(url);
+      }
+    } else {
+      RNFS.unlink(url)
+      try {
+        const pdf = await RNImageToPdf.createPDFbyImages(options);
+        handlePrint(pdf.filePath);
+        RNFS.unlink(url)
+      } catch (e) {
+        myAsyncPDFFunction(url);
+      }
+    }
+  };
+
+  const handlePrint = async (url) => {
+    await RNPrint.print({ filePath: url });
+    RNFS.unlink(url)
   };
 
   return (
@@ -519,7 +568,7 @@ const Home = (props) => {
                         justifyContent: "center",
                       }}
                       onPress={() => {
-                          handlePrint()
+                        fetchImage(qrCodeURL);
                       }}
                     >
                       <Text

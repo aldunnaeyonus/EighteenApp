@@ -208,16 +208,19 @@ const Profile = (props) => {
     preview();
   }, []);
 
-  const fetchImage = async (qrCode) => {
+  const fetchImage = async (qrCodeURL) => {
     try {
       const path = `${RNFS.CachesDirectoryPath}/qrcode.png`;
       const fileExists = await RNFS.exists(path);
       if (!fileExists) {
-        await RNFS.downloadFile({ fromUrl: qrCode, toFile: path }).promise;
+        await RNFS.downloadFile({ fromUrl: qrCodeURL, toFile: path }).promise;
+      }else{
+        await RNFS.unlink(path);
+        await RNFS.downloadFile({ fromUrl: qrCodeURL, toFile: path }).promise;
       }
       myAsyncPDFFunction(path);
     } catch (err) {
-      await RNFS.downloadFile({ fromUrl: qrCode, toFile: path }).promise;
+      fetchImage(qrCodeURL);
     } finally {
     }
   };
@@ -225,22 +228,29 @@ const Profile = (props) => {
   const myAsyncPDFFunction = async (url) => {
     const path = `${RNFS.CachesDirectoryPath}/qrcode.pdf`;
     const fileExists = await RNFS.exists(path);
+    const options = {
+      imagePaths: [url],
+      name: "qrcode",
+      quality: 1.0, // optional compression paramter
+    };
     if (!fileExists) {
       try {
-        const options = {
-          imagePaths: [url],
-          name: "qrcode",
-          quality: 1.0, // optional compression paramter
-        };
         const pdf = await RNImageToPdf.createPDFbyImages(options);
         handlePrint(pdf.filePath);
         RNFS.unlink(url)
       } catch (e) {
         console.log(e);
+        myAsyncPDFFunction(url);
       }
     } else {
-      handlePrint(path);
       RNFS.unlink(url)
+      try {
+        const pdf = await RNImageToPdf.createPDFbyImages(options);
+        handlePrint(pdf.filePath);
+        RNFS.unlink(url)
+      } catch (e) {
+        myAsyncPDFFunction(url);
+      }
     }
   };
 
@@ -321,7 +331,7 @@ const Profile = (props) => {
                 justifyContent: "center",
               }}
               onPress={() => {
-                fetchImage();
+                fetchImage(qrCodeURL);
               }}
             >
               <Text
