@@ -45,7 +45,7 @@ const CachedVideoPlayer = ({ url, fileName, videoPlayPause, videoPlayMute }) => 
 
   return (
             <Video
-              fullscreen={true}
+              fullscreen={false}
               fullscreenAutorotate={true}
               fullscreenOrientation={"all"}
               ignoreSilentSwitch="obey"

@@ -109,7 +109,7 @@ const getItemLayout = (data, index) => (
   const getItemLayoutBottom = (data, index) => (
     {
       length: 80, 
-      offset:  index * 80 + 10, 
+      offset:  index * 90 - width / 2 + 90 / 2, 
       index
     }
   );
