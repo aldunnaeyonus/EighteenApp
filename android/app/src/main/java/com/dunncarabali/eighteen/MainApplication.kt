@@ -24,9 +24,6 @@ class MainApplication : Application(), ReactApplication {
         object : DefaultReactNativeHost(this) {
           override fun getPackages(): List<ReactPackage> {
             // Packages that cannot be autolinked yet can be added manually here, for example:
-            packages.add(new RNImageToPdfPackage());,
-            packages.add(new RNPrintPackage());
-
             // packages.add(new MyReactNativePackage());
             return PackageList(this).packages
           }

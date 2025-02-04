@@ -109,11 +109,10 @@ android {
     ndkVersion rootProject.ext.ndkVersion
 
     buildToolsVersion rootProject.ext.buildToolsVersion
-    compileSdk rootProject.ext.compileSdkVersion
 
     namespace 'com.dunncarabali.eighteen'
-    defaultConfig {
-missingDimensionStrategy "store", "play"
+        defaultConfig {
+        missingDimensionStrategy "store", "play"
         applicationId 'com.dunncarabali.eighteen'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
@@ -184,7 +183,7 @@ dependencies {
     implementation("com.facebook.react:react-android")
     implementation project(':react-native-blob-util')
     implementation project(':react-native-image-to-pdf')
-    comimplementationpile project(':react-native-print')
+    implementation project(':react-native-print')
 
     def isGifEnabled = (findProperty('expo.gif.enabled') ?: "") == "true";
     def isWebpEnabled = (findProperty('expo.webp.enabled') ?: "") == "true";
@@ -215,4 +214,6 @@ if (rnVersion < versionToNumber(0, 75, 0)) {
     apply from: new File(["node", "--print", "require.resolve('@react-native-community/cli-platform-android/package.json', { paths: [require.resolve('react-native/package.json')] })"].execute(null, rootDir).text.trim(), "../native_modules.gradle");
     applyNativeModulesAppBuildGradle(project)
 }
-android { defaultConfig { missingDimensionStrategy "store", "play" } }
+android {
+    compileSdk 34
+    defaultConfig { missingDimensionStrategy "store", "play" } }
