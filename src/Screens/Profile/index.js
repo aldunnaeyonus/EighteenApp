@@ -32,9 +32,6 @@ import hotUpdate from "react-native-ota-hot-update/src/index";
 import email from "react-native-email";
 import DeviceInfo from "react-native-device-info";
 import { getLocales } from "expo-localization";
-import RNFS from "react-native-fs";
-import RNImageToPdf from "react-native-image-to-pdf";
-import RNPrint from "react-native-print";
 
 const Profile = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
@@ -208,58 +205,6 @@ const Profile = (props) => {
     preview();
   }, []);
 
-  const fetchImage = async (qrCodeURL) => {
-    try {
-      const flyer = constants.flyerdataPersonal
-      const path = `${RNFS.CachesDirectoryPath}/qrcode.png`;
-      const fileExists = await RNFS.exists(path);
-      if (!fileExists) {
-        await RNFS.downloadFile({ fromUrl: flyer+qrCodeURL, toFile: path }).promise;
-      }else{
-        await RNFS.unlink(path);
-        await RNFS.downloadFile({ fromUrl: flyer+qrCodeURL, toFile: path }).promise;
-      }
-      myAsyncPDFFunction(path);
-    } catch (err) {
-      fetchImage(qrCodeURL);
-    } finally {
-    }
-  };
-
-  const myAsyncPDFFunction = async (url) => {
-    const path = `${RNFS.CachesDirectoryPath}/qrcode.pdf`;
-    const fileExists = await RNFS.exists(path);
-    const options = {
-      imagePaths: [url],
-      name: "qrcode",
-      quality: 1.0, // optional compression paramter
-    };
-    if (!fileExists) {
-      try {
-        const pdf = await RNImageToPdf.createPDFbyImages(options);
-        handlePrint(pdf.filePath);
-        RNFS.unlink(url)
-      } catch (e) {
-        console.log(e);
-        myAsyncPDFFunction(url);
-      }
-    } else {
-      RNFS.unlink(url)
-      try {
-        const pdf = await RNImageToPdf.createPDFbyImages(options);
-        handlePrint(pdf.filePath);
-        RNFS.unlink(url)
-      } catch (e) {
-        myAsyncPDFFunction(url);
-      }
-    }
-  };
-
-  const handlePrint = async (url) => {
-    await RNPrint.print({ filePath: url });
-    RNFS.unlink(url)
-  };
-
   return (
     <ScrollView
       style={{ width: "100%", backgroundColor: "#fff" }}
@@ -290,17 +235,9 @@ const Profile = (props) => {
               }}
             />
           </View>
-          <View
-            style={{
-              flexDirection: "row",
-              width: "100%",
-              margin: 20,
-              justifyContent: "center",
-            }}
-          >
             <TouchableOpacity
               style={{
-                width: "40%",
+                width: ScreenWidth - 100,
                 marginRight: 10,
                 backgroundColor: "rgba(250, 190, 0, 1)",
                 borderRadius: 24,
@@ -321,32 +258,6 @@ const Profile = (props) => {
                 {i18n.t("Close")}
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                width: "40%",
-                marginLeft: 10,
-                backgroundColor: "rgba(234, 85, 4, 1)",
-                borderRadius: 24,
-                padding: 15,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-              onPress={() => {
-                fetchImage(qrCodeURL);
-              }}
-            >
-              <Text
-                style={{
-                  textTransform: "uppercase",
-                  fontSize: 20,
-                  fontWeight: 600,
-                  color: "#fff",
-                }}
-              >
-                {i18n.t("Print")}
-              </Text>
-            </TouchableOpacity>
-          </View>
         </View>
       </Modal>
       <View style={{ width: "100%", backgroundColor: "#fff" }}>
