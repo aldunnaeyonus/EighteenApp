@@ -239,6 +239,8 @@ const Profile = (props) => {
               style={{
                 width: ScreenWidth - 100,
                 marginRight: 10,
+                marginLeft: 10,
+                marginTop: 25,
                 backgroundColor: "rgba(250, 190, 0, 1)",
                 borderRadius: 24,
                 padding: 15,

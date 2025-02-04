@@ -18,7 +18,7 @@ const ImageGalleryView = (props) => {
           style={{
             flex: 1,
             height: '100%',
-            width: '100%',
+            width: width,
             justifyContent: "center",
             alignItems: "center",
             backgroundColor: "transparent",
@@ -109,7 +109,7 @@ const ImageGalleryView = (props) => {
           style={{
             flex: 1,
             height: '100%',
-            width: '100%',
+            width: width,
             justifyContent: "center",
             alignItems: "center",
             backgroundColor: "transparent",

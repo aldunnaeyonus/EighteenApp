@@ -17,7 +17,7 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 
 
 const PhotoViewer = (props) => {
-  const { width } = Dimensions.get("screen");
+  const { width } = Dimensions.get("window");
   const canMomentum = useRef(false);
   const AnimatedFlatlist = Animated.FlatList;
   const bottomPhoto = useRef();
@@ -99,19 +99,20 @@ const onMomentumScrollEnd = useCallback((ev) => {
     canMomentum.current = false;
    }, []);
 
-const getItemLayout = (data, index) => (
+const getItemLayout = (_, index) => (
     {
       length: width, 
       offset:  width * index, 
-      index}
-  );
-
-  const getItemLayoutBottom = (data, index) => (
-    {
-      length: 80, 
-      offset:  index * 90 - width / 2 + 90 / 2, 
       index
     }
+  );
+
+  const getItemLayoutBottom = (_, index) => (
+      {
+        length: 80, 
+        offset:  90 * index - width / 2 + 80 / 2, 
+        index}
+
   );
 
   return  (
