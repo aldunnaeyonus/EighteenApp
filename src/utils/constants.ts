@@ -180,7 +180,7 @@ export const CONTENT_SPACING = 15;
 export const url = "https://snapeighteen.com";
 export const updateJSON = "https://snapeighteen.com/update.json";
 export const urldata = "https://snapeighteen.com/dataFiles";
-export const flyerdataEvent = "https://snapeighteen.com/flyer.php?locale="++"&image=";
+export const flyerdataEvent = "https://snapeighteen.com/flyer.php?locale="+getLocales()[0].languageCode+"&image=";
 export const verification_number = "+1682.259.3773";
 export const verification_email = 'support@snapeighteen.com';
 const SAFE_BOTTOM = 0;
