@@ -569,7 +569,25 @@ const Home = (props) => {
                         justifyContent: "center",
                       }}
                       onPress={() => {
-                        fetchImage(qrCodeURL);
+                        Alert.alert(
+                        i18n.t("FlyerPrint"),
+                        i18n.t("Note: FlyerPrint"),
+                        [
+                          {
+                            text: i18n.t("Cancel"),
+                            onPress: () => console.log("Cancel Pressed"),
+                            style: "destructive",
+                          },
+                          {
+                            text: i18n.t("Continue"),
+                            onPress: async () => {
+                              fetchImage(qrCodeURL);
+                            },
+                            style: "default",
+                          },
+                        ],
+                        { cancelable: false }
+                      );
                       }}
                     >
                       <Text
