@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react'
+import React, { useCallback, useRef, useMemo } from 'react'
 import type { ViewProps } from 'react-native'
 import { StyleSheet, View, Dimensions, Platform} from 'react-native'
 import type { PanGestureHandlerGestureEvent, TapGestureHandlerStateChangeEvent } from 'react-native-gesture-handler'
@@ -14,17 +14,21 @@ import Reanimated, {
   withTiming,
   useAnimatedGestureHandler,
   useSharedValue,
-  withRepeat,
 } from 'react-native-reanimated'
-import type { Camera, PhotoFile, VideoFile } from 'react-native-vision-camera'
+import type { Camera, PhotoFile, VideoFile, TakePhotoOptions, TakeSnapshotOptions } from 'react-native-vision-camera'
+import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
 const START_RECORDING_DELAY = 200
+const MAX_DURATION = 30000
 const BORDER_WIDTH = 78 * 0.1
 export const SCREEN_WIDTH = Dimensions.get('window').width
 export const SCREEN_HEIGHT = Platform.select<number>({
   android: Dimensions.get('screen').height,
   ios: Dimensions.get('window').height,
 }) as number
+
+
+
 interface Props extends ViewProps {
   camera: React.RefObject<Camera>
   onMediaCaptured: (media: PhotoFile | VideoFile, type: 'photo' | 'video') => void
@@ -39,6 +43,7 @@ interface Props extends ViewProps {
 
   setIsPressingButton: (isPressingButton: boolean) => void
 }
+
 
 const _CaptureButton: React.FC<Props> = ({
   camera,
@@ -56,25 +61,31 @@ const _CaptureButton: React.FC<Props> = ({
   const isRecording = useRef(false)
   const recordingProgress = useSharedValue(0)
   const isPressingButton = useSharedValue(false)
+  const recordingTimeout = useRef<Timeout | null>(null);
+
+  const takePhotoOptions = useMemo<TakePhotoOptions & TakeSnapshotOptions>(
+    () => ({
+      photoCodec: 'jpeg',
+      qualityPrioritization: 'speed',
+      flash: flash,
+      quality: 90,
+      skipMetadata: true,
+    }),
+    [flash],
+  );
 
   //#region Camera Capture
-  const takePhoto = useCallback(() => {
-    const execute = async ()=>{
-      try {
-        if (camera.current == null) throw new Error('Camera ref is null!')
-  
-        console.log('Taking photo...')
-        const photo = await camera.current.takePhoto({
-          flash: flash,
-          enableShutterSound: false,
-        })
-        onMediaCaptured(photo, 'photo')
-      } catch (e) {
-        console.error('Failed to take photo!', e)
-      }
+  const takePhoto = useCallback(async () => {
+    try {
+      if (camera.current == null) throw new Error('Camera ref is null!');
+
+      console.log('Taking photo...');
+      const photo = await camera.current.takePhoto(takePhotoOptions);
+      onMediaCaptured(photo, 'photo');
+    } catch (e) {
+      console.error('Failed to take photo!', e);
     }
-    execute();
-  }, [camera, flash, onMediaCaptured])
+  }, [camera, onMediaCaptured, takePhotoOptions]);
 
   const onStoppedRecording = useCallback(() => {
     isRecording.current = false
@@ -82,24 +93,26 @@ const _CaptureButton: React.FC<Props> = ({
     console.log('stopped recording video!')
   }, [recordingProgress])
 
-  const stopRecording = useCallback( () => {
-    const execute = async ()=>{
-
+  const stopRecording = useCallback(async () => {
     try {
-      if (camera.current == null) throw new Error('Camera ref is null!')
+      if (camera.current == null) throw new Error('Camera ref is null!');
+      if (isRecording.current) {
+        this.testRef.animate(0, 10, Easing.linear); // Will fill the progress bar linearly in 8 seconds
+        console.log('calling stopRecording()...');
+        await camera.current.stopRecording();
+        console.log('called stopRecording()!');
 
-      console.log('calling stopRecording()...')
-      await camera.current.stopRecording()
-      console.log('called stopRecording()!')
+        clearTimeout(recordingTimeout.current)
+      }
     } catch (e) {
-      console.error('failed to stop recording!', e)
+      console.error('failed to stop recording!!', e);
     }
-  }
-  execute();
-  }, [camera])
+  }, [camera]);
+
   const startRecording = useCallback(() => {
     try {
       if (camera.current == null) throw new Error('Camera ref is null!')
+      this.testRef.animate(100, MAX_DURATION, Easing.linear); // Will fill the progress bar linearly in 8 seconds
 
       console.log('calling startRecording()...')
       camera.current.startRecording({
@@ -117,6 +130,13 @@ const _CaptureButton: React.FC<Props> = ({
       // TODO: wait until startRecording returns to actually find out if the recording has successfully started
       console.log('called startRecording()!')
       isRecording.current = true
+
+      recordingTimeout.current = setTimeout(() => {
+        if (isRecording.current) {
+          stopRecording();
+        }
+      }, MAX_DURATION);
+
     } catch (e) {
       console.error('failed to start recording!', e, 'camera')
     }
@@ -164,10 +184,10 @@ const _CaptureButton: React.FC<Props> = ({
             pressDownDate.current = undefined
             if (diff < START_RECORDING_DELAY) {
               // user has released the button within 200ms, so his intention is to take a single picture.
-              takePhoto()
+              await takePhoto()
             } else {
               // user has held the button for more than 200ms, so he has been recording this entire time.
-              stopRecording()
+             await stopRecording()
             }
           } finally {
             setTimeout(() => {
@@ -223,14 +243,12 @@ const _CaptureButton: React.FC<Props> = ({
     let scale: number
     if (enabled) {
       if (isPressingButton.value) {
-        scale = withRepeat(
-          withSpring(1, {
-            stiffness: 100,
-            damping: 1000,
-          }),
-          -1,
-          true,
-        )
+        scale =
+          withTiming(1.3, {
+            duration: 360,
+            easing: Easing.linear,
+          })
+
       } else {
         scale = withSpring(0.9, {
           stiffness: 500,
@@ -245,10 +263,6 @@ const _CaptureButton: React.FC<Props> = ({
     }
 
     return {
-      opacity: withTiming(enabled ? 1 : 0.3, {
-        duration: 100,
-        easing: Easing.linear,
-      }),
       transform: [
         {
           scale: scale,
@@ -275,13 +289,20 @@ const _CaptureButton: React.FC<Props> = ({
           simultaneousHandlers={tapHandler}>
           <Reanimated.View style={styles.flex}>
             <Reanimated.View style={[styles.shadow, shadowStyle]} />
+              <AnimatedCircularProgress
+              ref={(ref) => this.testRef = ref}
+              size={78}
+              width={BORDER_WIDTH}
+              fill={0}
+              tintColor="#f47457"
+              backgroundColor="white" />
             <View style={styles.button} />
           </Reanimated.View>
         </PanGestureHandler>
       </Reanimated.View>
     </TapGestureHandler>
-  )
-}
+  );
+};
 
 export const CaptureButton = React.memo(_CaptureButton)
 
