@@ -3,7 +3,7 @@ import type { ViewProps } from 'react-native'
 import { StyleSheet, View, Dimensions, Platform} from 'react-native'
 import type { PanGestureHandlerGestureEvent, TapGestureHandlerStateChangeEvent } from 'react-native-gesture-handler'
 import { PanGestureHandler, State, TapGestureHandler } from 'react-native-gesture-handler'
-
+import { constants, SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
 import Reanimated, {
   cancelAnimation,
   Easing,
@@ -21,14 +21,6 @@ import { AnimatedCircularProgress } from 'react-native-circular-progress';
 const START_RECORDING_DELAY = 200
 const MAX_DURATION = 30000
 const BORDER_WIDTH = 78 * 0.1
-export const SCREEN_WIDTH = Dimensions.get('window').width
-export const SCREEN_HEIGHT = Platform.select<number>({
-  android: Dimensions.get('screen').height,
-  ios: Dimensions.get('window').height,
-}) as number
-
-
-
 interface Props extends ViewProps {
   camera: React.RefObject<Camera>
   onMediaCaptured: (media: PhotoFile | VideoFile, type: 'photo' | 'video') => void
