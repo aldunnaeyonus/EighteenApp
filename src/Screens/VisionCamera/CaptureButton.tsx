@@ -289,7 +289,6 @@ const _CaptureButton: React.FC<Props> = ({
               fill={0}
               tintColor="#f47457"
               backgroundColor="white" />
-            <View style={styles.button} />
           </Reanimated.View>
         </PanGestureHandler>
       </Reanimated.View>
