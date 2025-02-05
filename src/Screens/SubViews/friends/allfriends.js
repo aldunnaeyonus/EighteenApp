@@ -4,7 +4,6 @@ import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
 const Image = createImageProgress(FastImage);
 import Progress from "react-native-progress";
-import { constants } from "../../../utils/constants";
 import { ListItem } from "@rneui/themed";
 
 const AllFriendsListItem = (props) => {

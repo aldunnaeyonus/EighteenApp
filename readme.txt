@@ -33,6 +33,7 @@ NPM Installs
     npm install -g npm-check-updates
 
 react-devtools
+import { SCREEN_HEIGHT, SCREEN_WIDTH } from '../../../utils/constants';
 
 npx uri-scheme open "snapseighteenapp://friends/45/user" --ios
 
