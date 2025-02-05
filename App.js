@@ -39,12 +39,11 @@ import Abouts from "./src/Screens/Profile/About";
 import GetPro from "./src/Screens/Store/GetPro";
 import { axiosPull } from "./src/utils/axiosPull";
 import hotUpdate  from 'react-native-ota-hot-update/src/index';
-import { constants } from "./src/utils/constants";
+import { constants, SCREEN_WIDTH, SCREEN_HEIGHT } from "./src/utils/constants";
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import NotifService from "./NotifService";
 import TempCamera from "./src/Screens/Cameras/TempCamera";
 import { getLocales } from 'expo-localization';
-import { StyleSheet } from "react-native";
 import { ToastProvider } from 'react-native-styled-toast'
 import {SheetProvider} from 'react-native-actions-sheet';
 
@@ -172,7 +171,7 @@ const onCheckVersion = () => {
       }
       setTimeout(() => {
         setReady(true);
-      }, 2000);
+      }, 3000);
     };
     fetchData();
   }, [signIn, ready, owner]);
@@ -181,7 +180,7 @@ const onCheckVersion = () => {
   if (!ready) {
     return (
       <FastImage
-      style={[StyleSheet.absoluteFill]}
+      style={{flex:1, width:SCREEN_WIDTH, height:SCREEN_HEIGHT}}
       resizeMode={FastImage.resizeMode.contain}
       source={require("./assets/splash.png")}
     />
