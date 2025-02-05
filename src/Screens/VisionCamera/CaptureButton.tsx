@@ -1,9 +1,9 @@
 import React, { useCallback, useRef, useMemo } from 'react'
 import type { ViewProps } from 'react-native'
-import { StyleSheet, View, Dimensions, Platform} from 'react-native'
+import { StyleSheet, View} from 'react-native'
 import type { PanGestureHandlerGestureEvent, TapGestureHandlerStateChangeEvent } from 'react-native-gesture-handler'
 import { PanGestureHandler, State, TapGestureHandler } from 'react-native-gesture-handler'
-import { constants, SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
+import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
 import Reanimated, {
   cancelAnimation,
   Easing,
@@ -53,8 +53,9 @@ const _CaptureButton: React.FC<Props> = ({
   const isRecording = useRef(false)
   const recordingProgress = useSharedValue(0)
   const isPressingButton = useSharedValue(false)
-  const recordingTimeout = useRef<Timeout | null>(null);
-
+  const recordingTimeout = useRef(0);
+  let testRef = useRef<AnimatedCircularProgress | null>(null);
+  
   const takePhotoOptions = useMemo<TakePhotoOptions & TakeSnapshotOptions>(
     () => ({
       photoCodec: 'jpeg',
@@ -89,7 +90,7 @@ const _CaptureButton: React.FC<Props> = ({
     try {
       if (camera.current == null) throw new Error('Camera ref is null!');
       if (isRecording.current) {
-        this.testRef.animate(0, 10, Easing.linear); // Will fill the progress bar linearly in 8 seconds
+        testRef.current?.animate(0, 10, Easing.linear); // Will fill the progress bar linearly in 8 seconds
         console.log('calling stopRecording()...');
         await camera.current.stopRecording();
         console.log('called stopRecording()!');
@@ -104,7 +105,7 @@ const _CaptureButton: React.FC<Props> = ({
   const startRecording = useCallback(() => {
     try {
       if (camera.current == null) throw new Error('Camera ref is null!')
-      this.testRef.animate(100, MAX_DURATION, Easing.linear); // Will fill the progress bar linearly in 8 seconds
+        testRef.current?.animate(100, MAX_DURATION, Easing.linear); // Will fill the progress bar linearly in 8 seconds
 
       console.log('calling startRecording()...')
       camera.current.startRecording({
@@ -123,7 +124,7 @@ const _CaptureButton: React.FC<Props> = ({
       console.log('called startRecording()!')
       isRecording.current = true
 
-      recordingTimeout.current = setTimeout(() => {
+      setTimeout(() => {
         if (isRecording.current) {
           stopRecording();
         }
@@ -282,7 +283,7 @@ const _CaptureButton: React.FC<Props> = ({
           <Reanimated.View style={styles.flex}>
             <Reanimated.View style={[styles.shadow, shadowStyle]} />
               <AnimatedCircularProgress
-              ref={(ref) => this.testRef = ref}
+              ref={testRef}             
               size={78}
               width={BORDER_WIDTH}
               fill={0}
