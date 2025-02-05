@@ -1,5 +1,18 @@
+diff --git a/node_modules/react-native-image-to-pdf/android/build.gradle b/node_modules/react-native-image-to-pdf/android/build.gradle
+index c098672..ff6cdf8 100644
+--- a/node_modules/react-native-image-to-pdf/android/build.gradle
++++ b/node_modules/react-native-image-to-pdf/android/build.gradle
+@@ -14,7 +14,7 @@ buildscript {
+ apply plugin: 'com.android.library'
+ 
+ android {
+-    compileSdkVersion 28
++    compileSdkVersion 31
+     buildToolsVersion "28.0.3"
+ 
+     defaultConfig {
 diff --git a/node_modules/react-native-image-to-pdf/ios/RNImageToPdf.m b/node_modules/react-native-image-to-pdf/ios/RNImageToPdf.m
-index c30cfad..60d26dc 100644
+index c30cfad..fc1a112 100644
 --- a/node_modules/react-native-image-to-pdf/ios/RNImageToPdf.m
 +++ b/node_modules/react-native-image-to-pdf/ios/RNImageToPdf.m
 @@ -26,9 +26,10 @@ RCT_EXPORT_MODULE();
@@ -7,7 +20,7 @@ index c30cfad..60d26dc 100644
                    resolver:(RCTPromiseResolveBlock)resolve
                    rejecter:(RCTPromiseRejectBlock)reject) {
 +		dispatch_async(dispatch_get_main_queue(), ^{
- 
+     
 -    _resolveBlock = resolve;
 -    _rejectBlock = reject;
 +			self->_resolveBlock = resolve;
