@@ -33,6 +33,7 @@ const Image = createImageProgress(FastImage);
 import { useIsFocused } from "@react-navigation/native";
 import { ActivityIndicator, MD2Colors } from "react-native-paper";
 import Loading from "../SubViews/home/Loading";
+import { getLocales } from 'expo-localization';
 
 const Friends = (props) => {
   const [cameraData] = useMMKVObject(
@@ -93,6 +94,7 @@ const Friends = (props) => {
               pin: pin,
               title: title,
               type: "event",
+              locale: getLocales()[0].languageCode
             };
             await axiosPull.postData("/camera/report.php", data);
             Alert.alert("", i18n.t("A report event"));
@@ -123,6 +125,8 @@ const Friends = (props) => {
               pin: "",
               title: "",
               type: "friend",
+              locale: getLocales()[0].languageCode
+
             };
             await axiosPull.postData("/camera/report.php", data);
             Alert.alert("", i18n.t("A report"));
