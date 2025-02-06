@@ -105,7 +105,10 @@ const Verification = (props) => {
         "/register/checkCode.php",
         data
       );
-      if (response[0].errorResponse == "Member") {
+      if (response[0].isActive == "0") {
+        setIsLoading(false);
+        setHandleStatus(i18n.t("Inactive"));
+      }else if (response[0].errorResponse == "Member") {
         storage.set("user.Data", JSON.stringify(response[0]));
         await AsyncStorage.setItem("current", "0");
         await AsyncStorage.setItem("logedIn", "1");

@@ -160,7 +160,6 @@ const onCheckVersion = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      setI18nConfig(localLang, constants.url);
       onCheckVersion();
       const owner = await AsyncStorage.getItem("user_id");
       setOwner(owner);
