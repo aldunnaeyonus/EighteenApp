@@ -158,6 +158,22 @@ const ProMain = (props) => {
                   <ListItem.Subtitle>{i18n.t("Pro15")}</ListItem.Subtitle>
                 </ListItem.Content>
               </ListItem>
+              <ListItem>
+                <Icon
+                  type="material-community"
+                  name="view-gallery-outline"
+                  size={25}
+                  color="#3D4849"
+                  containerStyle={{
+                    width: 28,
+                    height: 28,
+                  }}
+                />
+                <ListItem.Content>
+                  <ListItem.Title style={{fontFamily: 'HelveticaNeue-Medium',fontSize: 18,color: '#000', marginBottom:10}}>{i18n.t("Pro17")}</ListItem.Title>
+                  <ListItem.Subtitle>{i18n.t("Pro18")}</ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
       </View>
 
      {!isOwned ? (
