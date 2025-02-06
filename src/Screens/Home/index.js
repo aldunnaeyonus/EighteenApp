@@ -197,21 +197,12 @@ const Home = (props) => {
   };
 
   const _gotoShare = async (pin, time, owner, title) => {
-    const link =
-      constants.url + "/link.php?pin=" + pin + "." + time + "." + owner;
-    const message =
-      i18n.t("Join my Snap Eighteen Event") + " [" + title + "] at " + link;
-    const url =
-      constants.url +
-      "/qrcode.php?pin=" +
-      pin +
-      "&time=" +
-      time +
-      "&owner=" +
-      owner;
+    const link = constants.url + "/link.php?pin=" + pin + "." + time + "." + owner;
+    const liveLink = constants.url + "/gallery/" + pin;
+    const message = (user.isPro == "1" ?  i18n.t("Join my Snap Eighteen Event") +" "+ title + " " + i18n.t("ViewLiveGallery") + liveLink + "\n\n" :  i18n.t("Join my Snap Eighteen Event") +" "+ title + "\n\n";
     const shareOptions = {
       title: title,
-      url: url,
+      url: link,
       message: message,
     };
     try {
