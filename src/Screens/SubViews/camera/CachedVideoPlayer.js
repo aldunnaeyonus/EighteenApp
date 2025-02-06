@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, StyleSheet, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import Video  from 'react-native-video';
 import RNFS from 'react-native-fs';
 import { ActivityIndicator, MD2Colors } from "react-native-paper";
@@ -32,9 +32,7 @@ const CachedVideoPlayer = ({ url, fileName, videoPlayPause, videoPlayMute }) => 
    if (loading) {
     return (
       <View style={[
-        StyleSheet.absoluteFill, {
-          marginTop: SCREEN_HEIGHT / 2
-          }]}>
+        StyleSheet.absoluteFill, {marginTop: SCREEN_HEIGHT / 2 }]}>
        <ActivityIndicator
       size={40}
       animating={loading}

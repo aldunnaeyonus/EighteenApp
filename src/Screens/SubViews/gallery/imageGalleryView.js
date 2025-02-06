@@ -4,9 +4,9 @@ import { createImageProgress } from "react-native-image-progress";
 import FastImage from "react-native-fast-image";
 const Image = createImageProgress(FastImage);
 import Progress from "react-native-progress";
-const { width, height } = Dimensions.get("screen");
 import Zoom from "react-native-zoom-reanimated";
 import CachedVideoPlayer from '../camera/CachedVideoPlayer';
+import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../../utils/constants";
 
 const ImageGalleryView = (props) => {
     const [videoPlayPause] = useState(true);
@@ -17,13 +17,19 @@ const ImageGalleryView = (props) => {
         <View
           style={{
             flex: 1,
-            height: '100%',
-            width: width,
+            height: SCREEN_HEIGHT,
+            width: SCREEN_WIDTH,
             justifyContent: "center",
             alignItems: "center",
             backgroundColor: "transparent",
           }}
         >
+            <CachedVideoPlayer
+                url={props.item.uri}
+                fileName={String(props.item.uri).split("/").pop()}
+                videoPlayPause={videoPlayPause}
+                videoPlayMute={videoPlayMute}
+              />
           <View
             style={{
               backgroundColor: "transparent",
@@ -31,7 +37,7 @@ const ImageGalleryView = (props) => {
               top: 0,
               height: 60,
               marginTop: 30,
-              width: width,
+              width: SCREEN_WIDTH,
               flexDirection: "row",
             }}
           >
@@ -95,21 +101,14 @@ const ImageGalleryView = (props) => {
               {props.item.userName}
             </Text>
           </View>
-              <CachedVideoPlayer
-                url={props.item.uri}
-                height={height}
-                width={width}
-                fileName={String(props.item.uri).split("/").pop()}
-                videoPlayPause={videoPlayPause}
-                videoPlayMute={videoPlayMute}
-              />
+            
         </View>
       ) : (
         <View
           style={{
             flex: 1,
-            height: '100%',
-            width: width,
+            height: SCREEN_HEIGHT,
+            width: SCREEN_WIDTH,
             justifyContent: "center",
             alignItems: "center",
             backgroundColor: "transparent",
@@ -123,7 +122,7 @@ const ImageGalleryView = (props) => {
               zIndex: 2,
               height: 60,
               marginTop: 30,
-              width: width,
+              width: SCREEN_WIDTH,
               flexDirection: "row",
               opacity: 0.9,
             }}
@@ -197,7 +196,7 @@ const ImageGalleryView = (props) => {
           >
             <Image
               indicator={Progress}
-              style={{ marginTop: 0, height: height, width: width }}
+              style={{ marginTop: 0, height: SCREEN_HEIGHT, width: SCREEN_WIDTH }}
               resizeMode={FastImage.resizeMode.contain}
               source={{
                 priority: FastImage.priority.high,
