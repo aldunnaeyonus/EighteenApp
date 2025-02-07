@@ -1,10 +1,6 @@
 import React from 'react';
 import { ActivityIndicator, MD2Colors } from "react-native-paper";
-import Animated, {
-  useSharedValue,
-  withTiming,
-  useAnimatedStyle,
-} from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 
 const RefreshView = (props) => {
 

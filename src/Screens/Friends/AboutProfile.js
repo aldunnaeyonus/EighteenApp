@@ -12,6 +12,7 @@ import {
   const Image = createImageProgress(FastImage);
   import moment from "moment/min/moment-with-locales"
   import { getLocales } from 'expo-localization';
+import { SCREEN_WIDTH } from "../../utils/constants";
 
 
 const AboutProfile = (props) => {
@@ -19,7 +20,7 @@ const AboutProfile = (props) => {
   
       
   return (
-                 <View style={{ width: "100%", height:'100%', backgroundColor: "#fff" }}>
+                 <View style={{ width: SCREEN_WIDTH, height:'100%', backgroundColor: "#fff" }}>
                    <View style={style.leftContainer}>
                           <View style={[style.containers, {width: 70 + 6, height: 70 + 6}]}>
                             <Image

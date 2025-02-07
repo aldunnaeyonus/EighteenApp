@@ -24,8 +24,7 @@ import ActionSheet from "react-native-actions-sheet";
 import FriendListItem from "../SubViews/friends/friendsitem";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
 import { ListItem } from "@rneui/themed";
-const { width: ScreenWidth } = Dimensions.get("window");
-import { constants } from "../../utils/constants";
+import { constants, SCREEN_WIDTH } from "../../utils/constants";
 import Progress from "react-native-progress";
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
@@ -369,7 +368,7 @@ const Friends = (props) => {
         style={{
           backgroundColor: "white",
           height: "100%",
-          width: "100%",
+          width: SCREEN_WIDTH,
         }}
         edges={["bottom", "left", "right"]}
       >
@@ -448,7 +447,7 @@ const Friends = (props) => {
             borderColor: "#f0f0f0",
           }}
         >
-          <View style={{ width: "100%", backgroundColor: "#fff" }}>
+          <View style={{ width: SCREEN_WIDTH, backgroundColor: "#fff" }}>
             <ListItem
               containerStyle={{
                 paddingVertical: 5,
@@ -593,7 +592,7 @@ const style = StyleSheet.create({
     height: 0,
     marginTop: 10,
     marginBottom: 10,
-    width: ScreenWidth * 1,
+    width: SCREEN_WIDTH * 1,
     alignSelf: "center",
     backgroundColor: "#ccc",
   },

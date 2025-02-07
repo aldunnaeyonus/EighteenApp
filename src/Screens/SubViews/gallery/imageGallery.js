@@ -1,11 +1,11 @@
 import React from "react";
-import { TouchableOpacity, Dimensions } from "react-native";
+import { TouchableOpacity } from "react-native";
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
 const Image = createImageProgress(FastImage);
 import Progress from "react-native-progress";
-const { width } = Dimensions.get("window");
 import { Icon } from "react-native-elements";
+import { SCREEN_WIDTH } from "../../../utils/constants";
 
 const ImageGallery = (props) => {
   return (
@@ -31,8 +31,8 @@ const ImageGallery = (props) => {
           backgroundColor: "#f2f2f2",
           borderColor: "#fff",
           borderWidth: 1.0,
-          height: width / 4.0,
-          width: width / 4.0,
+          height: SCREEN_WIDTH / 4.0,
+          width: SCREEN_WIDTH / 4.0,
         }}
       >
         {props.item.item.type === "video" && (

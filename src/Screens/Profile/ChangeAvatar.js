@@ -6,7 +6,7 @@ import {
   Platform,
 } from "react-native";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
-import { constants } from "../../utils/constants";
+import { constants, SCREEN_WIDTH } from "../../utils/constants";
 import { useMMKVObject } from "react-native-mmkv";
 import * as ImagePicker from "expo-image-picker";
 import FormData from "form-data";
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 40,
     borderTopLeftRadius: 40,
     color: "#5A5A5A",
-    width: "100%",
+    width: SCREEN_WIDTH,
     flexDirection: "row",
     flexWrap: "wrap",
     flex: 1,
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 50,
     borderTopLeftRadius: 50,
     color: "#ace5fd",
-    width: "100%",
+    width: SCREEN_WIDTH,
     borderWidth: 1,
     borderColor: "#d3d3d3",
     shadowColor: "#000000",

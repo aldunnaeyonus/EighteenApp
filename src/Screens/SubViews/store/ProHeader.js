@@ -1,11 +1,11 @@
 import React from "react";
-import { Dimensions, View, Text } from "react-native";
+import { View, Text } from "react-native";
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
 const Image = createImageProgress(FastImage);
 import Progress from "react-native-progress";
-const { width } = Dimensions.get("window");
 import * as i18n from "../../../../i18n";
+import { SCREEN_WIDTH } from "../../../utils/constants";
 
 const ProHeader = (props) => {
   return (
@@ -13,7 +13,7 @@ const ProHeader = (props) => {
       key={props}
       style={{
         height: 250,
-        width: width,
+        width: SCREEN_WIDTH,
       }}
     >
       <Image
@@ -22,7 +22,7 @@ const ProHeader = (props) => {
         source={require("../../../../assets/decour.jpeg")}
         style={{
           height: 250,
-          width: width,
+          width: SCREEN_WIDTH,
           backgroundColor: "#f2f2f2",
           overflow: "hidden",
         }}
@@ -32,7 +32,7 @@ const ProHeader = (props) => {
           position: "absolute",
           height: 60,
           backgroundColor: "rgba(0, 0, 0, 0.30)",
-          width: width,
+          width: SCREEN_WIDTH,
           bottom: 0,
           borderBottomLeftRadius: 30,
           borderBottomRightRadius: 30,
@@ -47,7 +47,7 @@ const ProHeader = (props) => {
             fontSize: 25,
             bottom: 30,
             fontWeight: "bold",
-            width: width,
+            width: SCREEN_WIDTH,
           }}
         >
           {i18n.t("GoPro")}
@@ -61,7 +61,7 @@ const ProHeader = (props) => {
             fontSize: 16,
             fontWeight: "bold",
             bottom: 10,
-            width: width,
+            width: SCREEN_WIDTH,
           }}
         >
           {i18n.t("Unshakle your creative spirit")}

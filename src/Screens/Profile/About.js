@@ -14,13 +14,14 @@ import {
   import { useMMKVObject } from "react-native-mmkv";
   import { getLocales } from 'expo-localization';
   import moment from "moment/min/moment-with-locales"
+import { SCREEN_WIDTH } from "../../utils/constants";
 
 const Abouts = () => {
   const [user] = useMMKVObject("user.Data", storage);
       let [localLang] = useState(getLocales()[0].languageCode)
 
       return (
-                 <View style={{ width: "100%", height:'100%', backgroundColor: "#fff" }}>
+                 <View style={{ width: SCREEN_WIDTH, height:'100%', backgroundColor: "#fff" }}>
                    <View style={style.leftContainer}>
                           <View style={[style.containers, {width: 70 + 6, height: 70 + 6}]}>
                             <Image

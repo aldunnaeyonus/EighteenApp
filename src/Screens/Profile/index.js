@@ -8,13 +8,12 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-const { width: ScreenWidth } = Dimensions.get("window");
 import React, { useEffect, useState, useCallback } from "react";
 import { ListItem, Icon } from "@rneui/themed";
 import InfoText from "../../utils/InfoText";
 import * as Application from "expo-application";
 import axios from "axios";
-import { constants } from "../../utils/constants";
+import { constants, SCREEN_WIDTH } from "../../utils/constants";
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
 const Image = createImageProgress(FastImage);
@@ -207,7 +206,7 @@ const Profile = (props) => {
 
   return (
     <ScrollView
-      style={{ width: "100%", backgroundColor: "#fff" }}
+      style={{ width: SCREEN_WIDTH, backgroundColor: "#fff" }}
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
     >
@@ -222,8 +221,8 @@ const Profile = (props) => {
             <Image
               indicator={Progress}
               style={{
-                width: ScreenWidth - 100,
-                height: ScreenWidth - 100,
+                width: SCREEN_WIDTH - 100,
+                height: SCREEN_WIDTH - 100,
                 backgroundColor: "white",
                 alignSelf: "auto",
               }}
@@ -237,7 +236,7 @@ const Profile = (props) => {
           </View>
             <TouchableOpacity
               style={{
-                width: ScreenWidth - 100,
+                width: SCREEN_WIDTH - 100,
                 marginRight: 10,
                 marginLeft: 10,
                 marginTop: 25,
@@ -262,7 +261,7 @@ const Profile = (props) => {
             </TouchableOpacity>
         </View>
       </Modal>
-      <View style={{ width: "100%", backgroundColor: "#fff" }}>
+      <View style={{ width: SCREEN_WIDTH, backgroundColor: "#fff" }}>
         <Loading
           message={upload.message}
           flex={upload.display}
@@ -724,7 +723,7 @@ const styles = StyleSheet.create({
     marginTop: 0,
     marginBottom: -20,
     borderRadius: 16,
-    width: ScreenWidth * 0.9,
+    width: SCREEN_WIDTH * 0.9,
     alignSelf: "center",
     backgroundColor: "#ccc",
   },
@@ -732,7 +731,7 @@ const styles = StyleSheet.create({
     height: 0,
     marginTop: 10,
     marginBottom: 10,
-    width: ScreenWidth * 1,
+    width: SCREEN_WIDTH * 1,
     alignSelf: "center",
     backgroundColor: "#ccc",
   },
@@ -741,7 +740,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginLeft: 65,
     marginBottom: 10,
-    width: ScreenWidth,
+    width: SCREEN_WIDTH,
     alignSelf: "center",
     backgroundColor: "#ccc",
   },

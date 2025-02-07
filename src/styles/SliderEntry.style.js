@@ -1,18 +1,17 @@
-import { StyleSheet, Dimensions, Platform } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { colors } from './index.style';
+import { SCREEN_WIDTH } from '../utils/constants';
 
 const IS_IOS = Platform.OS === 'ios';
-const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
-const { width: ScreenWidth } = Dimensions.get("window");
 
 function wp (percentage) {
-    const value = (percentage * viewportWidth) / 100;
+    const value = (percentage * SCREEN_WIDTH) / 100;
     return Math.round(value);
 }
 const slideWidth = wp(75);
 const itemHorizontalMargin = wp(2);
 
-export const sliderWidth = viewportWidth;
+export const sliderWidth = SCREEN_WIDTH;
 export const itemWidth = slideWidth + itemHorizontalMargin * 3;
 
 const entryBorderRadius = 8;
@@ -80,7 +79,7 @@ export default StyleSheet.create({
     dividerStyle: {
         height: 0.5,
         borderRadius: 16,
-        width: ScreenWidth * 1.0,
+        width: SCREEN_WIDTH * 1.0,
         alignSelf: "center",
         backgroundColor: "#ccc",
         
@@ -89,7 +88,7 @@ export default StyleSheet.create({
       height: 0.5,
       marginTop: 10,
       marginBottom: 10,
-      width: ScreenWidth * 1,
+      width: SCREEN_WIDTH * 1,
       alignSelf: "center",
       backgroundColor: "#ccc",
     },
@@ -98,7 +97,7 @@ export default StyleSheet.create({
       borderTopRightRadius:10, 
       borderTopLeftRadius:10, 
       position: 'absolute', 
-      width:'100%',  
+      width:SCREEN_WIDTH,  
       height:'100%', 
       opacity:0.0
     },
@@ -134,7 +133,7 @@ export default StyleSheet.create({
         flexDirection: "column",
         justifyContent: 'flex-end',
         backgroundColor: 'transparent',
-        width: ScreenWidth,
+        width: SCREEN_WIDTH,
     },
     imageUserNameTitleBlack: {
         fontFamily: 'HelveticaNeue-Medium',
@@ -256,7 +255,7 @@ export default StyleSheet.create({
     },
     appButtonText: {
       fontSize: 25,
-      width: "100%",
+      width: SCREEN_WIDTH,
       color: "#fff",
       fontWeight: "bold",
       alignSelf: "center",

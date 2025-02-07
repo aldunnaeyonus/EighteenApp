@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   Share,
   StyleSheet,
-  Dimensions,
   Alert,
   Modal,
   View,
@@ -11,13 +10,12 @@ import {
   Platform,
 } from "react-native";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
-import { constants } from "../../utils/constants";
+import { constants, SCREEN_WIDTH } from "../../utils/constants";
 import "moment-duration-format";
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
 const Image = createImageProgress(FastImage);
 import Progress from "react-native-progress";
-const { width: ScreenWidth } = Dimensions.get("window");
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Icon } from "react-native-elements";
 import { storage } from "../../context/components/Storage";
@@ -582,8 +580,8 @@ const Home = (props) => {
             <Image
               indicator={Progress}
               style={{
-                width: ScreenWidth - 100,
-                height: ScreenWidth - 100,
+                width: SCREEN_WIDTH - 100,
+                height: SCREEN_WIDTH - 100,
                 backgroundColor: "white",
                 alignSelf: "auto",
               }}
@@ -597,7 +595,7 @@ const Home = (props) => {
           </View>
            <View style={{ 
                     flexDirection: "row", 
-                    width:'100%', 
+                    width:SCREEN_WIDTH, 
                     margin: 20, 
                     justifyContent: "center" 
                     }}>
@@ -753,8 +751,8 @@ const style = StyleSheet.create({
     overflow: "hidden",
   },
   qrmodalView: {
-    width: ScreenWidth - 50,
-    height: ScreenWidth - 50,
+    width: SCREEN_WIDTH - 50,
+    height: SCREEN_WIDTH - 50,
     backgroundColor: "white",
     borderRadius: 20,
     alignItems: "center",
@@ -811,7 +809,7 @@ const style = StyleSheet.create({
     height: 0.2,
     marginTop: 0,
     marginBottom: 5,
-    width: ScreenWidth * 1,
+    width: SCREEN_WIDTH * 1,
     alignSelf: "center",
     backgroundColor: "#ccc",
   },
@@ -830,7 +828,7 @@ const style = StyleSheet.create({
   },
   buttonTextStyle: {
     fontSize: 19,
-    width: "100%",
+    width: SCREEN_WIDTH,
     color: "#fff",
     fontWeight: "bold",
     alignSelf: "center",
@@ -859,7 +857,7 @@ const style = StyleSheet.create({
   },
   qrImageView: {
     position: "absolute",
-    width: "100%",
+    width: SCREEN_WIDTH,
     height: "100%",
   },
 });

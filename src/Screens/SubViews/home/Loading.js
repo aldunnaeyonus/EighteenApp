@@ -2,15 +2,14 @@ import React, { useRef } from "react";
 import {
     View,
     Text,
-    Dimensions,
   } from "react-native";
-const { width: ScreenWidth } = Dimensions.get("window");
 import { ActivityIndicator, MD2Colors } from "react-native-paper";
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
 const Image = createImageProgress(FastImage);
 import Progress from "react-native-progress";
 import Video from "react-native-video";
+import { SCREEN_WIDTH } from "../../../utils/constants";
 
 const Loading = (props) => {
   const video = useRef();
@@ -26,7 +25,7 @@ const Loading = (props) => {
       height: 40,
       borderRadius:6,
       overflow:'hidden',
-      width: ScreenWidth,
+      width: SCREEN_WIDTH,
       flexDirection:'row',
       alignContent:'center',
       alignItems:'center',

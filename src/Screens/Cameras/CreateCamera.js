@@ -18,6 +18,7 @@ import {
   ANDROID_DISPLAY,
   IOS_DISPLAY,
   constants,
+  SCREEN_WIDTH
 } from "../../utils/constants";
 import * as ImagePicker from "expo-image-picker";
 import FormData from "form-data";
@@ -638,7 +639,7 @@ const CreateCamera = (props) => {
           style={{
             backgroundColor: "white",
             height: "100%",
-            width: "100%",
+            width: SCREEN_WIDTH,
           }}
           edges={["bottom", "left", "right"]}
         >

@@ -3,19 +3,19 @@ import {
   View,
   Text,
   StyleSheet,
-  Dimensions,
 } from "react-native";
 import moment from "moment/min/moment-with-locales"
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
 const Image = createImageProgress(FastImage);
 import Progress from "react-native-progress";
-const { width: ScreenWidth } = Dimensions.get("window");
 import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../../i18n";
 import FacePile from "react-native-face-pile";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { getLocales } from 'expo-localization';
+import { SCREEN_WIDTH } from "../../../utils/constants";
+
 const JoinItems = (props) => {
     let [localLang] = useState(getLocales()[0].languageCode)
   
@@ -73,13 +73,13 @@ const JoinItems = (props) => {
         key={props}
         style={{
           height: 350,
-          width: ScreenWidth,
+          width: SCREEN_WIDTH,
         }}
       >
         <Image
           indicator={Progress}
           style={{
-            width: ScreenWidth,
+            width: SCREEN_WIDTH,
             height: 350,
           }}
           resizeMode={FastImage.resizeMode.cover}
@@ -94,7 +94,7 @@ const JoinItems = (props) => {
             position: "absolute",
             height: 62,
             backgroundColor: "rgba(0, 0, 0, 0.60)",
-            width: ScreenWidth,
+            width: SCREEN_WIDTH,
             bottom: 0,
           }}
         >
@@ -107,7 +107,7 @@ const JoinItems = (props) => {
               left: 20,
               bottom: 30,
               fontWeight: "bold",
-              width: ScreenWidth,
+              width: SCREEN_WIDTH,
             }}
           >
             {props.item.item.title == undefined
@@ -122,7 +122,7 @@ const JoinItems = (props) => {
               fontSize: 15,
               bottom: 7,
               left: 20,
-              width: ScreenWidth,
+              width: SCREEN_WIDTH,
             }}
           >
             {endEventTime}
@@ -253,7 +253,7 @@ const style = StyleSheet.create({
     height: 0.2,
     marginTop: 0,
     marginBottom: 5,
-    width: ScreenWidth * 1,
+    width: SCREEN_WIDTH * 1,
     alignSelf: "center",
     backgroundColor: "#ccc",
   },
@@ -272,7 +272,7 @@ const style = StyleSheet.create({
   },
   buttonTextStyle: {
     fontSize: 19,
-    width: "100%",
+    width: SCREEN_WIDTH,
     color: "#fff",
     fontWeight: "bold",
     alignSelf: "center",
@@ -284,7 +284,7 @@ const style = StyleSheet.create({
   listItem: {
     padding: 0,
     backgroundColor: "#FFF",
-    width: ScreenWidth,
+    width: SCREEN_WIDTH,
     height: 425,
     flex: 1,
     marginTop: 0,
@@ -294,7 +294,7 @@ const style = StyleSheet.create({
   },
   qrImageView: {
     position: "absolute",
-    width: "100%",
+    width: SCREEN_WIDTH,
     height: "100%",
   },
 });

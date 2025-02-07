@@ -7,7 +7,7 @@ import {
   Modal,
 } from "react-native";
 import React, { useState, useRef, useCallback } from "react";
-import { constants } from "../../utils/constants";
+import { constants, SCREEN_WIDTH } from "../../utils/constants";
 import { Icon } from "react-native-elements";
 import * as ImagePicker from "expo-image-picker";
 import FormData from "form-data";
@@ -309,7 +309,7 @@ const PhotoGallery = (props) => {
         style={{
           backgroundColor: "transparent",
           height: "100%",
-          width: "100%",
+          width: SCREEN_WIDTH,
         }}
         edges={["left", "right"]}
       >

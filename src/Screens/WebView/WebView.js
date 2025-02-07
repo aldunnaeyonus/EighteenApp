@@ -4,6 +4,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useToast } from "react-native-styled-toast";
 import { useFocusEffect } from '@react-navigation/native';
 import * as i18n from '../../../i18n';
+import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
 
 const WebViewer = (props) => {
   const { toast } = useToast();
@@ -40,8 +41,8 @@ const WebViewer = (props) => {
     <SafeAreaProvider>
       <WebView
             style={{
-              width:'100%',
-              height:'100%',
+              width:SCREEN_WIDTH,
+              height:SCREEN_HEIGHT,
               backgroundColor:'white'
             }}
         source={{ 

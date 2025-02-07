@@ -1,6 +1,6 @@
 import { TouchableOpacity, Dimensions } from "react-native";
 import * as i18n from "../../../i18n";
-import { constants } from "../../utils/constants";
+import { constants, SCREEN_WIDTH } from "../../utils/constants";
 import { storage } from "../../context/components/Storage";
 import { useMMKVObject } from "react-native-mmkv";
 import {
@@ -190,7 +190,7 @@ const GetPro = (props) => {
         style={{
           backgroundColor: "transparent",
           height: "100%",
-          width: "100%",
+          width: SCREEN_WIDTH,
         }}
         edges={["left", "right"]}
       >

@@ -1,13 +1,13 @@
 import React from "react";
-import { Dimensions, View, Text, TouchableOpacity } from "react-native";
-const { width } = Dimensions.get("window");
+import { View, Text, TouchableOpacity } from "react-native";
 import * as i18n from "../../../../i18n";
+import { SCREEN_WIDTH } from "../../../utils/constants";
 
 const ProFooter = (props) => {
   return (
     <View
       style={{
-        width: width,
+        width: SCREEN_WIDTH,
         marginTop: 10,
         marginBottom: 30,
         justifyContent: "center",

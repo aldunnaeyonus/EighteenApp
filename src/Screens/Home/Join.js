@@ -9,6 +9,7 @@ import { axiosPull } from "../../utils/axiosPull";
 import * as i18n from "../../../i18n";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ListItem from "../SubViews/home/JoinItems";
+import { SCREEN_WIDTH } from "../../utils/constants";
 
 const Join = (props) => {
   const AnimatedFlatlist = Animated.FlatList;
@@ -88,7 +89,7 @@ const Join = (props) => {
 
   return (
     <SafeAreaProvider
-      style={{ backgroundColor: "#fff", width: "100%", height: "100%" }}
+      style={{ backgroundColor: "#fff", width: SCREEN_WIDTH, height: "100%" }}
     >
       <AnimatedFlatlist
         showsHorizontalScrollIndicator={false}

@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useMemo } from 'react'
 import type { ViewProps } from 'react-native'
-import { StyleSheet, View} from 'react-native'
+import { StyleSheet} from 'react-native'
 import type { PanGestureHandlerGestureEvent, TapGestureHandlerStateChangeEvent } from 'react-native-gesture-handler'
 import { PanGestureHandler, State, TapGestureHandler } from 'react-native-gesture-handler'
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";

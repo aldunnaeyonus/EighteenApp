@@ -1,9 +1,8 @@
-import { StyleSheet, Text, View, Dimensions, Alert } from "react-native";
+import { StyleSheet, Text, View, Alert } from "react-native";
 import React, { useState, useCallback } from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
 import moment from "moment/min/moment-with-locales";
-const { width: ScreenWidth } = Dimensions.get("window");
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
 const Image = createImageProgress(FastImage);
@@ -16,7 +15,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../i18n";
 import { ActivityIndicator } from "react-native-paper";
 import { MenuView } from "@react-native-menu/menu";
-import { constants } from "../../utils/constants";
+import { constants, SCREEN_WIDTH } from "../../utils/constants";
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
 import RefreshableWrapper from "react-native-fresh-refresh";
 import * as FileSystem from "expo-file-system";
@@ -205,7 +204,7 @@ const ClosedCameras = (props) => {
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "flex-start",
-              width: ScreenWidth,
+              width: SCREEN_WIDTH,
             }}
           >
             <FontAwesome
@@ -227,7 +226,7 @@ const ClosedCameras = (props) => {
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "flex-start",
-              width: ScreenWidth,
+              width: SCREEN_WIDTH,
             }}
           >
             <FontAwesome
@@ -246,7 +245,7 @@ const ClosedCameras = (props) => {
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "flex-start",
-              width: ScreenWidth - 150,
+              width: SCREEN_WIDTH - 150,
             }}
           >
             <Text
@@ -346,7 +345,7 @@ const ClosedCameras = (props) => {
               style={{
                 flex: 1,
                 marginTop: 0,
-                width: "100%",
+                width: SCREEN_WIDTH,
                 alignItems: "center",
               }}
             >
@@ -424,7 +423,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     borderBottomWidth: 0.5,
     borderColor: "#D3D3D3",
-    width: "100%",
+    width: SCREEN_WIDTH,
     flex: 1,
     alignSelf: "center",
     flexDirection: "row",

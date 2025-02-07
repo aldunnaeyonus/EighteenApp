@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { Dimensions, View, Text } from "react-native";
+import { View, Text } from "react-native";
 import { createImageProgress } from "react-native-image-progress";
 import FastImage from "react-native-fast-image";
 const Image = createImageProgress(FastImage);

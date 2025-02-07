@@ -4,14 +4,14 @@ import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
 const Image = createImageProgress(FastImage);
 import Progress from "react-native-progress";
-import { View, Text, TouchableOpacity, Dimensions } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import styles from "../../../styles/SliderEntry.style";
 import CameraLens from "../camera/cameraView";
 import * as i18n from "../../../../i18n";
 import { useMMKVObject } from "react-native-mmkv";
 import { storage } from "../../../context/components/Storage";
 import { getLocales } from 'expo-localization';
-const { width } = Dimensions.get("window");
+import { SCREEN_WIDTH } from "../../../utils/constants";
 
 const MemberListItem = (props) => {
     let [localLang] = useState(getLocales()[0].languageCode)
@@ -83,7 +83,7 @@ const MemberListItem = (props) => {
             style={{
               flexDirection: "column",
               marginBottom: 0,
-              width: width - 200
+              width: SCREEN_WIDTH - 200
             }}
           >
             <Text

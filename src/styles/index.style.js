@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { SCREEN_WIDTH } from '../utils/constants';
 
 export const colors = {
     black: '#1a1917',
@@ -105,7 +106,7 @@ export default StyleSheet.create({
         },
         appButtonTextSort: {
           fontSize: 20,
-          width: "100%",
+          width: SCREEN_WIDTH,
           color: "#3D4849",
           alignSelf: "center",
           textAlign: 'center',
@@ -113,7 +114,7 @@ export default StyleSheet.create({
         },
       appButtonText: {
         fontSize: 27,
-        width: "100%",
+        width: SCREEN_WIDTH,
         color: "#fff",
         fontWeight: "bold",
         alignSelf: "center",
@@ -122,7 +123,7 @@ export default StyleSheet.create({
       },
       appButtonTextMeduim: {
         fontSize: 22,
-        width: "100%",
+        width: SCREEN_WIDTH,
         color: "#fff",
         fontWeight: "bold",
         alignSelf: "center",
@@ -195,7 +196,7 @@ export default StyleSheet.create({
         container: {
           flex: 1,
           flexDirection: 'column',
-          width: "100%",
+          width: SCREEN_WIDTH,
           backgroundColor:'#fff',
           alignItems: 'center',
           justifyContent: 'center',

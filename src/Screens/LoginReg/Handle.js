@@ -12,6 +12,8 @@ import * as i18n from "../../../i18n";
 import * as RNLocalize from "react-native-localize";
 import { getLocales } from 'expo-localization';
 import { storage } from "../../context/components/Storage";
+import { SCREEN_WIDTH } from "../../utils/constants";
+
 
 const Handle = (props) => {
   const [handleStatus, setHandleStatus] = useState("");
@@ -123,7 +125,7 @@ const Handle = (props) => {
         </Text>
         <View
           style={{
-            width: "100%",
+            width: SCREEN_WIDTH,
             alignItems: "center",
             paddingHorizontal: 10,
           }}

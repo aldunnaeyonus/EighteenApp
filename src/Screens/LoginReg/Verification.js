@@ -13,6 +13,7 @@ import { useToast } from "react-native-styled-toast";
 import { useFocusEffect } from "@react-navigation/native";
 import { ActivityIndicator } from "react-native-paper";
 import * as i18n from "../../../i18n";
+import { SCREEN_WIDTH } from "../../utils/constants";
 
 const Verification = (props) => {
   const [handleStatus, setHandleStatus] = useState("");
@@ -155,7 +156,7 @@ const Verification = (props) => {
         <View
           style={{
             paddingHorizontal: 10,
-            width: "100%",
+            width: SCREEN_WIDTH,
             alignItems: "center",
           }}
         >

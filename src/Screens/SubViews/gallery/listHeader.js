@@ -1,24 +1,25 @@
 import React from "react";
-import { View, Text, Dimensions } from "react-native";
+import { View, Text } from "react-native";
 import Progress from "react-native-progress";
-const { width } = Dimensions.get("window");
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
-const Image = createImageProgress(FastImage);
+import { SCREEN_WIDTH } from "../../../utils/constants";
 
+const Image = createImageProgress(FastImage);
+constants
 const GalleryHeader = (props) => {
   return (
     <View
       key={props}
       style={{
         height: 350,
-        width: width,
+        width: SCREEN_WIDTH,
       }}
     >
       <Image
         indicator={Progress}
         style={{
-          width: width,
+          width: SCREEN_WIDTH,
           height: 350,
         }}
         resizeMode={FastImage.resizeMode.cover}
@@ -33,7 +34,7 @@ const GalleryHeader = (props) => {
           position: "absolute",
           height: 60,
           backgroundColor: "rgba(0, 0, 0, 0.60)",
-          width: width,
+          width: SCREEN_WIDTH,
           bottom: 0,
         }}
       >
@@ -46,7 +47,7 @@ const GalleryHeader = (props) => {
             left: 20,
             bottom: 30,
             fontWeight: "bold",
-            width: width,
+            width: SCREEN_WIDTH,
           }}
         >
           {props.title.toUpperCase()}
@@ -59,7 +60,7 @@ const GalleryHeader = (props) => {
             fontSize: 15,
             bottom: 7,
             left: 20,
-            width: width,
+            width: SCREEN_WIDTH,
           }}
         >
           {props.endEventTime}

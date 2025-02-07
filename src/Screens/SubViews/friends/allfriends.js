@@ -5,6 +5,7 @@ import { createImageProgress } from "react-native-image-progress";
 const Image = createImageProgress(FastImage);
 import Progress from "react-native-progress";
 import { ListItem } from "@rneui/themed";
+import { SCREEN_WIDTH } from "../../../utils/constants";
 
 const AllFriendsListItem = (props) => {
   return (
@@ -94,7 +95,7 @@ const style = StyleSheet.create({
   },
   listItem: {
     backgroundColor: "#FFF",
-    width: "100%",
+    width: SCREEN_WIDTH,
     flex: 1,
     alignSelf: "center",
     flexDirection: "row",

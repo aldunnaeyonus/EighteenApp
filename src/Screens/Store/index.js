@@ -10,7 +10,7 @@ import {
   useIAP,
   withIAPContext,
 } from "react-native-iap";
-import { constants, errorLog } from "../../utils/constants";
+import { constants, errorLog, SCREEN_WIDTH } from "../../utils/constants";
 import { axiosPull } from "../../utils/axiosPull";
 import { useToast } from "react-native-styled-toast";
 import * as i18n from "../../../i18n";
@@ -136,7 +136,7 @@ const Products = (props) => {
             style={{
               marginTop: 15,
               justifyContent: "center",
-              width: "100%",
+              width: SCREEN_WIDTH,
               padding: 20,
             }}
           >

@@ -2,12 +2,12 @@ import React from "react";
 import { ScrollView, View } from "react-native";
 import { ListItem } from "@rneui/themed";
 import * as i18n from "../../../i18n";
-import { constants } from "../../utils/constants";
+import { constants, SCREEN_WIDTH } from "../../utils/constants";
 
 const Languages = () => {
   return (
     <ScrollView style={{ backgroundColor: "white" }}>
-      <View style={{ width: "100%", height: "100%", backgroundColor: "#fff" }}>
+      <View style={{ width: SCREEN_WIDTH, height: "100%", backgroundColor: "#fff" }}>
         {constants.languages
           .sort((a, b) => (b > a ? -1 : 1))
           .map((lang, index) => (

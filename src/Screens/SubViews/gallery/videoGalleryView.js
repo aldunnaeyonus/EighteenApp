@@ -1,5 +1,5 @@
 import React  from "react";
-import { View, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { createImageProgress } from "react-native-image-progress";
 import FastImage from "react-native-fast-image";
 const Image = createImageProgress(FastImage);

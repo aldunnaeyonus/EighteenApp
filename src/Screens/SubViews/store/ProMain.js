@@ -1,9 +1,10 @@
 import React from "react";
-import { Dimensions, View, Text, TouchableOpacity, Platform, Image, Linking } from "react-native";
-const { width } = Dimensions.get("window");
+import { View, Text, TouchableOpacity, Platform, Image, Linking } from "react-native";
 import * as i18n from "../../../../i18n";
 import { ListItem } from "@rneui/themed";
 import { Icon } from "react-native-elements";
+import { SCREEN_WIDTH } from "../../../utils/constants";
+
 
 const ProMain = (props) => {
   const Owned = props.owned.find((item) => item === props.item.item.productId);
@@ -12,7 +13,7 @@ const ProMain = (props) => {
   return (
     <View
       style={{
-        width: width,
+        width: SCREEN_WIDTH,
         marginTop: 30,
 
       }}
