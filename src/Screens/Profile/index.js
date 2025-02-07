@@ -1,6 +1,5 @@
 import {
   StyleSheet,
-  Dimensions,
   View,
   Alert,
   Text,

@@ -1,8 +1,9 @@
 import React from "react";
-import { StyleSheet, Dimensions, View, Text } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import * as i18n from "../../../../i18n";
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
+import { SCREEN_WIDTH } from "../../../utils/constants";
 const Image = createImageProgress(FastImage);
 
 const ProfileHeader = (props) => {
@@ -131,7 +132,7 @@ const style = StyleSheet.create({
   },
   upperContainer: {
     flexDirection: "row",
-    width: Dimensions.get("window").width,
+    width: SCREEN_WIDTH,
   },
 
   leftContainer: {

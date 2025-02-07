@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Dimensions,
   TouchableOpacity,
 } from "react-native";
 import moment from "moment/min/moment-with-locales";

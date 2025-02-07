@@ -1,4 +1,4 @@
-import { TouchableOpacity, Dimensions } from "react-native";
+import { TouchableOpacity } from "react-native";
 import * as i18n from "../../../i18n";
 import { constants, SCREEN_WIDTH, SCREEN_HEIGHT} from "../../utils/constants";
 import { storage } from "../../context/components/Storage";
@@ -225,8 +225,8 @@ const GetPro = (props) => {
         size={80}
         style={{
           position: "absolute",
-          top: Dimensions.get("window").height / 2.0,
-          left: Dimensions.get("window").width / 2 - 50,
+          top: SCREEN_HEIGHT / 2.0,
+          left: SCREEN_WIDTH / 2 - 50,
         }}
         animating={isLoading}
         color={MD2Colors.orange900}

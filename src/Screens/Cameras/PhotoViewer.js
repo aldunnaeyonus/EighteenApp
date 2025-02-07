@@ -2,7 +2,6 @@ import {
   View,
   TouchableOpacity,
   Share,
-  Dimensions,
   FlatList
 } from "react-native";
 import React, { useState, useRef, useCallback } from "react";
@@ -17,7 +16,6 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
 
 const PhotoViewer = (props) => {
-  const { width } = Dimensions.get("window");
   const canMomentum = useRef(false);
   const AnimatedFlatlist = Animated.FlatList;
   const bottomPhoto = useRef();
@@ -28,12 +26,12 @@ const PhotoViewer = (props) => {
   const scrollToActiveIndex = (index) => {
     setActiveIndex(index)
     newphoto?.current?.scrollToOffset({
-      offset: index * width,
+      offset: index * SCREEN_WIDTH,
       animated: true
     })
-    if ( index * (80 + 10) - 80 / 2 >  width / 2){
+    if ( index * (80 + 10) - 80 / 2 >  SCREEN_WIDTH / 2){
         bottomPhoto?.current.scrollToOffset({
-          offset:  index * (80 + 10) - width / 2 + 80 / 2,
+          offset:  index * (80 + 10) - SCREEN_WIDTH / 2 + 80 / 2,
           animated: true
         })
     }else {
@@ -91,7 +89,7 @@ const onMomentumScrollEnd = useCallback((ev) => {
     if (canMomentum.current) {
 
         const index = Math.floor(
-            Math.floor(ev.nativeEvent.contentOffset.x) / width
+            Math.floor(ev.nativeEvent.contentOffset.x) / SCREEN_WIDTH
         );
         scrollToActiveIndex(index)
         setActiveIndex(index)
@@ -101,8 +99,8 @@ const onMomentumScrollEnd = useCallback((ev) => {
 
 const getItemLayout = (_, index) => (
     {
-      length: width, 
-      offset:  width * index, 
+      length: SCREEN_WIDTH, 
+      offset:  SCREEN_WIDTH * index, 
       index
     }
   );
@@ -110,7 +108,7 @@ const getItemLayout = (_, index) => (
   const getItemLayoutBottom = (_, index) => (
       {
         length: 80, 
-        offset:  index * 90 - width / 2 + 80 / 2, 
+        offset:  index * 90 - SCREEN_WIDTH / 2 + 80 / 2, 
         index}
 
   );
@@ -148,7 +146,7 @@ const getItemLayout = (_, index) => (
         horizontal
         initialScrollIndex={props.route.params.pagerIndex}
         keyExtractor={(item) => item.image_id}
-        style={{position:'absolute', bottom:90, width:width}}
+        style={{position:'absolute', bottom:90, width:SCREEN_WIDTH}}
         extraData={props.route.params.data}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{paddingHorizontal:10}}

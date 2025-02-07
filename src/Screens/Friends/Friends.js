@@ -3,7 +3,6 @@ import {
   StyleSheet,
   View,
   Alert,
-  Dimensions,
   Modal,
   TouchableOpacity,
   Text,
@@ -352,8 +351,8 @@ const Friends = (props) => {
         size={80}
         style={{
           position: "absolute",
-          top: Dimensions.get("window").height / 3.5,
-          left: Dimensions.get("window").width / 2 - 40,
+          top: SCREEN_HEIGHT / 3.5,
+          left: SCREEN_WIDTH / 2 - 40,
         }}
         animating={isLoading}
         hidesWhenStopped={true}

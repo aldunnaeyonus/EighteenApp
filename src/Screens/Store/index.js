@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Dimensions, Platform } from "react-native";
+import { View, Text, Platform } from "react-native";
 import Animated from "react-native-reanimated";
 import { ActivityIndicator, MD2Colors } from "react-native-paper";
 import StoreListItem from "../SubViews/store/storeList";
@@ -10,7 +10,7 @@ import {
   useIAP,
   withIAPContext,
 } from "react-native-iap";
-import { constants, errorLog, SCREEN_WIDTH } from "../../utils/constants";
+import { constants, errorLog, SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
 import { axiosPull } from "../../utils/axiosPull";
 import { useToast } from "react-native-styled-toast";
 import * as i18n from "../../../i18n";
@@ -176,8 +176,8 @@ const Products = (props) => {
         size={80}
         style={{
           position: "absolute",
-          top: Dimensions.get("window").height / 3.5,
-          left: Dimensions.get("window").width / 2 - 40,
+          top:SCREEN_HEIGHT / 3.5,
+          left: SCREEN_WIDTH / 2 - 40,
         }}
         animating={isLoading}
         hidesWhenStopped={true}

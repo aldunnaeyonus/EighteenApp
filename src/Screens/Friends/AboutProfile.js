@@ -1,7 +1,6 @@
 import React,  { useState } from "react";
 import {
     StyleSheet,
-    Dimensions,
     View,
     Text,
   } from "react-native";
@@ -189,7 +188,7 @@ const style = StyleSheet.create({
     },
     upperContainer: {
       flexDirection: 'row',
-      width: Dimensions.get('window').width,
+      width: SCREEN_WIDTH,
     },
   
     leftContainer: {
