@@ -13,6 +13,7 @@ const VideoGalleryView = (props) => {
           style={{
             height: 80,
             width: 80,
+            marginRight:5,
             justifyContent: "center",
             alignItems: "center",
             backgroundColor: "transparent",

@@ -29,9 +29,9 @@ const PhotoViewer = (props) => {
       offset: index * SCREEN_WIDTH,
       animated: true
     })
-    if ( index * (80 + 10) - 80 / 2 >  SCREEN_WIDTH / 2){
+    if ( index * 90 - 80 / 2 >  SCREEN_WIDTH / 2){
         bottomPhoto?.current.scrollToOffset({
-          offset:  index * (80 + 10) - SCREEN_WIDTH / 2 + 80 / 2,
+          offset:  index * 90 - SCREEN_WIDTH / 2 + 80 / 2,
           animated: true
         })
     }else {
