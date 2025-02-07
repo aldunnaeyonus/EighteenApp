@@ -34,7 +34,7 @@ const ProMain = (props) => {
                 }}
                 onPress={() => {
                   if (Platform.OS == "ios") {
-                    Linking.openURL('App-prefs:APPLE_ACCOUNT&path=SUBSCRIPTIONS');
+                    Linking.openURL('https://apps.apple.com/account/subscriptions');
                   }else  if (Platform.OS == "android") {
                   Linking.openURL('https://play.google.com/store/account/subscriptions');
                   }

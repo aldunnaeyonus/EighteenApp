@@ -13,7 +13,7 @@ import { useToast } from "react-native-styled-toast";
 import { useFocusEffect } from "@react-navigation/native";
 import { ActivityIndicator } from "react-native-paper";
 import * as i18n from "../../../i18n";
-import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
+import { SCREEN_WIDTH } from "../../utils/constants";
 
 const Verification = (props) => {
   const [handleStatus, setHandleStatus] = useState("");
@@ -79,7 +79,7 @@ const Verification = (props) => {
               color="#fff"
               containerStyle={{
                 padding: 7,
-                height: SCREEN_HEIGHT,
+                height: "100%",
                 backgroundColor: "rgba(0, 0, 0, 0.60)",
                 borderRadius: 22,
               }}
