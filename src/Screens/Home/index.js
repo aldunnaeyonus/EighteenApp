@@ -8,6 +8,7 @@ import {
   View,
   Text,
   TouchableOpacity,
+  Platform,
 } from "react-native";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
 import { constants } from "../../utils/constants";
@@ -526,20 +527,17 @@ const Home = (props) => {
               <Text>No Camera Device</Text>
             ) : (
               <Camera
-                style={[
-                  StyleSheet.absoluteFill,
-                  { overflow: "hidden", borderRadius: 20},
-                ]}
+              style={[
+                StyleSheet.absoluteFill,{ overflow: "hidden", borderRadius: 20, zIndex:-100}]}
                 device={device}
+                resizeMode={Platform.OS == "ios" ? 'cover' : 'contain'}
                 isActive={true}
                 codeScanner={codeScanner}
               />
             )}
             <Image
-              style={[
-                StyleSheet.absoluteFill,
-                { overflow: "hidden", borderRadius: 20},
-              ]}
+            resizeMode="contain"
+              style={[StyleSheet.absoluteFill]}
               source={require("../../../assets/scan.png")}
             />
           </View>
@@ -759,13 +757,13 @@ const style = StyleSheet.create({
     height: ScreenWidth - 50,
     backgroundColor: "white",
     borderRadius: 20,
-    zIndex: 1,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
     },
+    overflow:'hidden',
     shadowOpacity: 0.25,
     shadowRadius: 22,
     elevation: 7,
