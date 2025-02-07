@@ -14,7 +14,7 @@ import * as i18n from "../../../i18n";
 import ImageGalleryView from "../SubViews/gallery/imageGalleryView";
 import VideoGalleryView from "../SubViews/gallery/videoGalleryView";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
-import { SCREEN_WIDTH } from "../../utils/constants";
+import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
 
 const PhotoViewer = (props) => {
   const { width } = Dimensions.get("window");
@@ -120,7 +120,7 @@ const getItemLayout = (_, index) => (
       <SafeAreaView
         style={{
           backgroundColor: "transparent",
-          height: "100%",
+          height: SCREEN_HEIGHT,
           width: SCREEN_WIDTH,
         }}
         edges={["left", "right"]}

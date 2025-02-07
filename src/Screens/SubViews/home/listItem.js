@@ -13,7 +13,7 @@ import { createImageProgress } from "react-native-image-progress";
 const Image = createImageProgress(FastImage);
 import Progress from "react-native-progress";
 import { Icon } from "react-native-elements";
-import { constants, SCREEN_WIDTH } from "../../../utils/constants";
+import { constants, SCREEN_WIDTH, SCREEN_HEIGHT } from "../../../utils/constants";
 import styles from "../../../styles/SliderEntry.style";
 import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../../i18n";
@@ -526,7 +526,7 @@ const style = StyleSheet.create({
   qrImageView: {
     position: "absolute",
     width: SCREEN_WIDTH,
-    height: "100%",
+    height: SCREEN_HEIGHT,
   },
 });
 export default ListItem;

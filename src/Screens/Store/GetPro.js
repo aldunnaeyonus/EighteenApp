@@ -1,6 +1,6 @@
 import { TouchableOpacity, Dimensions } from "react-native";
 import * as i18n from "../../../i18n";
-import { constants, SCREEN_WIDTH } from "../../utils/constants";
+import { constants, SCREEN_WIDTH, SCREEN_HEIGHT} from "../../utils/constants";
 import { storage } from "../../context/components/Storage";
 import { useMMKVObject } from "react-native-mmkv";
 import {
@@ -78,7 +78,7 @@ const GetPro = (props) => {
               color="#fff"
               containerStyle={{
                 padding: 7,
-                height: "100%",
+                height: SCREEN_HEIGHT,
                 backgroundColor: "rgba(0, 0, 0, 0.60)",
                 borderRadius: 22,
               }}
@@ -189,7 +189,7 @@ const GetPro = (props) => {
       <SafeAreaView
         style={{
           backgroundColor: "transparent",
-          height: "100%",
+          height: SCREEN_HEIGHT,
           width: SCREEN_WIDTH,
         }}
         edges={["left", "right"]}

@@ -7,7 +7,7 @@ import {
   Modal,
 } from "react-native";
 import React, { useState, useRef, useCallback } from "react";
-import { constants, SCREEN_WIDTH } from "../../utils/constants";
+import { constants, SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
 import { Icon } from "react-native-elements";
 import * as ImagePicker from "expo-image-picker";
 import FormData from "form-data";
@@ -308,7 +308,7 @@ const PhotoGallery = (props) => {
       <SafeAreaView
         style={{
           backgroundColor: "transparent",
-          height: "100%",
+          height: SCREEN_HEIGHT,
           width: SCREEN_WIDTH,
         }}
         edges={["left", "right"]}

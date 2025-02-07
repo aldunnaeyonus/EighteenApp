@@ -24,7 +24,7 @@ import ActionSheet from "react-native-actions-sheet";
 import FriendListItem from "../SubViews/friends/friendsitem";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
 import { ListItem } from "@rneui/themed";
-import { constants, SCREEN_WIDTH } from "../../utils/constants";
+import { constants, SCREEN_WIDTH, SCREEN_HEIGHT} from "../../utils/constants";
 import Progress from "react-native-progress";
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
@@ -367,7 +367,7 @@ const Friends = (props) => {
       <SafeAreaView
         style={{
           backgroundColor: "white",
-          height: "100%",
+          height:SCREEN_HEIGHT,
           width: SCREEN_WIDTH,
         }}
         edges={["bottom", "left", "right"]}

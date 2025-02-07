@@ -14,7 +14,7 @@ import * as i18n from "../../../../i18n";
 import FacePile from "react-native-face-pile";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { getLocales } from 'expo-localization';
-import { SCREEN_WIDTH } from "../../../utils/constants";
+import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../../utils/constants";
 
 const JoinItems = (props) => {
     let [localLang] = useState(getLocales()[0].languageCode)
@@ -295,7 +295,7 @@ const style = StyleSheet.create({
   qrImageView: {
     position: "absolute",
     width: SCREEN_WIDTH,
-    height: "100%",
+    height: SCREEN_HEIGHT,
   },
 });
 export default JoinItems;

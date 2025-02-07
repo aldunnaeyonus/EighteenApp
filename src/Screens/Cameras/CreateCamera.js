@@ -18,7 +18,8 @@ import {
   ANDROID_DISPLAY,
   IOS_DISPLAY,
   constants,
-  SCREEN_WIDTH
+  SCREEN_WIDTH,
+  SCREEN_HEIGHT
 } from "../../utils/constants";
 import * as ImagePicker from "expo-image-picker";
 import FormData from "form-data";
@@ -638,7 +639,7 @@ const CreateCamera = (props) => {
         <SafeAreaView
           style={{
             backgroundColor: "white",
-            height: "100%",
+            height: SCREEN_HEIGHT,
             width: SCREEN_WIDTH,
           }}
           edges={["bottom", "left", "right"]}

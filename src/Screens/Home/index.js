@@ -10,7 +10,7 @@ import {
   Platform,
 } from "react-native";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
-import { constants, SCREEN_WIDTH } from "../../utils/constants";
+import { constants, SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
 import "moment-duration-format";
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
@@ -858,7 +858,7 @@ const style = StyleSheet.create({
   qrImageView: {
     position: "absolute",
     width: SCREEN_WIDTH,
-    height: "100%",
+    height: SCREEN_HEIGHT,
   },
 });
 

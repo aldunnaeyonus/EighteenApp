@@ -19,7 +19,7 @@ import * as i18n from "../../../../i18n";
 import CreditsFont from "../camera/credits";
 import FacePile from "react-native-face-pile";
 import { getLocales } from 'expo-localization';
-import { SCREEN_WIDTH } from "../../../utils/constants";
+import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../../utils/constants";
 
 const FriendListItem = (props) => {
   const isFocused = useIsFocused();
@@ -539,7 +539,7 @@ const style = StyleSheet.create({
   qrImageView: {
     position: "absolute",
     width: SCREEN_WIDTH,
-    height: "100%",
+    height: SCREEN_HEIGHT,
   },
 });
 export default FriendListItem;
