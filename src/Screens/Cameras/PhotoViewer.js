@@ -108,7 +108,7 @@ const getItemLayout = (_, index) => (
   const getItemLayoutBottom = (_, index) => (
       {
         length: 80, 
-        offset:  index * 90 - SCREEN_WIDTH / 2 + 80 / 2, 
+        offset:  index * 90 - SCREEN_WIDTH / 2 + 90 / 2, 
         index}
 
   );

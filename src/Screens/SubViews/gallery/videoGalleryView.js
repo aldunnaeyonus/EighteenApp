@@ -1,5 +1,5 @@
 import React  from "react";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { createImageProgress } from "react-native-image-progress";
 import FastImage from "react-native-fast-image";
 const Image = createImageProgress(FastImage);
@@ -9,8 +9,20 @@ import { Icon } from "react-native-elements";
 const VideoGalleryView = (props) => {
 
     return (
-
+   <View
+          style={{
+            height: 80,
+            width: 80,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "transparent",
+          }}
+        >
         <TouchableOpacity
+         style={{
+          height: 80,
+          width: 80,
+        }}
           onPress={()=> {props.scrollToActiveIndex(props.index) }}
           >
         <Image 
@@ -41,6 +53,7 @@ const VideoGalleryView = (props) => {
                   )}
                   </Image> 
         </TouchableOpacity>
+        </View>
     )
 };
 export default VideoGalleryView;
