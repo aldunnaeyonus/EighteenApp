@@ -65,7 +65,7 @@ export default function App() {
         console.log('update success!');
       },
       updateFail(message) {
-        console.log(message);
+        console.log("updateFail:", message);
       },
       restartAfterInstall: false,
     });
@@ -75,6 +75,8 @@ const onCheckVersion = () => {
     fetch(constants.updateJSON).then(async (data) => {
       const result = await data.json();
       const currentVersion = await hotUpdate.getCurrentVersion();
+      console.log("Server: ", result?.version);
+      console.log("App: ", parseInt(currentVersion));
       if (parseInt(result?.version) > parseInt(currentVersion)) {
                 startUpdate(
                   Platform.OS === 'ios'
