@@ -6,7 +6,7 @@ import { createImageProgress } from "react-native-image-progress";
 import { SCREEN_WIDTH } from "../../../utils/constants";
 
 const Image = createImageProgress(FastImage);
-constants
+
 const GalleryHeader = (props) => {
   return (
     <View
