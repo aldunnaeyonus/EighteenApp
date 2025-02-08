@@ -44,6 +44,7 @@ import NotifService from "./NotifService";
 import TempCamera from "./src/Screens/Cameras/TempCamera";
 import { getLocales } from 'expo-localization';
 import { ToastProvider } from 'react-native-styled-toast'
+import { storage } from "./src/context/components/Storage";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -170,12 +171,22 @@ const onCheckVersion = () => {
   useEffect(() => {
     const fetchData = async () => {
       onCheckVersion();
+      if (signIn) {
       const owner = await AsyncStorage.getItem("user_id");
       setOwner(owner);
       const logedIn = await AsyncStorage.getItem("logedIn");
       setSignIn(stringToBoolean(logedIn));
-      if (signIn) {
-        await axiosPull._getProStatus(owner, Platform.OS);
+      await axiosPull._getProStatus(owner, Platform.OS);
+      }else{
+          storage.set("uploadData", JSON.stringify({"message": "", "display":"none", "image":""}));
+          storage.set("user.Join.Feed", JSON.stringify([]));
+          storage.set("user.Friend.Feed", JSON.stringify([]));
+          storage.set("uploadData", JSON.stringify(["message"]));
+          storage.set("user.Camera.Feed", JSON.stringify([]));
+          storage.set("user.Camera.Friend.Feed", JSON.stringify([]));
+          storage.set("user.Member.Join.Feed", JSON.stringify([]));
+          storage.set("user.AllFriend.Feed", JSON.stringify([]));
+
       }
       setTimeout(() => {
         setReady(true);

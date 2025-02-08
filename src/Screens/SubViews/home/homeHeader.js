@@ -12,41 +12,6 @@ const FriendHeader = (props) => {
     const [friendData] = useMMKVObject("user.Friend.Feed", storage);
     const [user] = useMMKVObject("user.Data", storage);
 
-  if (friendData == undefined) {
-      return (
-        <View
-        style={{
-          width: "95%",
-          height: 25,
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignContent: "center",
-          margin: 10,
-          marginBottom: 10,
-        }}
-      >
-        <Text
-          style={{
-            fontSize: 17,
-            paddingTop: 5,
-            fontWeight: "500",
-          }}
-        >
-          {" "}
-          {i18n.t("Friends")}
-        </Text>
-          <Text
-            style={{
-              fontSize: 15,
-              fontWeight: "300",
-            }}
-          >
-            {i18n.t("ViewAll")}
-          </Text>
-      </View>
-      )
-  }
-
   return (
     <>
       <View
