@@ -58,6 +58,14 @@ const PhotoViewer = (props) => {
 
   useFocusEffect(
     useCallback(() => {
+      newphoto?.current.scrollToIndex({animate: true, index: props.route.params.pagerIndex})  
+      bottomPhoto?.current.scrollToIndex({animate: true, index: props.route.params.pagerIndex})  
+
+    }, [])
+  );
+
+  useFocusEffect(
+    useCallback(() => {
       if (!props.unsubscribe) {
         toast({
           message: i18n.t("No internet connection"),
@@ -105,13 +113,13 @@ const getItemLayout = (_, index) => (
     }
   );
 
-  const getItemLayoutBottom = (_, index) => (
-      {
+  const getItemLayoutBottom = (_, index) => {
+    return {
         length: 80, 
         offset:  index * 90 - SCREEN_WIDTH / 2 + 90 / 2, 
-        index}
-
-  );
+        index
+      }
+    };
 
   return  (
     <SafeAreaProvider>
@@ -125,14 +133,13 @@ const getItemLayout = (_, index) => (
       >
      <FlatList
       ref={newphoto}
-      getItemLayout={getItemLayout}
       extraData={props.route.params.data}
       showsHorizontalScrollIndicator={false}
-      initialScrollIndex={props.route.params.pagerIndex}
       onMomentumScrollBegin={onMomentumScrollBegin}
       onMomentumScrollEnd={onMomentumScrollEnd}
       pagingEnabled
       horizontal
+      getItemLayout={getItemLayout}
       style={{ backgroundColor: "black"}}
       data={props.route.params.data}
       keyExtractor={(item) => item.image_id}
@@ -142,9 +149,8 @@ const getItemLayout = (_, index) => (
       <AnimatedFlatlist
         ref={bottomPhoto}
         data={props.route.params.data} 
-        getItemLayout={getItemLayoutBottom}
         horizontal
-        initialScrollIndex={props.route.params.pagerIndex}
+        getItemLayout={getItemLayoutBottom}
         keyExtractor={(item) => item.image_id}
         style={{position:'absolute', bottom:90, width:SCREEN_WIDTH}}
         extraData={props.route.params.data}
