@@ -639,7 +639,7 @@ const CreateCamera = (props) => {
         <SafeAreaView
           style={{
             backgroundColor: "white",
-            height: SCREEN_HEIGHT,
+            height: "100%",
             width: SCREEN_WIDTH,
           }}
           edges={["bottom", "left", "right"]}

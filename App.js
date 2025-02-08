@@ -186,7 +186,6 @@ const onCheckVersion = () => {
           storage.set("user.Camera.Friend.Feed", JSON.stringify([]));
           storage.set("user.Member.Join.Feed", JSON.stringify([]));
           storage.set("user.AllFriend.Feed", JSON.stringify([]));
-
       }
       setTimeout(() => {
         setReady(true);
