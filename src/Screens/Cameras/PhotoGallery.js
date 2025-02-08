@@ -189,7 +189,7 @@ const PhotoGallery = (props) => {
               color="#fff"
               containerStyle={{
                 padding: 7,
-                height: animating ? "0%" : "100%",
+                height: 44,
                 backgroundColor: "rgba(0, 0, 0, 0.60)",
                 borderRadius: 22,
               }}
@@ -210,7 +210,7 @@ const PhotoGallery = (props) => {
                 color="#fff"
                 containerStyle={{
                   padding: 7,
-                  height: animating ? "0%" : "100%",
+                  height: 44,
                   backgroundColor: "rgba(0, 0, 0, 0.60)",
                   borderRadius: 22,
                 }}
@@ -234,7 +234,7 @@ const PhotoGallery = (props) => {
                 color="#fff"
                 containerStyle={{
                   padding: 7,
-                  height: animating ? "0%" : "100%",
+                  height: 44,
                   backgroundColor: "rgba(0, 0, 0, 0.60)",
                   borderRadius: 22,
                 }}

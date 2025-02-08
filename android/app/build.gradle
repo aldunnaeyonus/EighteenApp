@@ -106,17 +106,13 @@ def enableProguardInReleaseBuilds = (findProperty('android.enableProguardInRelea
 def jscFlavor = 'org.webkit:android-jsc:+'
 
 android {
-    ndkVersion rootProject.ext.ndkVersion
-
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    ndkVersion '26.1.10909125'
 
     namespace 'com.dunncarabali.eighteen'
         defaultConfig {
         missingDimensionStrategy "store", "play"
         applicationId 'com.dunncarabali.eighteen'
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 19
+            versionCode 20
         versionName "1.0.0"
     }
     signingConfigs {
@@ -184,7 +180,7 @@ dependencies {
     implementation project(':react-native-blob-util')
     implementation project(':react-native-image-to-pdf')
     implementation project(':react-native-print')
-    implementation 'com.google.mlkit:barcode-scanning:17.2.0'
+    implementation 'com.google.mlkit:barcode-scanning:17.3.0'
 
     def isGifEnabled = (findProperty('expo.gif.enabled') ?: "") == "true";
     def isWebpEnabled = (findProperty('expo.webp.enabled') ?: "") == "true";
@@ -216,5 +212,14 @@ if (rnVersion < versionToNumber(0, 75, 0)) {
     applyNativeModulesAppBuildGradle(project)
 }
 android {
-    compileSdk 34
-    defaultConfig { missingDimensionStrategy "store", "play" } }
+
+    compileSdk 35
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    buildToolsVersion '34.0.0'
+    defaultConfig {
+        minSdk 30
+        targetSdk 35
+        missingDimensionStrategy "store", "play" } }

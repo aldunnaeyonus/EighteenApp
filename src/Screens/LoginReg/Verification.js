@@ -79,7 +79,7 @@ const Verification = (props) => {
               color="#fff"
               containerStyle={{
                 padding: 7,
-                height: "100%",
+                height: 44,
                 backgroundColor: "rgba(0, 0, 0, 0.60)",
                 borderRadius: 22,
               }}
