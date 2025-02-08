@@ -6,18 +6,17 @@ Build Web
 Build Run iOS
     npx expo run:ios --Builds on Machine
     eas build -p ios -- Sends to Server
-    npx react-native bundle --entry-file='index.js' export:embed  --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios' && mkdir -p ios/output && npx expo export:embed --platform ios --entry-file='index.js' --bundle-output ios/output/main.jsbundle --dev false --assets-dest ios/output --sourcemap-output ios/sourcemap.js && cd ios && find output -type f | zip main.jsbundle.zip -@ && zip sourcemap.zip sourcemap.js && cd .. && rm -rf ios/output && rm -rf ios/sourcemap.js
+    npx react-native bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios' && mkdir -p ios/output && npx react-native bundle --platform ios --entry-file='index.js' --bundle-output ios/output/main.jsbundle --dev=false --assets-dest ios/output && cd ios && find output -type f | zip main.jsbundle.zip -@ && cd .. && rm -rf ios/output
    
    Build Run Android
     npx expo run:android --Builds on Machine
     eas build -p android -- Sends to Server
-    npx react-native bundle --platform='android' --entry-file='index.js' --bundle-output='./android/app/src/main/assets/index.android.bundle' --dev=false --assets-dest='./android/app/src/main/res' && mkdir -p android/output && npx expo export:embed --platform android --entry-file='index.js' --bundle-output android/output/index.android.bundle --dev false --assets-dest android/output --sourcemap-output android/sourcemap.js && cd android && find output -type f | zip index.android.bundle.zip -@ && zip sourcemap.zip sourcemap.js && cd .. && rm -rf android/output && rm -rf android/sourcemap.js
+    npx react-native bundle --platform='android' --entry-file='index.js' --bundle-output='./android/app/src/main/assets/index.android.bundle' --dev=false --assets-dest='./android/app/src/main/res' && mkdir -p android/output && npx react-native bundle --platform='android' --entry-file='index.js' --bundle-output android/output/index.android.bundle --dev=false --assets-dest android/output && cd android && find output -type f | zip index.android.bundle.zip -@ && cd .. && rm -rf android/output
     sudo npx react-native start
 
 curl 'http://localhost:8081/index.js.bundle?dev=false&minify=true' -o ios/main2.jsbundle
 
 All Build jbundle.
-   npx react-native bundle --platform='android' --entry-file='index.js' --bundle-output='./android/app/src/main/assets/index.android.bundle' --dev=false --assets-dest='./android/app/src/main/res' && npx react-native bundle --entry-file='index.js' --bundle-output='./ios/SnapEighteen/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios/SnapEighteen/'
 
 PODs
     pod deintegrate  
