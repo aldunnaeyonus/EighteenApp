@@ -5,10 +5,15 @@ import { createImageProgress } from "react-native-image-progress";
 import Progress from "react-native-progress";
 const Image = createImageProgress(FastImage);
 import * as i18n from "../../../../i18n";
+import { storage } from "../../../context/components/Storage";
+import { useMMKVObject } from "react-native-mmkv";
 
 const FriendHeader = (props) => {
+    const [friendData] = useMMKVObject("user.Friend.Feed", storage);
+    const [user] = useMMKVObject("user.Data", storage);
+  
+
   return (
-    <>
       <View
         style={{
           width: "95%",
@@ -40,7 +45,6 @@ const FriendHeader = (props) => {
             {i18n.t("ViewAll")}
           </Text>
         </TouchableOpacity>
-      </View>
       <ScrollView
         style={{ height: 100 }}
         horizontal
@@ -57,11 +61,11 @@ const FriendHeader = (props) => {
           }}
         >
           <TouchableOpacity
-            onPress={() => props._createCamera(props.user.user_id)}
+            onPress={() => props._createCamera(user.user_id)}
           >
             <Image
               indicator={Progress}
-              key={props.user.user_avatar}
+              key={user.user_avatar}
               style={{
                 height: 70,
                 width: 70,
@@ -77,7 +81,7 @@ const FriendHeader = (props) => {
               source={{
                 priority: FastImage.priority.high,
                 cache: FastImage.cacheControl.immutable,
-                uri: props.user.user_avatar,
+                uri: user.user_avatar,
               }}
             />
             <Text
@@ -95,7 +99,7 @@ const FriendHeader = (props) => {
             >
               {i18n.t("AddCamera")}
             </Text>
-            {props.user.isPro == "1" && (
+            {user.isPro == "1" && (
               <View style={{ position: "absolute" }}>
                 <View
                   style={{
@@ -125,7 +129,7 @@ const FriendHeader = (props) => {
           </TouchableOpacity>
         </View>
 
-        {props.friendData.map((grids) => (
+        {friendData.map((grids) => (
           <View
             key={"b" + grids.UUID}
             style={{
@@ -142,7 +146,7 @@ const FriendHeader = (props) => {
             >
               <Image
                 key={"bb" + grids.UUID}
-                ref={(friends) => friends + parseInt(props.user.friendID)}
+                ref={(friends) => friends + parseInt(grids.friendID)}
                 indicator={Progress}
                 style={{
                   height: 70,
@@ -239,7 +243,7 @@ const FriendHeader = (props) => {
           </View>
         ))}
       </ScrollView>
-    </>
+      </View>
   );
 };
 

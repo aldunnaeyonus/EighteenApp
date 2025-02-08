@@ -45,7 +45,6 @@ const Home = (props) => {
   );
   const [modalQRCodeVisable, setmodalQRCodeVisable] = useState(false);
   const [modalVisable, setmodalVisable] = useState(false);
-  const [friendData] = useMMKVObject("user.Friend.Feed", storage);
   const [user] = useMMKVObject("user.Data", storage);
   const [refreshing, setRefreshing] = useState(false);
   const [qrCodeURL, setQrCodeURL] = useState("");
@@ -701,8 +700,6 @@ const Home = (props) => {
             <>
               <FriendHeader
                 _createCamera={_createCamera}
-                user={user}
-                friendData={friendData}
                 _gotoAllFriends={_gotoAllFriends}
                 goToFriend={goToFriend}
               />
