@@ -204,9 +204,7 @@ const onCheckVersion = () => {
           linking={linking}
           fallback={
             <FastImage
-              style={{
-                flex: 1,
-              }}
+              style={{flex:1, width:SCREEN_WIDTH, height:SCREEN_HEIGHT}}
               resizeMode={FastImage.resizeMode.contain}
               source={require("./assets/splash.png")}
             />
