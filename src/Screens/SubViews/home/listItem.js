@@ -191,7 +191,7 @@ const ListItem = (props) => {
                 width: 40,
                 height: 40,
                 marginRight: 5,
-                marginTop: 10,
+                marginTop: 5,
                 borderTopRightRadius: 5,
                 borderTopLeftRadius: 5,
                 backgroundColor: "rgba(0, 0, 0, 0.60)",
