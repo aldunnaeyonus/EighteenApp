@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
-import { Text, LogBox, Platform } from "react-native";
+import { Text, LogBox, Platform, Alert } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
@@ -15,7 +15,6 @@ import Friends from "./src/Screens/Friends/Friends";
 import AllFriends from "./src/Screens/Friends/AllFriends";
 import { MenuProvider } from "react-native-popup-menu";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { AlertProvider } from "./src/context/alerts/AuthContext";
 import MediaGallery from "./src/Screens/Cameras/PhotoGallery";
 import MediaViewer from "./src/Screens/Cameras/PhotoViewer";
 import Profile from "./src/Screens/Profile";
@@ -45,7 +44,6 @@ import NotifService from "./NotifService";
 import TempCamera from "./src/Screens/Cameras/TempCamera";
 import { getLocales } from 'expo-localization';
 import { ToastProvider } from 'react-native-styled-toast'
-import {SheetProvider} from 'react-native-actions-sheet';
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -65,7 +63,18 @@ export default function App() {
         console.log('update success!');
       },
       updateFail(message) {
-        console.log("updateFail:", message);
+         Alert.alert(
+                  i18n.t("Warning"),
+                  message,
+                  [
+                    {
+                      text: i18n.t("Close"),
+                      onPress: () => console.log("Cancel Pressed"),
+                      style: "desructive",
+                    },
+                  ],
+                  { cancelable: false }
+                );
       },
       restartAfterInstall: false,
     });
@@ -75,8 +84,6 @@ const onCheckVersion = () => {
     fetch(constants.updateJSON).then(async (data) => {
       const result = await data.json();
       const currentVersion = await hotUpdate.getCurrentVersion();
-      console.log("Server: ", result?.version);
-      console.log("App: ", parseInt(currentVersion));
       if (parseInt(result?.version) > parseInt(currentVersion)) {
                 startUpdate(
                   Platform.OS === 'ios'
@@ -191,9 +198,7 @@ const onCheckVersion = () => {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <AlertProvider>
       <ToastProvider maxToasts={1} offset={65} position="TOP">
-         <SheetProvider context="global">
           <MenuProvider>
         <NavigationContainer
           linking={linking}
@@ -684,9 +689,7 @@ const onCheckVersion = () => {
             </Stack.Navigator>
         </NavigationContainer>
         </MenuProvider>
-              </SheetProvider>
               </ToastProvider>
-      </AlertProvider>
     </GestureHandlerRootView>
   );
 }
