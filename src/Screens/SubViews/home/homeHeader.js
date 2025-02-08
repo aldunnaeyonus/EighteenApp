@@ -14,6 +14,7 @@ const FriendHeader = (props) => {
   
 
   return (
+    <>
       <View
         style={{
           width: "95%",
@@ -45,6 +46,7 @@ const FriendHeader = (props) => {
             {i18n.t("ViewAll")}
           </Text>
         </TouchableOpacity>
+      </View>
       <ScrollView
         style={{ height: 100 }}
         horizontal
@@ -243,7 +245,7 @@ const FriendHeader = (props) => {
           </View>
         ))}
       </ScrollView>
-      </View>
+    </>
   );
 };
 
