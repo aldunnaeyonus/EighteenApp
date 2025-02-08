@@ -171,11 +171,12 @@ const onCheckVersion = () => {
   useEffect(() => {
     const fetchData = async () => {
       onCheckVersion();
-      if (signIn) {
       const owner = await AsyncStorage.getItem("user_id");
       setOwner(owner);
       const logedIn = await AsyncStorage.getItem("logedIn");
       setSignIn(stringToBoolean(logedIn));
+      
+      if (signIn) {
       await axiosPull._getProStatus(owner, Platform.OS);
       }else{
           storage.set("uploadData", JSON.stringify({"message": "", "display":"none", "image":""}));
