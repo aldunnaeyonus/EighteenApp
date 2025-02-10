@@ -535,11 +535,10 @@ const Home = (props) => {
         <View style={style.centeredView}>
           <View style={style.qrmodalView}>
             {device == null ? (
-              <Text>No Camera Device</Text>
+              <></>
             ) : (
               <Camera
-                style={[StyleSheet.absoluteFill]}
-                {...props}
+                style={[StyleSheet.absoluteFill,{ overflow: "hidden", borderRadius: 20}]}
                 device={device}
                 androidPreviewViewType={"texture-view"}
                 isActive={true}
