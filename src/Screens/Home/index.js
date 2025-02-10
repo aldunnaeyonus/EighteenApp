@@ -526,10 +526,10 @@ const Home = (props) => {
               <Text>No Camera Device</Text>
             ) : (
               <Camera
-              style={[
-                StyleSheet.absoluteFill,{ overflow: "hidden", borderRadius: 20, zIndex:-100}]}
+              style={[StyleSheet.absoluteFill]}
+                {...props}
                 device={device}
-                resizeMode={Platform.OS == "ios" ? 'cover' : 'contain'}
+                androidPreviewViewType={"texture-view"}
                 isActive={true}
                 codeScanner={codeScanner}
               />
