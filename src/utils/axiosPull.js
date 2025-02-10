@@ -83,9 +83,11 @@ export const _pullGalleryArray = async (pin) => {
   return JSON.stringify(response);
 };
 
-export const _pullGalleryFeed = async (pin) => {
+export const _pullGalleryFeed = async (pin, owner, user) => {
   const data = {
     pin: pin,
+     owner: owner,
+     user: user,
   };
   const response = await postData("/camera/gallery.php", data);
   const myData = []
