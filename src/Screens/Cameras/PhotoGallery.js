@@ -243,10 +243,10 @@ const PhotoGallery = (props) => {
           ),
       });
       var timeout = setInterval(async () => {
-        await axiosPull._pullGalleryFeed(props.route.params.pin);
+        await axiosPull._pullGalleryFeed(props.route.params.pin, props.route.params.user, props.route.params.owner);
       }, 15000);
       const fetchData = async () => {
-        await axiosPull._pullGalleryFeed(props.route.params.pin);
+        await axiosPull._pullGalleryFeed(props.route.params.pin, props.route.params.user, props.route.params.owner);
         preLoadImages();
       };
       fetchData();
