@@ -138,25 +138,22 @@ const Profile = (props) => {
     email(to, {
       subject: `${i18n.t("Email2")}`,
       body: `${i18n.t("Email1")}
+--------------------------
+//App
+App: ${DeviceInfo.getApplicationName()}
+Build: ${version}
+Version: ${Application.nativeApplicationVersion}
 
-                  --------------------------
-                  //App
-                  App: ${DeviceInfo.getApplicationName()}
-                  Build: ${version}
-                  Version: ${Application.nativeApplicationVersion}
+//Device
+OS: ${DeviceInfo.getSystemName()}
+Brand: ${DeviceInfo.getBrand()}
+Device: ${DeviceInfo.getDeviceId()}
+Version: ${DeviceInfo.getSystemVersion()}
 
-                  //Device
-                  OS: ${DeviceInfo.getSystemName()}
-                  Brand: ${DeviceInfo.getBrand()}
-                  Device: ${DeviceInfo.getDeviceId()}
-                  Version: ${DeviceInfo.getSystemVersion()}
-
-                  //User
-                  User: ${user.user_handle}-${user.user_id}
-                  Email: ${user.user_email}
-                  Language Code: ${getLocales()[0].languageCode}
-                  --------------------------
-                  `,
+//User
+User: ${user.user_handle}-${user.user_id}
+Email: ${user.user_email}
+Language Code: ${getLocales()[0].languageCode}`,
       checkCanOpen: true, // Call Linking.canOpenURL prior to Linking.openURL
     }).catch(console.error);
   };
