@@ -75,7 +75,7 @@ export const _pullUser = async (id, screen) => {
   storage.set("user.Data", JSON.stringify(response[0]));
 };
 
-export const resetBadge = async (owner, pin) => {
+export const _resetBadge = async (owner, pin) => {
  const data = {
    owner: owner,
    pin: pin
@@ -177,7 +177,7 @@ export const _pullMembersFeed = async (pin, owner, UUID) => {
 export const axiosPull = {
   AITexttoImage,
   postData,
-  resetBadge,
+  _resetBadge,
   _pullHistoryFeed,
   _pullUser,
   _pullCameraFeed,
