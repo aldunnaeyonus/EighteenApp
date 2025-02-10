@@ -75,9 +75,10 @@ export const _pullUser = async (id, screen) => {
   storage.set("user.Data", JSON.stringify(response[0]));
 };
 
-export const resetBadge = async (owner) => {
+export const resetBadge = async (owner, pin) => {
  const data = {
-    owner: owner,
+   owner: owner,
+   pin: pin
   };
   const response = await postData("/camera/resetBadge.php", data);
   return JSON.stringify(response);
