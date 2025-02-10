@@ -177,6 +177,7 @@ const Home = (props) => {
     illustration
   ) => {
     await axiosPull._resetBadge(user.user_id, pin);
+    await axiosPull._pullCameraFeed(user.user_id, "owner");
     props.navigation.navigate("MediaGallery", {
       pin: pin,
       title: title,
