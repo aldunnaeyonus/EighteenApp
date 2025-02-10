@@ -4,6 +4,7 @@ import {
   Platform,
   TouchableOpacity,
   Text,
+  Alert,
   Modal,
 } from "react-native";
 import React, { useState, useRef, useCallback } from "react";
@@ -29,7 +30,9 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 const stickers = [];
 import Loading from "../SubViews/home/Loading";
 import { getLocales } from "expo-localization";
-
+import {
+  useCameraPermission,
+} from "react-native-vision-camera";
 const PhotoGallery = (props) => {
   const [filteredDataSource] = useMMKVObject(
     `user.Gallery.Friend.Feed.${props.route.params.pin}`,
@@ -44,6 +47,9 @@ const PhotoGallery = (props) => {
       ? "99"
       : props.route.params.credits
   );
+  const { hasPermission, requestPermission } = useCameraPermission();
+  const [cameraStatus, requestCameraPermission] = ImagePicker.useCameraPermissions()
+
   const [modalUpload, setModalUpload] = useState(false);
   const { toast } = useToast();
   const [cameraData] = useMMKVObject(
@@ -104,6 +110,29 @@ const PhotoGallery = (props) => {
   };
 
   const pickImageChooser = async () => {
+if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
+          await ImagePicker.requestCameraPermissionsAsync();
+        }else if (cameraStatus.status == ImagePicker.PermissionStatus.DENIED) {
+      Alert.alert(
+      i18n.t("Permissions"),
+      i18n.t("To access photo"),
+      [
+        {
+          text: i18n.t("Cancel"),
+          onPress: () => console.log("Cancel Pressed"),
+          style: "destructive",
+        },
+        {
+          text: i18n.t("ViewSettings"),
+          onPress: () => {
+            _editItemFeed(UUID, owner, pin)
+          },
+          style: "default",
+        },
+      ],
+      { cancelable: false }
+    )
+        }else{
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsMultipleSelection: true,
       selectionLimit: parseInt(credits) >= 5 ? 5 : parseInt(credits),
@@ -138,6 +167,7 @@ const PhotoGallery = (props) => {
         }
       }
     }
+  }
   };
 
   const openCloseModal = useCallback(() => {
@@ -200,7 +230,11 @@ const PhotoGallery = (props) => {
           credits > 0 || props.route.params.owner == props.route.params.user ? (
             <TouchableOpacity
               onPress={() => {
+                if (hasPermission){
                 openCloseModal();
+              }else{
+                requestPermission();
+               }
               }}
             >
               <Icon

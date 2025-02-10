@@ -7,7 +7,6 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Platform,
 } from "react-native";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
 import { constants, SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
@@ -32,6 +31,7 @@ import Loading from "../SubViews/home/Loading";
 import {
   Camera,
   useCameraDevice,
+  useCameraPermission,
   useCodeScanner,
 } from "react-native-vision-camera";
 import RNFS from "react-native-fs";
@@ -57,6 +57,7 @@ const Home = (props) => {
   };
   const device = useCameraDevice("back");
   const [isBarcodeScannerEnabled, setisBarcodeScannerEnabled] = useState(true);
+  const { hasPermission, requestPermission } = useCameraPermission();
 
   const codeScanner = useCodeScanner({
     codeTypes: ["qr"],
@@ -403,8 +404,12 @@ const Home = (props) => {
           name="qrcode-scan"
           size={30}
           onPress={() => {
+            if (hasPermission){
             setisBarcodeScannerEnabled(true);
             setmodalQRCodeVisable(true);
+            }else{
+             requestPermission();
+            }
           }}
           color="#3D4849"
         />

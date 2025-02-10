@@ -4,6 +4,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Platform,
+  Alert,
 } from "react-native";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
 import { constants, SCREEN_WIDTH } from "../../utils/constants";
@@ -18,9 +19,8 @@ import FastImage from "react-native-fast-image";
 
 const ChangeData = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
-
+  const [cameraStatus] = ImagePicker.useCameraPermissions()
   const [uploading] = useMMKVObject("uploadData", storage);
-
   const fetchCode = async (icon, types) => {
     props.navigation.setOptions({
       headerRight: () => (
@@ -60,6 +60,29 @@ const ChangeData = (props) => {
   };
 
   const pickImage = async () => {
+if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
+          await ImagePicker.requestCameraPermissionsAsync();
+        }else if (cameraStatus.status == ImagePicker.PermissionStatus.DENIED) {
+      Alert.alert(
+      i18n.t("Permissions"),
+      i18n.t("To access photo"),
+      [
+        {
+          text: i18n.t("Cancel"),
+          onPress: () => console.log("Cancel Pressed"),
+          style: "destructive",
+        },
+        {
+          text: i18n.t("ViewSettings"),
+          onPress: () => {
+            _editItemFeed(UUID, owner, pin)
+          },
+          style: "default",
+        },
+      ],
+      { cancelable: false }
+    )
+        }else{
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
       aspect: [1, 1],
@@ -69,6 +92,7 @@ const ChangeData = (props) => {
     if (!result.canceled) {
       fetchCode(result.assets[0].uri, "1");
     }
+  }
   };
   return (
     <>

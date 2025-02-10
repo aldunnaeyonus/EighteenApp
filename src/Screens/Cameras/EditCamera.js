@@ -20,7 +20,6 @@ import {
   IOS_DISPLAY,
   constants,
   SCREEN_WIDTH,
-  SCREEN_HEIGHT
 } from "../../utils/constants";
 import * as ImagePicker from "expo-image-picker";
 import FormData from "form-data";
@@ -67,6 +66,7 @@ const EditCamera = (props) => {
   const [selectedDate, setSelectedDate] = useState(sourcedDate.toDate());
   const { toast } = useToast();
   const [minimumDate] = useState(new Date());
+  const [cameraStatus] = ImagePicker.useCameraPermissions()
 
   const [selectedIndex, setSelectedIndex] = useState(
     isPro
@@ -258,6 +258,29 @@ const EditCamera = (props) => {
   };
 
   const pickImage = async () => {
+       if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
+                 await ImagePicker.requestCameraPermissionsAsync();
+               }else if (cameraStatus.status == ImagePicker.PermissionStatus.DENIED) {
+             Alert.alert(
+             i18n.t("Permissions"),
+             i18n.t("To access photo"),
+             [
+               {
+                 text: i18n.t("Cancel"),
+                 onPress: () => console.log("Cancel Pressed"),
+                 style: "destructive",
+               },
+               {
+                 text: i18n.t("ViewSettings"),
+                 onPress: () => {
+                   _editItemFeed(UUID, owner, pin)
+                 },
+                 style: "default",
+               },
+             ],
+             { cancelable: false }
+           )
+               }else{
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -272,6 +295,7 @@ const EditCamera = (props) => {
       setImage(image);
       setisEditing(false);
     }
+  }
   };
 
   useFocusEffect(

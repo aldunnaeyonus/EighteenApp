@@ -19,7 +19,6 @@ import {
   IOS_DISPLAY,
   constants,
   SCREEN_WIDTH,
-  SCREEN_HEIGHT
 } from "../../utils/constants";
 import * as ImagePicker from "expo-image-picker";
 import FormData from "form-data";
@@ -75,6 +74,7 @@ const CreateCamera = (props) => {
   const [errorColor] = useState(verified ? "#fafbfc" : "#ffa3a6");
   const [uploading] = useMMKVObject("uploadData", storage);
   let notification = new NotifService();
+  const [cameraStatus] = ImagePicker.useCameraPermissions()
 
   const MODE_VALUES = Platform.select({
     ios: Object.values(IOS_MODE),
@@ -240,6 +240,29 @@ const CreateCamera = (props) => {
   };
 
   const pickImage = async () => {
+     if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
+          await ImagePicker.requestCameraPermissionsAsync();
+        }else if (cameraStatus.status == ImagePicker.PermissionStatus.DENIED) {
+      Alert.alert(
+      i18n.t("Permissions"),
+      i18n.t("To access photo"),
+      [
+        {
+          text: i18n.t("Cancel"),
+          onPress: () => console.log("Cancel Pressed"),
+          style: "destructive",
+        },
+        {
+          text: i18n.t("ViewSettings"),
+          onPress: () => {
+            _editItemFeed(UUID, owner, pin)
+          },
+          style: "default",
+        },
+      ],
+      { cancelable: false }
+    )
+        }else{
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
     });
@@ -250,6 +273,7 @@ const CreateCamera = (props) => {
       setImage(image);
       setisEditing(false);
     }
+  }
   };
 
   useFocusEffect(
