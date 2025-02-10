@@ -176,8 +176,6 @@ const Home = (props) => {
     camera_add_social,
     illustration
   ) => {
-    await axiosPull._resetBadge(user.user_id, pin);
-    await axiosPull._pullCameraFeed(user.user_id, "owner");
     props.navigation.navigate("MediaGallery", {
       pin: pin,
       title: title,
@@ -193,85 +191,98 @@ const Home = (props) => {
       illustration: illustration,
       type: "owner",
     });
+    await axiosPull._resetBadge(user.user_id, pin);
+    await axiosPull._pullCameraFeed(user.user_id, "owner");
   };
 
   const _gotoShare = async (pin, time, owner, title) => {
-     Alert.alert(
-                            i18n.t("Share Event"),
-                            i18n.t("ChooseOption") +"\n"+title,
-                            (
-                              user.isPro == "1" ? 
-                              [
-                                {
-                                  text: i18n.t("Cancel"),
-                                  onPress: () => console.log("Cancel Pressed"),
-                                  style: "destructive",
-                                },
-                                {
-                                  text: i18n.t("OnlineGallery"),
-                                  onPress: () => {
-                                    const shareOptions = {
-                                      title: title,
-                                      url: constants.url + "/gallery/index.php?pin=" + pin,
-                                      message: i18n.t("ViewLiveGallery"),
-                                    };
-                                    try {
-                                      const ShareResponse = Share.share(shareOptions);
-                                      console.log("Result =>", ShareResponse);
-                                    } catch (error) {
-                                      console.log("Error =>", error);
-                                    }
-                                  },
-                                  style: "default",
-                                },
-                                {
-                                  text: i18n.t("Share Event"),
-                                  onPress: async () => {
-                                    const shareOptions = {
-                                      title: title,
-                                      url: constants.url + "/qrcode.php?pin=" + pin + "&time=" + time + "&owner=" + owner,
-                                      message: i18n.t("Join my Snap Eighteen Event") +", "+ title,
-                                    };
-                                
-                                    try {
-                                      const ShareResponse = await Share.share(shareOptions);
-                                      console.log("Result =>", ShareResponse);
-                                    } catch (error) {
-                                      console.log("Error =>", error);
-                                    }
-                                  },
-                                  style: "default",
-                                  },
-                              ]
-                              : 
-                              [
-                                {
-                                  text: i18n.t("Cancel"),
-                                  onPress: () => console.log("Cancel Pressed"),
-                                  style: "destructive",
-                                },
-                                {
-                                  text: i18n.t("Share Event"),
-                                  onPress: async () => {
-                                    const shareOptions = {
-                                      title: title,
-                                      url: constants.url + "/qrcode.php?pin=" + pin + "&time=" + time + "&owner=" + owner,
-                                      message: i18n.t("Join my Snap Eighteen Event") +", "+ title,
-                                    };
-                                
-                                    try {
-                                      const ShareResponse = await Share.share(shareOptions);
-                                      console.log("Result =>", ShareResponse);
-                                    } catch (error) {
-                                      console.log("Error =>", error);
-                                    }
-                                  },
-                                  style: "default",
-                                },
-                              ]
-                              ),
-                            { cancelable: false }
-                          );
+    Alert.alert(
+      i18n.t("Share Event"),
+      i18n.t("ChooseOption") + "\n" + title,
+      user.isPro == "1"
+        ? [
+            {
+              text: i18n.t("Cancel"),
+              onPress: () => console.log("Cancel Pressed"),
+              style: "destructive",
+            },
+            {
+              text: i18n.t("OnlineGallery"),
+              onPress: () => {
+                const shareOptions = {
+                  title: title,
+                  url: constants.url + "/gallery/index.php?pin=" + pin,
+                  message: i18n.t("ViewLiveGallery"),
+                };
+                try {
+                  const ShareResponse = Share.share(shareOptions);
+                  console.log("Result =>", ShareResponse);
+                } catch (error) {
+                  console.log("Error =>", error);
+                }
+              },
+              style: "default",
+            },
+            {
+              text: i18n.t("Share Event"),
+              onPress: async () => {
+                const shareOptions = {
+                  title: title,
+                  url:
+                    constants.url +
+                    "/qrcode.php?pin=" +
+                    pin +
+                    "&time=" +
+                    time +
+                    "&owner=" +
+                    owner,
+                  message: i18n.t("Join my Snap Eighteen Event") + ", " + title,
+                };
+
+                try {
+                  const ShareResponse = await Share.share(shareOptions);
+                  console.log("Result =>", ShareResponse);
+                } catch (error) {
+                  console.log("Error =>", error);
+                }
+              },
+              style: "default",
+            },
+          ]
+        : [
+            {
+              text: i18n.t("Cancel"),
+              onPress: () => console.log("Cancel Pressed"),
+              style: "destructive",
+            },
+            {
+              text: i18n.t("Share Event"),
+              onPress: async () => {
+                const shareOptions = {
+                  title: title,
+                  url:
+                    constants.url +
+                    "/qrcode.php?pin=" +
+                    pin +
+                    "&time=" +
+                    time +
+                    "&owner=" +
+                    owner,
+                  message: i18n.t("Join my Snap Eighteen Event") + ", " + title,
+                };
+
+                try {
+                  const ShareResponse = await Share.share(shareOptions);
+                  console.log("Result =>", ShareResponse);
+                } catch (error) {
+                  console.log("Error =>", error);
+                }
+              },
+              style: "default",
+            },
+          ],
+      { cancelable: false }
+    );
   };
 
   const _deleteFeedItemIndex = (UUID) => {
@@ -420,7 +431,7 @@ const Home = (props) => {
       await axiosPull._pullUser(user.user_id, "Home");
       await axiosPull._pullCameraFeed(user.user_id, "owner");
       await axiosPull._pullFriendsFeed(user.user_id);
-      if (user.isActive == "0"){
+      if (user.isActive == "0") {
         Alert.alert(
           i18n.t("Warning"),
           i18n.t("Inactive"),
@@ -459,14 +470,16 @@ const Home = (props) => {
   };
   const fetchImage = async (qrCodeURL) => {
     try {
-      const flyer = constants.flyerdataEvent
+      const flyer = constants.flyerdataEvent;
       const path = `${RNFS.CachesDirectoryPath}/qrcodeEvent.png`;
       const fileExists = await RNFS.exists(path);
       if (!fileExists) {
-        await RNFS.downloadFile({ fromUrl: flyer+qrCodeURL, toFile: path }).promise;
-      }else{
+        await RNFS.downloadFile({ fromUrl: flyer + qrCodeURL, toFile: path })
+          .promise;
+      } else {
         await RNFS.unlink(path);
-        await RNFS.downloadFile({ fromUrl: flyer+qrCodeURL, toFile: path }).promise;
+        await RNFS.downloadFile({ fromUrl: flyer + qrCodeURL, toFile: path })
+          .promise;
       }
       myAsyncPDFFunction(path);
     } catch (err) {
@@ -487,17 +500,17 @@ const Home = (props) => {
       try {
         const pdf = await RNImageToPdf.createPDFbyImages(options);
         handlePrint(pdf.filePath);
-        RNFS.unlink(url)
+        RNFS.unlink(url);
       } catch (e) {
         console.log(e);
         myAsyncPDFFunction(url);
       }
     } else {
-      RNFS.unlink(url)
+      RNFS.unlink(url);
       try {
         const pdf = await RNImageToPdf.createPDFbyImages(options);
         handlePrint(pdf.filePath);
-        RNFS.unlink(url)
+        RNFS.unlink(url);
       } catch (e) {
         myAsyncPDFFunction(url);
       }
@@ -506,7 +519,7 @@ const Home = (props) => {
 
   const handlePrint = async (url) => {
     await RNPrint.print({ filePath: url });
-    RNFS.unlink(url)
+    RNFS.unlink(url);
   };
 
   return (
@@ -520,13 +533,12 @@ const Home = (props) => {
         onRequestClose={() => setmodalQRCodeVisable(false)}
       >
         <View style={style.centeredView}>
-          
           <View style={style.qrmodalView}>
-          {device == null ? (
+            {device == null ? (
               <Text>No Camera Device</Text>
             ) : (
               <Camera
-              style={[StyleSheet.absoluteFill]}
+                style={[StyleSheet.absoluteFill]}
                 {...props}
                 device={device}
                 androidPreviewViewType={"texture-view"}
@@ -535,7 +547,7 @@ const Home = (props) => {
               />
             )}
             <Image
-            resizeMode="contain"
+              resizeMode="contain"
               style={[StyleSheet.absoluteFill]}
               source={require("../../../assets/scan.png")}
             />
@@ -594,84 +606,85 @@ const Home = (props) => {
               }}
             />
           </View>
-           <View style={{ 
-                    flexDirection: "row", 
-                    width:SCREEN_WIDTH, 
-                    margin: 20, 
-                    justifyContent: "center" 
-                    }}>
-                    <TouchableOpacity
-                      style={{
-                        width: '40%',
-                        marginRight: 10,
-                        backgroundColor: "rgba(250, 190, 0, 1)",
-                        borderRadius: 24,
-                        padding: 15,
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                      onPress={() => {
-                        setQrCodeURL("");
-                        setmodalVisable(false);
-                      }}
-                    >
-                      <Text
-                        style={{
-                          textTransform: "uppercase",
-                          fontSize: 20,
-                          fontWeight: 600,
-                          color: "#fff",
-                        }}
-                      >
-                        {i18n.t("Close")}
-                      </Text>
-                    </TouchableOpacity>
-                         <TouchableOpacity
-                      style={{
-                        width: '40%',
-                        marginLeft: 10,
-                        backgroundColor: "rgba(234, 85, 4, 1)",
-                        borderRadius: 24,
-                        padding: 15,
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                      onPress={() => {
-                        Alert.alert(
-                        i18n.t("FlyerPrint"),
-                        i18n.t("Note: FlyerPrint"),
-                        [
-                          {
-                            text: i18n.t("Cancel"),
-                            onPress: () => console.log("Cancel Pressed"),
-                            style: "destructive",
-                          },
-                          {
-                            text: i18n.t("Continue"),
-                            onPress: async () => {
-                              fetchImage(qrCodeURL);
-                            },
-                            style: "default",
-                          },
-                        ],
-                        { cancelable: false }
-                      );
-                      }}
-                    >
-                      <Text
-                        style={{
-                          textTransform: "uppercase",
-                          fontSize: 20,
-                          fontWeight: 600,
-                          color: "#fff",
-                        }}
-                      >
-                        {i18n.t("Print")}
-                      </Text>
-                    </TouchableOpacity>
-                        </View>
-                  </View>
-
+          <View
+            style={{
+              flexDirection: "row",
+              width: SCREEN_WIDTH,
+              margin: 20,
+              justifyContent: "center",
+            }}
+          >
+            <TouchableOpacity
+              style={{
+                width: "40%",
+                marginRight: 10,
+                backgroundColor: "rgba(250, 190, 0, 1)",
+                borderRadius: 24,
+                padding: 15,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              onPress={() => {
+                setQrCodeURL("");
+                setmodalVisable(false);
+              }}
+            >
+              <Text
+                style={{
+                  textTransform: "uppercase",
+                  fontSize: 20,
+                  fontWeight: 600,
+                  color: "#fff",
+                }}
+              >
+                {i18n.t("Close")}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                width: "40%",
+                marginLeft: 10,
+                backgroundColor: "rgba(234, 85, 4, 1)",
+                borderRadius: 24,
+                padding: 15,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              onPress={() => {
+                Alert.alert(
+                  i18n.t("FlyerPrint"),
+                  i18n.t("Note: FlyerPrint"),
+                  [
+                    {
+                      text: i18n.t("Cancel"),
+                      onPress: () => console.log("Cancel Pressed"),
+                      style: "destructive",
+                    },
+                    {
+                      text: i18n.t("Continue"),
+                      onPress: async () => {
+                        fetchImage(qrCodeURL);
+                      },
+                      style: "default",
+                    },
+                  ],
+                  { cancelable: false }
+                );
+              }}
+            >
+              <Text
+                style={{
+                  textTransform: "uppercase",
+                  fontSize: 20,
+                  fontWeight: 600,
+                  color: "#fff",
+                }}
+              >
+                {i18n.t("Print")}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </Modal>
 
       <RefreshableWrapper
@@ -760,7 +773,7 @@ const style = StyleSheet.create({
       width: 0,
       height: 2,
     },
-    overflow:'hidden',
+    overflow: "hidden",
     shadowOpacity: 0.25,
     shadowRadius: 22,
     elevation: 7,

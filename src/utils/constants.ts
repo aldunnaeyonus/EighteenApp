@@ -33,7 +33,7 @@ export const historyActionsPro = (UUID: String) => [
   },
   {
     id: "Download-" + UUID,
-    title: i18n.t('DownloadMediaLink'),
+    title: i18n.t('SendLink'),
     titleColor: "black",
   },
   {
@@ -55,7 +55,7 @@ export const historyActions = (UUID: String) => [
   },
   {
     id: "Download-" + UUID,
-    title: i18n.t('DownloadMediaLink'),
+    title: i18n.t('SendLink'),
     titleColor: "black",
   },
 ];

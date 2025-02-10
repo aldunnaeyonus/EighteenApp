@@ -233,31 +233,31 @@ const Profile = (props) => {
               }}
             />
           </View>
-            <TouchableOpacity
+          <TouchableOpacity
+            style={{
+              width: SCREEN_WIDTH - 100,
+              marginRight: 10,
+              marginLeft: 10,
+              marginTop: 25,
+              backgroundColor: "rgba(250, 190, 0, 1)",
+              borderRadius: 24,
+              padding: 15,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            onPress={() => setmodalVisable(false)}
+          >
+            <Text
               style={{
-                width: SCREEN_WIDTH - 100,
-                marginRight: 10,
-                marginLeft: 10,
-                marginTop: 25,
-                backgroundColor: "rgba(250, 190, 0, 1)",
-                borderRadius: 24,
-                padding: 15,
-                alignItems: "center",
-                justifyContent: "center",
+                textTransform: "uppercase",
+                fontSize: 20,
+                fontWeight: 600,
+                color: "#fff",
               }}
-              onPress={() => setmodalVisable(false)}
             >
-              <Text
-                style={{
-                  textTransform: "uppercase",
-                  fontSize: 20,
-                  fontWeight: 600,
-                  color: "#fff",
-                }}
-              >
-                {i18n.t("Close")}
-              </Text>
-            </TouchableOpacity>
+              {i18n.t("Close")}
+            </Text>
+          </TouchableOpacity>
         </View>
       </Modal>
       <View style={{ width: SCREEN_WIDTH, backgroundColor: "#fff" }}>
@@ -469,33 +469,6 @@ const Profile = (props) => {
             <View style={[styles.dividerTableStyle]} />
 
             <InfoText text={i18n.t("Account Actions")} />
-            <View style={[styles.dividerTableStyleShort]} />
-
-            <ListItem
-              containerStyle={{ paddingVertical: 5 }}
-              key="17"
-              onPress={() => {
-                openSettings();
-              }}
-            >
-              <Icon
-                type="material"
-                name="screen-lock-portrait"
-                size={20}
-                color="#3D4849"
-                containerStyle={{
-                  width: 28,
-                  height: 28,
-                  borderRadius: 6,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              />
-              <ListItem.Content>
-                <ListItem.Title>{i18n.t("Permissions")}</ListItem.Title>
-              </ListItem.Content>
-              <ListItem.Chevron />
-            </ListItem>
             <View style={[styles.dividerTableStyleShort]} />
             <ListItem
               containerStyle={{ paddingVertical: 5 }}

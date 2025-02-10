@@ -134,6 +134,30 @@ const ListItem = (props) => {
             {endEventTime}
           </Text>
         </View>
+         <View style={{ position: "absolute", bottom:10, right:10 }}>
+                          <View
+                            style={{
+                              marginBm: 15,
+                              backgroundColor: props.item.item.badge == "0" ? "rgba(116, 198, 190, 0.0)" : "rgba(116, 198, 190, 0.8)",
+                              width: 40,
+                              height: 40,
+                              borderRadius: 20,
+                              justifyContent: "center",
+                            }}
+                          >
+                            <Text
+                              style={{
+                                color: "#fff",
+                                textAlignVertical: "center",
+                                textAlign: "center",
+                                fontSize: 17,
+                                fontWeight: "bold",
+                              }}
+                            >
+                              {props.item.item.badge > 99 ? "+99" : props.item.item.badge == "0" ? "" : props.item.item.badge}
+                            </Text>
+                          </View>
+                        </View>
         <View style={styles.imageUserNameContainer}>
           <MenuView
             key={props.item.item.UUID}
