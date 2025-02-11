@@ -4,6 +4,7 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
+  Pressable
 } from "react-native";
 import moment from "moment/min/moment-with-locales";
 import { MenuView } from "@react-native-menu/menu";
@@ -135,9 +136,23 @@ const ListItem = (props) => {
           </Text>
         </View>
          <View style={{ position: "absolute", bottom:10, right:10 }}>
+            <Pressable 
+            onPress={
+           props._gotoMedia(
+                props.item.item.pin,
+                props.item.item.title,
+                props.item.item.owner,
+                props.item.item.UUID,
+                props.item.item.end,
+                props.item.item.start,
+                props.item.item.credits,
+                props.item.item.camera_add_social,
+                props.item.item.illustration
+              );  
+          }>
                           <View
                             style={{
-                              marginBm: 15,
+                              margin: 15,
                               backgroundColor: props.item.item.badge == "0" ? "rgba(116, 198, 190, 0.0)" : "rgba(116, 198, 190, 0.8)",
                               width: 40,
                               height: 40,
@@ -157,6 +172,7 @@ const ListItem = (props) => {
                               {props.item.item.badge > 99 ? "+99" : props.item.item.badge == "0" ? "" : props.item.item.badge}
                             </Text>
                           </View>
+                              </Pressable>
                         </View>
         <View style={styles.imageUserNameContainer}>
           <MenuView
