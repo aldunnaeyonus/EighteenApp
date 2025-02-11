@@ -358,33 +358,6 @@ Language Code: ${getLocales()[0].languageCode}`,
           <InfoText text={i18n.t("Profile Settings")} />
           <View>
             <View style={[styles.dividerTableStyle]} />
-
-            <ListItem
-              containerStyle={{ paddingVertical: 5 }}
-              key="3"
-              onPress={() => {
-                notifications();
-              }}
-            >
-              <Icon
-                type="material-community"
-                name="message"
-                size={20}
-                color="#3D4849"
-                containerStyle={{
-                  width: 28,
-                  height: 28,
-                  borderRadius: 6,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              />
-              <ListItem.Content>
-                <ListItem.Title>{i18n.t("Notifications")}</ListItem.Title>
-              </ListItem.Content>
-              <ListItem.Chevron />
-            </ListItem>
-            <View style={[styles.dividerTableStyleShort]} />
             <ListItem
               containerStyle={{ paddingVertical: 5 }}
               key="12"
