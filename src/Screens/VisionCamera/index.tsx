@@ -360,9 +360,7 @@ const VisionCamera = (props: {
               style={StyleSheet.absoluteFill}
               isActive={isActive}
               onInitialized={onInitialized}
-              outputOrientation="device"
               videoHdr={videoHdr}
-              photoQualityBalance="balanced"
               onUIRotationChanged={(degrees) => setUiRotation(degrees)}
               enableZoomGesture={true}
               photo={true}
