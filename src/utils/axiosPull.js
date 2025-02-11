@@ -161,7 +161,7 @@ export const _pullHistoryFeed = async (owner) => {
   storage.set("user.Media.Feed", JSON.stringify(myData));
 };
 
-export const _pullMembersFeed = async (pin, owner, UUID) => {
+export const _pullMembersFeed = async (owner, pin, UUID) => {
   const data = {
     owner: owner,
     pin: pin,
