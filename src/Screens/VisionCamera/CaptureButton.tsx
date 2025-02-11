@@ -110,7 +110,6 @@ const _CaptureButton: React.FC<Props> = ({
       console.log('calling startRecording()...')
       camera.current.startRecording({
         flash: flash,
-        videoCodec: 'h265',
         fileType: 'mp4',
         onRecordingError: (error) => {
           console.error('Recording failed!', error)

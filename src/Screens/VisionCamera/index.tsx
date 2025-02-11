@@ -352,6 +352,7 @@ const VisionCamera = (props: {
           style={StyleSheet.absoluteFill}
         >
           <TapGestureHandler onEnded={onDoubleTap} numberOfTaps={2}>
+            
             <ReanimatedCamera
               ref={camera}
               {...props}
