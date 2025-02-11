@@ -135,9 +135,9 @@ const ListItem = (props) => {
             {endEventTime}
           </Text>
         </View>
-         <View style={{ position: "absolute", bottom:10, right:10 }}>
+         <View style={{ position: "absolute", bottom:-3, right:0 }}>
             <Pressable 
-            onPress={
+            onPress={()=> {
            props._gotoMedia(
                 props.item.item.pin,
                 props.item.item.title,
@@ -148,8 +148,8 @@ const ListItem = (props) => {
                 props.item.item.credits,
                 props.item.item.camera_add_social,
                 props.item.item.illustration
-              );  
-          }>
+              )
+          }}>
                           <View
                             style={{
                               margin: 15,

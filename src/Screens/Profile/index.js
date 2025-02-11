@@ -353,10 +353,10 @@ Language Code: ${getLocales()[0].languageCode}`,
             </ListItem.Content>
             <ListItem.Chevron />
           </ListItem>
-            <View style={[styles.dividerTableStyle]} />
           <View style={[styles.dividerTableStyle]} />
           <InfoText text={i18n.t("Profile Settings")} />
           <View>
+            <View style={[styles.dividerTableStyle]} />
               <ListItem
               containerStyle={{ paddingVertical: 5 }}
               key="3"
