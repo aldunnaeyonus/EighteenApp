@@ -371,7 +371,6 @@ const VisionCamera = (props: {
               video={true}
               animatedProps={cameraAnimatedProps}
               audio={true}
-              exposure={0}
               format={format}
               enableLocation={location.hasPermission}
               lowLightBoost={canToggleNightMode}
