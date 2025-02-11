@@ -184,8 +184,7 @@ const getItemLayout = (_, index) => (
           color="white"
         />
        </TouchableOpacity>
-       { props.route.params.share == "0" || props.route.params.owner == props.route.params.user && (
-       
+       { props.route.params.share == "1" || props.route.params.owner == props.route.params.user ?
        <TouchableOpacity
               onPress={async () => {
                 _gotoShare(props.route.params.data[activeIndex].uri );
@@ -198,8 +197,8 @@ const getItemLayout = (_, index) => (
                 color="#fff"
               />
             </TouchableOpacity>
-       )}
-
+       : <></>
+      }
       </View>
       </SafeAreaView>
     </SafeAreaProvider>

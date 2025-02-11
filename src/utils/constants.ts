@@ -6,9 +6,9 @@ import { getLocales } from 'expo-localization';
 
 export const MIN_MS = 60000;
 export const camera_time_text = ["8 Hours", "18 Hours", "1 Day"];
-export const camera_time_text_PRO = ["18 Hours", "1 Day", "2 Days", "1 Week", "2 Weeks", "1 Month"];
+export const camera_time_text_PRO = ["1 Day", "2 Days", "1 Week", "2 Weeks", "1 Month"];
 export const camera_time_seconds = ["28800", "64800", "86400",];
-export const camera_time_seconds_PRO = ["64800", "86400", "432000", "604800","1209600", "2678400"];
+export const camera_time_seconds_PRO = ["86400", "432000", "604800","1209600", "2678400"];
 export const camera_amount = ["1", "2", "3", "4", "5", "10", "15", "18"];
 export const media_amount = ["1", "2", "3", "4", "5", "10", "15", "18"];
 export const camera_amount_PRO = ["10", "18", "25", "50", "100", "150", "250", "500", "1000"];
