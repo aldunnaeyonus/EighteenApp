@@ -193,12 +193,10 @@ const VisionCamera = (props: {
   const screenAspectRatio = constants.SCREEN_HEIGHT / constants.SCREEN_WIDTH;
 
   const format = useCameraFormat(device, [
-    { fps: 60 },
     { videoAspectRatio: screenAspectRatio },
     { videoResolution: "max" },
     { photoAspectRatio: screenAspectRatio },
     { photoResolution: "max" },
-    { videoStabilizationMode: 'cinematic-extended' }
   ]);
 
   const [enableHdr, setEnableHdr] = useState(false);
