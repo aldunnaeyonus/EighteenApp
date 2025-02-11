@@ -29,7 +29,6 @@ const JoinedMembers = (props) => {
       pin: pin,
     };
     await axiosPull.postData("/camera/addShots.php", data);
-    await axiosPull._pullCameraFeed(user, "owner");
     await axiosPull._pullMembersFeed(pin, user, UUID)
   }
 
