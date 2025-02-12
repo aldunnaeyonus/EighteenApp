@@ -58,9 +58,11 @@ export default function App() {
   const [owner, setOwner] = useState("0");
   let [localLang] = useState(getLocales()[0].languageCode)
   const [modalVisible, setModalVisible] = useState(false);
-  const startUpdate = async (url, urlversion) => {
-    await hotUpdate.downloadBundleUri(ReactNativeBlobUtil, url, urlversion, message {
+  
+  const startUpdate = async (url, urlversion, message) => {
+    await hotUpdate.downloadBundleUri(ReactNativeBlobUtil, url, urlversion {
       updateSuccess: () => {
+        setModalVisible(true);
         return (
           <Modal
             animationType="slide"
