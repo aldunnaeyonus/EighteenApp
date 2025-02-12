@@ -21,7 +21,7 @@ const AndroidPermissions = (props) => {
       checkMic();
       checkAccuracy();
       checkNotifiations();
-      if (props.profile != "profile"){
+      if (props.profile != "settings"){
       if (
         camera == "granted" &&
         mic == "granted" &&
