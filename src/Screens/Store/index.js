@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Platform } from "react-native";
+import { View, Text, Platform, TouchableOpacity } from "react-native";
 import Animated from "react-native-reanimated";
 import { ActivityIndicator, MD2Colors } from "react-native-paper";
 import StoreListItem from "../SubViews/store/storeList";
@@ -131,6 +131,39 @@ const Products = (props) => {
     >
       <AnimatedFlatlist
         showsHorizontalScrollIndicator={false}
+        ListHeaderComponent={
+      <View style={{paddingHorizontal: 24, marginBottom: 28 }}>
+        <TouchableOpacity
+          style={{
+           width: 40,
+           height: 40,
+           borderRadius: 9999,
+           alignItems: 'center',
+           justifyContent: 'center',
+           backgroundColor: '#ffdada',
+           marginBottom: 16,
+           }}>
+          <FeatherIcon
+            color="#F82E08"
+            name="arrow-left"
+            size={24} />
+        </TouchableOpacity>
+        <Text style={{
+              fontSize: 34,
+              fontWeight: 'bold',
+              color: '#181818',
+              marginBottom: 12,
+              }}>In App Puchases</Text>
+
+        <Text style={{
+              fontSize: 15,
+              lineHeight: 20,
+              fontWeight: '500',
+              color: '#889797',
+              }}> Boost your productivity with premium tools and personalized features. Subscribe now for unlimited access!
+        </Text>
+      </View>
+        }
         ListFooterComponent={
           <View
             style={{
@@ -149,17 +182,13 @@ const Products = (props) => {
             >
               {i18n.t("In-app purchases")}
               {`\n`}
-              {i18n.t("Event Upgrades")}
-              {`\n`}
-              {i18n.t("Camera Upgrades")}
-              {`\n`}
             </Text>
           </View>
         }
         style={{ background: "white" }}
         showsVerticalScrollIndicatorr={false}
         data={products}
-        numColumns={Platform.OS == "ios" ? 2 : 2}
+        numColumns={1}
         extraData={products}
         scrollEventThrottle={16}
         keyExtractor={(item) => item.productId}
