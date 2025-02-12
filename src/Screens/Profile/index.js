@@ -113,7 +113,7 @@ const Profile = (props) => {
 
     const faq = useCallback(() => {
     props.navigation.navigate("WebView", {
-      url: constants.url + "/faq/index.html",
+      url: constants.url + "/faq/index.php?locale="+getLocales()[0].languageCode,
       name: i18n.t("FAQs"),
     });
   });
