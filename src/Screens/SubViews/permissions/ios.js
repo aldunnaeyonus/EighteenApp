@@ -6,6 +6,7 @@ import React, { useState, useCallback } from "react";
 import { request, PERMISSIONS, check } from "react-native-permissions";
 import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../../i18n";
+import {Linking} from 'react-native';
 
 const IOSPermissions = () => {
   const [camera, setCamera] = useState("");
@@ -68,6 +69,17 @@ const IOSPermissions = () => {
       title={i18n.t("Permissions")}
       subtitle={i18n.t("PermissionsText")}
     >
+       <PermissionItem
+        title={i18n.t("ViewSettings")}
+        iconContainerBackgroundColor={'transparent'}
+        example={0}
+        iconStatusColor="transparent"}
+        subtitle={i18n.t("opensettings")}
+        source={require("../../../../assets/permissions.png")}
+        onPress={() => {
+         Linking.openSettings();
+        }}
+      />
       <PermissionItem
         title={i18n.t("Camera")}
         iconContainerBackgroundColor={'transparent'}
