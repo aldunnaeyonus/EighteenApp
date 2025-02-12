@@ -21,7 +21,7 @@ const AndroidPermissions = (props) => {
       checkMic();
       checkAccuracy();
       checkNotifiations();
-      if (props.profile != "settings"){
+      if (props.profile == "new"){
       if (
         camera == "granted" &&
         mic == "granted" &&
@@ -33,7 +33,7 @@ const AndroidPermissions = (props) => {
       } else {
         this.permModal.openModal();
       }
-      }else{
+      }elseif (props.profile == "settings"){
         this.permModal.openModal();
       }
     }, [camera, mic, photo, accuracy, notifications])
