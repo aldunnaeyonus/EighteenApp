@@ -7,7 +7,7 @@ import { request, PERMISSIONS, check } from "react-native-permissions";
 import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../../i18n";
 
-const AndroidPermissions = () => {
+const AndroidPermissions = (props) => {
   const [camera, setCamera] = useState("");
   const [mic, setMic] = useState("");
   const [photo, setPhoto] = useState("");
@@ -21,6 +21,7 @@ const AndroidPermissions = () => {
       checkMic();
       checkAccuracy();
       checkNotifiations();
+      if (props.profile != "profile"){
       if (
         camera == "granted" &&
         mic == "granted" &&
@@ -30,6 +31,9 @@ const AndroidPermissions = () => {
       ) {
         this.permModal.closeModal();
       } else {
+        this.permModal.openModal();
+      }
+      }else{
         this.permModal.openModal();
       }
     }, [camera, mic, photo, accuracy, notifications])
