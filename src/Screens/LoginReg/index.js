@@ -12,7 +12,7 @@ const Begin = (props) => {
 
   return (
     <View>
-      {Platform.OS == "ios" ? <IOSPermissions /> : <AndroidPermissions />}
+      {Platform.OS == "ios" ? <IOSPermissions profile={'new'}/> : <AndroidPermissions profile={'new'} />}
       <Wrapper>
         <Logo source={require("../../../assets/adaptive-icon.png")} />
 
