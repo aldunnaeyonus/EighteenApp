@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Platform, TouchableOpacity } from "react-native";
-import Animated from "react-native-reanimated";
+import { View, Text, Platform } from "react-native";
 import { ActivityIndicator, MD2Colors } from "react-native-paper";
-import StoreListItem from "../SubViews/store/storeList";
 import {
   isIosStorekit2,
   PurchaseError,
@@ -24,7 +22,6 @@ const Products = (props) => {
     getProducts,
   } = useIAP();
   const [isLoading, setIsLoading] = useState(true);
-  const AnimatedFlatlist = Animated.FlatList;
   const { toast } = useToast();
 
   useEffect(() => {
@@ -123,43 +120,35 @@ const Products = (props) => {
   }, [currentPurchase, finishTransaction, connected]);
 
   return (
+
+    <View style={{paddingHorizontal: 24, marginBottom: 28, backgroundColor:'white', width:'100%', height:'100%' }}>
+    <Text style={{
+      marginTop: 28, 
+          fontSize: 34,
+          fontWeight: 'bold',
+          color: '#ea5504',
+          marginBottom: 12,
+          }}>{i18n.t("In App Extras")}</Text>
+
+    <Text style={{
+      marginTop: 28, 
+          fontSize: 15,
+          lineHeight: 20,
+          fontWeight: '400',
+          color: '#889797',
+          }}>{i18n.t("storeslogan")}
+    </Text>
     <View
       style={{
         flex: 1,
         backgroundColor: "white",
       }}
     >
-      <AnimatedFlatlist
-        showsHorizontalScrollIndicator={false}
-        ListHeaderComponent={
-      <View style={{paddingHorizontal: 24, marginBottom: 28 }}>
-        <Text style={{
-              fontSize: 34,
-              fontWeight: 'bold',
-              color: '#181818',
-              marginBottom: 12,
-              }}>{i18n.t("In App Extras")}</Text>
 
-        <Text style={{
-              fontSize: 15,
-              lineHeight: 20,
-              fontWeight: '400',
-              color: '#889797',
-              }}>{i18n.t("storeslogan")}
-        </Text>
-      </View>
-        }
-        ListFooterComponent={
-          <View
-            style={{
-              marginTop: 15,
-              justifyContent: "center",
-              width: SCREEN_WIDTH,
-              padding: 20,
-            }}
-          >
+
             <Text
               style={{
+                marginTop: 50, 
                 color: "grey",
                 fontSize: 13,
                 textAlign: "center",
@@ -168,24 +157,7 @@ const Products = (props) => {
               {i18n.t("In-app purchases")}
               {`\n`}
             </Text>
-          </View>
-        }
-        style={{ background: "white" }}
-        showsVerticalScrollIndicatorr={false}
-        data={products}
-        numColumns={1}
-        extraData={products}
-        scrollEventThrottle={16}
-        keyExtractor={(item) => item.productId}
-        renderItem={(item, index) => (
-          <StoreListItem
-            item={item}
-            index={index}
-            cameras={props.route.params.cameras}
-            handleBuyProduct={handleBuyProduct}
-          />
-        )}
-      />
+     
       <ActivityIndicator
         size={80}
         style={{
@@ -197,6 +169,7 @@ const Products = (props) => {
         hidesWhenStopped={true}
         color={MD2Colors.orange900}
       />
+    </View>  
     </View>
   );
 };

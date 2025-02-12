@@ -1,18 +1,20 @@
 import React, {useState} from "react";
 import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import * as i18n from "../../../../i18n";
 import FeatherIcon from 'react-native-vector-icons/Feather';
 
 const StoreListItem = (props) => {
   const [selected, setSelected] = useState(0);
-const isActive = selected === props.index;
-  
+  const isActive = selected;
+  console.log(isActive)
+  console.log(selected)
+
   return (
+    <View  style={{marginLeft:15, marginRight:15}}
+>
               <TouchableOpacity 
-                key={index}
+                key={props.item.index}
                 onPress={() => {
-                  setSelected(props.index);
+                  setSelected(props.item.index);
                   props.handleBuyProduct(props.item.item.productId)
                   }}>
                 <View
@@ -43,7 +45,7 @@ const isActive = selected === props.index;
                     </Text>
                   </View>
                 </View>
-              </TouchableOpacity>
+              </TouchableOpacity></View>
             );
 };
 
@@ -71,7 +73,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   radioLabel: {
-    fontSize: 19,
+    fontSize: 17,
     fontWeight: '700',
     color: '#1d1d1d',
   },
@@ -82,7 +84,7 @@ const styles = StyleSheet.create({
     color: '#889797',
   },
   radioPrice: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '600',
     color: '#1d1d1d',
   },
