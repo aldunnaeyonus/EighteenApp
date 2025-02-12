@@ -6,7 +6,7 @@ import React, { useState, useCallback } from "react";
 import { request, PERMISSIONS, check } from "react-native-permissions";
 import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../../i18n";
-import {Linking} from 'react-native';
+import { Linking } from "react-native";
 
 const IOSPermissions = () => {
   const [camera, setCamera] = useState("");
@@ -44,20 +44,16 @@ const IOSPermissions = () => {
       checkCamera();
       checkMic();
       checkAccuracy();
-            if (props.profile == "new"){
-      if (
-        camera == "granted" &&
-        mic == "granted" &&
-        photo == "granted" &&
-        accuracy == "granted"
-      ) {
-        this.permModal.closeModal();
-      } else {
-        this.permModal.openModal();
-      }
-            }else if (props.profile == "settings"){
-        this.permModal.openModal();
-            }
+        if (
+          camera == "granted" &&
+          mic == "granted" &&
+          photo == "granted" &&
+          accuracy == "granted"
+        ) {
+          this.permModal.closeModal();
+        } else {
+          this.permModal.openModal();
+        }
     }, [camera, mic, photo, accuracy])
   );
 
@@ -69,20 +65,20 @@ const IOSPermissions = () => {
       title={i18n.t("Permissions")}
       subtitle={i18n.t("PermissionsText")}
     >
-       <PermissionItem
+      <PermissionItem
         title={i18n.t("ViewSettings")}
-        iconContainerBackgroundColor={'transparent'}
+        iconContainerBackgroundColor={"transparent"}
         example={0}
-        iconStatusColor="transparent"}
+        iconStatusColor={"transparent"}
         subtitle={i18n.t("opensettings")}
         source={require("../../../../assets/permissions.png")}
         onPress={() => {
-         Linking.openSettings();
+          Linking.openSettings();
         }}
       />
       <PermissionItem
         title={i18n.t("Camera")}
-        iconContainerBackgroundColor={'transparent'}
+        iconContainerBackgroundColor={"transparent"}
         example={1}
         iconStatusColor={camera == "granted" ? "green" : "red"}
         subtitle={i18n.t("To access camera")}

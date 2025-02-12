@@ -60,7 +60,7 @@ export default function App() {
   const [modalVisible, setModalVisible] = useState(false);
   
   const startUpdate = async (url, urlversion, message) => {
-    await hotUpdate.downloadBundleUri(ReactNativeBlobUtil, url, urlversion {
+    await hotUpdate.downloadBundleUri(ReactNativeBlobUtil, url, urlversion, {
       updateSuccess: () => {
         setModalVisible(true);
         return (

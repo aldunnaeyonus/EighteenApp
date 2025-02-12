@@ -8,7 +8,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../../i18n";
 import {Linking} from 'react-native';
 
-const AndroidPermissions = (props) => {
+const AndroidPermissions = () => {
   const [camera, setCamera] = useState("");
   const [mic, setMic] = useState("");
   const [photo, setPhoto] = useState("");
@@ -22,7 +22,6 @@ const AndroidPermissions = (props) => {
       checkMic();
       checkAccuracy();
       checkNotifiations();
-      if (props.profile == "new"){
       if (
         camera == "granted" &&
         mic == "granted" &&
@@ -34,9 +33,7 @@ const AndroidPermissions = (props) => {
       } else {
         this.permModal.openModal();
       }
-      }elseif (props.profile == "settings"){
-        this.permModal.openModal();
-      }
+
     }, [camera, mic, photo, accuracy, notifications])
   );
 
@@ -82,7 +79,7 @@ const AndroidPermissions = (props) => {
         title={i18n.t("ViewSettings")}
         iconContainerBackgroundColor={'transparent'}
         example={0}
-        iconStatusColor="transparent"}
+        iconStatusColor={"transparent"}
         subtitle={i18n.t("opensettings")}
         source={require("../../../../assets/permissions.png")}
         onPress={() => {

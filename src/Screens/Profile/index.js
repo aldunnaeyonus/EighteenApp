@@ -340,7 +340,7 @@ Language Code: ${getLocales()[0].languageCode}`,
           <View style={[styles.dividerTableStyle]} />
           <ListItem
             containerStyle={{ paddingVertical: 5 }}
-            key="10"
+            fkey="26"
             onPress={() => {
               setmodalVisable(true);
             }}
@@ -368,7 +368,9 @@ Language Code: ${getLocales()[0].languageCode}`,
             containerStyle={{ paddingVertical: 5 }}
             key="10"
             onPress={() => {
+              return (
                Platform.OS == "ios" ? <IOSPermissions profile={'settings'}/> : <AndroidPermissions profile={'settings'}/>
+              )
             }}
           >
             <Icon
@@ -639,7 +641,7 @@ Language Code: ${getLocales()[0].languageCode}`,
 
           <ListItem
             containerStyle={{ paddingVertical: 5 }}
-            key="8"
+            key="27"
             onPress={() => {
               terms();
             }}
