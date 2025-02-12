@@ -30,6 +30,8 @@ import hotUpdate from "react-native-ota-hot-update/src/index";
 import email from "react-native-email";
 import DeviceInfo from "react-native-device-info";
 import { getLocales } from "expo-localization";
+import IOSPermissions from "../SubViews/permissions/ios";
+import AndroidPermissions from "../SubViews/permissions/android";
 
 const Profile = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
@@ -350,6 +352,33 @@ Language Code: ${getLocales()[0].languageCode}`,
             />
             <ListItem.Content>
               <ListItem.Title>{i18n.t("Friend Code")}</ListItem.Title>
+            </ListItem.Content>
+            <ListItem.Chevron />
+          </ListItem>
+          <View style={[styles.dividerTableStyle]} />
+          <ListItem
+            containerStyle={{ paddingVertical: 5 }}
+            key="10"
+            onPress={() => {
+              
+              
+            }}
+          >
+            <Icon
+              type="material"
+              name="perm-device-info"
+              size={20}
+              color="#3D4849"
+              containerStyle={{
+                width: 28,
+                height: 28,
+                borderRadius: 6,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            />
+            <ListItem.Content>
+              <ListItem.Title>{i18n.t("Permissions")}</ListItem.Title>
             </ListItem.Content>
             <ListItem.Chevron />
           </ListItem>
