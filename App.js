@@ -57,25 +57,26 @@ export default function App() {
   const [ready, setReady] = useState(false);
   const [owner, setOwner] = useState("0");
   let [localLang] = useState(getLocales()[0].languageCode)
-  
+  const [modalVisible, setModalVisible] = useState(false);
   const startUpdate = async (url, urlversion) => {
-    await hotUpdate.downloadBundleUri(ReactNativeBlobUtil, url, urlversion, {
+    await hotUpdate.downloadBundleUri(ReactNativeBlobUtil, url, urlversion, message {
       updateSuccess: () => {
-        console.log('update success!');
+        return (
+          <Modal
+            animationType="slide"
+            visible={modalVisible}
+            onRequestClose={() => {setModalVisible(false)}}
+          >
+            <View>
+              <Text>What's New in this Version</Text>
+              {message}
+              <Button title="Close" onPress={() => setModalVisible(false)} />
+            </View>
+          </Modal>
+          );
       },
       updateFail(message) {
-         Alert.alert(
-                  i18n.t("Warning"),
-                  message,
-                  [
-                    {
-                      text: i18n.t("Close"),
-                      onPress: () => console.log("Cancel Pressed"),
-                      style: "desructive",
-                    },
-                  ],
-                  { cancelable: false }
-                );
+        console.log(message);
       },
       restartAfterInstall: false,
     });
@@ -90,7 +91,8 @@ const onCheckVersion = () => {
                   Platform.OS === 'ios'
                     ? result?.downloadIosUrl
                     : result?.downloadAndroidUrl,
-                  result?.version
+                  result?.version,
+                  result?.whatsnew
                 );
         };
     });
