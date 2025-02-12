@@ -5,6 +5,7 @@ import {
   GestureResponderEvent,
   Text,
   Platform,
+  StatusBar,
 } from "react-native";
 import {
   useCameraPermission,
@@ -252,6 +253,7 @@ const VisionCamera = (props: {
       uploading
     );
     props.navigation.goBack();
+    StatusBar.setHidden(false, 'none');
   };
 
   const onMediaCaptured = useCallback(
@@ -298,6 +300,7 @@ const VisionCamera = (props: {
   }
 
   useEffect(() => {
+          StatusBar.setHidden(true, 'none');
     location.requestPermission();
   }, [location]);
 
@@ -378,6 +381,7 @@ const VisionCamera = (props: {
               exposure={0}
               enableLocation={location.hasPermission}
               lowLightBoost={canToggleNightMode}
+              frameProcessor={frameProcessor}
             />
           </TapGestureHandler>
         </Reanimated.View>
@@ -420,6 +424,7 @@ const VisionCamera = (props: {
           name={"close"}
           onPress={() => {
             props.navigation.goBack();
+            StatusBar.setHidden(false, 'none');
           }}
           size={30}
           color="white"

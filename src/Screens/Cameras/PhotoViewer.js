@@ -2,7 +2,8 @@ import {
   View,
   TouchableOpacity,
   Share,
-  FlatList
+  FlatList,
+  StatusBar
 } from "react-native";
 import React, { useState, useRef, useCallback } from "react";
 import { Icon } from "react-native-elements";
@@ -58,14 +59,18 @@ const PhotoViewer = (props) => {
 
   useFocusEffect(
     useCallback(() => {
+      StatusBar.setHidden(true, 'none');
       newphoto?.current.scrollToIndex({animate: true, index: props.route.params.pagerIndex})  
       bottomPhoto?.current.scrollToIndex({animate: true, index: props.route.params.pagerIndex})  
-
+      return () => {
+        StatusBar.setHidden(false, 'none');
+      };
     }, [])
   );
 
   useFocusEffect(
     useCallback(() => {
+
       if (!props.unsubscribe) {
         toast({
           message: i18n.t("No internet connection"),
@@ -163,12 +168,13 @@ const getItemLayout = (_, index) => (
         <View
         style={{
           position: "absolute",
-          right: 10,
+          right: 25,
           zIndex:2,
-          top: 40,
+          top: 30,
           padding: 10,
           borderRadius: 5,
           backgroundColor: "rgba(0, 0, 0, 0.40)",
+          flexDirection:'row',
           gap: 20,
         }}
       >

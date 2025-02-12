@@ -6,6 +6,7 @@ import {
   PermissionsAndroid,
   Platform,
   Image,
+  StatusBar
 } from "react-native";
 import type { OnVideoErrorData, OnLoadData } from "react-native-video";
 import Video from "react-native-video";
@@ -91,7 +92,6 @@ const MediaPage = (props: {
   const onMediaLoadError = useCallback((error: OnVideoErrorData) => {
     console.error(`failed to load media: ${JSON.stringify(error)}`);
   }, []);
-  const [isRotated, setIsRotated] = useState(false);
 
   const source = useMemo(() => ({ uri: `file://${path}` }), [path]);
   const screenStyle = useMemo(
@@ -155,6 +155,7 @@ const MediaPage = (props: {
     }
     setTimeout(() => {
       setAnimating(false);
+                  StatusBar.setHidden(false, 'none');
       props.navigation.pop(2);
     }, 1000);
   };
@@ -205,6 +206,7 @@ const MediaPage = (props: {
           size={30}
           onPress={() => {
             props.navigation.goBack();
+            StatusBar.setHidden(false, 'none');
           }}
           color="white"
         />

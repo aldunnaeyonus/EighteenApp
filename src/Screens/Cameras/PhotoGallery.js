@@ -6,6 +6,7 @@ import {
   Text,
   Alert,
   Modal,
+  StatusBar
 } from "react-native";
 import React, { useState, useRef, useCallback } from "react";
 import { constants, SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
@@ -184,6 +185,8 @@ if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
 
   useFocusEffect(
     useCallback(() => {
+            StatusBar.setHidden(true, 'none');
+      
       if (!props.unsubscribe) {
         toast({
           message: i18n.t("No internet connection"),
@@ -209,6 +212,7 @@ if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
         headerLeft: () => (
           <TouchableOpacity
             onPress={() => {
+                    StatusBar.setHidden(false, 'none');
               props.navigation.goBack();
             }}
           >
