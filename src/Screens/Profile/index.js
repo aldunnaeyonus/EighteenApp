@@ -4,6 +4,7 @@ import {
   Alert,
   Text,
   Modal,
+  Platform,
   TouchableOpacity,
   ScrollView,
 } from "react-native";
@@ -360,8 +361,7 @@ Language Code: ${getLocales()[0].languageCode}`,
             containerStyle={{ paddingVertical: 5 }}
             key="10"
             onPress={() => {
-              
-              
+               Platform.OS == "ios" ? <IOSPermissions profile={settings}/> : <AndroidPermissions profile={settings}/>
             }}
           >
             <Icon
