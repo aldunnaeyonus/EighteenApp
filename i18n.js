@@ -11,7 +11,7 @@ const loadTranslations = async (locale, url) => {
   i18n.translations = {[locale]: translation};
   i18n.enableFallback = true
   i18n.defaultLocale = DEFAULT_LANGUAGE
-  //i18n.store(translation);
+  i18n.store(translation);
 }
 
 

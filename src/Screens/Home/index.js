@@ -199,7 +199,7 @@ const Home = (props) => {
   const _gotoShare = async (pin, time, owner, title) => {
     Alert.alert(
       i18n.t("Share Event"),
-      i18n.t("ChooseOption") + "\n" + title,
+      i18n.t("ChooseOption"),
       user.isPro == "1"
         ? [
             {

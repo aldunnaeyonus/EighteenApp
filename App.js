@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
-import { Text, LogBox, Platform, Alert } from "react-native";
+import { Text, LogBox, Platform, Modal, View, Button } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
@@ -192,6 +192,7 @@ const onCheckVersion = () => {
           storage.set("user.Member.Join.Feed", JSON.stringify([]));
           storage.set("user.AllFriend.Feed", JSON.stringify([]));
       }
+      
       setTimeout(() => {
         setReady(true);
       }, 3000);
@@ -201,6 +202,7 @@ const onCheckVersion = () => {
 
 
   if (!ready) {
+    
     setI18nConfig(localLang, constants.url);
     return (
       <FastImage
