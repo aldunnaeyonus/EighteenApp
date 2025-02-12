@@ -111,6 +111,13 @@ const Profile = (props) => {
     props.navigation.navigate("Abouts");
   });
 
+    const faq = useCallback(() => {
+    props.navigation.navigate("WebView", {
+      url: constants.url + "/faq/index.html",
+      name: i18n.t("FAQs"),
+    });
+  });
+  
   const privacy = useCallback(() => {
     props.navigation.navigate("WebView", {
       url: constants.url + "/privacyPolicy.html",
@@ -652,6 +659,32 @@ Language Code: ${getLocales()[0].languageCode}`,
             />
             <ListItem.Content>
               <ListItem.Title>{i18n.t("Terms & Use")}</ListItem.Title>
+            </ListItem.Content>
+            <ListItem.Chevron />
+          </ListItem>
+          <View style={[styles.dividerTableStyleShort]} />
+          <ListItem
+            containerStyle={{ paddingVertical: 5 }}
+            key="8"
+            onPress={() => {
+              faq();
+            }}
+          >
+            <Icon
+              type="material"
+              name="info-outline"
+              size={20}
+              color="#3D4849"
+              containerStyle={{
+                width: 28,
+                height: 28,
+                borderRadius: 6,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            />
+            <ListItem.Content>
+              <ListItem.Title>{i18n.t("FAQs")}</ListItem.Title>
             </ListItem.Content>
             <ListItem.Chevron />
           </ListItem>
