@@ -179,7 +179,6 @@ const onCheckVersion = () => {
       setOwner(owner);
       const logedIn = await AsyncStorage.getItem("logedIn");
       setSignIn(stringToBoolean(logedIn));
-      
       if (signIn) {
       await axiosPull._getProStatus(owner, Platform.OS);
       }else{
@@ -202,7 +201,6 @@ const onCheckVersion = () => {
 
 
   if (!ready) {
-    
     setI18nConfig(localLang, constants.url);
     return (
       <FastImage
