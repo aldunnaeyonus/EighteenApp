@@ -1,15 +1,18 @@
-import React from "react";
+import React, {useState} from "react";
 import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import * as i18n from "../../../../i18n";
 import FeatherIcon from 'react-native-vector-icons/Feather';
 
 const StoreListItem = (props) => {
+  const [selected, setSelected] = useState(0);
 const isActive = selected === props.index;
+  
   return (
               <TouchableOpacity 
                 key={index}
                 onPress={() => {
+                  setSelected(props.index);
                   props.handleBuyProduct(props.item.item.productId)
                   }}>
                 <View
