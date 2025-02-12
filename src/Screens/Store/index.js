@@ -133,34 +133,19 @@ const Products = (props) => {
         showsHorizontalScrollIndicator={false}
         ListHeaderComponent={
       <View style={{paddingHorizontal: 24, marginBottom: 28 }}>
-        <TouchableOpacity
-          style={{
-           width: 40,
-           height: 40,
-           borderRadius: 9999,
-           alignItems: 'center',
-           justifyContent: 'center',
-           backgroundColor: '#ffdada',
-           marginBottom: 16,
-           }}>
-          <FeatherIcon
-            color="#F82E08"
-            name="arrow-left"
-            size={24} />
-        </TouchableOpacity>
         <Text style={{
               fontSize: 34,
               fontWeight: 'bold',
               color: '#181818',
               marginBottom: 12,
-              }}>In App Puchases</Text>
+              }}>In App Extras</Text>
 
         <Text style={{
               fontSize: 15,
               lineHeight: 20,
               fontWeight: '500',
               color: '#889797',
-              }}> Boost your productivity with premium tools and personalized features. Subscribe now for unlimited access!
+              }}> Boost your events member interactions with these in app extras!
         </Text>
       </View>
         }
