@@ -45,9 +45,7 @@ const PhotoViewer = (props) => {
   
   const _gotoShare = async (image) => {
     const shareOptions = {
-      title: "Snap Eighteen",
       url: image,
-      message: props.route.params.title,
     };
     try {
       const ShareResponse = await Share.share(shareOptions);

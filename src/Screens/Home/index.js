@@ -622,7 +622,7 @@ const Home = (props) => {
               style={{
                 width: "40%",
                 marginRight: 10,
-                backgroundColor: "rgba(116, 198, 190, 0.8)",
+                backgroundColor: "rgba(116, 198, 190, 1)",
                 borderRadius: 8,
                 padding: 15,
                 alignItems: "center",
