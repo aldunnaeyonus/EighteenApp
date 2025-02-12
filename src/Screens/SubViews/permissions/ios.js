@@ -43,7 +43,7 @@ const IOSPermissions = () => {
       checkCamera();
       checkMic();
       checkAccuracy();
-            if (props.profile != "settings"){
+            if (props.profile == "new"){
       if (
         camera == "granted" &&
         mic == "granted" &&
@@ -54,7 +54,7 @@ const IOSPermissions = () => {
       } else {
         this.permModal.openModal();
       }
-            }else{
+            }else if (props.profile == "settings"){
         this.permModal.openModal();
             }
     }, [camera, mic, photo, accuracy])
