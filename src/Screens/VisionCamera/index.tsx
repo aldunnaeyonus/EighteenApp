@@ -364,14 +364,15 @@ const VisionCamera = (props: {
               onUIRotationChanged={(degrees) => setUiRotation(degrees)}
               enableZoomGesture={true}
               photo={true}
+              androidPreviewViewType={"surface-view"}
               isMirrored={cameraPosition == "front" ? true : false}
               video={true}
               animatedProps={cameraAnimatedProps}
               audio={true}
               format={format}
+              exposure={0}
               enableLocation={location.hasPermission}
               lowLightBoost={canToggleNightMode}
-              frameProcessor={frameProcessor}
             />
           </TapGestureHandler>
         </Reanimated.View>
