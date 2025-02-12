@@ -138,14 +138,14 @@ const Products = (props) => {
               fontWeight: 'bold',
               color: '#181818',
               marginBottom: 12,
-              }}>In App Extras</Text>
+              }}>{i18n.t("In App Extras")}</Text>
 
         <Text style={{
               fontSize: 15,
               lineHeight: 20,
-              fontWeight: '500',
+              fontWeight: '400',
               color: '#889797',
-              }}> Boost your events member interactions with these in app extras!
+              }}>{i18n.t("storeslogan")}
         </Text>
       </View>
         }
