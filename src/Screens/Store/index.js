@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Platform } from "react-native";
+import { View, Text, Platform, StyleSheet, TouchableWithoutFeedback, TouchableOpacity, ScrollView} from "react-native";
 import { ActivityIndicator, MD2Colors } from "react-native-paper";
 import {
   isIosStorekit2,
@@ -8,10 +8,13 @@ import {
   useIAP,
   withIAPContext,
 } from "react-native-iap";
-import { constants, errorLog, SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
+import { constants, errorLog, SCREEN_WIDTH, SCREEN_HEIGHT} from "../../utils/constants";
 import { axiosPull } from "../../utils/axiosPull";
 import { useToast } from "react-native-styled-toast";
 import * as i18n from "../../../i18n";
+import FeatherIcon from 'react-native-vector-icons/Feather';
+import { Icon } from "react-native-elements";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Products = (props) => {
   const {
@@ -45,6 +48,28 @@ const Products = (props) => {
         hideAccent: true,
       });
     }
+    props.navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity
+          onPress={() => {
+            props.navigation.goBack();
+          }}
+        >
+          <Icon
+            type="material"
+            size={30}
+            name="arrow-back-ios-new"
+            color="#fff"
+            containerStyle={{
+              padding: 7,
+              height: 44,
+              backgroundColor: "rgba(0, 0, 0, 0.60)",
+              borderRadius: 22,
+            }}
+          />
+        </TouchableOpacity>
+      ),
+    });
   }, [props.unsubscribe]);
 
   const handleGetProducts = async () => {
@@ -77,6 +102,7 @@ const Products = (props) => {
     }
   };
 
+  
   useEffect(() => {
     handleGetProducts();
     const checkCurrentPurchase = async () => {
@@ -118,46 +144,72 @@ const Products = (props) => {
 
     checkCurrentPurchase();
   }, [currentPurchase, finishTransaction, connected]);
+      const [selected, setSelected] = useState(0);
 
   return (
+          <SafeAreaView
+            style={{
+              backgroundColor: "transparent",
+              height: SCREEN_HEIGHT,
+              width: SCREEN_WIDTH,
+            }}
+            edges={["left", "right"]}
+          >
+    <ScrollView showsVerticalScrollIndicator={false} style={{backgroundColor: 'white', paddingTop:130,height: '100%',width: SCREEN_WIDTH}}>
+      <View style={styles.header}>
+        <Text style={styles.title}>{i18n.t("In App Extras")}</Text>
+        <Text style={styles.subtitle}>{i18n.t("storeslogan")}</Text>
+      </View>
+      <View style={styles.form}>
+        <View>
+          {products.map((item, index) => {
+            const isActive = selected === index;
+            return (
+              <TouchableWithoutFeedback
+                key={index}
+                onPress={() => setSelected(index)}>
+                <View
+                  style={[
+                    styles.radio,
+                    isActive
+                      ? { borderColor: '#F82E08', backgroundColor: '#feeae6' }
+                      : {},
+                  ]}>
+                  <FeatherIcon
+                    color={isActive ? '#F82E08' : '#363636'}
+                    name={isActive ? 'check-circle' : 'circle'}
+                    size={24} />
+                  <View style={styles.radioBody}>
+                    <View>
+                      <Text style={styles.radioLabel}>{item.title}</Text>
+                      <Text style={styles.radioText}>{item.description}</Text>
+                    </View>
+                    <Text
+                      style={[
+                        styles.radioPrice,
+                        isActive && styles.radioPriceActive,
+                      ]}>
+                      {item.localizedPrice}
+                    </Text>
+                  </View>
+                </View>
+              </TouchableWithoutFeedback>
+            );
+          })}
+        </View>
+        <TouchableOpacity
+            onPress={() => {
+              handleBuyProduct(products[selected].productId)
+            }}>
+            <View style={styles.btn}>
+              <Text style={styles.btnText}>{i18n.t("Purchase")}</Text>
+            </View>
+          </TouchableOpacity>
 
-    <View style={{paddingHorizontal: 24, marginBottom: 28, backgroundColor:'white', width:'100%', height:'100%' }}>
-    <Text style={{
-      marginTop: 28, 
-          fontSize: 34,
-          fontWeight: 'bold',
-          color: '#ea5504',
-          marginBottom: 12,
-          }}>{i18n.t("In App Extras")}</Text>
-
-    <Text style={{
-      marginTop: 28, 
-          fontSize: 15,
-          lineHeight: 20,
-          fontWeight: '400',
-          color: '#889797',
-          }}>{i18n.t("storeslogan")}
-    </Text>
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: "white",
-      }}
-    >
-
-
-            <Text
-              style={{
-                marginTop: 50, 
-                color: "grey",
-                fontSize: 13,
-                textAlign: "center",
-              }}
-            >
-              {i18n.t("In-app purchases")}
-              {`\n`}
-            </Text>
-     
+        <View >
+          <Text style={styles.formFooterText}>{i18n.t("In-app purchases")} </Text>
+        </View>
+      </View>
       <ActivityIndicator
         size={80}
         style={{
@@ -169,9 +221,137 @@ const Products = (props) => {
         hidesWhenStopped={true}
         color={MD2Colors.orange900}
       />
-    </View>  
-    </View>
+    </ScrollView>
+          </SafeAreaView>
+
   );
 };
 
+const styles = StyleSheet.create({
+  title: {
+    fontSize: 34,
+    fontWeight: 'bold',
+    color: '#181818',
+    marginBottom: 12,
+  },
+  subtitle: {
+    fontSize: 14,
+    lineHeight: 20,
+    fontWeight: '500',
+    color: '#889797',
+  },
+  /** Header */
+  header: {
+    paddingHorizontal: 24,
+    marginBottom: 28,
+  },
+  headerAction: {
+    width: 40,
+    height: 40,
+    borderRadius: 9999,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#ffdada',
+    marginBottom: 16,
+  },
+  /** Form */
+  form: {
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
+    paddingBottom: 24,
+    justifyContent: 'space-between',
+    paddingHorizontal: 24,
+  },
+  formFooterText: {
+    marginTop: 12,
+    marginBottom:125,
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#929292',
+    textAlign: 'center',
+  },
+  /** Radio */
+  radio: {
+    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    borderWidth: 2,
+    borderColor: 'transparent',
+    borderStyle: 'solid',
+    borderRadius: 24,
+    marginBottom: 16,
+    backgroundColor: '#fff',
+  },
+  radioBody: {
+    paddingLeft: 10,
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+  },
+  radioLabel: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: '#1d1d1d',
+  },
+  radioText: {
+    marginTop: 6,
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#889797',
+  },
+  radioPrice: {
+    fontSize: 16,
+    marginLeft:-15,
+    fontWeight: '600',
+    color: '#1d1d1d',
+  },
+  radioPriceActive: {
+    transform: [
+      {
+        scale: 1.2,
+      },
+    ],
+  },
+  /** Button */
+  btn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 8,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderWidth: 1,
+    backgroundColor: '#F82E08',
+    borderColor: '#F82E08',
+  },
+  btnText: {
+    fontSize: 20,
+    lineHeight: 22,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  btnEmpty: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 8,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderWidth: 1.5,
+    backgroundColor: 'transparent',
+    borderColor: '#F82E08',
+    marginTop: 12,
+  },
+  btnEmptyText: {
+    fontSize: 17,
+    lineHeight: 22,
+    fontWeight: 'bold',
+    color: '#F82E08',
+  },
+});
 export default withIAPContext(Products);

@@ -78,6 +78,7 @@ StyledTitle = styled.Text`
   text-transform: uppercase;
   text-align: center;
   font-weight: bold;
+    font-size: 20px;
   letter-spacing: 3px;
   color: ${(props) => (props.transparent ? "#000" : "#fff")};
 `;

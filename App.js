@@ -330,10 +330,10 @@ const onCheckVersion = () => {
               <Stack.Screen
                 name="Purchase"
                 options={{
-                  title: i18n.t("purchase"),
+                  title: "",
                   headerShown: true,
                   gestureEnabled: false,
-                  headerTintColor: "#000",
+                  headerTransparent: true,
                   headerBackTitleVisible: false,
                 }}
               >

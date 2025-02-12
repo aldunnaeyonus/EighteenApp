@@ -182,13 +182,16 @@ const ProMain = (props) => {
 
           <TouchableOpacity
             style={{
-              width: '90%',
-              backgroundColor: "#e35504",
-              borderRadius: 12,
-              padding: 10,
-              margin: 20,
-              alignItems: "center",
-              justifyContent: "center",
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 8,
+              paddingVertical: 16,
+              paddingHorizontal: 24,
+              borderWidth: 1,
+              margin:25,
+              backgroundColor: '#F82E08',
+              borderColor: '#F82E08',
             }}
             onPress={() => {
               Platform.OS == "ios" ? props.handleBuySubscription(props.item.item.productId) : props.handleBuySubscription(props.item.item.productId,props.item.item.subscriptionOfferDetails[1].offerToken );
