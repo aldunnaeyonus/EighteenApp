@@ -197,8 +197,12 @@ const VisionCamera = (props: {
     { videoResolution: "max" },
     { photoAspectRatio: screenAspectRatio },
     { photoResolution: "max" },
+    { photoHdr: true },
+    { videoHdr: true },
+    { videoStabilizationMode: 'auto' },
+    { autoFocusSystem: 'phase-detection' },
+    { fps: 240 },
   ]);
-
   const [enableHdr, setEnableHdr] = useState(false);
   const [enableNightMode, setEnableNightMode] = useState(false);
 
@@ -364,7 +368,8 @@ const VisionCamera = (props: {
               onUIRotationChanged={(degrees) => setUiRotation(degrees)}
               enableZoomGesture={true}
               photo={true}
-              androidPreviewViewType={"surface-view"}
+              videoStabilizationMode={'auto'}
+              androidPreviewViewType={"texture-view"}
               isMirrored={cameraPosition == "front" ? true : false}
               video={true}
               animatedProps={cameraAnimatedProps}
