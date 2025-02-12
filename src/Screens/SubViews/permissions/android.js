@@ -67,8 +67,8 @@ const AndroidPermissions = () => {
 
   return (
     <PermissionModal
-      panGestureEnabled={false}
-      closeOnOverlayTap={false}
+      panGestureEnabled={true}
+      closeOnOverlayTap={true}
       ref={(ref) => (permModal = ref)}
       title={i18n.t("Permissions")}
       subtitle={i18n.t("PermissionsText")}
