@@ -1,192 +1,95 @@
 import React from "react";
-import { Text, View, TouchableOpacity } from "react-native";
+import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import * as i18n from "../../../../i18n";
+import FeatherIcon from 'react-native-vector-icons/Feather';
 
 const StoreListItem = (props) => {
+const isActive = selected === props.index;
   return (
-    <View
-      key={props.index}
-      style={{
-        margin: 5,
-        padding: 20,
-        borderRadius: 5,
-        shadowColor: "rgba(0, 0, 0, 1)",
-        shadowOpacity: 0.4,
-        shadowRadius: 3,
-        shadowOffset: {
-          height: 1,
-          width: 1,
-        },
-        backgroundColor: "#FFF",
-        height: 'auto',
-        width:'auto',
-        elevation: 7,
-        flex: 1,
-        alignSelf: "flex-start",
-        alignItems: "center",
-      }}
-    >
-      <Text
-        style={{
-          color: "#000",
-          fontSize: 16,
-          fontWeight:'bold',
-          textAlign: "center",
-        }}
-      >
-        {`${i18n.t("Upgradeto")} \n${props.item.item.description}`.toLocaleUpperCase()}
-      </Text>
+              <TouchableOpacity 
+                key={index}
+                onPress={() => {
+                  props.handleBuyProduct(props.item.item.productId)
+                  }}>
+                <View
+                  style={[
+                    styles.radio,
+                    isActive
+                      ? { borderColor: '#F82E08', backgroundColor: '#feeae6' }
+                      : {},
+                  ]}>
+                  <FeatherIcon
+                    color={isActive ? '#F82E08' : '#363636'}
+                    name={isActive ? 'check-circle' : 'circle'}
+                    size={24} />
 
-      <View
-        style={{
-          borderRadius: 30,
-          marginTop: 15,
-          justifyContent: "center",
-          height: 35,
-          width: 100,
-        }}
-      >
-        <Text
-          style={{
-            color: "black",
-            fontWeight:'bold',
-            fontSize: 20,
-            textAlign: "center",
-          }}
-        >
-          {props.item.item.localizedPrice}
-        </Text>
-      </View>
-      <Text
-        style={{
-          marginTop: 15,
-          marginBottom: 10,
-          color: "black",
-          fontWeight:'bold',
-          fontSize: 13,
-        }}
-      >
-        {i18n.t("Advantages of Purchase")}
-      </Text>
+                  <View style={styles.radioBody}>
+                    <View>
+                      <Text style={styles.radioLabel}>{props.item.item.title}</Text>
 
-      <View
-        style={{
-          alignSelf: "center",
-          alignItems: "center",
-        }}
-      >
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "left",
-          }}
-        >
-          <Ionicons name={"checkmark-outline"} size={20} color="green" />
-          <Text
-            style={{
-              backgroundColor: "white",
-              margin: 3,
-              fontSize: 13,
-              textAlign: "center",
-            }}
-          >
-            {props.item.item.localizedPrice == "$19.99"
-              ? i18n.t("Most Popular")
-              : props.item.item.localizedPrice == "$29.99"
-                ? i18n.t("Wedding Value")
-                : props.item.item.localizedPrice == "$9.99"
-                  ? i18n.t("Party Value")
-                  : i18n.t("Cheapest Value")}
-          </Text>
-        </View>
+                      <Text style={styles.radioText}>{props.item.item.description}</Text>
+                    </View>
 
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "left",
-          }}
-        >
-          <Ionicons name={"checkmark-outline"} size={20} color="green" />
-          <Text
-            style={{
-              backgroundColor: "white",
-              margin: 5,
-              fontSize: 13,
-              textAlign: "center",
-            }}
-          >
-            {i18n.t("One Time Purchase")}
-          </Text>
-        </View>
-
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "left",
-          }}
-        >
-          <Ionicons name={"checkmark-outline"} size={20} color="green" />
-          <Text
-            style={{
-              backgroundColor: "white",
-              margin: 5,
-              fontSize: 13,
-              textAlign: "center",
-            }}
-          >
-            {props.item.item.localizedPrice == "$0.99"
-              ? i18n.t("18  More Shots")
-              : props.item.item.localizedPrice == "$19.99"
-                ? 100 * 18 +
-                  (25 - parseInt(props.cameras)) * 18 +
-                  " " +
-                  i18n.t("More Shots")
-                : props.item.item.localizedPrice == "$29.99"
-                  ? 200 * 18 +
-                    (25 - parseInt(props.cameras)) * 18 +
-                    " " +
-                    i18n.t("More Shots")
-                  : props.item.item.localizedPrice == "$9.99"
-                    ? 50 * 18 +
-                      (25 - parseInt(props.cameras)) * 18 +
-                      " " +
-                      i18n.t("More Shots")
-                    : 18 * 18 +
-                      (25 - parseInt(props.cameras)) * 18 +
-                      " " +
-                      i18n.t("More Shots")}
-          </Text>
-        </View>
-        <TouchableOpacity
-          style={{
-            flexDirection: "row",
-            marginTop: 20,
-            width: 'auto',
-            backgroundColor: "#e35504",
-            borderRadius: 12,
-            padding: 10,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-          onPress={() => {
-            props.handleBuyProduct(props.item.item.productId);
-          }}
-        >
-          <Text
-            style={{
-              textTransform: "uppercase",
-              fontSize: 17,
-              fontWeight: 600,
-              color: "#fff",
-            }}
-          >
-            {i18n.t("Purchase")}
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
+                    <Text
+                      style={[
+                        styles.radioPrice,
+                        isActive && styles.radioPriceActive,
+                      ]}>
+                      {props.item.item.localizedPrice}
+                    </Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            );
 };
+
+const styles = StyleSheet.create({
+  /** Radio */
+  radio: {
+    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    borderWidth: 2,
+    borderColor: 'transparent',
+    borderStyle: 'solid',
+    borderRadius: 24,
+    marginBottom: 16,
+    backgroundColor: '#fff',
+  },
+  radioBody: {
+    paddingLeft: 10,
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+  },
+  radioLabel: {
+    fontSize: 19,
+    fontWeight: '700',
+    color: '#1d1d1d',
+  },
+  radioText: {
+    marginTop: 6,
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#889797',
+  },
+  radioPrice: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#1d1d1d',
+  },
+  radioPriceActive: {
+    transform: [
+      {
+        scale: 1.2,
+      },
+    ],
+  },
+});
 
 export default StoreListItem;
