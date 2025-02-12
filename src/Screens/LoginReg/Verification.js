@@ -231,7 +231,7 @@ const Verification = (props) => {
               style={{
                 textTransform: "uppercase",
                 fontSize: 20,
-                fontWeight: 600,
+                fontWeight: 'bold',
                 color: "#fff",
               }}
             >
