@@ -64,3 +64,19 @@ index a9a8523..ee22f47 100644
 -  subtitle:
 -    "Phasellus id scelerisque sem. Vivamus consequat leo turpis, vitae sagittis lacus efficitur eu.Phasellus id scelerisque sem. Vivamus consequat leo turpis, vitae sagittis lacus efficitur eu."
 -};
+diff --git a/node_modules/react-native-permissions-modal/lib/components/PermissionModal/PermissionModal.style.js b/node_modules/react-native-permissions-modal/lib/components/PermissionModal/PermissionModal.style.js
+index 84250d3..b3958e3 100644
+--- a/node_modules/react-native-permissions-modal/lib/components/PermissionModal/PermissionModal.style.js
++++ b/node_modules/react-native-permissions-modal/lib/components/PermissionModal/PermissionModal.style.js
+@@ -14,9 +14,9 @@ export default StyleSheet.create({
+     fontWeight: "600"
+   },
+   subtitleStyle: {
+-    fontSize: 15,
++    fontSize: 17,
+     fontSize: 14,
+-    color: "#666",
++    color: "#333",
+     lineHeight: 22,
+     paddingTop: 10,
+     paddingBottom: 10,

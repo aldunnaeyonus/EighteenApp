@@ -211,7 +211,7 @@ const Verification = (props) => {
               marginTop: 20,
               width: 250,
               backgroundColor: "#e35504",
-              borderRadius: 24,
+              borderRadius: 8,
               padding: 15,
               alignItems: "center",
               justifyContent: "center",

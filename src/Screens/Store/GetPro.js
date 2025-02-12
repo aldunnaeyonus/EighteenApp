@@ -1,4 +1,4 @@
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, StatusBar } from "react-native";
 import * as i18n from "../../../i18n";
 import { constants, SCREEN_WIDTH, SCREEN_HEIGHT} from "../../utils/constants";
 import { storage } from "../../context/components/Storage";
@@ -44,6 +44,8 @@ const GetPro = (props) => {
 
   useFocusEffect(
     useCallback(() => {
+            StatusBar.setHidden(true, 'none');
+      
       if (!props.unsubscribe) {
         toast({
           message: i18n.t("No internet connection"),
@@ -86,6 +88,9 @@ const GetPro = (props) => {
           </TouchableOpacity>
         ),
       });
+            return () => {
+              StatusBar.setHidden(false, 'none');
+            };
     }, [props.unsubscribe])
   );
 

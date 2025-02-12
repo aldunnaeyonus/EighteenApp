@@ -177,7 +177,7 @@ const Handle = (props) => {
               flexDirection: "row",
               width: 250,
               backgroundColor: "#e35504",
-              borderRadius: 24,
+              borderRadius: 8,
               padding: 15,
               alignItems: "center",
               justifyContent: "center",

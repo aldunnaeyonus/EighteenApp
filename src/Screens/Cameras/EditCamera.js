@@ -648,7 +648,7 @@ const EditCamera = (props) => {
               flexDirection: "row",
               width: 250,
               backgroundColor: "rgba(234, 85, 4, 1)",
-              borderRadius: 24,
+              borderRadius: 8,
               padding: 15,
               alignItems: "center",
               justifyContent: "center",

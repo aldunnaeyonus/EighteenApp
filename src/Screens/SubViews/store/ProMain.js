@@ -190,8 +190,8 @@ const ProMain = (props) => {
               paddingHorizontal: 24,
               borderWidth: 1,
               margin:25,
-              backgroundColor: '#F82E08',
-              borderColor: '#F82E08',
+              backgroundColor: 'rgba(234, 85, 4, 1)"',
+              borderColor: 'rgba(234, 85, 4, 1)"',
             }}
             onPress={() => {
               Platform.OS == "ios" ? props.handleBuySubscription(props.item.item.productId) : props.handleBuySubscription(props.item.item.productId,props.item.item.subscriptionOfferDetails[1].offerToken );
