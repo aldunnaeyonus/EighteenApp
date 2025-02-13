@@ -44,6 +44,7 @@ const Home = (props) => {
     storage
   );
   const [modalQRCodeVisable, setmodalQRCodeVisable] = useState(false);
+  const [modalShareVisable, setModalShareVisable] = useState(false);
   const [modalVisable, setmodalVisable] = useState(false);
   const [user] = useMMKVObject("user.Data", storage);
   const [refreshing, setRefreshing] = useState(false);
@@ -197,6 +198,29 @@ const Home = (props) => {
   };
 
   const _gotoShare = async (pin, time, owner, title) => {
+    user.isPro == "0" ? 
+       const shareOptions = {
+                  title: title,
+                  url:
+                    constants.url +
+                    "/qrcode.php?pin=" +
+                    pin +
+                    "&time=" +
+                    time +
+                    "&owner=" +
+                    owner,
+                  message: i18n.t("Join my Snap Eighteen Event") + ", " + title,
+                };
+
+                try {
+                  const ShareResponse = await Share.share(shareOptions);
+                  console.log("Result =>", ShareResponse);
+                } catch (error) {
+                  console.log("Error =>", error);
+                }
+    :
+
+    
     Alert.alert(
       i18n.t("Share Event"),
       i18n.t("ChooseOption"),
@@ -223,38 +247,6 @@ const Home = (props) => {
                 }
               },
               style: "default",
-            },
-            {
-              text: i18n.t("Share Event"),
-              onPress: async () => {
-                const shareOptions = {
-                  title: title,
-                  url:
-                    constants.url +
-                    "/qrcode.php?pin=" +
-                    pin +
-                    "&time=" +
-                    time +
-                    "&owner=" +
-                    owner,
-                  message: i18n.t("Join my Snap Eighteen Event") + ", " + title,
-                };
-
-                try {
-                  const ShareResponse = await Share.share(shareOptions);
-                  console.log("Result =>", ShareResponse);
-                } catch (error) {
-                  console.log("Error =>", error);
-                }
-              },
-              style: "default",
-            },
-          ]
-        : [
-            {
-              text: i18n.t("Cancel"),
-              onPress: () => console.log("Cancel Pressed"),
-              style: "destructive",
             },
             {
               text: i18n.t("Share Event"),
