@@ -6,6 +6,7 @@ import {
   Modal,
   Alert,
   NativeModules,
+  TouchableWithoutFeedback
 } from "react-native";
 import { TouchableOpacity } from "react-native";
 import styles from "../../styles/SliderEntry.style";
@@ -471,6 +472,7 @@ const CreateCamera = (props) => {
           setModalUpload(!modalUpload);
         }}
       >
+                         <TouchableWithoutFeedback onPressOut={() => setModalUpload(false)}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <View
@@ -509,7 +511,7 @@ const CreateCamera = (props) => {
                 alignContent: "space-between",
               }}
             >
-              <View style={{ flexDirection: "column" }}>
+                           <View style={{ flexDirection: "column", alignContent: "center",alignItems:'center',justifyContent: "center", }}>
                 <Icon
                   type="material-community"
                   size={30}
@@ -564,7 +566,7 @@ const CreateCamera = (props) => {
                   {i18n.t("AI")}
                 </Text>
               </View>
-              <View style={{ flexDirection: "column" }}>
+                           <View style={{ flexDirection: "column", alignContent: "center",alignItems:'center',justifyContent: "center", }}>
                 <Icon
                   type="material-community"
                   size={30}
@@ -595,7 +597,7 @@ const CreateCamera = (props) => {
                   {i18n.t("Gallery")}
                 </Text>
               </View>
-              <View style={{ flexDirection: "column" }}>
+                           <View style={{ flexDirection: "column", alignContent: "center",alignItems:'center',justifyContent: "center", }}>
                 <Icon
                   type="material-community"
                   size={30}
@@ -658,6 +660,7 @@ const CreateCamera = (props) => {
             </Text>
           </TouchableOpacity>
         </View>
+        </TouchableWithoutFeedback>
       </Modal>
       <SafeAreaProvider>
         <SafeAreaView

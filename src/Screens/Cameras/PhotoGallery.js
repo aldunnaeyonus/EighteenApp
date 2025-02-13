@@ -6,7 +6,8 @@ import {
   Text,
   Alert,
   Modal,
-  StatusBar
+  StatusBar,
+  TouchableWithoutFeedback
 } from "react-native";
 import React, { useState, useRef, useCallback } from "react";
 import { constants, SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
@@ -403,6 +404,7 @@ if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
             setModalUpload(!modalUpload);
           }}
         >
+         <TouchableWithoutFeedback onPressOut={() => setModalUpload(false)}>
           <View style={style.centeredView}>
             <View style={style.modalView}>
               <View
@@ -441,7 +443,7 @@ if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
                   alignContent: "space-between",
                 }}
               >
-                <View style={{ flexDirection: "column" }}>
+                           <View style={{ flexDirection: "column", alignContent: "center",alignItems:'center',justifyContent: "center", }}>
                   <Icon
                     type="material-community"
                     size={30}
@@ -544,6 +546,7 @@ if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
               </Text>
             </TouchableOpacity>
           </View>
+          </TouchableWithoutFeedback>
         </Modal>
       </SafeAreaView>
     </SafeAreaProvider>

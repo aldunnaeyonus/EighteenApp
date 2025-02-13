@@ -1,10 +1,11 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
   Alert,
   Modal,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Text,
 } from "react-native";
 import RefreshableWrapper from "react-native-fresh-refresh";
@@ -19,10 +20,8 @@ import { Icon } from "react-native-elements";
 import { axiosPull } from "../../utils/axiosPull";
 import { useToast } from "react-native-styled-toast";
 import * as i18n from "../../../i18n";
-import ActionSheet from "react-native-actions-sheet";
 import FriendListItem from "../SubViews/friends/friendsitem";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
-import { ListItem } from "@rneui/themed";
 import { constants, SCREEN_WIDTH, SCREEN_HEIGHT} from "../../utils/constants";
 import Progress from "react-native-progress";
 import FastImage from "react-native-fast-image";
@@ -51,7 +50,6 @@ const Friends = (props) => {
   const AnimatedFlatlist = Animated.FlatList;
   const [user] = useMMKVObject("user.Data", storage);
   const { toast } = useToast();
-  const actionSheetRef = useRef();
   const [modalVisable, setmodalVisable] = useState(false);
     const [modalActionVisable, setmodalActionVisable] = useState(false);
   const [qrCodeURL] = useState(
@@ -306,11 +304,11 @@ const Friends = (props) => {
             ) : isFriend == "1" ? (
               <Icon
                 containerStyle={{ marginLeft: 5 }}
-                type="material"
-                name="menu"
+                type="entypo"
+                name="popup"
                 size={30}
                 onPress={() => {
-                  actionSheetRef.current?.show();
+                  setmodalActionVisable(true)
                 }}
                 color="#3D4849"
               />
@@ -439,12 +437,13 @@ const Friends = (props) => {
         </RefreshableWrapper>
          <Modal
         visible={modalActionVisable}
-        animationType="fade"
+        animationType="slide"
         transparent={true}
         onRequestClose={() => {setmodalActionVisable(false); }}
       >
+                <TouchableWithoutFeedback onPressOut={() => setmodalActionVisable(false)}>
         <View style={style.centeredView}>
-          <View style={style.qrmodalView}>
+          <View style={style.modalView}>
           <View
               style={{
                 flexDirection: "column",
@@ -472,142 +471,149 @@ const Friends = (props) => {
                 </Text>
               </View>
               </View>
-              <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: 30,
-                alignContent: "space-between",
-              }}
-            >
-              <View style={{ flexDirection: "column" }}>
-                <Icon
-                  type="material"
-                  size={30}
-                  name="report-gmailerrorred"
-                  color={"#fff"}
-                  containerStyle={{
-                    height: 55,
-                    width: 55,
-                    alignContent: "center",
-                    justifyContent: "center",
-                    backgroundColor: "rgba(250, 190, 0, 1)",
-                    borderRadius: 22,
-                  }}
-                  onPress={async() => {
-                    setmodalActionVisable(false);
-                    _reportUser(props.route.params.userID);
-                  }}
-                />
-                <Text
-                  style={{
-                    textAlign: "center",
-                    marginTop: 10,
-                  }}
-                >
-                  {i18n.t("Report Friend")}
-                </Text>
-              </View>
-              <View style={{ flexDirection: "column" }}>
-                <Icon
-                  type="ant"
-                  size={30}
-                  name="deleteuser"
-                  color={"#fff"}
-                  containerStyle={{
-                    height: 55,
-                    width: 55,
-                    alignContent: "center",
-                    justifyContent: "center",
-                    backgroundColor: "#ea5504",
-                    borderRadius: 22,
-                  }}
-                  onPress={async() => {
-                    setmodalActionVisable(false);
-                    _deleteUser();
-                  }}
-                />
-                <Text
-                  style={{
-                    textAlign: "center",
-                    marginTop: 10,
-                  }}
-                >
-                  {i18n.t("Delete Friend")}
-                </Text>
-              </View>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: 30,
-                alignContent: "space-between",
-              }}
-            >
-              <View style={{ flexDirection: "column" }}>
-                <Icon
-                  type="material-community"
-                  size={30}
-                  name="qrcode"
-                  color={"#fff"}
-                  containerStyle={{
-                    height: 55,
-                    width: 55,
-                    alignContent: "center",
-                    justifyContent: "center",
-                    backgroundColor: "rgba(250, 190, 0, 1)",
-                    borderRadius: 22,
-                  }}
-                  onPress={async() => {
-                    setmodalActionVisable(false);
-                    setTimeout(() => {
-                      setmodalVisable(true);
-                    }, 200);
-                  }}
-                />
-                <Text
-                  style={{
-                    textAlign: "center",
-                    marginTop: 10,
-                  }}
-                >
-                  {i18n.t("QRCode")}
-                </Text>
-              </View>
-              <View style={{ flexDirection: "column" }}>
-                <Icon
-                  type="material-community"
-                  size={30}
-                  name="shield-account-variant-outline"
-                  color={"#fff"}
-                  containerStyle={{
-                    height: 55,
-                    width: 55,
-                    alignContent: "center",
-                    justifyContent: "center",
-                    backgroundColor: "#ea5504",
-                    borderRadius: 22,
-                  }}
-                  onPress={async() => {
-                    setmodalActionVisable(false);
-                    props.navigation.navigate("About", {
-                      items: friendData,
-                    });
-                  }}
-                />
-                <Text
-                  style={{
-                    textAlign: "center",
-                    marginTop: 10,
-                  }}
-                >
-                  {i18n.t("About")}
-                </Text>
-              </View>
-            </View>
+             <View
+                           style={{
+                             flexDirection: "row",
+                             justifyContent: "center",
+                             alignItems: "center",
+                             alignContent: "space-between",
+                             width:'100%'
+                           }}
+                         >
+                           <View style={{ flexDirection: "column", alignContent: "center",alignItems:'center',justifyContent: "center", width:'50%'}}>
+                           <Icon
+                               type="material"
+                               size={30}
+                               name="report-gmailerrorred"
+                               color={"#fff"}
+                               containerStyle={{
+                                 height: 55,
+                                 width: 55,
+                                 alignContent: "center",
+                                 justifyContent: "center",
+                                 backgroundColor: "rgba(116, 198, 190, 1)",
+                                 borderRadius: 22,
+                               }}
+                               onPress={() => {
+                                setmodalActionVisable(false);
+                                _reportUser(props.route.params.userID);
+                               }}
+                             />
+                             <Text
+                               style={{
+                                 textAlign: "center",
+                                 marginTop: 10,
+                               }}
+                             >
+                               {i18n.t("Report Friend")}
+                             </Text>
+                           </View>
+                           <View style={{ flexDirection: "column", alignContent: "center",alignItems:'center',justifyContent: "center", width:'50%'}}>
+                             <Icon
+                               type="antdesign"
+                               size={30}
+                               name="deleteuser"
+                               color={"#fff"}
+                               containerStyle={{
+                                 height: 55,
+                                 width: 55,
+                                 alignContent: "center",
+                                 justifyContent: "center",
+                                 backgroundColor: "rgba(250, 190, 0, 1)",
+                                 borderRadius: 22,
+                               }}
+                               onPress={() => {
+                                setmodalActionVisable(false);
+                                _deleteUser();
+                               }}
+                             />
+                             <Text
+                               style={{
+                                 textAlign: "center",
+                                 marginTop: 10,
+                               }}
+                             >
+                               {i18n.t("Delete Friend")}
+                             </Text>
+                           </View>
+                           </View>
+                                                      
+                           <View
+                           style={{
+                             flexDirection: "row",
+                            height:25,
+                           }}
+                         ></View>
+                            <View
+                           style={{
+                             flexDirection: "row",
+                             justifyContent: "center",
+                             alignItems: "center",
+                             alignContent: "space-between",
+                             width:'100%'
+                           }}
+                         >
+                           <View style={{ flexDirection: "column", alignContent: "center",alignItems:'center',justifyContent: "center", width:'50%' }}>
+                           <Icon
+                               type="material-community"
+                               size={30}
+                               name="qrcode"
+                               color={"#fff"}
+                               containerStyle={{
+                                 height: 55,
+                                 width: 55,
+                                 alignContent: "center",
+                                 justifyContent: "center",
+                                 backgroundColor: "#3D4849",
+                                 borderRadius: 22,
+                               }}
+                               onPress={() => {
+                                setmodalActionVisable(false);
+                                setTimeout(() => {
+                                  setmodalVisable(true);
+                                }, 200);
+                               }}
+                             />
+                             <Text
+                               style={{
+                                 textAlign: "center",
+                                 marginTop: 10,
+                               }}
+                             >
+                               {i18n.t("QRCode")}
+                             </Text>
+                           </View>
+                           <View style={{ flexDirection: "column", alignContent: "center",alignItems:'center',justifyContent: "center", width:'50%'}}>
+                             <Icon
+                               type="material-community"
+                               size={30}
+                               name="shield-account-variant-outline"
+                               color={"#fff"}
+                               containerStyle={{
+                                 height: 55,
+                                 width: 55,
+                                 alignContent: "center",
+                                 justifyContent: "center",
+                                 backgroundColor: "#ea5504",
+                                 borderRadius: 22,
+                               }}
+                               onPress={() => {
+                                setmodalActionVisable(false);
+                                props.navigation.navigate("About", {
+                                  items: friendData,
+                                });
+                               }}
+                             />
+                             <Text
+                               style={{
+                                 textAlign: "center",
+                                 marginTop: 10,
+                               }}
+                             >
+                               {i18n.t("About")}
+                             </Text>
+                           </View>
+                         </View>
           </View>
           <TouchableOpacity
             style={{
@@ -635,9 +641,11 @@ const Friends = (props) => {
             </Text>
           </TouchableOpacity>
         </View>
+        </TouchableWithoutFeedback>
       </Modal>
               
-        <Modal visible={modalVisable} animationType="slide" transparent={true}>
+        <Modal visible={modalVisable} animationType="slide" transparent={true} onRequestClose={() => {setmodalVisable(false); }}        >
+        <TouchableWithoutFeedback onPressOut={() => setmodalVisable(false)}>
           <View style={style.centeredView}>
             <View style={style.modalView}>
               <Image
@@ -684,6 +692,7 @@ const Friends = (props) => {
               </Text>
             </TouchableOpacity>
           </View>
+          </TouchableWithoutFeedback>
         </Modal>
       </SafeAreaView>
     </SafeAreaProvider>

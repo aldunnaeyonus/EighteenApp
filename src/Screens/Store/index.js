@@ -306,16 +306,11 @@ const styles = StyleSheet.create({
   },
   radioPrice: {
     fontSize: 16,
-    marginLeft:-15,
+    marginLeft:-35,
     fontWeight: '600',
     color: '#1d1d1d',
   },
   radioPriceActive: {
-    transform: [
-      {
-        scale: 1.2,
-      },
-    ],
   },
   /** Button */
   btn: {

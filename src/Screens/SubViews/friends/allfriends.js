@@ -33,9 +33,11 @@ const AllFriendsListItem = (props) => {
               }}
               resizeMode={FastImage.resizeMode.contain}
               style={{
-                height: 60,
-                width: 60,
-                borderRadius: 30,
+                height: 45,
+                width: 45,
+                borderRadius: 24,
+                borderWidth:1,
+                borderColor:'black',
                 overflow: "hidden",
                 backgroundColor: "#f2f2f2",
               }}
@@ -88,10 +90,10 @@ const AllFriendsListItem = (props) => {
 const style = StyleSheet.create({
   titleText: {
     fontFamily: "HelveticaNeue-Bold",
-    fontSize: 20,
+    fontSize: 17,
     textAlign: "left",
     color: "#3D4849",
-    fontWeight: "bold",
+    fontWeight: "600",
   },
   listItem: {
     backgroundColor: "#FFF",

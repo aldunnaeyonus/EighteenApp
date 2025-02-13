@@ -155,6 +155,7 @@ const FriendListItem = (props) => {
                 height: 40,
                 marginRight: 5,
                 marginTop: 5,
+                paddingTop:10,
                 borderTopRightRadius: 5,
                 borderTopLeftRadius: 5,
                 backgroundColor: "rgba(0, 0, 0, 0.60)",
@@ -191,8 +192,7 @@ const FriendListItem = (props) => {
                 width: 40,
                 height: 40,
                 marginRight: 5,
-                paddingTop: 10,
-                marginTop: 0,
+                paddingTop: 15,
                 backgroundColor: "rgba(0, 0, 0, 0.60)",
               }}
               type="font-awesome"
@@ -208,7 +208,7 @@ const FriendListItem = (props) => {
                 width: 40,
                 height: 40,
                 marginRight: 5,
-                marginTop: 0,
+                paddingTop:10,
                 fontSize: 9,
                 textAlign: "center",
                 backgroundColor: "rgba(0, 0, 0, 0.60)",

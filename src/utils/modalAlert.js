@@ -70,7 +70,7 @@ close={'Close Button'}
                 alignContent: "space-between",
               }}
             >
-              <View style={{ flexDirection: "column" }}>
+                           <View style={{ flexDirection: "column", alignContent: "center",alignItems:'center',justifyContent: "center", }}>
                 <Text
                   style={{
                     textAlign: "center",

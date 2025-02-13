@@ -4,7 +4,7 @@ import {
   Alert,
   Text,
   Modal,
-  Platform,
+  TouchableWithoutFeedback,
   TouchableOpacity,
   ScrollView,
 } from "react-native";
@@ -21,7 +21,6 @@ import Progress from "react-native-progress";
 import { storage } from "../../context/components/Storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useMMKVObject } from "react-native-mmkv";
-import { openSettings } from "react-native-permissions";
 import { axiosPull } from "../../utils/axiosPull";
 import * as i18n from "../../../i18n";
 import ProfileHeader from "../SubViews/home/profileHeader";
@@ -31,8 +30,6 @@ import hotUpdate from "react-native-ota-hot-update/src/index";
 import email from "react-native-email";
 import DeviceInfo from "react-native-device-info";
 import { getLocales } from "expo-localization";
-import IOSPermissions from "../SubViews/permissions/ios";
-import AndroidPermissions from "../SubViews/permissions/android";
 
 const Profile = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
@@ -222,6 +219,7 @@ Language Code: ${getLocales()[0].languageCode}`,
         transparent={true}
         onRequestClose={() => setmodalVisable(false)}
       >
+                                 <TouchableWithoutFeedback onPressOut={() => setmodalVisable(false)}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Image
@@ -266,6 +264,7 @@ Language Code: ${getLocales()[0].languageCode}`,
             </Text>
           </TouchableOpacity>
         </View>
+        </TouchableWithoutFeedback>
       </Modal>
       <View style={{ width: SCREEN_WIDTH, backgroundColor: "#fff" }}>
         <Loading
@@ -320,8 +319,8 @@ Language Code: ${getLocales()[0].languageCode}`,
             }}
           >
             <Icon
-              type="material"
-              name="camera-roll"
+              type="ionicon"
+              name="film-outline"
               size={20}
               color="#3D4849"
               containerStyle={{
@@ -375,8 +374,8 @@ Language Code: ${getLocales()[0].languageCode}`,
               }}
             >
               <Icon
-                type="material-community"
-                name="message"
+                type="ionicon"
+                name="notifications-circle-outline"
                 size={20}
                 color="#3D4849"
                 containerStyle={{

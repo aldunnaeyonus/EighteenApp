@@ -40,12 +40,15 @@ const CreditsFont = (props) => {
         type="material-community"
         containerStyle={{
           marginRight: -15,
+          paddingTop:5,
         }}
         name={first}
         size={30}
         color="white"
       />
-      <Icon type="material-community" name={second} size={30} color="white" />
+      <Icon type="material-community" name={second} size={30} color="white"  containerStyle={{
+          paddingTop:5,
+        }}/>
     </View>
   );
 };

@@ -7,7 +7,8 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Linking
+  Linking,
+  TouchableWithoutFeedback
 } from "react-native";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
 import { constants, SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
@@ -200,7 +201,7 @@ const Home = (props) => {
   };
 
   const _gotoShare = async (pin, time, owner, title) => {
-    user.isPro == "0" ? 
+    if (user.isPro == "0"){ 
        const shareOptions = {
                   title: title,
                   url:
@@ -219,9 +220,10 @@ const Home = (props) => {
                   console.log("Result =>", ShareResponse);
                 } catch (error) {
                   console.log("Error =>", error);
-                }
-    :
+                };
+              }else{
         setModalShareVisable(true);
+              }
   };
 
   const _deleteFeedItemIndex = (UUID) => {
@@ -356,7 +358,7 @@ const Home = (props) => {
         <Icon
           containerStyle={{ zIndex: 0 }}
           type="material"
-          name="more-vert"
+          name="menu"
           size={30}
           onPress={() => {
             triggerProfileFunction();
@@ -471,10 +473,12 @@ const Home = (props) => {
     >
        <Modal
         visible={modalShareVisable}
-        animationType="fade"
+        animationType="slide"
         transparent={true}
         onRequestClose={() => {setModalShareVisable(false); }}
       >
+      <TouchableWithoutFeedback onPressOut={() => setModalShareVisable(false)}>
+        
         <View style={style.centeredView}>
           <View style={style.qrmodalView}>
           <View
@@ -513,7 +517,7 @@ const Home = (props) => {
                 alignContent: "space-between",
               }}
             >
-              <View style={{ flexDirection: "column" }}>
+                           <View style={{ flexDirection: "column", alignContent: "center",alignItems:'center',justifyContent: "center", }}>
                 <Icon
                   type="material-community"
                   size={30}
@@ -550,7 +554,7 @@ const Home = (props) => {
                   {i18n.t("OnlineGallery")}
                 </Text>
               </View>
-              <View style={{ flexDirection: "column" }}>
+                           <View style={{ flexDirection: "column", alignContent: "center",alignItems:'center',justifyContent: "center", }}>
                 <Icon
                   type="material"
                   size={30}
@@ -623,13 +627,16 @@ const Home = (props) => {
             </Text>
           </TouchableOpacity>
         </View>
+        </TouchableWithoutFeedback>
       </Modal>
       <Modal
         visible={modalQRCodeVisable}
-        animationType="fade"
+        animationType="slide"
         transparent={true}
         onRequestClose={() => setmodalQRCodeVisable(false)}
       >
+              <TouchableWithoutFeedback onPressOut={() => setmodalQRCodeVisable(false)}>
+
         <View style={style.centeredView}>
           <View style={style.qrmodalView}>
             {device == null ? (
@@ -678,6 +685,7 @@ const Home = (props) => {
             </Text>
           </TouchableOpacity>
         </View>
+        </TouchableWithoutFeedback>
       </Modal>
       <Modal
         visible={modalVisable}
@@ -685,6 +693,7 @@ const Home = (props) => {
         transparent={true}
         onRequestClose={() => setmodalVisable(false)}
       >
+                      <TouchableWithoutFeedback onPressOut={() => setmodalVisable(false)}>
         <View style={style.centeredView}>
           <View style={style.modalView}>
             <Image
@@ -782,6 +791,7 @@ const Home = (props) => {
             </TouchableOpacity>
           </View>
         </View>
+        </TouchableWithoutFeedback>
       </Modal>
 
       <RefreshableWrapper

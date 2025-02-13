@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
-import { Text, LogBox, Platform, Modal, View, Button } from "react-native";
+import { Text, LogBox, Platform} from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
@@ -57,25 +57,11 @@ export default function App() {
   const [ready, setReady] = useState(false);
   const [owner, setOwner] = useState("0");
   let [localLang] = useState(getLocales()[0].languageCode)
-  const [modalVisible, setModalVisible] = useState(false);
   
   const startUpdate = async (url, urlversion, message) => {
     await hotUpdate.downloadBundleUri(ReactNativeBlobUtil, url, urlversion, {
       updateSuccess: () => {
-        setModalVisible(true);
-        return (
-          <Modal
-            animationType="slide"
-            visible={modalVisible}
-            onRequestClose={() => {setModalVisible(false)}}
-          >
-            <View>
-              <Text>What's New in this Version</Text>
-              {message}
-              <Button title="Close" onPress={() => setModalVisible(false)} />
-            </View>
-          </Modal>
-          );
+       
       },
       updateFail(message) {
         console.log(message);
