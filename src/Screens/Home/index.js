@@ -203,13 +203,13 @@ const Home = (props) => {
                   title: title,
                   url:
                     constants.url +
-                    "/qrcode.php?pin=" +
+                    "/link.php?pin=" +
                     pin +
-                    "&time=" +
+                    "." +
                     time +
-                    "&owner=" +
+                    "." +
                     owner,
-                  message: i18n.t("Join my Snap Eighteen Event") + ", " + title,
+                  message: i18n.t("Join my Snap Eighteen Event") + " " + title,
                 };
 
                 try {
@@ -566,14 +566,14 @@ const Home = (props) => {
                     const shareOptions = {
                       title: title,
                       url:
-                        constants.url +
-                        "/qrcode.php?pin=" +
-                        pin +
-                        "&time=" +
-                        time +
-                        "&owner=" +
-                        owner,
-                      message: i18n.t("Join my Snap Eighteen Event") + ", " + title,
+                         constants.url +
+                    "/link.php?pin=" +
+                    pin +
+                    "." +
+                    time +
+                    "." +
+                    owner,
+                      message: i18n.t("Join my Snap Eighteen Event") + " " + title,
                     };
     
                     try {
