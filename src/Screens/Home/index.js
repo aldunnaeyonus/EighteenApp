@@ -219,63 +219,7 @@ const Home = (props) => {
                   console.log("Error =>", error);
                 }
     :
-
-    
-    Alert.alert(
-      i18n.t("Share Event"),
-      i18n.t("ChooseOption"),
-      user.isPro == "1"
-        ? [
-            {
-              text: i18n.t("Cancel"),
-              onPress: () => console.log("Cancel Pressed"),
-              style: "destructive",
-            },
-            {
-              text: i18n.t("OnlineGallery"),
-              onPress: () => {
-                const shareOptions = {
-                  title: title,
-                  url: constants.url + "/gallery/index.php?pin=" + pin,
-                  message: i18n.t("ViewLiveGallery"),
-                };
-                try {
-                  const ShareResponse = Share.share(shareOptions);
-                  console.log("Result =>", ShareResponse);
-                } catch (error) {
-                  console.log("Error =>", error);
-                }
-              },
-              style: "default",
-            },
-            {
-              text: i18n.t("Share Event"),
-              onPress: async () => {
-                const shareOptions = {
-                  title: title,
-                  url:
-                    constants.url +
-                    "/qrcode.php?pin=" +
-                    pin +
-                    "&time=" +
-                    time +
-                    "&owner=" +
-                    owner,
-                  message: i18n.t("Join my Snap Eighteen Event") + ", " + title,
-                };
-
-                try {
-                  const ShareResponse = await Share.share(shareOptions);
-                  console.log("Result =>", ShareResponse);
-                } catch (error) {
-                  console.log("Error =>", error);
-                }
-              },
-              style: "default",
-            },
-          ],
-      { cancelable: false }
-    );
+        setModalShareVisable(true);
   };
 
   const _deleteFeedItemIndex = (UUID) => {
@@ -523,6 +467,161 @@ const Home = (props) => {
     <SafeAreaProvider
       style={{ backgroundColor: "#fff", flex: 1, paddingBottom: 24 }}
     >
+       <Modal
+        visible={modalShareVisable}
+        animationType="fade"
+        transparent={true}
+        onRequestClose={() => {setModalShareVisable(false); }}
+      >
+        <View style={style.centeredView}>
+          <View style={style.qrmodalView}>
+          <View
+              style={{
+                flexDirection: "column",
+                marginTop: -20,
+                marginBottom: 25,
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: 30,
+                  alignContent: "space-between",
+                }}
+              >
+                <Text
+                  style={{
+                    textAlign: "center",
+                    fontSize: 20,
+                    fontWeight: 500,
+                  }}
+                >
+                  {i18n.t("Make a Selection")}
+                </Text>
+              </View>
+              </View>
+              <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: 30,
+                alignContent: "space-between",
+              }}
+            >
+              <View style={{ flexDirection: "column" }}>
+                <Icon
+                  type="material-community"
+                  size={30}
+                  name="view-gallery-outline"
+                  color={"#fff"}
+                  containerStyle={{
+                    height: 55,
+                    width: 55,
+                    alignContent: "center",
+                    justifyContent: "center",
+                    backgroundColor: "rgba(250, 190, 0, 1)",
+                    borderRadius: 22,
+                  }}
+                  onPress={async() => {
+                    const shareOptions = {
+                      title: title,
+                      url: constants.url + "/gallery/index.php?pin=" + pin,
+                      message: i18n.t("ViewLiveGallery"),
+                    };
+                    try {
+                      const ShareResponse = await Share.share(shareOptions);
+                      console.log("Result =>", ShareResponse);
+                    } catch (error) {
+                      console.log("Error =>", error);
+                    }
+                  }}
+                />
+                <Text
+                  style={{
+                    textAlign: "center",
+                    marginTop: 10,
+                  }}
+                >
+                  {i18n.t("OnlineGallery")}
+                </Text>
+              </View>
+              <View style={{ flexDirection: "column" }}>
+                <Icon
+                  type="material"
+                  size={30}
+                  name="photo-camera-back"
+                  color={"#fff"}
+                  containerStyle={{
+                    height: 55,
+                    width: 55,
+                    alignContent: "center",
+                    justifyContent: "center",
+                    backgroundColor: "#ea5504",
+                    borderRadius: 22,
+                  }}
+                  onPress={async() => {
+                    const shareOptions = {
+                      title: title,
+                      url:
+                        constants.url +
+                        "/qrcode.php?pin=" +
+                        pin +
+                        "&time=" +
+                        time +
+                        "&owner=" +
+                        owner,
+                      message: i18n.t("Join my Snap Eighteen Event") + ", " + title,
+                    };
+    
+                    try {
+                      const ShareResponse = await Share.share(shareOptions);
+                      console.log("Result =>", ShareResponse);
+                    } catch (error) {
+                      console.log("Error =>", error);
+                    }
+                  }}
+                />
+                <Text
+                  style={{
+                    textAlign: "center",
+                    marginTop: 10,
+                  }}
+                >
+                  {i18n.t("Share Event")}
+                </Text>
+              </View>
+            </View>
+          </View>
+          <TouchableOpacity
+            style={{
+              marginTop: 20,
+              flexDirection: "row",
+              width: 250,
+              backgroundColor: "rgba(234, 85, 4, 1)",
+              borderRadius: 8,
+              padding: 15,
+              alignItems: "center",
+              justifyContent: "center",
+              marginbottom: 20,
+            }}
+            onPress={() => { setModalShareVisable(false); }}
+          >
+            <Text
+              style={{
+                textTransform: "uppercase",
+                fontSize: 20,
+                fontWeight: 600,
+                color: "#fff",
+              }}
+            >
+              {i18n.t("Close")}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
       <Modal
         visible={modalQRCodeVisable}
         animationType="fade"
