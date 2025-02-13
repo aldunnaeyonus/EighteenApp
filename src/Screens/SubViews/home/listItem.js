@@ -238,7 +238,7 @@ const ListItem = (props) => {
               }}
               type="material-community"
               size={30}
-              name="menu-open"
+              name="delete-sweep-outline"
               color="#fff"
             />
           </MenuView>
