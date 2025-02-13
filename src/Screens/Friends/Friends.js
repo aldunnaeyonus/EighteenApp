@@ -53,6 +53,7 @@ const Friends = (props) => {
   const { toast } = useToast();
   const actionSheetRef = useRef();
   const [modalVisable, setmodalVisable] = useState(false);
+    const [modalActionVisable, setmodalActionVisable] = useState(false);
   const [qrCodeURL] = useState(
     constants.url + "/friendQRCode.php?owner=" + props.route.params.userID
   );
@@ -436,97 +437,206 @@ const Friends = (props) => {
             }
           />
         </RefreshableWrapper>
-        <ActionSheet
-          ref={actionSheetRef}
-          disableDragBeyondMinimumSnapPoint
-          gestureEnabled
-          snapPoints={[100]}
-          containerStyle={{
-            borderWidth: 1,
-            borderColor: "#f0f0f0",
-          }}
-        >
-          <View style={{ width: SCREEN_WIDTH, backgroundColor: "#fff" }}>
-            <ListItem
-              containerStyle={{
-                paddingVertical: 5,
-                alignContent: "center",
-                justifyContent: "center",
-                marginTop: 20,
-              }}
-              key="1"
-              onPress={() => {
-                actionSheetRef.current?.hide();
-                _reportUser(props.route.params.userID);
+         <Modal
+        visible={modalActionVisable}
+        animationType="fade"
+        transparent={true}
+        onRequestClose={() => {setmodalActionVisable(false); }}
+      >
+        <View style={style.centeredView}>
+          <View style={style.qrmodalView}>
+          <View
+              style={{
+                flexDirection: "column",
+                marginTop: -20,
+                marginBottom: 25,
               }}
             >
-              <ListItem.Content>
-                <ListItem.Title>{i18n.t("Report Friend")}</ListItem.Title>
-              </ListItem.Content>
-              <ListItem.Chevron />
-            </ListItem>
-
-            <ListItem
-              containerStyle={{
-                paddingVertical: 5,
-                alignContent: "center",
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: 30,
+                  alignContent: "space-between",
+                }}
+              >
+                <Text
+                  style={{
+                    textAlign: "center",
+                    fontSize: 20,
+                    fontWeight: 500,
+                  }}
+                >
+                  {i18n.t("Make a Selection")}
+                </Text>
+              </View>
+              </View>
+              <View
+              style={{
+                flexDirection: "row",
                 justifyContent: "center",
-                marginTop: 20,
-              }}
-              key="2"
-              onPress={() => {
-                actionSheetRef.current?.hide();
-                _deleteUser();
+                alignItems: "center",
+                gap: 30,
+                alignContent: "space-between",
               }}
             >
-              <ListItem.Content>
-                <ListItem.Title>{i18n.t("Delete Friend")}</ListItem.Title>
-              </ListItem.Content>
-              <ListItem.Chevron />
-            </ListItem>
-
-            <ListItem
-              containerStyle={{
-                paddingVertical: 5,
-                alignContent: "center",
+              <View style={{ flexDirection: "column" }}>
+                <Icon
+                  type="material"
+                  size={30}
+                  name="report-gmailerrorred"
+                  color={"#fff"}
+                  containerStyle={{
+                    height: 55,
+                    width: 55,
+                    alignContent: "center",
+                    justifyContent: "center",
+                    backgroundColor: "rgba(250, 190, 0, 1)",
+                    borderRadius: 22,
+                  }}
+                  onPress={async() => {
+                    setmodalActionVisable(false);
+                    _reportUser(props.route.params.userID);
+                  }}
+                />
+                <Text
+                  style={{
+                    textAlign: "center",
+                    marginTop: 10,
+                  }}
+                >
+                  {i18n.t("Report Friend")}
+                </Text>
+              </View>
+              <View style={{ flexDirection: "column" }}>
+                <Icon
+                  type="ant"
+                  size={30}
+                  name="deleteuser"
+                  color={"#fff"}
+                  containerStyle={{
+                    height: 55,
+                    width: 55,
+                    alignContent: "center",
+                    justifyContent: "center",
+                    backgroundColor: "#ea5504",
+                    borderRadius: 22,
+                  }}
+                  onPress={async() => {
+                    setmodalActionVisable(false);
+                    _deleteUser();
+                  }}
+                />
+                <Text
+                  style={{
+                    textAlign: "center",
+                    marginTop: 10,
+                  }}
+                >
+                  {i18n.t("Delete Friend")}
+                </Text>
+              </View>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
                 justifyContent: "center",
-                marginTop: 20,
-              }}
-              key="3"
-              onPress={() => {
-                actionSheetRef.current?.hide();
-                setTimeout(() => {
-                  setmodalVisable(true);
-                }, 500);
+                alignItems: "center",
+                gap: 30,
+                alignContent: "space-between",
               }}
             >
-              <ListItem.Content>
-                <ListItem.Title>{i18n.t("QRCode")}</ListItem.Title>
-              </ListItem.Content>
-              <ListItem.Chevron />
-            </ListItem>
-            <ListItem
-              containerStyle={{
-                paddingVertical: 5,
-                alignContent: "center",
-                justifyContent: "center",
-                marginTop: 20,
-              }}
-              key="4"
-              onPress={() => {
-                actionSheetRef.current?.hide();
-                props.navigation.navigate("About", {
-                  items: friendData,
-                });
-              }}
-            >
-              <ListItem.Content>
-                <ListItem.Title>{i18n.t("About")}</ListItem.Title>
-              </ListItem.Content>
-              <ListItem.Chevron />
-            </ListItem>
+              <View style={{ flexDirection: "column" }}>
+                <Icon
+                  type="material-community"
+                  size={30}
+                  name="qrcode"
+                  color={"#fff"}
+                  containerStyle={{
+                    height: 55,
+                    width: 55,
+                    alignContent: "center",
+                    justifyContent: "center",
+                    backgroundColor: "rgba(250, 190, 0, 1)",
+                    borderRadius: 22,
+                  }}
+                  onPress={async() => {
+                    setmodalActionVisable(false);
+                    setTimeout(() => {
+                      setmodalVisable(true);
+                    }, 200);
+                  }}
+                />
+                <Text
+                  style={{
+                    textAlign: "center",
+                    marginTop: 10,
+                  }}
+                >
+                  {i18n.t("QRCode")}
+                </Text>
+              </View>
+              <View style={{ flexDirection: "column" }}>
+                <Icon
+                  type="material-community"
+                  size={30}
+                  name="shield-account-variant-outline"
+                  color={"#fff"}
+                  containerStyle={{
+                    height: 55,
+                    width: 55,
+                    alignContent: "center",
+                    justifyContent: "center",
+                    backgroundColor: "#ea5504",
+                    borderRadius: 22,
+                  }}
+                  onPress={async() => {
+                    setmodalActionVisable(false);
+                    props.navigation.navigate("About", {
+                      items: friendData,
+                    });
+                  }}
+                />
+                <Text
+                  style={{
+                    textAlign: "center",
+                    marginTop: 10,
+                  }}
+                >
+                  {i18n.t("About")}
+                </Text>
+              </View>
+            </View>
           </View>
-        </ActionSheet>
+          <TouchableOpacity
+            style={{
+              marginTop: 20,
+              flexDirection: "row",
+              width: 250,
+              backgroundColor: "rgba(234, 85, 4, 1)",
+              borderRadius: 8,
+              padding: 15,
+              alignItems: "center",
+              justifyContent: "center",
+              marginbottom: 20,
+            }}
+            onPress={() => { setmodalActionVisable(false); }}
+          >
+            <Text
+              style={{
+                textTransform: "uppercase",
+                fontSize: 20,
+                fontWeight: 600,
+                color: "#fff",
+              }}
+            >
+              {i18n.t("Close")}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+              
         <Modal visible={modalVisable} animationType="slide" transparent={true}>
           <View style={style.centeredView}>
             <View style={style.modalView}>
