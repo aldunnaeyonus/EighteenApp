@@ -452,7 +452,7 @@ if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
                       width: 55,
                       alignContent: "center",
                       justifyContent: "center",
-                      backgroundColor: "#ea5504",
+                      backgroundColor: 'rgba(116, 198, 190, 1)',
                       borderRadius: 22,
                     }}
                     onPress={() => {
