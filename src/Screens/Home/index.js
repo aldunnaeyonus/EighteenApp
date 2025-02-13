@@ -355,8 +355,8 @@ const Home = (props) => {
       headerRight: () => (
         <Icon
           containerStyle={{ zIndex: 0 }}
-          type="material-community"
-          name="account-settings-outline"
+          type="material"
+          name="more-vert"
           size={30}
           onPress={() => {
             triggerProfileFunction();
