@@ -7,6 +7,7 @@ import {
   View,
   Text,
   TouchableOpacity,
+  Linking
 } from "react-native";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
 import { constants, SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
@@ -62,7 +63,7 @@ const Home = (props) => {
 
   const codeScanner = useCodeScanner({
     codeTypes: ["qr"],
-    onCodeScanned: (codes) => {
+    onCodeScanned: async (codes) => {
       if (isBarcodeScannerEnabled) {
         setmodalQRCodeVisable(false);
         const code = JSON.parse(JSON.stringify(codes[0].value));
@@ -85,8 +86,9 @@ const Home = (props) => {
             time: newCode[1],
             owner: newCode[2],
           });
+        }else{
+          await Linking.openURL(code);
         }
-
         setisBarcodeScannerEnabled(false);
       }
     },
