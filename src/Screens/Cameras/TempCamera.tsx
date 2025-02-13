@@ -3,12 +3,12 @@ import { View, StyleSheet, GestureResponderEvent, Text } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import {
   useCameraPermission,
-  useMicrophonePermission,
   useCameraDevice,
   useCameraFormat,
   Camera,
   PhotoFile,
   TakePhotoOptions,
+  useLocationPermission,
   runAtTargetFps,
   useFrameProcessor,
   VideoFile,
@@ -49,10 +49,6 @@ const TempCamera = (props: {
   const [uiRotation, setUiRotation] = useState(0);
 
   const { hasPermission, requestPermission } = useCameraPermission();
-  const {
-    hasPermission: microphonePermission,
-    requestPermission: requestMicrophonePermission,
-  } = useMicrophonePermission();
   const [isActive, setIsActive] = useState(false);
   const [flash, setFlash] = useState<TakePhotoOptions["flash"]>("off");
   const [cameraPosition, setCameraPosition] = useState<"front" | "back">(
@@ -60,6 +56,7 @@ const TempCamera = (props: {
   );
   const device = useCameraDevice(cameraPosition);
   const [isCameraInitialized, setIsCameraInitialized] = useState(false);
+  const location = useLocationPermission();
 
   const camera = useRef<Camera>(null);
 
@@ -90,11 +87,7 @@ const TempCamera = (props: {
       requestPermission();
     }
     setIsActive(true);
-
-    if (!microphonePermission) {
-      requestMicrophonePermission();
-    }
-  }, [hasPermission, microphonePermission]);
+  }, [hasPermission]);
 
   const onFlipCameraPressed = useCallback(() => {
     setCameraPosition((p) => (p === "back" ? "front" : "back"));
@@ -134,6 +127,11 @@ const TempCamera = (props: {
     { videoResolution: "max" },
     { photoAspectRatio: screenAspectRatio },
     { photoResolution: "max" },
+    { photoHdr: true },
+    { videoHdr: true },
+    { videoStabilizationMode: 'auto' },
+    { autoFocusSystem: 'phase-detection' },
+    { fps: 240 },
   ]);
   const [enableHdr, setEnableHdr] = useState(false);
   const [enableNightMode, setEnableNightMode] = useState(false);
@@ -149,11 +147,23 @@ const TempCamera = (props: {
     },
     [isPressingButton]
   );
+  useEffect(() => {
+    StatusBar.setHidden(true, 'none');
+    location.requestPermission();
+  }, [location]);
 
+    const cameraAnimatedProps = useAnimatedProps<CameraProps>(() => {
+    const z = Math.max(Math.min(zoom.value, maxZoom), minZoom);
+    return {
+      zoom: z,
+    };
+  }, [maxZoom, minZoom, zoom]);
+  
   const onMediaCaptured = useCallback(
     async (media: PhotoFile | VideoFile, type: "photo" | "video") => {
       if (type == "photo") {
         await AsyncStorage.setItem("media.path", media.path);
+            StatusBar.setHidden(false, 'none');
         props.navigation.goBack();
       }
     },
@@ -161,15 +171,54 @@ const TempCamera = (props: {
   );
   const supportsHdr = format?.supportsPhotoHdr;
   const canToggleNightMode = device?.supportsLowLightBoost ?? false;
+  const videoHdr = format?.supportsVideoHdr && enableHdr;
 
   const onDoubleTap = useCallback(() => {
     onFlipCameraPressed();
   }, [onFlipCameraPressed]);
 
-  if (!hasPermission || !microphonePermission) {
+  if (!hasPermission) {
     return <ActivityIndicator />;
   }
-
+  if (device == null)
+    return (
+      <View style={[StyleSheet.absoluteFill, { backgroundColor: "black" }]}>
+        <View style={[uiStyle]}>
+          <Text
+            style={{
+              color: "white",
+              textAlign: "center",
+              fontWeight: "600",
+              fontSize: 20,
+              top: constants.SAFE_AREA_PADDING.paddingBottom + 45,
+            }}
+          >
+            No Camera Device
+          </Text>
+        </View>
+        <View
+          style={[
+            uiStyle,
+            {
+              position: "absolute",
+              right: 10,
+              top: 50,
+              padding: 10,
+              borderRadius: 5,
+              backgroundColor: "rgba(0, 0, 0, 0.60)",
+              gap: 30,
+            },
+          ]}
+        >
+          <Ionicons
+            name={"close"}
+            onPress={() => props.navigation.goBack()}
+            size={30}
+            color="white"
+          />
+        </View>
+      </View>
+    );
   return (
     <View style={{ flex: 1, backgroundColor: "black" }}>
       <PinchGestureHandler onGestureEvent={onPinchGesture} enabled={isActive}>
@@ -185,13 +234,19 @@ const TempCamera = (props: {
               onInitialized={onInitialized}
               outputOrientation="device"
               photoQualityBalance="balanced"
-              onUIRotationChanged={setUiRotation}
+              onUIRotationChanged={(degrees) => setUiRotation(degrees)}
+              isMirrored={cameraPosition == "front" ? true : false}
               enableZoomGesture={true}
+              videoStabilizationMode={'auto'}
+              androidPreviewViewType={"texture-view"}
+              animatedProps={cameraAnimatedProps}
               photo={true}
-              isMirrored={false}
               video={false}
               audio={false}
               device={device}
+              exposure={0}
+              enableLocation={location.hasPermission}
+              lowLightBoost={canToggleNightMode}
               frameProcessor={frameProcessor}
             />
           </TapGestureHandler>
