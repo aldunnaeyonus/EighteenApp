@@ -606,7 +606,7 @@ const CreateCamera = (props) => {
                     width: 55,
                     alignContent: "center",
                     justifyContent: "center",
-                    backgroundColor: "#ea5504",
+                    backgroundColor: "#3D4849",
                     borderRadius: 22,
                   }}
                   onPress={() => {
