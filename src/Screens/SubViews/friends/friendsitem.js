@@ -5,6 +5,7 @@ import {
   Alert,
   StyleSheet,
   TouchableOpacity,
+  Pressable
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import moment from "moment/min/moment-with-locales"
@@ -75,6 +76,20 @@ const FriendListItem = (props) => {
           width: SCREEN_WIDTH,
         }}
       >
+         <Pressable 
+                    onPress={()=> {
+                      props._gotoMedia(
+                        props.item.item.pin,
+                        props.item.item.title,
+                        props.item.item.owner,
+                        props.item.item.UUID,
+                        props.item.item.end,
+                        props.item.item.start,
+                        props.item.item.credits,
+                        props.item.item.camera_add_social,
+                        props.item.item.illustration
+                      )
+                  }}>
         <Image
           indicator={Progress}
           style={{
@@ -87,7 +102,7 @@ const FriendListItem = (props) => {
             cache: FastImage.cacheControl.immutable,
             uri: props.item.item.illustration,
           }}
-        />
+        /></Pressable>
         <View
           style={{
             position: "absolute",

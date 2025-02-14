@@ -1,9 +1,10 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
   Platform,
+  View,
   Alert,
 } from "react-native";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
@@ -16,11 +17,34 @@ import { handleUpload } from "../SubViews/upload";
 import * as i18n from "../../../i18n";
 import { ActivityIndicator } from "react-native-paper";
 import FastImage from "react-native-fast-image";
+import { createImageProgress } from "react-native-image-progress";
+const Image = createImageProgress(FastImage);
+import Progress from "react-native-progress";
 
 const ChangeData = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
   const [cameraStatus] = ImagePicker.useCameraPermissions()
   const [uploading] = useMMKVObject("uploadData", storage);
+  const [avatars, setAvatars] = useState([]);
+
+  const pullData=async ()=> {
+    await axiosPull._pullUser(user.user_id, "Profile");
+
+  }
+
+  useEffect(() => {
+    pullData();
+      const fetchData = async () => {
+        fetch(constants.url + "/avatars/avatars.json")
+          .then((response) => response.json())
+          .then((jsonData) => {
+            setAvatars(jsonData);
+          })
+          .catch((error) => {});
+      };
+      fetchData();
+    }, [avatars]);
+
   const fetchCode = async (icon, types) => {
     props.navigation.setOptions({
       headerRight: () => (
@@ -41,21 +65,33 @@ const ChangeData = (props) => {
         type: constants.mimes(icon.split(".").pop()), // set MIME type
         uri: Platform.OS === "android" ? icon : icon.replace("file://", ""),
       });
+      handleUpload(
+        constants.url + "/avatars/fetch.php",
+        formData,
+        user.user_id,
+        "avatar",
+        "pin",
+        "",
+        i18n.t("ProfilePic") + " " + i18n.t("PleaseWait"),
+        icon,
+        uploading
+      );
     } else {
       formData.append("avatar", String(icon));
+      handleUpload(
+        constants.url + "/avatars/fetch.php",
+        formData,
+        user.user_id,
+        "avatar",
+        "pin",
+        "",
+        i18n.t("ProfilePic") + " " + i18n.t("PleaseWait"),
+        constants.url+"/avatars/"+icon,
+        uploading
+      );
     }
 
-    handleUpload(
-      constants.url + "/avatars/fetch.php",
-      formData,
-      user.user_id,
-      "avatar",
-      "pin",
-      "",
-      i18n.t("ProfilePic") + " " + i18n.t("PleaseWait"),
-      icon,
-      uploading
-    );
+    
     props.navigation.goBack();
   };
 
@@ -116,6 +152,41 @@ if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
             headerTextStyle={styles.headerTextStyle}
           />
         </TouchableOpacity>
+        <View style={styles.destinationsView}>
+          {avatars.map((grids) => (
+            <TouchableOpacity
+              onPress={() => {
+                fetchCode(grids.icon + ".png", "0");
+              }}
+              style={styles.gridButtonContainer}
+            >
+              <View style={[styles.gridButton]}>
+                <Image
+                  key={grids.key}
+                  indicator={Progress}
+                  resizeMode={FastImage.resizeMode.contain}
+                  style={{
+                    width: 80,
+                    height: 80,
+                    backgroundColor: "#f2f2f2",
+                    borderRadius: 40,
+                    borderColor: "#e35504",
+                    borderWidth:
+                    grids.icon + ".png" == user.user_avatar ? 3 : 0,
+                    margin: 7,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                  source={{
+                    priority: FastImage.priority.high,
+                    cache: FastImage.cacheControl.immutable,
+                    uri: constants.url + "/avatars/" + grids.icon + ".png",
+                  }}
+                />
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
       </ScrollView>
     </>
   );
@@ -191,6 +262,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f2f2f2",
     borderRadius: 40,
     margin: 2,
+    marginBottom:25,
     justifyContent: "center",
     alignItems: "center",
   },
