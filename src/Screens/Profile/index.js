@@ -31,6 +31,7 @@ import hotUpdate from "react-native-ota-hot-update/src/index";
 import email from "react-native-email";
 import DeviceInfo from "react-native-device-info";
 import { getLocales } from "expo-localization";
+import moment from "moment/min/moment-with-locales"
 
 const Profile = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
@@ -287,7 +288,7 @@ Language Code: ${getLocales()[0].languageCode}`,
                                try {
                                      const ShareResponse = await Share.share({
                                            title: i18n.t("FriendCode"),
-                                           url: constants.url + "/friend.php?user=" + user.user_id,
+                                           url: constants.url + "/friend.php?user=" + user.user_id+"."+moment().unix(),
                                            message: i18n.t("FriendCodeMessage"),
                                          });
                                      console.log("Result =>", ShareResponse);
