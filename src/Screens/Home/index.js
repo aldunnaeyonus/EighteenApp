@@ -61,8 +61,8 @@ const Home = (props) => {
   const device = useCameraDevice("back");
   const [isBarcodeScannerEnabled, setisBarcodeScannerEnabled] = useState(true);
   const { hasPermission, requestPermission } = useCameraPermission();
-  let shareOptions = { title: "", url: "", message: "" };
-  let shareOptionsGallery =  { title: "", url: "", message: "" };
+const [shareOptions, setshareOptions] = useState({ title: "", url: "", message: "" });
+const [shareOptionsGallery, setshareOptionsGallery] =  useState({ title: "", url: "", message: "" });
   const codeScanner = useCodeScanner({
     codeTypes: ["qr"],
     onCodeScanned: async (codes) => {
@@ -200,18 +200,18 @@ const Home = (props) => {
     await axiosPull._resetBadge(user.user_id, pin);
     await axiosPull._pullCameraFeed(user.user_id, "owner");
   };
-
+  setshareOptions
   const _gotoShare = async (pin, time, owner, title) => {
-    shareOptions = {
+    setshareOptions({
       title: title,
       url:constants.url +"/link.php?pin=" +pin +"." +time +"." +owner,
       message: i18n.t("Join my Snap Eighteen Event") + " " + title,
-    };
-    shareOptionsGallery = {
+    });
+    setshareOptionsGallery ({
       title: title,
       url: constants.url + "/gallery/index.php?pin=" + pin,
       message: i18n.t("ViewLiveGallery"),
-    };
+    });
     if (user.isPro == "0"){ 
 
                 try {
@@ -472,6 +472,7 @@ const Home = (props) => {
     >
        <Modal
         visible={modalShareVisable}
+        presentationStyle="pageSheet"
         animationType="slide"
         transparent={true}
         onRequestClose={() => {setModalShareVisable(false); }}
@@ -531,6 +532,7 @@ const Home = (props) => {
                     borderRadius: 22,
                   }}
                   onPress={async() => {
+                    console.log(shareOptionsGallery)
                     setModalShareVisable(false)
                     try {
                       const ShareResponse = await Share.share(shareOptionsGallery);
@@ -672,6 +674,7 @@ const Home = (props) => {
       </Modal>
       <Modal
         visible={modalVisable}
+        presentationStyle="pageSheet"
         animationType="slide"
         transparent={true}
         onRequestClose={() => setmodalVisable(false)}

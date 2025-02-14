@@ -466,6 +466,7 @@ const CreateCamera = (props) => {
     <>
       <Modal
         animationType="slide"
+        presentationStyle="pageSheet"
         transparent={true}
         visible={modalUpload}
         onRequestClose={() => {

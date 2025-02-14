@@ -398,6 +398,7 @@ if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
         />
         <Modal
           animationType="slide"
+          presentationStyle="pageSheet"
           transparent={true}
           visible={modalUpload}
           onRequestClose={() => {

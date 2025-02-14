@@ -437,6 +437,7 @@ const Friends = (props) => {
         </RefreshableWrapper>
          <Modal
         visible={modalActionVisable}
+        presentationStyle="pageSheet"
         animationType="slide"
         transparent={true}
         onRequestClose={() => {setmodalActionVisable(false); }}
@@ -644,7 +645,13 @@ const Friends = (props) => {
         </TouchableWithoutFeedback>
       </Modal>
               
-        <Modal visible={modalVisable} animationType="slide" transparent={true} onRequestClose={() => {setmodalVisable(false); }}        >
+        <Modal 
+        visible={modalVisable} 
+        presentationStyle="pageSheet"
+        animationType="slide" 
+        transparent={true} 
+        onRequestClose={() => {setmodalVisable(false); }}        
+        >
         <TouchableWithoutFeedback onPressOut={() => setmodalVisable(false)}>
           <View style={style.centeredView}>
             <View style={style.modalView}>

@@ -215,6 +215,7 @@ Language Code: ${getLocales()[0].languageCode}`,
     >
       <Modal
         visible={modalVisable}
+        presentationStyle="pageSheet"
         animationType="slide"
         transparent={true}
         onRequestClose={() => setmodalVisable(false)}
