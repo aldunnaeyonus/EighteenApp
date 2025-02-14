@@ -12,12 +12,14 @@ import {
   runAtTargetFps,
   useFrameProcessor,
   VideoFile,
+  CameraProps,
 } from "react-native-vision-camera";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import Reanimated, {
   Extrapolation,
   interpolate,
   useAnimatedGestureHandler,
+  useAnimatedProps,
   useSharedValue,
 } from "react-native-reanimated";
 import { CaptureButton } from "../VisionCamera/CaptureButton";
@@ -30,6 +32,7 @@ import {
 import momentDurationFormatSetup from "moment-duration-format";
 import moment from "moment";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ViewStyle, StatusBar } from "react-native";
 
 const ReanimatedCamera = Reanimated.createAnimatedComponent(Camera);
 Reanimated.addWhitelistedNativeProps({
@@ -47,7 +50,9 @@ const TempCamera = (props: {
 }) => {
   momentDurationFormatSetup(moment);
   const [uiRotation, setUiRotation] = useState(0);
-
+  const uiStyle: ViewStyle = {
+    transform: [{ rotate: `${uiRotation}deg` }],
+  };
   const { hasPermission, requestPermission } = useCameraPermission();
   const [isActive, setIsActive] = useState(false);
   const [flash, setFlash] = useState<TakePhotoOptions["flash"]>("off");
@@ -123,17 +128,12 @@ const TempCamera = (props: {
   const screenAspectRatio = constants.SCREEN_HEIGHT / constants.SCREEN_WIDTH;
 
   const format = useCameraFormat(device, [
-    { videoAspectRatio: screenAspectRatio },
-    { videoResolution: "max" },
     { photoAspectRatio: screenAspectRatio },
     { photoResolution: "max" },
     { photoHdr: true },
-    { videoHdr: true },
-    { videoStabilizationMode: 'auto' },
     { autoFocusSystem: 'phase-detection' },
     { fps: 240 },
   ]);
-  const [enableHdr, setEnableHdr] = useState(false);
   const [enableNightMode, setEnableNightMode] = useState(false);
 
   const onInitialized = useCallback(() => {
@@ -169,9 +169,7 @@ const TempCamera = (props: {
     },
     [props]
   );
-  const supportsHdr = format?.supportsPhotoHdr;
   const canToggleNightMode = device?.supportsLowLightBoost ?? false;
-  const videoHdr = format?.supportsVideoHdr && enableHdr;
 
   const onDoubleTap = useCallback(() => {
     onFlipCameraPressed();
@@ -241,6 +239,7 @@ const TempCamera = (props: {
               androidPreviewViewType={"texture-view"}
               animatedProps={cameraAnimatedProps}
               photo={true}
+              format={format}
               video={false}
               audio={false}
               device={device}
@@ -302,14 +301,6 @@ const TempCamera = (props: {
           size={30}
           color="white"
         />
-        {supportsHdr && (
-          <MaterialCommunityIcons
-            name={enableHdr ? "hdr" : "hdr-off"}
-            color="white"
-            size={30}
-            onPress={() => setEnableHdr((h) => !h)}
-          />
-        )}
         {canToggleNightMode && (
           <Ionicons
             name={enableNightMode ? "moon" : "moon-outline"}
