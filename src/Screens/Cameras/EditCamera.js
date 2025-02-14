@@ -595,7 +595,7 @@ const EditCamera = (props) => {
                   }}
                   onPress={() => {
                     setTimeout(() => {
-                      setIsAI(flase);
+                      setIsAI(false);
                       pickImage();
                     }, 200);
                     setModalUpload(false);
