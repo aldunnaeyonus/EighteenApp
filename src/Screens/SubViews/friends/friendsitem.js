@@ -134,6 +134,9 @@ const FriendListItem = (props) => {
           >
             <Icon
               onPress={() => {
+                if (props.item.item.start > moment().unix()){
+                  Alert.alert("", i18n.t("Notstared"));
+                }else{
                 props.item.item.show_gallery == "1"
                   ? props._gotoMedia(
                       props.item.item.pin,
@@ -147,6 +150,7 @@ const FriendListItem = (props) => {
                       props.item.item.illustration
                     )
                   : Alert.alert("", i18n.t("BlockedGallery"));
+                }
               }}
               containerStyle={{
                 alignSelf: "flex-end",
@@ -167,6 +171,9 @@ const FriendListItem = (props) => {
             />
             <Icon
               onPress={() => {
+                if (props.item.item.start > moment().unix()){
+                  Alert.alert("", i18n.t("Notstared"));
+                }else{
                 if (parseInt(props.item.item.credits) <= 0) {
                   props._gotoStore(
                     props.item.item.pin,
@@ -186,6 +193,7 @@ const FriendListItem = (props) => {
                     props.item.item.camera_add_social
                   );
                 }
+              }
               }}
               containerStyle={{
                 alignSelf: "flex-end",
