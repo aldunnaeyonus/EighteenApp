@@ -210,7 +210,10 @@ const TempCamera = (props: {
         >
           <Ionicons
             name={"close"}
-            onPress={() => props.navigation.goBack()}
+            onPress={() => {
+              StatusBar.setHidden(false, 'none');
+              props.navigation.goBack()
+            }}
             size={30}
             color="white"
           />
@@ -283,7 +286,10 @@ const TempCamera = (props: {
       >
         <Ionicons
           name={"close"}
-          onPress={() => props.navigation.goBack()}
+          onPress={() => {
+            StatusBar.setHidden(false, 'none');
+            props.navigation.goBack()
+          }}
           size={30}
           color="white"
         />

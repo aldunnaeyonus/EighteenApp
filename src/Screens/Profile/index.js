@@ -108,13 +108,14 @@ const Profile = (props) => {
     props.navigation.navigate("Abouts");
   });
 
-    const faq = useCallback(() => {
+  const faq = useCallback(() => {
     props.navigation.navigate("WebView", {
-      url: constants.url + "/faq/index.php?locale="+getLocales()[0].languageCode,
+      url:
+        constants.url + "/faq/index.php?locale=" + getLocales()[0].languageCode,
       name: i18n.t("FAQs"),
     });
   });
-  
+
   const privacy = useCallback(() => {
     props.navigation.navigate("WebView", {
       url: constants.url + "/privacyPolicy.html",
@@ -215,56 +216,55 @@ Language Code: ${getLocales()[0].languageCode}`,
     >
       <Modal
         visible={modalVisable}
-        presentationStyle="pageSheet"
         animationType="slide"
         transparent={true}
         onRequestClose={() => setmodalVisable(false)}
       >
-                                 <TouchableWithoutFeedback onPressOut={() => setmodalVisable(false)}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Image
-              indicator={Progress}
+        <TouchableWithoutFeedback onPressOut={() => setmodalVisable(false)}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Image
+                indicator={Progress}
+                style={{
+                  width: SCREEN_WIDTH - 100,
+                  height: SCREEN_WIDTH - 100,
+                  backgroundColor: "white",
+                  alignSelf: "auto",
+                }}
+                resizeMode={FastImage.resizeMode.contain}
+                source={{
+                  priority: FastImage.priority.high,
+                  cache: FastImage.cacheControl.web,
+                  uri: qrCodeURL,
+                }}
+              />
+            </View>
+            <TouchableOpacity
               style={{
                 width: SCREEN_WIDTH - 100,
-                height: SCREEN_WIDTH - 100,
-                backgroundColor: "white",
-                alignSelf: "auto",
+                marginRight: 10,
+                marginLeft: 10,
+                marginTop: 25,
+                backgroundColor: "rgba(234, 85, 4, 1)",
+                borderRadius: 8,
+                padding: 15,
+                alignItems: "center",
+                justifyContent: "center",
               }}
-              resizeMode={FastImage.resizeMode.contain}
-              source={{
-                priority: FastImage.priority.high,
-                cache: FastImage.cacheControl.web,
-                uri: qrCodeURL,
-              }}
-            />
-          </View>
-          <TouchableOpacity
-            style={{
-              width: SCREEN_WIDTH - 100,
-              marginRight: 10,
-              marginLeft: 10,
-              marginTop: 25,
-              backgroundColor: "rgba(234, 85, 4, 1)",
-              borderRadius: 8,
-              padding: 15,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-            onPress={() => setmodalVisable(false)}
-          >
-            <Text
-              style={{
-                textTransform: "uppercase",
-                fontSize: 20,
-                fontWeight: 600,
-                color: "#fff",
-              }}
+              onPress={() => setmodalVisable(false)}
             >
-              {i18n.t("Close")}
-            </Text>
-          </TouchableOpacity>
-        </View>
+              <Text
+                style={{
+                  textTransform: "uppercase",
+                  fontSize: 20,
+                  fontWeight: 600,
+                  color: "#fff",
+                }}
+              >
+                {i18n.t("Close")}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </TouchableWithoutFeedback>
       </Modal>
       <View style={{ width: SCREEN_WIDTH, backgroundColor: "#fff" }}>
@@ -367,7 +367,7 @@ Language Code: ${getLocales()[0].languageCode}`,
           <InfoText text={i18n.t("Profile Settings")} />
           <View>
             <View style={[styles.dividerTableStyle]} />
-              <ListItem
+            <ListItem
               containerStyle={{ paddingVertical: 5 }}
               key="3"
               onPress={() => {

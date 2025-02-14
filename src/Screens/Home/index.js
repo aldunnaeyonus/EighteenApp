@@ -8,7 +8,7 @@ import {
   Text,
   TouchableOpacity,
   Linking,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
 } from "react-native";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
 import { constants, SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
@@ -61,8 +61,16 @@ const Home = (props) => {
   const device = useCameraDevice("back");
   const [isBarcodeScannerEnabled, setisBarcodeScannerEnabled] = useState(true);
   const { hasPermission, requestPermission } = useCameraPermission();
-const [shareOptions, setshareOptions] = useState({ title: "", url: "", message: "" });
-const [shareOptionsGallery, setshareOptionsGallery] =  useState({ title: "", url: "", message: "" });
+  const [shareOptions, setshareOptions] = useState({
+    title: "",
+    url: "",
+    message: "",
+  });
+  const [shareOptionsGallery, setshareOptionsGallery] = useState({
+    title: "",
+    url: "",
+    message: "",
+  });
   const codeScanner = useCodeScanner({
     codeTypes: ["qr"],
     onCodeScanned: async (codes) => {
@@ -88,7 +96,7 @@ const [shareOptionsGallery, setshareOptionsGallery] =  useState({ title: "", url
             time: newCode[1],
             owner: newCode[2],
           });
-        }else{
+        } else {
           await Linking.openURL(code);
         }
         setisBarcodeScannerEnabled(false);
@@ -200,29 +208,28 @@ const [shareOptionsGallery, setshareOptionsGallery] =  useState({ title: "", url
     await axiosPull._resetBadge(user.user_id, pin);
     await axiosPull._pullCameraFeed(user.user_id, "owner");
   };
-  setshareOptions
+  setshareOptions;
   const _gotoShare = async (pin, time, owner, title) => {
     setshareOptions({
       title: title,
-      url:constants.url +"/link.php?pin=" +pin +"." +time +"." +owner,
+      url: constants.url + "/link.php?pin=" + pin + "." + time + "." + owner,
       message: i18n.t("Join my Snap Eighteen Event") + " " + title,
     });
-    setshareOptionsGallery ({
+    setshareOptionsGallery({
       title: title,
       url: constants.url + "/gallery/index.php?pin=" + pin,
       message: i18n.t("ViewLiveGallery"),
     });
-    if (user.isPro == "0"){ 
-
-                try {
-                  const ShareResponse = await Share.share(shareOptions);
-                  console.log("Result =>", ShareResponse);
-                } catch (error) {
-                  console.log("Error =>", error);
-                };
-              }else{
-        setModalShareVisable(true);
-              }
+    if (user.isPro == "0") {
+      try {
+        const ShareResponse = await Share.share(shareOptions);
+        console.log("Result =>", ShareResponse);
+      } catch (error) {
+        console.log("Error =>", error);
+      }
+    } else {
+      setModalShareVisable(true);
+    }
   };
 
   const _deleteFeedItemIndex = (UUID) => {
@@ -343,11 +350,11 @@ const [shareOptionsGallery, setshareOptionsGallery] =  useState({ title: "", url
           name="qrcode-scan"
           size={30}
           onPress={() => {
-            if (hasPermission){
-            setisBarcodeScannerEnabled(true);
-            setmodalQRCodeVisable(true);
-            }else{
-             requestPermission();
+            if (hasPermission) {
+              setisBarcodeScannerEnabled(true);
+              setmodalQRCodeVisable(true);
+            } else {
+              requestPermission();
             }
           }}
           color="#3D4849"
@@ -470,24 +477,46 @@ const [shareOptionsGallery, setshareOptionsGallery] =  useState({ title: "", url
     <SafeAreaProvider
       style={{ backgroundColor: "#fff", flex: 1, paddingBottom: 24 }}
     >
-       <Modal
+      <Modal
         visible={modalShareVisable}
-        presentationStyle="pageSheet"
         animationType="slide"
         transparent={true}
-        onRequestClose={() => {setModalShareVisable(false); }}
+        onRequestClose={() => {
+          setModalShareVisable(false);
+        }}
       >
-      <TouchableWithoutFeedback onPressOut={() => setModalShareVisable(false)}>
-        
-        <View style={style.centeredView}>
-          <View style={style.modalView}>
-          <View
-              style={{
-                flexDirection: "column",
-                marginTop: -20,
-                marginBottom: 25,
-              }}
-            >
+        <TouchableWithoutFeedback
+          onPressOut={() => setModalShareVisable(false)}
+        >
+          <View style={style.centeredView}>
+            <View style={style.modalView}>
+              <View
+                style={{
+                  flexDirection: "column",
+                  marginTop: -20,
+                  marginBottom: 25,
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: 30,
+                    alignContent: "space-between",
+                  }}
+                >
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      fontSize: 20,
+                      fontWeight: 500,
+                    }}
+                  >
+                    {i18n.t("Make a Selection")}
+                  </Text>
+                </View>
+              </View>
               <View
                 style={{
                   flexDirection: "row",
@@ -497,228 +526,104 @@ const [shareOptionsGallery, setshareOptionsGallery] =  useState({ title: "", url
                   alignContent: "space-between",
                 }}
               >
-                <Text
+                <View
                   style={{
-                    textAlign: "center",
-                    fontSize: 20,
-                    fontWeight: 500,
-                  }}
-                >
-                  {i18n.t("Make a Selection")}
-                </Text>
-              </View>
-              </View>
-              <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: 30,
-                alignContent: "space-between",
-              }}
-            >
-                <View style={{ flexDirection: "column", alignContent: "center",alignItems:'center',justifyContent: "center", }}>
-                <Icon
-                  type="material-community"
-                  size={30}
-                  name="view-gallery-outline"
-                  color={"#fff"}
-                  containerStyle={{
-                    height: 55,
-                    width: 55,
+                    flexDirection: "column",
                     alignContent: "center",
+                    alignItems: "center",
                     justifyContent: "center",
-                    backgroundColor: "rgba(250, 190, 0, 1)",
-                    borderRadius: 22,
-                  }}
-                  onPress={async() => {
-                    console.log(shareOptionsGallery)
-                    setModalShareVisable(false)
-                    try {
-                      const ShareResponse = await Share.share(shareOptionsGallery);
-                      console.log("Result =>", ShareResponse);
-                    } catch (error) {
-                      console.log("Error =>", error);
-                    }
-                  }}
-                />
-                <Text
-                  style={{
-                    textAlign: "center",
-                    marginTop: 10,
                   }}
                 >
-                  {i18n.t("OnlineGallery")}
-                </Text>
-              </View>
-                 <View style={{ flexDirection: "column", alignContent: "center",alignItems:'center',justifyContent: "center", }}>
-                <Icon
-                  type="material"
-                  size={30}
-                  name="photo-camera-back"
-                  color={"#fff"}
-                  containerStyle={{
-                    height: 55,
-                    width: 55,
+                  <Icon
+                    type="material-community"
+                    size={30}
+                    name="view-gallery-outline"
+                    color={"#fff"}
+                    containerStyle={{
+                      height: 55,
+                      width: 55,
+                      alignContent: "center",
+                      justifyContent: "center",
+                      backgroundColor: "rgba(250, 190, 0, 1)",
+                      borderRadius: 22,
+                    }}
+                    onPress={async () => {
+                      console.log(shareOptionsGallery);
+                      setModalShareVisable(false);
+                      try {
+                        const ShareResponse =
+                          await Share.share(shareOptionsGallery);
+                        console.log("Result =>", ShareResponse);
+                      } catch (error) {
+                        console.log("Error =>", error);
+                      }
+                    }}
+                  />
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      marginTop: 10,
+                    }}
+                  >
+                    {i18n.t("OnlineGallery")}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: "column",
                     alignContent: "center",
+                    alignItems: "center",
                     justifyContent: "center",
-                    backgroundColor: "#ea5504",
-                    borderRadius: 22,
-                  }}
-                  onPress={async () => {
-                    setModalShareVisable(false)
-                    try {
-                      const ShareResponse = await Share.share(shareOptions);
-                      console.log("Result =>", ShareResponse);
-                    } catch (error) {
-                      console.log("Error =>", error);
-                    }
-                  }}
-                />
-                <Text
-                  style={{
-                    textAlign: "center",
-                    marginTop: 10,
                   }}
                 >
-                  {i18n.t("Share Event")}
-                </Text>
+                  <Icon
+                    type="material"
+                    size={30}
+                    name="photo-camera-back"
+                    color={"#fff"}
+                    containerStyle={{
+                      height: 55,
+                      width: 55,
+                      alignContent: "center",
+                      justifyContent: "center",
+                      backgroundColor: "#ea5504",
+                      borderRadius: 22,
+                    }}
+                    onPress={async () => {
+                      setModalShareVisable(false);
+                      try {
+                        const ShareResponse = await Share.share(shareOptions);
+                        console.log("Result =>", ShareResponse);
+                      } catch (error) {
+                        console.log("Error =>", error);
+                      }
+                    }}
+                  />
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      marginTop: 10,
+                    }}
+                  >
+                    {i18n.t("Share Event")}
+                  </Text>
+                </View>
               </View>
             </View>
-          </View>
-          <TouchableOpacity
-            style={{
-              marginTop: 20,
-              flexDirection: "row",
-              width: 250,
-              backgroundColor: "rgba(234, 85, 4, 1)",
-              borderRadius: 8,
-              padding: 15,
-              alignItems: "center",
-              justifyContent: "center",
-              marginbottom: 20,
-            }}
-            onPress={() => { setModalShareVisable(false); }}
-          >
-            <Text
-              style={{
-                textTransform: "uppercase",
-                fontSize: 20,
-                fontWeight: 600,
-                color: "#fff",
-              }}
-            >
-              {i18n.t("Close")}
-            </Text>
-          </TouchableOpacity>
-        </View>
-        </TouchableWithoutFeedback>
-      </Modal>
-      <Modal
-        visible={modalQRCodeVisable}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => setmodalQRCodeVisable(false)}
-      >
-              <TouchableWithoutFeedback onPressOut={() => setmodalQRCodeVisable(false)}>
-
-        <View style={style.centeredView}>
-          <View style={style.qrmodalView}>
-            {device == null ? (
-              <></>
-            ) : (
-              <Camera
-                style={[StyleSheet.absoluteFill,{ overflow: "hidden", borderRadius: 20}]}
-                device={device}
-                androidPreviewViewType={"texture-view"}
-                isActive={true}
-                codeScanner={codeScanner}
-              />
-            )}
-            <Image
-              resizeMode="contain"
-              style={[StyleSheet.absoluteFill]}
-              source={require("../../../assets/scan.png")}
-            />
-          </View>
-          <TouchableOpacity
-            style={{
-              marginTop: 20,
-              flexDirection: "row",
-              width: 250,
-              backgroundColor: "rgba(234, 85, 4, 1)",
-              borderRadius: 8,
-              padding: 15,
-              alignItems: "center",
-              justifyContent: "center",
-              marginbottom: 20,
-            }}
-            onPress={() => {
-              setmodalQRCodeVisable(false);
-              setisBarcodeScannerEnabled(false);
-            }}
-          >
-            <Text
-              style={{
-                textTransform: "uppercase",
-                fontSize: 20,
-                fontWeight: 600,
-                color: "#fff",
-              }}
-            >
-              {i18n.t("Close")}
-            </Text>
-          </TouchableOpacity>
-        </View>
-        </TouchableWithoutFeedback>
-      </Modal>
-      <Modal
-        visible={modalVisable}
-        presentationStyle="pageSheet"
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => setmodalVisable(false)}
-      >
-                      <TouchableWithoutFeedback onPressOut={() => setmodalVisable(false)}>
-        <View style={style.centeredView}>
-          <View style={style.modalView}>
-            <Image
-              indicator={Progress}
-              style={{
-                width: SCREEN_WIDTH - 100,
-                height: SCREEN_WIDTH - 100,
-                backgroundColor: "white",
-                alignSelf: "auto",
-              }}
-              resizeMode={FastImage.resizeMode.contain}
-              source={{
-                priority: FastImage.priority.high,
-                cache: FastImage.cacheControl.immutable,
-                uri: qrCodeURL,
-              }}
-            />
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              width: SCREEN_WIDTH,
-              margin: 20,
-              justifyContent: "center",
-            }}
-          >
             <TouchableOpacity
               style={{
-                width: "40%",
-                marginRight: 10,
-                backgroundColor: "rgba(234, 85, 4, 1))",
+                marginTop: 20,
+                flexDirection: "row",
+                width: 250,
+                backgroundColor: "rgba(234, 85, 4, 1)",
                 borderRadius: 8,
                 padding: 15,
                 alignItems: "center",
                 justifyContent: "center",
+                marginbottom: 20,
               }}
               onPress={() => {
-                setQrCodeURL("");
-                setmodalVisable(false);
+                setModalShareVisable(false);
               }}
             >
               <Text
@@ -732,36 +637,55 @@ const [shareOptionsGallery, setshareOptionsGallery] =  useState({ title: "", url
                 {i18n.t("Close")}
               </Text>
             </TouchableOpacity>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+      <Modal
+        visible={modalQRCodeVisable}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setmodalQRCodeVisable(false)}
+      >
+        <TouchableWithoutFeedback
+          onPressOut={() => setmodalQRCodeVisable(false)}
+        >
+          <View style={style.centeredView}>
+            <View style={style.qrmodalView}>
+              {device == null ? (
+                <></>
+              ) : (
+                <Camera
+                  style={[
+                    StyleSheet.absoluteFill,
+                    { overflow: "hidden", borderRadius: 20 },
+                  ]}
+                  device={device}
+                  androidPreviewViewType={"texture-view"}
+                  isActive={true}
+                  codeScanner={codeScanner}
+                />
+              )}
+              <Image
+                resizeMode="contain"
+                style={[StyleSheet.absoluteFill]}
+                source={require("../../../assets/scan.png")}
+              />
+            </View>
             <TouchableOpacity
               style={{
-                width: "40%",
-                marginLeft: 10,
-                backgroundColor: "rgba(116, 198, 190, 1)",
+                marginTop: 20,
+                flexDirection: "row",
+                width: 250,
+                backgroundColor: "rgba(234, 85, 4, 1)",
                 borderRadius: 8,
                 padding: 15,
                 alignItems: "center",
                 justifyContent: "center",
+                marginbottom: 20,
               }}
               onPress={() => {
-                Alert.alert(
-                  i18n.t("FlyerPrint"),
-                  i18n.t("Note: FlyerPrint"),
-                  [
-                    {
-                      text: i18n.t("Cancel"),
-                      onPress: () => console.log("Cancel Pressed"),
-                      style: "destructive",
-                    },
-                    {
-                      text: i18n.t("Continue"),
-                      onPress: async () => {
-                        fetchImage(qrCodeURL);
-                      },
-                      style: "default",
-                    },
-                  ],
-                  { cancelable: false }
-                );
+                setmodalQRCodeVisable(false);
+                setisBarcodeScannerEnabled(false);
               }}
             >
               <Text
@@ -772,11 +696,116 @@ const [shareOptionsGallery, setshareOptionsGallery] =  useState({ title: "", url
                   color: "#fff",
                 }}
               >
-                {i18n.t("Print")}
+                {i18n.t("Close")}
               </Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+      <Modal
+        visible={modalVisable}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setmodalVisable(false)}
+      >
+        <TouchableWithoutFeedback onPressOut={() => setmodalVisable(false)}>
+          <View style={style.centeredView}>
+            <View style={style.modalView}>
+              <Image
+                indicator={Progress}
+                style={{
+                  width: SCREEN_WIDTH - 100,
+                  height: SCREEN_WIDTH - 100,
+                  backgroundColor: "white",
+                  alignSelf: "auto",
+                }}
+                resizeMode={FastImage.resizeMode.contain}
+                source={{
+                  priority: FastImage.priority.high,
+                  cache: FastImage.cacheControl.immutable,
+                  uri: qrCodeURL,
+                }}
+              />
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                width: SCREEN_WIDTH,
+                margin: 20,
+                justifyContent: "center",
+              }}
+            >
+              <TouchableOpacity
+                style={{
+                  width: "40%",
+                  marginRight: 10,
+                  backgroundColor: "rgba(234, 85, 4, 1))",
+                  borderRadius: 8,
+                  padding: 15,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                onPress={() => {
+                  setQrCodeURL("");
+                  setmodalVisable(false);
+                }}
+              >
+                <Text
+                  style={{
+                    textTransform: "uppercase",
+                    fontSize: 20,
+                    fontWeight: 600,
+                    color: "#fff",
+                  }}
+                >
+                  {i18n.t("Close")}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  width: "40%",
+                  marginLeft: 10,
+                  backgroundColor: "rgba(116, 198, 190, 1)",
+                  borderRadius: 8,
+                  padding: 15,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                onPress={() => {
+                  Alert.alert(
+                    i18n.t("FlyerPrint"),
+                    i18n.t("Note: FlyerPrint"),
+                    [
+                      {
+                        text: i18n.t("Cancel"),
+                        onPress: () => console.log("Cancel Pressed"),
+                        style: "destructive",
+                      },
+                      {
+                        text: i18n.t("Continue"),
+                        onPress: async () => {
+                          fetchImage(qrCodeURL);
+                        },
+                        style: "default",
+                      },
+                    ],
+                    { cancelable: false }
+                  );
+                }}
+              >
+                <Text
+                  style={{
+                    textTransform: "uppercase",
+                    fontSize: 20,
+                    fontWeight: 600,
+                    color: "#fff",
+                  }}
+                >
+                  {i18n.t("Print")}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </TouchableWithoutFeedback>
       </Modal>
 

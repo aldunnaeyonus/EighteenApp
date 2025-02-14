@@ -6,7 +6,7 @@ import {
   Modal,
   NativeModules,
   Alert,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
 } from "react-native";
 import { TouchableOpacity } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
@@ -67,7 +67,7 @@ const EditCamera = (props) => {
   const [selectedDate, setSelectedDate] = useState(sourcedDate.toDate());
   const { toast } = useToast();
   const [minimumDate] = useState(new Date());
-  const [cameraStatus] = ImagePicker.useCameraPermissions()
+  const [cameraStatus] = ImagePicker.useCameraPermissions();
 
   const [selectedIndex, setSelectedIndex] = useState(
     isPro
@@ -259,44 +259,44 @@ const EditCamera = (props) => {
   };
 
   const pickImage = async () => {
-       if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
-                 await ImagePicker.requestCameraPermissionsAsync();
-               }else if (cameraStatus.status == ImagePicker.PermissionStatus.DENIED) {
-             Alert.alert(
-             i18n.t("Permissions"),
-             i18n.t("To access photo"),
-             [
-               {
-                 text: i18n.t("Cancel"),
-                 onPress: () => console.log("Cancel Pressed"),
-                 style: "destructive",
-               },
-               {
-                 text: i18n.t("ViewSettings"),
-                 onPress: () => {
-                   _editItemFeed(UUID, owner, pin)
-                 },
-                 style: "default",
-               },
-             ],
-             { cancelable: false }
-           )
-               }else{
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      aspect: [1, 1],
-      quality: 1,
-    });
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-      setisEditing(true);
+    if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
+      await ImagePicker.requestCameraPermissionsAsync();
+    } else if (cameraStatus.status == ImagePicker.PermissionStatus.DENIED) {
+      Alert.alert(
+        i18n.t("Permissions"),
+        i18n.t("To access photo"),
+        [
+          {
+            text: i18n.t("Cancel"),
+            onPress: () => console.log("Cancel Pressed"),
+            style: "destructive",
+          },
+          {
+            text: i18n.t("ViewSettings"),
+            onPress: () => {
+              _editItemFeed(UUID, owner, pin);
+            },
+            style: "default",
+          },
+        ],
+        { cancelable: false }
+      );
     } else {
-      setImage(image);
-      setisEditing(false);
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        aspect: [1, 1],
+        quality: 1,
+      });
+      if (!result.canceled) {
+        setImage(result.assets[0].uri);
+        setisEditing(true);
+      } else {
+        setImage(image);
+        setisEditing(false);
+      }
     }
-  }
   };
 
   useFocusEffect(
@@ -478,23 +478,42 @@ const EditCamera = (props) => {
     <>
       <Modal
         animationType="slide"
-        presentationStyle="pageSheet"
         transparent={true}
         visible={modalUpload}
         onRequestClose={() => {
           setModalUpload(!modalUpload);
         }}
       >
-                 <TouchableWithoutFeedback onPressOut={() => setModalUpload(false)}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <View
-              style={{
-                flexDirection: "column",
-                marginTop: -20,
-                marginBottom: 25,
-              }}
-            >
+        <TouchableWithoutFeedback onPressOut={() => setModalUpload(false)}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <View
+                style={{
+                  flexDirection: "column",
+                  marginTop: -20,
+                  marginBottom: 25,
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: 30,
+                    alignContent: "space-between",
+                  }}
+                >
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      fontSize: 20,
+                      fontWeight: 500,
+                    }}
+                  >
+                    {i18n.t("Make a Selection")}
+                  </Text>
+                </View>
+              </View>
               <View
                 style={{
                   flexDirection: "row",
@@ -504,175 +523,176 @@ const EditCamera = (props) => {
                   alignContent: "space-between",
                 }}
               >
-                <Text
+                <View
                   style={{
-                    textAlign: "center",
-                    fontSize: 20,
-                    fontWeight: 500,
+                    flexDirection: "column",
+                    alignContent: "center",
+                    alignItems: "center",
+                    justifyContent: "center",
                   }}
                 >
-                  {i18n.t("Make a Selection")}
-                </Text>
-              </View>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: 30,
-                alignContent: "space-between",
-              }}
-            >
-                           <View style={{ flexDirection: "column", alignContent: "center",alignItems:'center',justifyContent: "center", }}>
-                <Icon
-                  type="material-community"
-                  size={30}
-                  name="chip"
-                  color={"#fff"}
-                  containerStyle={{
-                    height: 55,
-                    width: 55,
-                    alignContent: "center",
-                    justifyContent: "center",
-                    backgroundColor: "rgba(116, 198, 190, 1)",
-                    borderRadius: 22,
-                  }}
-                  onPress={() => {
-                    setModalUpload(false);
-                    if (name.length < 1) {
-                      setisEditing(false);
-                      setVerified(false);
-                    } else {
-                      setVerified(true);
-                      Alert.alert(
-                        i18n.t("AI Image Generator"),
-                        i18n.t("Note: AI Image"),
-                        [
-                          {
-                            text: i18n.t("Cancel"),
-                            onPress: () => console.log("Cancel Pressed"),
-                            style: "destructive",
-                          },
-                          {
-                            text: i18n.t("Continue"),
-                            onPress: async () => {
-                              setTimeout(() => {
-                                setIsAI(true);
-                                AITexttoImage();
-                              }, 500);
+                  <Icon
+                    type="material-community"
+                    size={30}
+                    name="chip"
+                    color={"#fff"}
+                    containerStyle={{
+                      height: 55,
+                      width: 55,
+                      alignContent: "center",
+                      justifyContent: "center",
+                      backgroundColor: "rgba(116, 198, 190, 1)",
+                      borderRadius: 22,
+                    }}
+                    onPress={() => {
+                      setModalUpload(false);
+                      if (name.length < 1) {
+                        setisEditing(false);
+                        setVerified(false);
+                      } else {
+                        setVerified(true);
+                        Alert.alert(
+                          i18n.t("AI Image Generator"),
+                          i18n.t("Note: AI Image"),
+                          [
+                            {
+                              text: i18n.t("Cancel"),
+                              onPress: () => console.log("Cancel Pressed"),
+                              style: "destructive",
                             },
-                            style: "default",
-                          },
-                        ],
-                        { cancelable: false }
-                      );
-                    }
-                  }}
-                />
-                <Text
+                            {
+                              text: i18n.t("Continue"),
+                              onPress: async () => {
+                                setTimeout(() => {
+                                  setIsAI(true);
+                                  AITexttoImage();
+                                }, 500);
+                              },
+                              style: "default",
+                            },
+                          ],
+                          { cancelable: false }
+                        );
+                      }
+                    }}
+                  />
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      marginTop: 10,
+                    }}
+                  >
+                    {i18n.t("AI")}
+                  </Text>
+                </View>
+                <View
                   style={{
-                    textAlign: "center",
-                    marginTop: 10,
-                  }}
-                >
-                  {i18n.t("AI")}
-                </Text>
-              </View>
-                           <View style={{ flexDirection: "column", alignContent: "center",alignItems:'center',justifyContent: "center", }}>
-                <Icon
-                  type="material-community"
-                  size={30}
-                  name="image-outline"
-                  color={"#fff"}
-                  containerStyle={{
-                    height: 55,
-                    width: 55,
+                    flexDirection: "column",
                     alignContent: "center",
+                    alignItems: "center",
                     justifyContent: "center",
-                    backgroundColor: "rgba(250, 190, 0, 1)",
-                    borderRadius: 22,
-                  }}
-                  onPress={() => {
-                    setTimeout(() => {
-                      setIsAI(false);
-                      pickImage();
-                    }, 200);
-                    setModalUpload(false);
-                  }}
-                />
-                <Text
-                  style={{
-                    textAlign: "center",
-                    marginTop: 10,
                   }}
                 >
-                  {i18n.t("Gallery")}
-                </Text>
-              </View>
-                           <View style={{ flexDirection: "column", alignContent: "center",alignItems:'center',justifyContent: "center", }}>
-                <Icon
-                  type="material-community"
-                  size={30}
-                  name="camera-outline"
-                  color={"#fff"}
-                  containerStyle={{
-                    height: 55,
-                    width: 55,
+                  <Icon
+                    type="material-community"
+                    size={30}
+                    name="image-outline"
+                    color={"#fff"}
+                    containerStyle={{
+                      height: 55,
+                      width: 55,
+                      alignContent: "center",
+                      justifyContent: "center",
+                      backgroundColor: "rgba(250, 190, 0, 1)",
+                      borderRadius: 22,
+                    }}
+                    onPress={() => {
+                      setTimeout(() => {
+                        setIsAI(false);
+                        pickImage();
+                      }, 200);
+                      setModalUpload(false);
+                    }}
+                  />
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      marginTop: 10,
+                    }}
+                  >
+                    {i18n.t("Gallery")}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: "column",
                     alignContent: "center",
+                    alignItems: "center",
                     justifyContent: "center",
-                    backgroundColor: "#3D4849",
-                    borderRadius: 22,
-                  }}
-                  onPress={() => {
-                    setTimeout(() => {
-                      setIsAI(false);
-                      props.navigation.navigate("TempCameraPage", {
-                        title: String(name),
-                      });
-                    }, 200);
-                    setModalUpload(false);
-                  }}
-                />
-                <Text
-                  style={{
-                    textAlign: "center",
-                    marginTop: 10,
                   }}
                 >
-                  {i18n.t("Camera")}
-                </Text>
+                  <Icon
+                    type="material-community"
+                    size={30}
+                    name="camera-outline"
+                    color={"#fff"}
+                    containerStyle={{
+                      height: 55,
+                      width: 55,
+                      alignContent: "center",
+                      justifyContent: "center",
+                      backgroundColor: "#3D4849",
+                      borderRadius: 22,
+                    }}
+                    onPress={() => {
+                      setTimeout(() => {
+                        setIsAI(false);
+                        props.navigation.navigate("TempCameraPage", {
+                          title: String(name),
+                        });
+                      }, 200);
+                      setModalUpload(false);
+                    }}
+                  />
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      marginTop: 10,
+                    }}
+                  >
+                    {i18n.t("Camera")}
+                  </Text>
+                </View>
               </View>
             </View>
-          </View>
-          <TouchableOpacity
-            style={{
-              marginTop: 20,
-              flexDirection: "row",
-              width: 250,
-              backgroundColor: "rgba(234, 85, 4, 1)",
-              borderRadius: 8,
-              padding: 15,
-              alignItems: "center",
-              justifyContent: "center",
-              marginBottom: 20,
-            }}
-            onPress={() => {
-              setModalUpload(false);
-            }}
-          >
-            <Text
+            <TouchableOpacity
               style={{
-                textTransform: "uppercase",
-                fontSize: 20,
-                fontWeight: 600,
-                color: "#fff",
+                marginTop: 20,
+                flexDirection: "row",
+                width: 250,
+                backgroundColor: "rgba(234, 85, 4, 1)",
+                borderRadius: 8,
+                padding: 15,
+                alignItems: "center",
+                justifyContent: "center",
+                marginBottom: 20,
+              }}
+              onPress={() => {
+                setModalUpload(false);
               }}
             >
-              {i18n.t("Close")}
-            </Text>
-          </TouchableOpacity>
-        </View>
+              <Text
+                style={{
+                  textTransform: "uppercase",
+                  fontSize: 20,
+                  fontWeight: 600,
+                  color: "#fff",
+                }}
+              >
+                {i18n.t("Close")}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </TouchableWithoutFeedback>
       </Modal>
       <SafeAreaProvider>

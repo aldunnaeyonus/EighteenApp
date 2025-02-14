@@ -22,7 +22,7 @@ import { useToast } from "react-native-styled-toast";
 import * as i18n from "../../../i18n";
 import FriendListItem from "../SubViews/friends/friendsitem";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
-import { constants, SCREEN_WIDTH, SCREEN_HEIGHT} from "../../utils/constants";
+import { constants, SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
 import Progress from "react-native-progress";
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
@@ -30,7 +30,7 @@ const Image = createImageProgress(FastImage);
 import { useIsFocused } from "@react-navigation/native";
 import { ActivityIndicator, MD2Colors } from "react-native-paper";
 import Loading from "../SubViews/home/Loading";
-import { getLocales } from 'expo-localization';
+import { getLocales } from "expo-localization";
 
 const Friends = (props) => {
   const [cameraData] = useMMKVObject(
@@ -51,7 +51,7 @@ const Friends = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
   const { toast } = useToast();
   const [modalVisable, setmodalVisable] = useState(false);
-    const [modalActionVisable, setmodalActionVisable] = useState(false);
+  const [modalActionVisable, setmodalActionVisable] = useState(false);
   const [qrCodeURL] = useState(
     constants.url + "/friendQRCode.php?owner=" + props.route.params.userID
   );
@@ -91,7 +91,7 @@ const Friends = (props) => {
               pin: pin,
               title: title,
               type: "event",
-              locale: getLocales()[0].languageCode
+              locale: getLocales()[0].languageCode,
             };
             await axiosPull.postData("/camera/report.php", data);
             Alert.alert("", i18n.t("A report event"));
@@ -122,8 +122,7 @@ const Friends = (props) => {
               pin: "",
               title: "",
               type: "friend",
-              locale: getLocales()[0].languageCode
-
+              locale: getLocales()[0].languageCode,
             };
             await axiosPull.postData("/camera/report.php", data);
             Alert.alert("", i18n.t("A report"));
@@ -308,7 +307,7 @@ const Friends = (props) => {
                 name="popup"
                 size={30}
                 onPress={() => {
-                  setmodalActionVisable(true)
+                  setmodalActionVisable(true);
                 }}
                 color="#3D4849"
               />
@@ -365,7 +364,7 @@ const Friends = (props) => {
       <SafeAreaView
         style={{
           backgroundColor: "white",
-          height:SCREEN_HEIGHT,
+          height: SCREEN_HEIGHT,
           width: SCREEN_WIDTH,
         }}
         edges={["bottom", "left", "right"]}
@@ -435,270 +434,308 @@ const Friends = (props) => {
             }
           />
         </RefreshableWrapper>
-         <Modal
-        visible={modalActionVisable}
-        presentationStyle="pageSheet"
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => {setmodalActionVisable(false); }}
-      >
-                <TouchableWithoutFeedback onPressOut={() => setmodalActionVisable(false)}>
-        <View style={style.centeredView}>
-          <View style={style.modalView}>
-          <View
-              style={{
-                flexDirection: "column",
-                marginTop: -20,
-                marginBottom: 25,
-              }}
-            >
-              <View
+        <Modal
+          visible={modalActionVisable}
+          animationType="slide"
+          transparent={true}
+          onRequestClose={() => {
+            setmodalActionVisable(false);
+          }}
+        >
+          <TouchableWithoutFeedback
+            onPressOut={() => setmodalActionVisable(false)}
+          >
+            <View style={style.centeredView}>
+              <View style={style.modalView}>
+                <View
+                  style={{
+                    flexDirection: "column",
+                    marginTop: -20,
+                    marginBottom: 25,
+                  }}
+                >
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      gap: 30,
+                      alignContent: "space-between",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        textAlign: "center",
+                        fontSize: 20,
+                        fontWeight: 500,
+                      }}
+                    >
+                      {i18n.t("Make a Selection")}
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    alignContent: "space-between",
+                    width: "100%",
+                  }}
+                >
+                  <View
+                    style={{
+                      flexDirection: "column",
+                      alignContent: "center",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "50%",
+                    }}
+                  >
+                    <Icon
+                      type="material"
+                      size={30}
+                      name="report-gmailerrorred"
+                      color={"#fff"}
+                      containerStyle={{
+                        height: 55,
+                        width: 55,
+                        alignContent: "center",
+                        justifyContent: "center",
+                        backgroundColor: "rgba(116, 198, 190, 1)",
+                        borderRadius: 22,
+                      }}
+                      onPress={() => {
+                        setmodalActionVisable(false);
+                        _reportUser(props.route.params.userID);
+                      }}
+                    />
+                    <Text
+                      style={{
+                        textAlign: "center",
+                        marginTop: 10,
+                      }}
+                    >
+                      {i18n.t("Report Friend")}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: "column",
+                      alignContent: "center",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "50%",
+                    }}
+                  >
+                    <Icon
+                      type="antdesign"
+                      size={30}
+                      name="deleteuser"
+                      color={"#fff"}
+                      containerStyle={{
+                        height: 55,
+                        width: 55,
+                        alignContent: "center",
+                        justifyContent: "center",
+                        backgroundColor: "rgba(250, 190, 0, 1)",
+                        borderRadius: 22,
+                      }}
+                      onPress={() => {
+                        setmodalActionVisable(false);
+                        _deleteUser();
+                      }}
+                    />
+                    <Text
+                      style={{
+                        textAlign: "center",
+                        marginTop: 10,
+                      }}
+                    >
+                      {i18n.t("Delete Friend")}
+                    </Text>
+                  </View>
+                </View>
+
+                <View
+                  style={{
+                    flexDirection: "row",
+                    height: 25,
+                  }}
+                ></View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    alignContent: "space-between",
+                    width: "100%",
+                  }}
+                >
+                  <View
+                    style={{
+                      flexDirection: "column",
+                      alignContent: "center",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "50%",
+                    }}
+                  >
+                    <Icon
+                      type="material-community"
+                      size={30}
+                      name="qrcode"
+                      color={"#fff"}
+                      containerStyle={{
+                        height: 55,
+                        width: 55,
+                        alignContent: "center",
+                        justifyContent: "center",
+                        backgroundColor: "#3D4849",
+                        borderRadius: 22,
+                      }}
+                      onPress={() => {
+                        setmodalActionVisable(false);
+                        setTimeout(() => {
+                          setmodalVisable(true);
+                        }, 200);
+                      }}
+                    />
+                    <Text
+                      style={{
+                        textAlign: "center",
+                        marginTop: 10,
+                      }}
+                    >
+                      {i18n.t("QRCode")}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: "column",
+                      alignContent: "center",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "50%",
+                    }}
+                  >
+                    <Icon
+                      type="material-community"
+                      size={30}
+                      name="shield-account-variant-outline"
+                      color={"#fff"}
+                      containerStyle={{
+                        height: 55,
+                        width: 55,
+                        alignContent: "center",
+                        justifyContent: "center",
+                        backgroundColor: "#ea5504",
+                        borderRadius: 22,
+                      }}
+                      onPress={() => {
+                        setmodalActionVisable(false);
+                        props.navigation.navigate("About", {
+                          items: friendData,
+                        });
+                      }}
+                    />
+                    <Text
+                      style={{
+                        textAlign: "center",
+                        marginTop: 10,
+                      }}
+                    >
+                      {i18n.t("About")}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+              <TouchableOpacity
                 style={{
+                  marginTop: 20,
                   flexDirection: "row",
-                  justifyContent: "center",
+                  width: 250,
+                  backgroundColor: "rgba(234, 85, 4, 1)",
+                  borderRadius: 8,
+                  padding: 15,
                   alignItems: "center",
-                  gap: 30,
-                  alignContent: "space-between",
+                  justifyContent: "center",
+                  marginbottom: 20,
+                }}
+                onPress={() => {
+                  setmodalActionVisable(false);
                 }}
               >
                 <Text
                   style={{
-                    textAlign: "center",
+                    textTransform: "uppercase",
                     fontSize: 20,
-                    fontWeight: 500,
+                    fontWeight: 600,
+                    color: "#fff",
                   }}
                 >
-                  {i18n.t("Make a Selection")}
+                  {i18n.t("Close")}
                 </Text>
-              </View>
-              </View>
-             <View
-                           style={{
-                             flexDirection: "row",
-                             justifyContent: "center",
-                             alignItems: "center",
-                             alignContent: "space-between",
-                             width:'100%'
-                           }}
-                         >
-                           <View style={{ flexDirection: "column", alignContent: "center",alignItems:'center',justifyContent: "center", width:'50%'}}>
-                           <Icon
-                               type="material"
-                               size={30}
-                               name="report-gmailerrorred"
-                               color={"#fff"}
-                               containerStyle={{
-                                 height: 55,
-                                 width: 55,
-                                 alignContent: "center",
-                                 justifyContent: "center",
-                                 backgroundColor: "rgba(116, 198, 190, 1)",
-                                 borderRadius: 22,
-                               }}
-                               onPress={() => {
-                                setmodalActionVisable(false);
-                                _reportUser(props.route.params.userID);
-                               }}
-                             />
-                             <Text
-                               style={{
-                                 textAlign: "center",
-                                 marginTop: 10,
-                               }}
-                             >
-                               {i18n.t("Report Friend")}
-                             </Text>
-                           </View>
-                           <View style={{ flexDirection: "column", alignContent: "center",alignItems:'center',justifyContent: "center", width:'50%'}}>
-                             <Icon
-                               type="antdesign"
-                               size={30}
-                               name="deleteuser"
-                               color={"#fff"}
-                               containerStyle={{
-                                 height: 55,
-                                 width: 55,
-                                 alignContent: "center",
-                                 justifyContent: "center",
-                                 backgroundColor: "rgba(250, 190, 0, 1)",
-                                 borderRadius: 22,
-                               }}
-                               onPress={() => {
-                                setmodalActionVisable(false);
-                                _deleteUser();
-                               }}
-                             />
-                             <Text
-                               style={{
-                                 textAlign: "center",
-                                 marginTop: 10,
-                               }}
-                             >
-                               {i18n.t("Delete Friend")}
-                             </Text>
-                           </View>
-                           </View>
-                                                      
-                           <View
-                           style={{
-                             flexDirection: "row",
-                            height:25,
-                           }}
-                         ></View>
-                            <View
-                           style={{
-                             flexDirection: "row",
-                             justifyContent: "center",
-                             alignItems: "center",
-                             alignContent: "space-between",
-                             width:'100%'
-                           }}
-                         >
-                           <View style={{ flexDirection: "column", alignContent: "center",alignItems:'center',justifyContent: "center", width:'50%' }}>
-                           <Icon
-                               type="material-community"
-                               size={30}
-                               name="qrcode"
-                               color={"#fff"}
-                               containerStyle={{
-                                 height: 55,
-                                 width: 55,
-                                 alignContent: "center",
-                                 justifyContent: "center",
-                                 backgroundColor: "#3D4849",
-                                 borderRadius: 22,
-                               }}
-                               onPress={() => {
-                                setmodalActionVisable(false);
-                                setTimeout(() => {
-                                  setmodalVisable(true);
-                                }, 200);
-                               }}
-                             />
-                             <Text
-                               style={{
-                                 textAlign: "center",
-                                 marginTop: 10,
-                               }}
-                             >
-                               {i18n.t("QRCode")}
-                             </Text>
-                           </View>
-                           <View style={{ flexDirection: "column", alignContent: "center",alignItems:'center',justifyContent: "center", width:'50%'}}>
-                             <Icon
-                               type="material-community"
-                               size={30}
-                               name="shield-account-variant-outline"
-                               color={"#fff"}
-                               containerStyle={{
-                                 height: 55,
-                                 width: 55,
-                                 alignContent: "center",
-                                 justifyContent: "center",
-                                 backgroundColor: "#ea5504",
-                                 borderRadius: 22,
-                               }}
-                               onPress={() => {
-                                setmodalActionVisable(false);
-                                props.navigation.navigate("About", {
-                                  items: friendData,
-                                });
-                               }}
-                             />
-                             <Text
-                               style={{
-                                 textAlign: "center",
-                                 marginTop: 10,
-                               }}
-                             >
-                               {i18n.t("About")}
-                             </Text>
-                           </View>
-                         </View>
-          </View>
-          <TouchableOpacity
-            style={{
-              marginTop: 20,
-              flexDirection: "row",
-              width: 250,
-              backgroundColor: "rgba(234, 85, 4, 1)",
-              borderRadius: 8,
-              padding: 15,
-              alignItems: "center",
-              justifyContent: "center",
-              marginbottom: 20,
-            }}
-            onPress={() => { setmodalActionVisable(false); }}
-          >
-            <Text
-              style={{
-                textTransform: "uppercase",
-                fontSize: 20,
-                fontWeight: 600,
-                color: "#fff",
-              }}
-            >
-              {i18n.t("Close")}
-            </Text>
-          </TouchableOpacity>
-        </View>
-        </TouchableWithoutFeedback>
-      </Modal>
-              
-        <Modal 
-        visible={modalVisable} 
-        presentationStyle="pageSheet"
-        animationType="slide" 
-        transparent={true} 
-        onRequestClose={() => {setmodalVisable(false); }}        
-        >
-        <TouchableWithoutFeedback onPressOut={() => setmodalVisable(false)}>
-          <View style={style.centeredView}>
-            <View style={style.modalView}>
-              <Image
-                indicator={Progress}
-                style={{
-                  width: 300,
-                  height: 300,
-                  backgroundColor: "white",
-                  alignSelf: "auto",
-                }}
-                resizeMode={FastImage.resizeMode.contain}
-                source={{
-                  cache: FastImage.cacheControl.immutable,
-                  priority: FastImage.priority.high,
-                  uri: qrCodeURL,
-                }}
-              />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              style={{
-                marginTop: 20,
-                flexDirection: "row",
-                width: 250,
-                backgroundColor: "rgba(234, 85, 4, 1)",
-                borderRadius: 8,
-                padding: 15,
-                alignItems: "center",
-                justifyContent: "center",
-                marginBottom: 20,
-              }}
-              onPress={() => {
-                setmodalVisable(false);
-              }}
-            >
-              <Text
+          </TouchableWithoutFeedback>
+        </Modal>
+
+        <Modal
+          visible={modalVisable}
+          animationType="slide"
+          transparent={true}
+          onRequestClose={() => {
+            setmodalVisable(false);
+          }}
+        >
+          <TouchableWithoutFeedback onPressOut={() => setmodalVisable(false)}>
+            <View style={style.centeredView}>
+              <View style={style.modalView}>
+                <Image
+                  indicator={Progress}
+                  style={{
+                    width: 300,
+                    height: 300,
+                    backgroundColor: "white",
+                    alignSelf: "auto",
+                  }}
+                  resizeMode={FastImage.resizeMode.contain}
+                  source={{
+                    cache: FastImage.cacheControl.immutable,
+                    priority: FastImage.priority.high,
+                    uri: qrCodeURL,
+                  }}
+                />
+              </View>
+              <TouchableOpacity
                 style={{
-                  textTransform: "uppercase",
-                  fontSize: 20,
-                  fontWeight: 600,
-                  color: "#fff",
+                  marginTop: 20,
+                  flexDirection: "row",
+                  width: 250,
+                  backgroundColor: "rgba(234, 85, 4, 1)",
+                  borderRadius: 8,
+                  padding: 15,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginBottom: 20,
+                }}
+                onPress={() => {
+                  setmodalVisable(false);
                 }}
               >
-                {i18n.t("Close")}
-              </Text>
-            </TouchableOpacity>
-          </View>
+                <Text
+                  style={{
+                    textTransform: "uppercase",
+                    fontSize: 20,
+                    fontWeight: 600,
+                    color: "#fff",
+                  }}
+                >
+                  {i18n.t("Close")}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </TouchableWithoutFeedback>
         </Modal>
       </SafeAreaView>
