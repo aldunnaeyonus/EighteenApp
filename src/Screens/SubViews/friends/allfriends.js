@@ -47,8 +47,8 @@ const AllFriendsListItem = (props) => {
             <View style={{ position: "absolute" }}>
               <View
                 style={{
-                  marginTop: 50,
-                  marginLeft: 50,
+                  marginTop: 37,
+                  marginLeft: 37,
                   backgroundColor: "transparent",
                   width: 20,
                   height: 20,
