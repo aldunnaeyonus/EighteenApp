@@ -1,5 +1,6 @@
 import {
   StyleSheet,
+  Share,
   View,
   Alert,
   Text,
@@ -239,31 +240,74 @@ Language Code: ${getLocales()[0].languageCode}`,
                 }}
               />
             </View>
-            <TouchableOpacity
-              style={{
-                width: SCREEN_WIDTH - 100,
-                marginRight: 10,
-                marginLeft: 10,
-                marginTop: 25,
-                backgroundColor: "rgba(234, 85, 4, 1)",
-                borderRadius: 8,
-                padding: 15,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-              onPress={() => setmodalVisable(false)}
-            >
-              <Text
-                style={{
-                  textTransform: "uppercase",
-                  fontSize: 20,
-                  fontWeight: 600,
-                  color: "#fff",
-                }}
-              >
-                {i18n.t("Close")}
-              </Text>
-            </TouchableOpacity>
+            <View
+                          style={{
+                            flexDirection: "row",
+                            width: SCREEN_WIDTH,
+                            margin: 20,
+                            justifyContent: "center",
+                          }}
+                        >
+                          <TouchableOpacity
+                            style={{
+                              width: "40%",
+                              marginRight: 10,
+                              backgroundColor: "rgba(234, 85, 4, 1))",
+                              borderRadius: 8,
+                              padding: 15,
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                            onPress={() => {
+                              setmodalVisable(false);
+                            }}
+                          >
+                            <Text
+                              style={{
+                                textTransform: "uppercase",
+                                fontSize: 20,
+                                fontWeight: 600,
+                                color: "#fff",
+                              }}
+                            >
+                              {i18n.t("Close")}
+                            </Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            style={{
+                              width: "40%",
+                              marginLeft: 10,
+                              backgroundColor: "rgba(116, 198, 190, 1)",
+                              borderRadius: 8,
+                              padding: 15,
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                            onPress={async () => {
+                               try {
+                                     const ShareResponse = await Share.share({
+                                           title: i18n.t("FriendCode"),
+                                           url: constants.url + "/friend.php?user=" + user.user_id,
+                                           message: i18n.t("FriendCodeMessage"),
+                                         });
+                                     console.log("Result =>", ShareResponse);
+                                   } catch (error) {
+                                     console.log("Error =>", error);
+                                   }
+                            }}
+                          >
+                            <Text
+                              style={{
+                                textTransform: "uppercase",
+                                fontSize: 20,
+                                fontWeight: 600,
+                                color: "#fff",
+                              }}
+                            >
+                              {i18n.t("Share")}
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
           </View>
         </TouchableWithoutFeedback>
       </Modal>
@@ -633,32 +677,6 @@ Language Code: ${getLocales()[0].languageCode}`,
             />
             <ListItem.Content>
               <ListItem.Title>{i18n.t("Terms & Use")}</ListItem.Title>
-            </ListItem.Content>
-            <ListItem.Chevron />
-          </ListItem>
-          <View style={[styles.dividerTableStyleShort]} />
-          <ListItem
-            containerStyle={{ paddingVertical: 5 }}
-            key="8"
-            onPress={() => {
-              faq();
-            }}
-          >
-            <Icon
-              type="material"
-              name="info-outline"
-              size={20}
-              color="#3D4849"
-              containerStyle={{
-                width: 28,
-                height: 28,
-                borderRadius: 6,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            />
-            <ListItem.Content>
-              <ListItem.Title>{i18n.t("FAQs")}</ListItem.Title>
             </ListItem.Content>
             <ListItem.Chevron />
           </ListItem>

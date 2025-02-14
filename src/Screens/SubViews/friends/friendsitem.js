@@ -69,15 +69,9 @@ const FriendListItem = (props) => {
 
   return (
     <SafeAreaView key={props.item.item.UUID} style={style.listItem}>
-      <View
-        key={props}
-        style={{
-          height: 350,
-          width: SCREEN_WIDTH,
-        }}
-      >
          <Pressable 
                     onPress={()=> {
+                      if (props.item.item.start < moment().unix()){
                       props._gotoMedia(
                         props.item.item.pin,
                         props.item.item.title,
@@ -89,7 +83,16 @@ const FriendListItem = (props) => {
                         props.item.item.camera_add_social,
                         props.item.item.illustration
                       )
+                    }
                   }}>
+      <View
+        key={props}
+        style={{
+          height: 350,
+          width: SCREEN_WIDTH,
+        }}
+      >
+      
         <Image
           indicator={Progress}
           style={{
@@ -102,7 +105,7 @@ const FriendListItem = (props) => {
             cache: FastImage.cacheControl.immutable,
             uri: props.item.item.illustration,
           }}
-        /></Pressable>
+        />
         <View
           style={{
             position: "absolute",
@@ -470,6 +473,7 @@ const FriendListItem = (props) => {
           </Text>
         </View>
       </View>
+      </Pressable>
     </SafeAreaView>
   );
 };

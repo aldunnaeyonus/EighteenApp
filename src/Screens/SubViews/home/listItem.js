@@ -76,14 +76,7 @@ const ListItem = (props) => {
       style={style.listItem}
       edges={["right", "bottom", "left"]}
     >
-      <View
-        key={props}
-        style={{
-          height: 350,
-          width: SCREEN_WIDTH,
-        }}
-      >
-         <Pressable 
+       <Pressable 
             onPress={()=> {
            props._gotoMedia(
                 props.item.item.pin,
@@ -97,6 +90,14 @@ const ListItem = (props) => {
                 props.item.item.illustration
               )
           }}>
+      <View
+        key={props}
+        style={{
+          height: 350,
+          width: SCREEN_WIDTH,
+        }}
+      >
+        
         <Image
           indicator={Progress}
           style={{
@@ -109,7 +110,8 @@ const ListItem = (props) => {
             cache: FastImage.cacheControl.immutable,
             uri: props.item.item.illustration,
           }}
-        /></Pressable>
+        />
+       
         <View
           style={{
             position: "absolute",
@@ -502,6 +504,7 @@ const ListItem = (props) => {
           </Text>
         </View>
       </View>
+      </Pressable>
     </SafeAreaProvider>
   );
 };
