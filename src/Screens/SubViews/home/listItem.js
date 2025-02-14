@@ -76,7 +76,15 @@ const ListItem = (props) => {
       style={style.listItem}
       edges={["right", "bottom", "left"]}
     >
-       <Pressable 
+     
+      <View
+        key={props}
+        style={{
+          height: 350,
+          width: SCREEN_WIDTH,
+        }}
+      >
+          <Pressable 
             onPress={()=> {
            props._gotoMedia(
                 props.item.item.pin,
@@ -90,14 +98,6 @@ const ListItem = (props) => {
                 props.item.item.illustration
               )
           }}>
-      <View
-        key={props}
-        style={{
-          height: 350,
-          width: SCREEN_WIDTH,
-        }}
-      >
-        
         <Image
           indicator={Progress}
           style={{
@@ -111,7 +111,7 @@ const ListItem = (props) => {
             uri: props.item.item.illustration,
           }}
         />
-       
+       </Pressable>
         <View
           style={{
             position: "absolute",
@@ -190,7 +190,7 @@ const ListItem = (props) => {
                           </View>
                               </Pressable>
                         </View>
-        <View style={styles.imageUserNameContainer}>
+        <View style={styles.imageUserNameContainers}>
           <MenuView
             key={props.item.item.UUID}
             index={props.item.index}
@@ -504,7 +504,6 @@ const ListItem = (props) => {
           </Text>
         </View>
       </View>
-      </Pressable>
     </SafeAreaProvider>
   );
 };

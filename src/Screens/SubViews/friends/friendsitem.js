@@ -145,7 +145,7 @@ const FriendListItem = (props) => {
         </View>
         {props.item.item.subscribed == "1" ? (
           <View
-            style={styles.imageUserNameContainer}
+            style={styles.imageUserNameContainers}
             pointerEvents={
               props.item.item.end >= moment().unix() ? "auto" : "none"
             }

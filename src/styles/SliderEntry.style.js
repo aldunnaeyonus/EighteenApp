@@ -135,6 +135,15 @@ export default StyleSheet.create({
         backgroundColor: 'transparent',
         width: SCREEN_WIDTH,
     },
+    imageUserNameContainers: {
+      position: 'absolute',
+      overflow:'hidden',
+      right:5,
+      flexDirection: "column",
+      justifyContent: 'flex-end',
+      backgroundColor: 'transparent',
+      width: 60,
+  },
     imageUserNameTitleBlack: {
         fontFamily: 'HelveticaNeue-Medium',
         fontSize: 18,
