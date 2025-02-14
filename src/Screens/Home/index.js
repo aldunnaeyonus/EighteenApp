@@ -61,7 +61,8 @@ const Home = (props) => {
   const device = useCameraDevice("back");
   const [isBarcodeScannerEnabled, setisBarcodeScannerEnabled] = useState(true);
   const { hasPermission, requestPermission } = useCameraPermission();
-
+  let shareOptions = { title: "", url: "", message: "" };
+  let shareOptionsGallery =  { title: "", url: "", message: "" };
   const codeScanner = useCodeScanner({
     codeTypes: ["qr"],
     onCodeScanned: async (codes) => {
@@ -201,19 +202,17 @@ const Home = (props) => {
   };
 
   const _gotoShare = async (pin, time, owner, title) => {
+    shareOptions = {
+      title: title,
+      url:constants.url +"/link.php?pin=" +pin +"." +time +"." +owner,
+      message: i18n.t("Join my Snap Eighteen Event") + " " + title,
+    };
+    shareOptionsGallery = {
+      title: title,
+      url: constants.url + "/gallery/index.php?pin=" + pin,
+      message: i18n.t("ViewLiveGallery"),
+    };
     if (user.isPro == "0"){ 
-       const shareOptions = {
-                  title: title,
-                  url:
-                    constants.url +
-                    "/link.php?pin=" +
-                    pin +
-                    "." +
-                    time +
-                    "." +
-                    owner,
-                  message: i18n.t("Join my Snap Eighteen Event") + " " + title,
-                };
 
                 try {
                   const ShareResponse = await Share.share(shareOptions);
@@ -480,7 +479,7 @@ const Home = (props) => {
       <TouchableWithoutFeedback onPressOut={() => setModalShareVisable(false)}>
         
         <View style={style.centeredView}>
-          <View style={style.qrmodalView}>
+          <View style={style.modalView}>
           <View
               style={{
                 flexDirection: "column",
@@ -517,7 +516,7 @@ const Home = (props) => {
                 alignContent: "space-between",
               }}
             >
-                           <View style={{ flexDirection: "column", alignContent: "center",alignItems:'center',justifyContent: "center", }}>
+                <View style={{ flexDirection: "column", alignContent: "center",alignItems:'center',justifyContent: "center", }}>
                 <Icon
                   type="material-community"
                   size={30}
@@ -532,13 +531,9 @@ const Home = (props) => {
                     borderRadius: 22,
                   }}
                   onPress={async() => {
-                    const shareOptions = {
-                      title: title,
-                      url: constants.url + "/gallery/index.php?pin=" + pin,
-                      message: i18n.t("ViewLiveGallery"),
-                    };
+                    setModalShareVisable(false)
                     try {
-                      const ShareResponse = await Share.share(shareOptions);
+                      const ShareResponse = await Share.share(shareOptionsGallery);
                       console.log("Result =>", ShareResponse);
                     } catch (error) {
                       console.log("Error =>", error);
@@ -554,7 +549,7 @@ const Home = (props) => {
                   {i18n.t("OnlineGallery")}
                 </Text>
               </View>
-                           <View style={{ flexDirection: "column", alignContent: "center",alignItems:'center',justifyContent: "center", }}>
+                 <View style={{ flexDirection: "column", alignContent: "center",alignItems:'center',justifyContent: "center", }}>
                 <Icon
                   type="material"
                   size={30}
@@ -568,20 +563,8 @@ const Home = (props) => {
                     backgroundColor: "#ea5504",
                     borderRadius: 22,
                   }}
-                  onPress={async() => {
-                    const shareOptions = {
-                      title: title,
-                      url:
-                         constants.url +
-                    "/link.php?pin=" +
-                    pin +
-                    "." +
-                    time +
-                    "." +
-                    owner,
-                      message: i18n.t("Join my Snap Eighteen Event") + " " + title,
-                    };
-    
+                  onPress={async () => {
+                    setModalShareVisable(false)
                     try {
                       const ShareResponse = await Share.share(shareOptions);
                       console.log("Result =>", ShareResponse);
