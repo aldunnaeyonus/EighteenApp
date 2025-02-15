@@ -1051,6 +1051,7 @@ const style = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: 'lightgrey',
     marginBottom: 8,
+    opacity:0.6
   },
   empty: {
     flexGrow: 1,

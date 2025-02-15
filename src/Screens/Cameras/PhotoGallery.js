@@ -403,14 +403,20 @@ const postConclusion = async () => {
             </>
           }
           ListEmptyComponent={
+            <View style={style.empty}>
+              <View style={style.fake}>
+                <View style={style.fakeSquare} />
+                <View style={style.fakeSquare} />
+                <View style={style.fakeSquare} />
+            </View>
+
             <EmptyStateView
-              imageSource={require("../../../assets/2802783.png")}
-              imageStyle={style.imageStyle}
               headerText={props.route.params.title.toUpperCase()}
               subHeaderText={i18n.t("A gallery")}
               headerTextStyle={style.headerTextStyle}
               subHeaderTextStyle={style.subHeaderTextStyle}
             />
+            </View>
           }
           ref={photo}
           style={{ backgroundColor: "white", marginTop: 0 }}
@@ -638,5 +644,42 @@ const style = StyleSheet.create({
     marginBottom: 15,
     textAlign: "center",
   },
+    /** Fake */
+    fake: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: 24,
+      opacity:0.4
+    },
+    fakeCircle: {
+      width: 44,
+      height: 44,
+      borderRadius: 9999,
+      backgroundColor: '#e8e9ed',
+      marginRight: 16,
+    },
+    fakeSquare: {
+      width: 100,
+      height: 100,
+      margin:10,
+      backgroundColor: '#e8e9ed',
+      borderRadius: 0,
+    },
+    fakeLine: {
+      width: 200,
+      height: 10,
+      borderRadius: 4,
+      backgroundColor: 'lightgrey',
+      marginBottom: 8,
+    },
+    empty: {
+      flexGrow: 1,
+      flexShrink: 1,
+      flexBasis: 0,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: 50,
+    },
 });
 export default PhotoGallery;
