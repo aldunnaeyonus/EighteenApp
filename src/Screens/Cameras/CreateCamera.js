@@ -432,6 +432,7 @@ const CreateCamera = (props) => {
       image,
       uploading
     );
+    
     if (parseInt(start) >= moment().unix()) {
       notification.scheduleNotif(
         String(name),

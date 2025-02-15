@@ -12,19 +12,18 @@ import { constants, SCREEN_WIDTH } from "../../utils/constants";
 import { useMMKVObject } from "react-native-mmkv";
 import * as ImagePicker from "expo-image-picker";
 import FormData from "form-data";
-import { storage } from "../../context/components/Storage";
-import { handleUpload } from "../SubViews/upload";
+import { storage, updateStorage } from "../../context/components/Storage";
 import * as i18n from "../../../i18n";
 import { ActivityIndicator } from "react-native-paper";
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
 const Image = createImageProgress(FastImage);
 import Progress from "react-native-progress";
+import axios from "axios";
 
 const ChangeData = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
   const [cameraStatus] = ImagePicker.useCameraPermissions()
-  const [uploading] = useMMKVObject("uploadData", storage);
   const [avatars, setAvatars] = useState([]);
 
   const pullData=async ()=> {
@@ -65,34 +64,44 @@ const ChangeData = (props) => {
         type: constants.mimes(icon.split(".").pop()), // set MIME type
         uri: Platform.OS === "android" ? icon : icon.replace("file://", ""),
       });
-      handleUpload(
-        constants.url + "/avatars/fetch.php",
-        formData,
-        user.user_id,
-        "avatar",
-        "pin",
-        "",
-        i18n.t("ProfilePic") + " " + i18n.t("PleaseWait"),
-        icon,
-        uploading
-      );
-    } else {
+    } else{
       formData.append("avatar", String(icon));
-      handleUpload(
-        constants.url + "/avatars/fetch.php",
-        formData,
-        user.user_id,
-        "avatar",
-        "pin",
-        "",
-        i18n.t("ProfilePic") + " " + i18n.t("PleaseWait"),
-        constants.url+"/avatars/"+icon,
-        uploading
-      );
     }
 
-    
-    props.navigation.goBack();
+  const postConclusion = async () => {
+    await axios({
+      method: "POST",
+      url: constants.url + "/avatars/fetch.php",
+      data: formData,
+      headers: {
+        Accept: "application/json",
+        "content-Type": "multipart/form-data",
+      },
+    }).then(async (res) => {
+      updateStorage(user, 'user_avatar', (types == "1") ? String("SNAP18-avatar-" + user.user_id + "-" + icon.split("/").pop()) : icon, 'user.Data')
+      props.navigation.setOptions({
+        headerRight: () => (
+         <></>
+        ),
+      });
+      await axiosPull._pullUser(user, "Upload");
+    });
+  }
+  postConclusion();
+/*
+
+      handleUpload(
+        constants.url + "/avatars/fetch.php",
+        formData,
+        user.user_id,
+        "avatar",
+        "pin",
+        "",
+        i18n.t("ProfilePic") + " " + i18n.t("PleaseWait"),
+        types == "1" ? icon : constants.url+"/avatars/"+icon,
+        uploading
+      );
+    */
   };
 
   const pickImage = async () => {

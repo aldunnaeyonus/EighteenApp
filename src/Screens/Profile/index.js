@@ -43,35 +43,17 @@ const Profile = (props) => {
   const [upload] = useMMKVObject("uploadData", storage);
   const [version, setVersion] = useState("0");
 
-  const clearCache = useCallback(() => {
-    const cacheDir = RNFS.CachesDirectoryPath;
-    Alert.alert(
-      i18n.t("Delete Account"),
-      i18n.t("Are you sure"),
-      [
-        {
-          text: i18n.t("Cancel"),
-          onPress: () => console.log("Cancel Pressed"),
-          style: "default",
-        },
-        {
-          text: i18n.t("Clear"),
-          onPress: async () => {
-            try {
-              await RNFS.unlink(cacheDir);
-              console.log("Cache cleared successfully.");
-            } catch (error) {
-              console.error("Error clearing cache:", error);
-            }
-            FastImage.clearMemoryCache();
-            FastImage.clearDiskCache();
-          },
-          style: "destructive",
-        },
-      ],
-      { cancelable: false }
-    );
-  }, []);
+  const clearCache = (async () => {
+    Alert.alert(i18n.t("CacheCleared"))
+
+    try {
+      FastImage.clearMemoryCache();
+      FastImage.clearDiskCache();
+    } catch (error) {
+      console.error("Error clearing cache:", error);
+    }
+
+  });
 
   const logout = useCallback(() => {
     const execute = async () => {
@@ -545,6 +527,33 @@ Language Code: ${getLocales()[0].languageCode}`,
               </ListItem.Content>
               <ListItem.Chevron />
             </ListItem>
+            <View style={[styles.dividerTableStyleShort]} />
+
+            <ListItem
+              containerStyle={{ paddingVertical: 5 }}
+              key="25"
+              onPress={() => {
+                clearCache();
+              }}
+            >
+              <Icon
+                type="material"
+                name="cached"
+                size={20}
+                color="#3D4849"
+                containerStyle={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: 6,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              />
+              <ListItem.Content>
+                <ListItem.Title>{i18n.t("ClearCache")}</ListItem.Title>
+              </ListItem.Content>
+              <ListItem.Chevron />
+            </ListItem>
             <View style={[styles.dividerTableStyle]} />
             <ListItem
               containerStyle={{ paddingVertical: 5 }}
@@ -598,33 +607,7 @@ Language Code: ${getLocales()[0].languageCode}`,
               </ListItem.Content>
               <ListItem.Chevron />
             </ListItem>
-            <View style={[styles.dividerTableStyleShort]} />
-
-            <ListItem
-              containerStyle={{ paddingVertical: 5 }}
-              key="25"
-              onPress={() => {
-                clearCache();
-              }}
-            >
-              <Icon
-                type="material"
-                name="cached"
-                size={20}
-                color="#3D4849"
-                containerStyle={{
-                  width: 28,
-                  height: 28,
-                  borderRadius: 6,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              />
-              <ListItem.Content>
-                <ListItem.Title>{i18n.t("ClearCache")}</ListItem.Title>
-              </ListItem.Content>
-              <ListItem.Chevron />
-            </ListItem>
+            
             <View style={[styles.dividerTableStyle]} />
           </View>
           <InfoText text={i18n.t("Policies")} />

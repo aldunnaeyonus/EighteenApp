@@ -138,7 +138,7 @@ const MediaPage = (props: {
       "camera",
       props.route.params.pin,
       props.route.params.owner,
-      i18n.t("Uploading") + " " + i18n.t("PleaseWait"),
+      i18n.t("Uploading2"),
       source.uri,
       uploading
     );

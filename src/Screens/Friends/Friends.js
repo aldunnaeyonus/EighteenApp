@@ -388,14 +388,43 @@ const Friends = (props) => {
             scrollEventThrottle={16}
             ListEmptyComponent={
               isFriend == "1" && (
-                <EmptyStateView
-                  headerText={""}
-                  imageSource={require("../../../assets/friend.png")}
-                  imageStyle={style.imageStyle}
-                  subHeaderText={i18n.t("A gallery")}
-                  headerTextStyle={style.headerTextStyle}
-                  subHeaderTextStyle={style.subHeaderTextStyle}
-                />
+                  <View style={style.empty}>
+                    <View style={style.fake}>
+                      <View style={style.fakeSquare} >
+                      <Image
+                              source={require("../../../assets/elementor-placeholder-image.png")}
+                              resizeMode={FastImage.resizeMode.cover}
+                              style={{
+                                position: "absolute",
+                                height: 175,
+                                width: SCREEN_WIDTH - 150,
+                                borderRadius: 10,
+                                overflow: "hidden",
+                              }}
+                            />
+                        </View>
+                      <View
+                      style={[
+                        style.fakeLine,
+                        { width: SCREEN_WIDTH - 150, height:40, marginBottom: 0, position: "absolute", bottom:0, },
+                      ]} />
+                       <View
+                      style={[
+                        style.fakeLine,
+                        { width:30, height:120, marginBottom: 0, position: "absolute", top:8, right:5 },
+                      ]} />
+                     <View
+                      style={[
+                        style.fakeLine,
+                        { width:150, height:20, marginBottom: 0, position: "absolute", bottom:10, left:5, backgroundColor: '#e8e9ed', },
+                      ]} />
+                  </View>
+                  <EmptyStateView
+                      headerText={""}
+                      subHeaderText={i18n.t("A gallery")}
+                      headerTextStyle={style.headerTextStyle}
+                      subHeaderTextStyle={style.subHeaderTextStyle} />
+                  </View>
               )
             }
             ListHeaderComponent={
@@ -790,6 +819,42 @@ const style = StyleSheet.create({
     shadowRadius: 4,
     elevation: 7,
   },
+    /** Fake */
+    fake: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: 24,
+      opacity:0.4
+    },
+    fakeCircle: {
+      width: 44,
+      height: 44,
+      borderRadius: 9999,
+      backgroundColor: '#e8e9ed',
+      marginRight: 16,
+    },
+    fakeSquare: {
+      width: SCREEN_WIDTH - 150,
+      height: 175,
+      backgroundColor: '#e8e9ed',
+      borderRadius: 10,
+    },
+    fakeLine: {
+      width: 200,
+      height: 10,
+      borderRadius: 4,
+      backgroundColor: 'lightgrey',
+      marginBottom: 8,
+    },
+    empty: {
+      flexGrow: 1,
+      flexShrink: 1,
+      flexBasis: 0,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: 50,
+    },
 });
 
 export default Friends;

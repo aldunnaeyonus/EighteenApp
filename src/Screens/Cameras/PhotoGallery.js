@@ -33,6 +33,9 @@ const stickers = [];
 import Loading from "../SubViews/home/Loading";
 import { getLocales } from "expo-localization";
 import { useCameraPermission } from "react-native-vision-camera";
+import axios from "axios";
+
+
 const PhotoGallery = (props) => {
   const [filteredDataSource] = useMMKVObject(
     `user.Gallery.Friend.Feed.${props.route.params.pin}`,
@@ -48,9 +51,7 @@ const PhotoGallery = (props) => {
       : props.route.params.credits
   );
   const { hasPermission, requestPermission } = useCameraPermission();
-  const [cameraStatus, requestCameraPermission] =
-    ImagePicker.useCameraPermissions();
-
+  const [cameraStatus] = ImagePicker.useCameraPermissions();
   const [modalUpload, setModalUpload] = useState(false);
   const { toast } = useToast();
   const [cameraData] = useMMKVObject(
@@ -84,6 +85,7 @@ const PhotoGallery = (props) => {
       });
     });
 
+  if (pickedImages.length > 1){
     handleUpload(
       constants.url + "/camera/upload.php",
       formData,
@@ -91,22 +93,42 @@ const PhotoGallery = (props) => {
       "gallery",
       props.route.params.pin,
       props.route.params.owner,
-      i18n.t("Uploading") + " " + i18n.t("PleaseWait"),
+      i18n.t("Uploading2"),
       pickedImages[0],
       uploading
     );
+  }else{
+    storage.set("uploadData", JSON.stringify({"message": i18n.t("Uploading") + " " + i18n.t("PleaseWait"), "display":"flex", "image":pickedImages[0]}));
+const postConclusion = async () => {
+    await axios({
+      method: "POST",
+      url: constants.url + "/camera/upload.php",
+      data: formData,
+      headers: {
+        Accept: "application/json",
+        "content-Type": "multipart/form-data",
+      },
+    }).then(async (res) => {
+      storage.set("uploadData", JSON.stringify({"message": "", "display":"none", "image":""}));
+      await axiosPull._pullGalleryFeed(props.route.params.pin);
+      await axiosPull._pullFriendCameraFeed(props.route.params.owner, "user", props.route.params.user);
+      await axiosPull._pullCameraFeed(props.route.params.user, "owner");
+    });
+  }
 
-    setCredits(parseInt(credits) - pickedImages.length);
-    if (props.route.params.owner != props.route.params.user) {
-      updateItemFeed(
-        JSON.stringify(cameraData),
-        props.route.params.pin,
-        String(parseInt(credits) - pickedImages.length),
-        `user.Camera.Friend.Feed.${props.route.params.owner}`,
-        "1"
-      );
-    }
+  postConclusion();
+  }
 
+  setCredits(parseInt(credits) - pickedImages.length);
+  if (props.route.params.owner != props.route.params.user) {
+    updateItemFeed(
+      JSON.stringify(cameraData),
+      props.route.params.pin,
+      String(parseInt(credits) - pickedImages.length),
+      `user.Camera.Friend.Feed.${props.route.params.owner}`,
+      "1"
+    );
+  }
     setPickedImages([]);
   };
 
