@@ -327,14 +327,24 @@ const ClosedCameras = (props) => {
         <AnimatedFlatList
           extraData={filteredDataSource}
           ListEmptyComponent={
+       <View style={styles.empty}>
+              <View style={styles.fake}>
+                <View style={styles.fakeSquare} />
+                <View>
+                <View style={styles.fakeLine} />
+                <View style={styles.fakeLine} />
+
+            </View>
+            </View>
             <EmptyStateView
-              imageSource={require("../../../assets/4320872.png")}
-              imageStyle={styles.imageStyle}
               headerText={i18n.t("Download Media")}
               subHeaderText={i18n.t("Ended")}
               headerTextStyle={styles.headerTextStyle}
               subHeaderTextStyle={styles.subHeaderTextStyle}
             />
+            </View>
+
+
           }
           style={{ flex: 1 }}
           data={filteredDataSource}
@@ -432,5 +442,35 @@ const styles = StyleSheet.create({
     marginLeft: -5,
     justifyContent: "center",
   },
+      /** Fake */
+      fake: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: 24,
+        opacity:0.4
+      },
+      fakeSquare: {
+        width: 75,
+        height: 75,
+        margin:10,
+        backgroundColor: '#e8e9ed',
+        borderRadius: 0,
+      },
+      fakeLine: {
+        width: 200,
+        height: 15,
+        borderRadius: 4,
+        backgroundColor: '#e8e9ed',
+        marginBottom: 8,
+      },
+      empty: {
+        flexGrow: 1,
+        flexShrink: 1,
+        flexBasis: 0,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 50,
+      },
 });
 export default ClosedCameras;
