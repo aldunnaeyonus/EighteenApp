@@ -155,6 +155,7 @@ const Friends = (props) => {
   };
 
   const addMember = async () => {
+    if (props.route.params.userID != user.user_id){
     const data = { user: props.route.params.userID, owner: user.user_id };
     await axiosPull.postData("/users/add.php", data);
     await axiosPull._pullFriendCameraFeed(
@@ -167,6 +168,7 @@ const Friends = (props) => {
     setisFriend(results[0]["response"]);
     Alert.alert(i18n.t("SnapEighteen"), i18n.t("FreiendsNow"));
     await axiosPull._pullFriendFeed(props.route.params.userID);
+  }
   };
 
   const deleteMember = async () => {
@@ -300,7 +302,9 @@ const Friends = (props) => {
                 }}
                 color="#3D4849"
               />
-            ) : isFriend == "1" ? (
+            ) :
+            props.route.params.userID == user.user_id ? <></> : 
+              isFriend == "1" ? (
               <Icon
                 containerStyle={{ marginLeft: 5 }}
                 type="material"
