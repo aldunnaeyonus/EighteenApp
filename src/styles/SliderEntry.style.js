@@ -45,7 +45,7 @@ export default StyleSheet.create({
         alignItems: "center",
       },
       modalView: {
-        width: "70%",
+        width: "80%",
         backgroundColor: "white",
         borderRadius: 20,
         padding: 35,

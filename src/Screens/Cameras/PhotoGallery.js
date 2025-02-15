@@ -468,7 +468,7 @@ const postConclusion = async () => {
                     flexDirection: "row",
                     justifyContent: "center",
                     alignItems: "center",
-                    gap: 30,
+                    gap: 70,
                     alignContent: "space-between",
                   }}
                 >
@@ -603,7 +603,7 @@ const style = StyleSheet.create({
     resizeMode: "contain",
   },
   subHeaderTextStyle: {
-    fontSize: 12,
+    fontSize: 13,
     color: "rgb(147, 147, 147)",
     paddingHorizontal: 60,
     textAlign: "center",

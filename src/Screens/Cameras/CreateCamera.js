@@ -488,7 +488,7 @@ const CreateCamera = (props) => {
                     flexDirection: "row",
                     justifyContent: "center",
                     alignItems: "center",
-                    gap: 30,
+                    gap: 70,
                     alignContent: "space-between",
                   }}
                 >
@@ -508,7 +508,7 @@ const CreateCamera = (props) => {
                   flexDirection: "row",
                   justifyContent: "center",
                   alignItems: "center",
-                  gap: 30,
+                  gap: 50,
                   alignContent: "space-between",
                 }}
               >

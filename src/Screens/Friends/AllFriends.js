@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
 import "moment-duration-format";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -108,7 +108,6 @@ const AllFriends = (props) => {
           data={search.length > 0 ? friendDataTemp : friendData}
           extraData={search.length > 0 ? friendDataTemp : friendData}
           scrollEventThrottle={16}
-          EmptyStateView={<></>}
           ListHeaderComponent={
             <SearchBar
               inputContainerStyle={{ backgroundColor: "white" }}
@@ -122,14 +121,23 @@ const AllFriends = (props) => {
             />
           }
           ListEmptyComponent={
+            <View style={style.empty}>
+            <View style={style.fake}>
+              <View style={style.fakeCircle} />
+              <View
+              style={[
+                style.fakeLine,
+                { width: 150, height:20, marginBottom: 0, bottom:0, },
+              ]} />
+              
+          </View>
             <EmptyStateView
-              imageSource={require("../../../assets/6960670.png")}
-              imageStyle={{ width: 300, height: 200 }}
               headerText={i18n.t("Friends List")}
-              subHeaderText={i18n.t("Snap Eighteen Friends")}
+              subHeaderText={search.length > 0 ? i18n.t("SeachEmpty") : i18n.t("Snap Eighteen Friends")}
               headerTextStyle={style.headerTextStyle}
               subHeaderTextStyle={style.subHeaderTextStyle}
             />
+            </View>
           }
           keyExtractor={(item) => item.UUID}
           renderItem={(item, index) => (
@@ -151,12 +159,42 @@ const style = StyleSheet.create({
     marginVertical: 10,
   },
   subHeaderTextStyle: {
-    fontSize: 12,
+    fontSize: 13,
     color: "rgb(147, 147, 147)",
     paddingHorizontal: 60,
     textAlign: "center",
     marginVertical: 10,
   },
+    /** Fake */
+    fake: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: 24,
+      opacity:0.4
+    },
+    fakeCircle: {
+      width: 44,
+      height: 44,
+      borderRadius: 9999,
+      backgroundColor: '#e8e9ed',
+      marginRight: 16,
+    },
+    fakeLine: {
+      width: 200,
+      height: 10,
+      borderRadius: 4,
+      backgroundColor: '#e8e9ed',
+      marginBottom: 8,
+    },
+    empty: {
+      flexGrow: 1,
+      flexShrink: 1,
+      flexBasis: 0,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: 50,
+    },
 });
 
 export default AllFriends;

@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
     margin: 20,
   },
   subHeaderTextStyle: {
-    fontSize: 12,
+    fontSize: 13,
     color: "rgb(147, 147, 147)",
     paddingHorizontal: 60,
     textAlign: "center",

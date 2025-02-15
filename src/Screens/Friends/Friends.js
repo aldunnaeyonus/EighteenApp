@@ -303,8 +303,8 @@ const Friends = (props) => {
             ) : isFriend == "1" ? (
               <Icon
                 containerStyle={{ marginLeft: 5 }}
-                type="entypo"
-                name="popup"
+                type="material"
+                name="menu"
                 size={30}
                 onPress={() => {
                   setmodalActionVisable(true);
@@ -793,7 +793,7 @@ const style = StyleSheet.create({
     marginVertical: 10,
   },
   subHeaderTextStyle: {
-    fontSize: 12,
+    fontSize: 13,
     color: "rgb(147, 147, 147)",
     paddingHorizontal: 60,
     textAlign: "center",
