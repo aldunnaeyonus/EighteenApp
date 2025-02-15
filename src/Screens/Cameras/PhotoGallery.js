@@ -406,8 +406,8 @@ const postConclusion = async () => {
             <View style={style.empty}>
               <View style={style.fake}>
                 <View style={style.fakeSquare} />
-                <View style={style.fakeSquare} />
-                <View style={style.fakeSquare} />
+                <View style={[style.fakeSquare, {opacity: 0.5}]} />
+                <View style={[style.fakeSquare, {opacity: 0.4}]} />
             </View>
 
             <EmptyStateView
