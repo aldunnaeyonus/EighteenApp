@@ -56,7 +56,7 @@ const FriendHeader = (props) => {
           key={"A0"}
           style={{
             padding: 7,
-            width: 100,
+            width: 110,
             alignContent: "space-between",
             alignItems: "center",
           }}
@@ -92,9 +92,9 @@ const FriendHeader = (props) => {
                 alignItems: "center",
                 justifyContent: "space-around",
                 textAlign: "center",
-                width: 100,
+                width: 110,
                 marginTop: 2,
-                fontWeight: "300",
+                fontWeight: "500",
                 fontSize: 13,
               }}
             >
@@ -135,7 +135,7 @@ const FriendHeader = (props) => {
             key={"b" + grids.UUID}
             style={{
               padding: 7,
-              width: 100,
+              width: 110,
               alignContent: "space-between",
               alignItems: "center",
             }}
@@ -202,8 +202,7 @@ const FriendHeader = (props) => {
                         color: "#fff",
                         textAlignVertical: "center",
                         textAlign: "center",
-                        fontSize: 13,
-                        fontWeight: "bold",
+                        fontSize: 14,
                       }}
                     >
                       {grids.friend_events > 9 ? "+9" : grids.friend_events}

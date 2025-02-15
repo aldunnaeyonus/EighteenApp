@@ -436,7 +436,7 @@ const ListItem = (props) => {
               );
             }}
           >
-            <FacePile numFaces={3} faces={FACES} circleSize={15} />
+            <FacePile numFaces={3} faces={FACES} circleSize={20} />
           </TouchableOpacity>
           <Text
             style={{
@@ -447,7 +447,7 @@ const ListItem = (props) => {
             <Text
               style={{
                 color: "grey",
-                fontSize: 14,
+                fontSize: 15,
                 fontWeight: "600",
               }}
             >
@@ -468,7 +468,7 @@ const ListItem = (props) => {
                 style={{
                   justifyContent: "center",
                   color: "#ea5504",
-                  fontSize: 14,
+                  fontSize: 15,
                   fontWeight: "600",
                 }}
               >
@@ -479,7 +479,7 @@ const ListItem = (props) => {
             <Text
               style={{
                 color: "grey",
-                fontSize: 14,
+                fontSize: 15,
                 fontWeight: "600",
               }}
             >
@@ -491,6 +491,7 @@ const ListItem = (props) => {
         <View
           style={{
             marginBottom: 10,
+            marginTop: 10,
             marginRight: 10,
             marginLeft: 10,
             height: 27,
@@ -499,7 +500,7 @@ const ListItem = (props) => {
             justifyContent: "space-between",
           }}
         >
-          <Text style={{ color: "grey", fontSize: 12 }}>
+          <Text style={{ color: "grey", fontSize: 15 }}>
             {eventStart} - {eventEnd}
           </Text>
         </View>
@@ -530,7 +531,7 @@ const style = StyleSheet.create({
     resizeMode: "contain",
   },
   subHeaderTextStyle: {
-    fontSize: 13,
+    fontSize: 15,
     color: "rgb(147, 147, 147)",
     paddingHorizontal: 60,
     textAlign: "center",

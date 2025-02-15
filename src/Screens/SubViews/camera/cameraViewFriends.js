@@ -24,7 +24,7 @@ return (
                 style={{
                   right: -24,
                   top: -15,
-                  fontSize: 12,
+                  fontSize: 15,
                   fontWeight: 300,
                   color: "#3D4849",
                 }}
@@ -47,7 +47,7 @@ return (
                 style={{
                   right:8,
                   top: 15,
-                  fontSize: 12,
+                  fontSize: 15,
                   fontWeight: 300,
                   color: "#3D4849",
                 }}

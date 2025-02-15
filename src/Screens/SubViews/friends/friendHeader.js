@@ -149,7 +149,7 @@ const style = StyleSheet.create({
     alignItems: "center",
   },
   subHeaderTextStyle: {
-    fontSize: 13,
+    fontSize: 15,
     color: "rgb(147, 147, 147)",
     textAlign: "center",
   },

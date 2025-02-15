@@ -386,7 +386,7 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   subHeaderTextStyle: {
-    fontSize: 13,
+    fontSize: 15,
     color: "rgb(147, 147, 147)",
     paddingHorizontal: 60,
     textAlign: "center",

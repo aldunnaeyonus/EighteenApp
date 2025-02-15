@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { StyleSheet, Alert } from "react-native";
+import { StyleSheet, Alert, View } from "react-native";
 import RefreshableWrapper from "react-native-fresh-refresh";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
 import { storage } from "../../context/components/Storage";
@@ -165,7 +165,7 @@ const JoinedMembers = (props) => {
               <View
               style={[
                 style.fakeLine,
-                { width: 150, height:20},
+                { width: 150, height:20, marginRight:25},
               ]} />
               <View style={style.fakeSquare} />
           </View>
@@ -211,7 +211,7 @@ const style = StyleSheet.create({
     resizeMode: "contain",
   },
   subHeaderTextStyle: {
-    fontSize: 13,
+    fontSize: 15,
     color: "rgb(147, 147, 147)",
     paddingHorizontal: 60,
     textAlign: "center",
@@ -237,7 +237,6 @@ const style = StyleSheet.create({
     height: 44,
     borderRadius: 15,
     backgroundColor: '#e8e9ed',
-    marginleft: 16,
   },
   fakeLine: {
     width: 200,

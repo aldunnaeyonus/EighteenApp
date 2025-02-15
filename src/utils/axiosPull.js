@@ -138,7 +138,7 @@ export const _pullFriendsFeed = async (id) => {
   const myData = []
     .concat(response)
     .sort((a, b) =>
-      String(a.friend_post_date).localeCompare(String(b.friend_post_date))
+      String(b.friend_post_date).localeCompare(String(a.friend_post_date))
     );
   storage.set("user.Friend.Feed", JSON.stringify(myData));
 };

@@ -294,7 +294,7 @@ export default StyleSheet.create({
     subtitle: {
         marginTop: 6,
         color: colors.gray,
-        fontSize: 12,
+        fontSize: 15,
         fontStyle: 'italic'
     },
     subtitleEven: {
