@@ -159,14 +159,23 @@ const JoinedMembers = (props) => {
           extraData={data}
           scrollEventThrottle={16}
           ListEmptyComponent={
-            <EmptyStateView
-              imageSource={require("../../../assets/6029678.png")}
-              imageStyle={style.imageStyle}
+           <View style={style.empty}>
+            <View style={style.fake}>
+              <View style={style.fakeCircle} />
+              <View
+              style={[
+                style.fakeLine,
+                { width: 150, height:20},
+              ]} />
+              <View style={style.fakeSquare} />
+          </View>
+          <EmptyStateView
               headerText={""}
               subHeaderText={i18n.t("Members are Capturing Moments")}
               headerTextStyle={style.headerTextStyle}
               subHeaderTextStyle={style.subHeaderTextStyle}
             />
+            </View>
           }
           keyExtractor={(item) => item.user_id}
           renderItem={(item, index) => (
@@ -207,6 +216,43 @@ const style = StyleSheet.create({
     paddingHorizontal: 60,
     textAlign: "center",
     marginVertical: 10,
+  },
+   /** Fake */
+   fake: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 24,
+    opacity:0.4
+  },
+  fakeCircle: {
+    width: 44,
+    height: 44,
+    borderRadius: 9999,
+    backgroundColor: '#e8e9ed',
+    marginRight: 16,
+  },
+  fakeSquare: {
+    width: 44,
+    height: 44,
+    borderRadius: 15,
+    backgroundColor: '#e8e9ed',
+    marginleft: 16,
+  },
+  fakeLine: {
+    width: 200,
+    height: 10,
+    borderRadius: 4,
+    backgroundColor: '#e8e9ed',
+    marginBottom: 8,
+  },
+  empty: {
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 50,
   },
 });
 export default JoinedMembers;
