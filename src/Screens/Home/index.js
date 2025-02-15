@@ -1049,7 +1049,7 @@ const style = StyleSheet.create({
     width: 200,
     height: 10,
     borderRadius: 4,
-    backgroundColor: 'lightgrey',
+    backgroundColor: '#e8e9ed',
     marginBottom: 8,
     opacity:0.6
   },

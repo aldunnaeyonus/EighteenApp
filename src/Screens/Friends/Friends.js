@@ -345,6 +345,14 @@ const Friends = (props) => {
 
   if (!ready) {
     return (
+      <SafeAreaView
+      style={{
+        backgroundColor: "white",
+        height: SCREEN_HEIGHT,
+        width: SCREEN_WIDTH,
+      }}
+      edges={["bottom", "left", "right"]}
+    >
       <ActivityIndicator
         size={80}
         style={{
@@ -356,6 +364,7 @@ const Friends = (props) => {
         hidesWhenStopped={true}
         color={MD2Colors.orange900}
       />
+      </SafeAreaView>
     );
   }
 
@@ -844,7 +853,7 @@ const style = StyleSheet.create({
       width: 200,
       height: 10,
       borderRadius: 4,
-      backgroundColor: 'lightgrey',
+      backgroundColor: '#e8e9ed',
       marginBottom: 8,
       opacity:0.6
     },
