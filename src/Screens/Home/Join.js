@@ -19,11 +19,29 @@ const Join = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
   const [data, setData] = useState([]);
 
+
+
   useEffect(() => {
     const fetchData = async () => {
       setTitle("Loading...");
+      const canGoBack = props.navigation.canGoBack()
       props.navigation.setOptions({
         title: title,
+        headerLeft: () => (
+          <TouchableOpacity
+            onPress={() => { canGoBack ? props.navigate.goBack() : props.navigation.navigate("Home") }}  >
+            <Icon
+              type="material"
+              size={30}
+              name="arrow-back-ios-new"
+              color="#fff"
+              containerStyle={{
+                padding: 7,
+                height: 44,
+              }}
+            />
+          </TouchableOpacity>
+        ),
       });
       if ((await AsyncStorage.getItem("logedIn")) == "1") {
         checkHandle();

@@ -85,7 +85,7 @@ const PhotoGallery = (props) => {
       });
     });
 
-  if (pickedImages.length > 1){
+  if (pickedImages.length > 0){
     handleUpload(
       constants.url + "/camera/upload.php",
       formData,
