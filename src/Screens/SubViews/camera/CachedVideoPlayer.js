@@ -47,7 +47,7 @@ const CachedVideoPlayer = ({ url, fileName, videoPlayPause, videoPlayMute }) => 
   return (
             <Video
               fullscreen={false}
-              fullscreenAutorotate={true}
+              fullscreenAutorotate={false}
               fullscreenOrientation={"all"}
               ignoreSilentSwitch="obey"
               playWhenInactive={false}
@@ -57,6 +57,7 @@ const CachedVideoPlayer = ({ url, fileName, videoPlayPause, videoPlayMute }) => 
               muted={videoPlayMute}
               controls={true}
               paused={videoPlayPause}
+              resizeMode='contain'
               style={{width:SCREEN_WIDTH, height:SCREEN_HEIGHT}}
               source={{ uri:videoPath }}
             />

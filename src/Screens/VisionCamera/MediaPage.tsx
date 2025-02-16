@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import type { OnVideoErrorData, OnLoadData } from "react-native-video";
 import Video from "react-native-video";
-import { constants } from "../../utils/constants";
+import { constants, SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
 import { useIsForeground } from "./hooks/useIsForeground";
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
 import { useIsFocused } from "@react-navigation/core";
@@ -188,10 +188,9 @@ const MediaPage = (props: {
       {type === "video" && (
         <Video
           source={source}
-          style={StyleSheet.absoluteFill}
+          style={{width:SCREEN_WIDTH, height:SCREEN_HEIGHT}}
           paused={isVideoPaused}
           resizeMode="contain"
-          poster="contain"
           allowsExternalPlayback={false}
           automaticallyWaitsToMinimizeStalling={false}
           disableFocus={true}
