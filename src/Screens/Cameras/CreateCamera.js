@@ -7,6 +7,7 @@ import {
   Alert,
   NativeModules,
   TouchableWithoutFeedback,
+  StyleSheet,
 } from "react-native";
 import { TouchableOpacity } from "react-native";
 import styles from "../../styles/SliderEntry.style";
@@ -32,8 +33,6 @@ import Progress from "react-native-progress";
 import { useToast } from "react-native-styled-toast";
 import moment from "moment";
 import { useFocusEffect } from "@react-navigation/native";
-import { handleUpload } from "../SubViews/upload";
-import { ActivityIndicator } from "react-native-paper";
 import * as i18n from "../../../i18n";
 import { Icon } from "react-native-elements";
 import * as RNLocalize from "react-native-localize";
@@ -43,6 +42,10 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
 import NotifService from "../../../NotifService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ActivityIndicator, MD2Colors } from "react-native-paper";
+import axios from "axios";
+import { axiosPull } from "../../utils/axiosPull";
+import RNFS from 'react-native-fs';
 
 const CreateCamera = (props) => {
   var newDate = new Date();
@@ -73,9 +76,9 @@ const CreateCamera = (props) => {
   const [end, setEnd] = useState(moment().unix() + 28800);
   const [verified, setVerified] = useState(true);
   const [errorColor] = useState(verified ? "#fafbfc" : "#ffa3a6");
-  const [uploading] = useMMKVObject("uploadData", storage);
   let notification = new NotifService();
   const [cameraStatus] = ImagePicker.useCameraPermissions();
+  const [loading, setLoading] = useState(false);
 
   const MODE_VALUES = Platform.select({
     ios: Object.values(IOS_MODE),
@@ -364,7 +367,14 @@ const CreateCamera = (props) => {
     return result;
   };
 
-  const createEvent = async () => {
+  const createEvent = () => {
+    setLoading(true);
+    props.navigation.setOptions({
+      headerRight: () => (
+        <ActivityIndicator color="black" size={"small"} animating={true} />
+      ),
+    });
+
     const pin =
       "SNAP-" +
       makeid(4) +
@@ -377,7 +387,7 @@ const CreateCamera = (props) => {
     var formData = new FormData();
     var fileName = "";
     formData.append("owner", user.user_id);
-    formData.append("eventName", String(name));
+    formData.append("eventName", name);
     formData.append("purchases", switch3 ? "1" : "0");
     formData.append(
       "length",
@@ -394,7 +404,7 @@ const CreateCamera = (props) => {
     formData.append("shots", isPro ? constants.media_amount[media] : "18");
     formData.append("start", start);
     formData.append("pin", pin);
-    formData.append("ai_description", isPro ? dname : "");
+    formData.append("ai_description", isPro ? dname.trim() : "");
     formData.append("end", end);
     formData.append("photoGallery", switch2 ? "1" : "0");
     formData.append("socialMedia", isPro ? (switch1 ? "1" : "0") : "1");
@@ -415,52 +425,63 @@ const CreateCamera = (props) => {
     });
     formData.append("photoName", fileName);
     formData.append("isAI", "0");
-    props.navigation.setOptions({
-      headerRight: () => (
-        <ActivityIndicator color="black" size={"small"} animating={true} />
-      ),
-    });
-
-    handleUpload(
-      constants.url + "/camera/create.php",
-      formData,
-      user.user_id,
-      "create",
-      "",
-      name,
-      i18n.t("CreatingEvent") + " " + i18n.t("PleaseWait"),
-      image,
-      uploading
-    );
-    
-    if (parseInt(start) >= moment().unix()) {
-      notification.scheduleNotif(
-        String(name),
-        i18n.t("EvnetStart"),
-        parseInt(start),
-        pin + "-start",
-        constants.urldata +
-          "/" +
-          user.user_id +
-          "/events/" +
-          pin +
-          "/" +
-          fileName
-      );
+   
+    const preLoading = async () => {
+      await axios({
+        method: "POST",
+        url: constants.url + "/camera/create.php",
+        data: formData,
+        headers: {
+          Accept: "application/json",
+          "content-Type": "multipart/form-data",
+        },
+      }).then((res) => {
+        const postLoading = async () => {
+        setLoading(false);
+        await CameraRoll.saveAsset(image);
+        await axiosPull._pullGalleryFeed(props.route.params.pin);
+        await axiosPull._pullFriendCameraFeed(props.route.params.owner, "user", props.route.params.user);
+        await axiosPull._pullCameraFeed(props.route.params.user, "owner");
+        if (parseInt(start) >= moment().unix()) {
+          notification.scheduleNotif(
+             String(name),
+             i18n.t("EvnetStart"),
+             parseInt(start),
+             pin + "-start",
+             constants.urldata +
+               "/" +
+               user.user_id +
+               "/events/" +
+               pin +
+               "/" +
+               fileName
+           );
+         }
+         RNFS.unlink(image);
+         notification.scheduleNotif(
+           String(name),
+           i18n.t("EvnetEnd"),
+           parseInt(end),
+           pin + "-end",
+           constants.urldata + "/" + user.user_id + "/events/" + pin + "/" + fileName
+         );
+        props.navigation.goBack();
+        }
+        postLoading();
+      });
     }
-    notification.scheduleNotif(
-      String(name),
-      i18n.t("EvnetEnd"),
-      parseInt(end),
-      pin + "-end",
-      constants.urldata + "/" + user.user_id + "/events/" + pin + "/" + fileName
-    );
-    await CameraRoll.saveAsset(image);
-
-    setTimeout(async () => {
-      setIsAI(false);
-      props.navigation.goBack();
-    }, 1500);
+    preLoading();
+    // handleUpload(
+    //   constants.url + "/camera/create.php",
+    //   formData,
+    //   user.user_id,
+    //   "create",
+    //   "",
+    //   name,
+    //   i18n.t("CreatingEvent") + " " + i18n.t("PleaseWait"),
+    //   image,
+    //   uploading
+    // );
   };
 
   return (
@@ -1369,6 +1390,20 @@ const CreateCamera = (props) => {
               )}
             </View>
           </ScrollView>
+          {
+          loading && (
+            <View
+            style={[StyleSheet.absoluteFill, {  backgroundColor:'rgba(0,0,0,0.4)', alignItems:'center', justifyContent:'center'
+            },]}>
+                <ActivityIndicator
+                        size={80}
+                        animating={loading}
+                        color={MD2Colors.orange900}
+                      />
+      <ListItem.Subtitle style={{color:'white', fontSize:20, fontWeight:'bold', marginTop:20}}>{i18n.t("PleaseWait")}</ListItem.Subtitle>
+            </View>
+          )
+}
         </SafeAreaView>
       </SafeAreaProvider>
     </>

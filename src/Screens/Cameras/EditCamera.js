@@ -1,6 +1,7 @@
 import {
   View,
   ScrollView,
+  StyleSheet,
   Platform,
   Text,
   Modal,
@@ -32,16 +33,17 @@ import Progress from "react-native-progress";
 import { useToast } from "react-native-styled-toast";
 import moment from "moment";
 import { useFocusEffect } from "@react-navigation/native";
-import { handleUpload } from "../SubViews/upload";
-import { ActivityIndicator } from "react-native-paper";
+import { ActivityIndicator, MD2Colors } from "react-native-paper";
 import * as i18n from "../../../i18n";
 import { useMMKVObject } from "react-native-mmkv";
 import { Icon } from "react-native-elements";
 import * as RNLocalize from "react-native-localize";
 import PhotoEditor from "@baronha/react-native-photo-editor";
 const stickers = [];
-import { CameraRoll } from "@react-native-camera-roll/camera-roll";
 import NotifService from "../../../NotifService";
+import axios from "axios";
+import { axiosPull } from "../../utils/axiosPull";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const EditCamera = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
@@ -51,8 +53,7 @@ const EditCamera = (props) => {
   const [switch3, setSwitch3] = useState(
     (props.route.params.camera_purchase_more = "1" ? true : false)
   );
-  let notification = new NotifService();
-  const [dname, setDName] = useState(props.route.params.description);
+  const [dname, setDName] = useState(props.route.params.description.trim());
   const [isPro] = useState(user.isPro == "1" ? true : false);
   const [switch2, setSwitch2] = useState(
     (props.route.params.show_gallery = "1" ? true : false)
@@ -61,8 +62,8 @@ const EditCamera = (props) => {
   const [switch4, setSwitch4] = useState(
     (props.route.params.autoJoin = "1" ? true : false)
   );
-  const timestamp = moment.unix(parseInt(props.route.params.start));
-  const timestampEnd = moment.unix(parseInt(props.route.params.end));
+  const timestamp = parseInt(props.route.params.start);
+  const timestampEnd = parseInt(props.route.params.end);
   const sourcedDate = moment(timestamp);
   const [selectedDate, setSelectedDate] = useState(sourcedDate.toDate());
   const { toast } = useToast();
@@ -82,7 +83,7 @@ const EditCamera = (props) => {
   const [media, setMedia] = useState(
     constants.media_amount.indexOf(props.route.params.shots)
   );
-
+  const [loading, setLoading] = useState(false);
   const [name, setName] = useState(props.route.params.title);
   const [image, setImage] = useState(props.route.params.illustration);
   const [maximumDate] = useState();
@@ -92,11 +93,14 @@ const EditCamera = (props) => {
   const [verified, setVerified] = useState(true);
   const [errorColor] = useState(verified ? "#fafbfc" : "#ffa3a6");
   const [isAI, setIsAI] = useState(false);
-  let deviceLanguage = NativeModules.I18nManager.localeIdentifier;
+let deviceLanguage =
+    Platform.OS === "ios"
+      ? NativeModules.SettingsManager.settings.AppleLocale
+      : NativeModules.I18nManager.localeIdentifier;
   const [start, setStart] = useState(timestamp);
   const [end, setEnd] = useState(timestampEnd);
   const [isEditing, setisEditing] = useState(false);
-  const [uploading] = useMMKVObject("uploadData", storage);
+  let notification = new NotifService();
 
   const onChange = (event, selectDate) => {
     if (event.type === "set") {
@@ -366,45 +370,53 @@ const EditCamera = (props) => {
     ])
   );
 
-  const createEvent = async () => {
+  const createEvent = () => {
+     props.navigation.setOptions({
+          headerRight: () => (
+            <ActivityIndicator color="black" size={"small"} animating={true} />
+          ),
+        });
+    var fileName = "";
     var formData = new FormData();
-    formData.append("user", String(props.route.params.user));
-    formData.append("owner", String(props.route.params.owner));
-    formData.append("eventName", String(name));
+
+    setLoading(true);
+
+    fileName =
+      "SNAP18-cover-" +
+      user.user_id +
+      "-" +
+      Date.now() +
+      image.split("/").pop();
+    formData.append("user", props.route.params.user);
+    formData.append("owner", props.route.params.owner);
+    formData.append("eventName", name);
     formData.append("purchases", switch3 ? "1" : "0");
     formData.append(
       "length",
-      String(
         isPro
           ? constants.camera_time_text_PRO[selectedIndex]
           : constants.camera_time_text[selectedIndex]
-      )
     );
-    formData.append("ai_description", isPro ? dname : "");
+    formData.append("ai_description", dname);
     formData.append(
       "cameras",
       isPro
         ? constants.camera_amount_PRO[cameras]
         : constants.camera_amount[cameras]
     );
-    formData.append("shots", isPro ? constants.media_amount[media] : "18");
     formData.append("start", start);
     formData.append("end", end);
+    formData.append("shots", isPro ? constants.media_amount[media] : "18");
     formData.append("photoGallery", switch2 ? "1" : "0");
     formData.append("socialMedia", isPro ? (switch1 ? "1" : "0") : "1");
-    formData.append("pin", String(props.route.params.pin));
-    formData.append("id", String(props.route.params.UUID));
+    formData.append("pin", props.route.params.pin);
+    formData.append("id", props.route.params.UUID);
     formData.append("autoJoin", switch4 ? "1" : "0");
     formData.append("device", Platform.OS);
     formData.append("camera", "0");
-    var fileName =
-      "SNAP18-cover-" +
-      user.user_id +
-      "-" +
-      Date.now() +
-      image.split("/").pop();
     formData.append("isAI", "0");
-    formData.append("aiIMAGE", "");
+    formData.append("aiIMAGE", "0");
+
     if (props.route.params.illustration != image) {
       formData.append("photoCount", "1");
       formData.append("photoName", fileName);
@@ -416,62 +428,81 @@ const EditCamera = (props) => {
     } else {
       formData.append("photoCount", "0");
     }
-    props.navigation.setOptions({
-      headerRight: () => (
-        <ActivityIndicator color="black" size={"small"} animating={true} />
-      ),
-    });
-    if (start != props.route.params.start) {
-      notification.cancelNotif(pin + "-start");
-      if (parseInt(start) >= moment().unix()) {
-        notification.scheduleNotif(
-          String(name),
-          i18n.t("EvnetStart"),
-          parseInt(start),
-          pin + "-start",
-          constants.urldata +
-            "/" +
-            user.user_id +
-            "/events/" +
-            pin +
-            "/" +
-            fileName
-        );
-      }
-    }
-    if (end != props.route.params.end) {
-      notification.cancelNotif(pin + "-end");
-      notification.scheduleNotif(
-        String(name),
-        i18n.t("EvnetEnd"),
-        parseInt(end),
-        pin + "-end",
-        constants.urldata +
-          "/" +
-          user.user_id +
-          "/events/" +
-          pin +
-          "/" +
-          fileName
-      );
-    }
-    await CameraRoll.saveAsset(image);
 
-    handleUpload(
-      constants.url + "/camera/save.php",
-      formData,
-      user.user_id,
-      "save",
-      props.route.params.pin,
-      "",
-      i18n.t("EdintEvent") + " " + i18n.t("PleaseWait"),
-      image,
-      uploading
-    );
-    setTimeout(() => {
-      setIsAI(false);
-      props.navigation.goBack();
-    }, 3500);
+    const preLoading = async () => {
+      await axios({
+        method: "POST",
+        url: constants.url + "/camera/save.php",
+        data: formData,
+        headers: {
+          Accept: "application/json",
+          "content-Type": "multipart/form-data",
+        },
+      }).then((res) => {
+        const postLoading = async () => {
+        setLoading(false);
+        setIsAI(false);
+        await axiosPull._pullCameraFeed(user, "owner");
+
+        if (start != props.route.params.start) {
+          notification.cancelNotif(pin + "-start");
+          if (parseInt(start) >= moment().unix()) {
+            notification.scheduleNotif(
+              String(name),
+              i18n.t("EvnetStart"),
+              parseInt(start),
+              pin + "-start",
+              constants.urldata +
+                "/" +
+                user.user_id +
+                "/events/" +
+                pin +
+                "/" +
+                fileName
+            );
+          }
+        }
+        if (end != props.route.params.end) {
+          notification.cancelNotif(pin + "-end");
+          notification.scheduleNotif(
+            String(name),
+            i18n.t("EvnetEnd"),
+            parseInt(end),
+            pin + "-end",
+            constants.urldata +
+              "/" +
+              user.user_id +
+              "/events/" +
+              pin +
+              "/" +
+              fileName
+          );
+        }
+        props.navigation.goBack();
+
+        }
+        postLoading();
+      
+      }).catch(console.error);
+
+    }
+    preLoading();
+
+    // handleUpload(
+    //   constants.url + "/camera/save.php",
+    //   formData,
+    //   user.user_id,
+    //   "save",
+    //   props.route.params.pin,
+    //   "",
+    //   i18n.t("EdintEvent") + " " + i18n.t("PleaseWait"),
+    //   image,
+    //   uploading
+    // );
+    // setTimeout(() => {
+    //   setIsAI(false);
+    //   props.navigation.goBack();
+    // }, 3500);
   };
 
   return (
@@ -1385,6 +1416,20 @@ const EditCamera = (props) => {
               )}
             </View>
           </ScrollView>
+                    {
+                    loading && (
+                      <View
+                      style={[StyleSheet.absoluteFill, {  backgroundColor:'rgba(0,0,0,0.4)', alignItems:'center', justifyContent:'center'
+                      },]}>
+                          <ActivityIndicator
+                                  size={80}
+                                  animating={loading}
+                                  color={MD2Colors.orange900}
+                                />
+                <ListItem.Subtitle style={{color:'white', fontSize:20, fontWeight:'bold', marginTop:20}}>{i18n.t("PleaseWait")}</ListItem.Subtitle>
+                      </View>
+                    )
+          }
         </SafeAreaView>
       </SafeAreaProvider>
     </>

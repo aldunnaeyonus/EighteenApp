@@ -138,7 +138,7 @@ export default StyleSheet.create({
     imageUserNameContainers: {
       position: 'absolute',
       overflow:'hidden',
-      right:5,
+      right:0,
       flexDirection: "column",
       justifyContent: 'flex-end',
       backgroundColor: 'transparent',

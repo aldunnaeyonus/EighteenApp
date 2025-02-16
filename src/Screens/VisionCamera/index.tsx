@@ -51,10 +51,11 @@ Reanimated.addWhitelistedNativeProps({
 import "moment-duration-format";
 import PhotoEditor from "@baronha/react-native-photo-editor";
 const stickers: never[] = [];
-import { handleUpload } from "../SubViews/upload";
+import axios from "axios";
 import { useMMKVObject } from "react-native-mmkv";
 import { ViewStyle } from "react-native";
 import { getLocales } from "expo-localization";
+import { axiosPull } from "../../utils/axiosPull";
 
 const VisionCamera = (props: {
   route: {
@@ -219,7 +220,7 @@ const VisionCamera = (props: {
     [isPressingButton]
   );
 
-  const createEvent = async (path: String) => {
+  const createEvent = (path: String) => {
     var formData = new FormData();
     formData.append("pin", props.route.params.pin);
     formData.append("owner", props.route.params.owner);
@@ -241,17 +242,35 @@ const VisionCamera = (props: {
       uri: path,
     });
 
-    handleUpload(
-      constants.url + "/camera/upload.php",
-      formData,
-      props.route.params.user,
-      "camera",
-      props.route.params.pin,
-      props.route.params.owner,
-      i18n.t("Uploading2"),
-      path,
-      uploading
-    );
+    const postConclusion = async () => {
+      await axios({
+        method: "POST",
+        url: constants.url + "/camera/upload.php",
+        data: formData,
+        headers: {
+          Accept: "application/json",
+          "content-Type": "multipart/form-data",
+        },
+      }).then(async (res) => {
+        await axiosPull._pullGalleryFeed(props.route.params.pin);
+        await axiosPull._pullFriendCameraFeed(props.route.params.owner, "user", props.route.params.user);
+        await axiosPull._pullCameraFeed(props.route.params.user, "owner");
+      });
+    }
+  
+    postConclusion();
+
+    // handleUpload(
+    //   constants.url + "/camera/upload.php",
+    //   formData,
+    //   props.route.params.user,
+    //   "camera",
+    //   props.route.params.pin,
+    //   props.route.params.owner,
+    //   i18n.t("Uploading2"),
+    //   path,
+    //   uploading
+    // );
     props.navigation.goBack();
     StatusBar.setHidden(false, 'none');
   };

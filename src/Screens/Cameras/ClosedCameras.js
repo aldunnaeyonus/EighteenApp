@@ -68,13 +68,13 @@ const ClosedCameras = (props) => {
 
   const _deleteFeedItemIndex = (UUID) => {
     filteredDataSource.forEach((res, index) => {
-      if (res.UUID == UUID) {
-        setcameraData((prevState) => {
-          prevState.splice(index, 1);
-          storage.set("user.Media.Feed", JSON.stringify(prevState));
-          return [...prevState];
-        });
-      }
+      // if (res.UUID == UUID) {
+      //   setcameraData((prevState) => {
+      //     prevState.splice(index, 1);
+      //     storage.set("user.Media.Feed", JSON.stringify(prevState));
+      //     return [...prevState];
+      //   });
+      // }
     });
   };
 
@@ -91,9 +91,14 @@ const ClosedCameras = (props) => {
         {
           text: i18n.t("Delete Event"),
           onPress: () => {
+            props.navigation.setOptions({
+              headerRight: () => (
+                <ActivityIndicator color="black" size={"small"} animating={true} />
+              ),
+            });
             setTimeout(() => {
               _deleteFeedItemSource(UUID, owner, pin);
-            }, 1000);
+            }, 500);
           },
           style: "destructive",
         },
@@ -115,12 +120,7 @@ const ClosedCameras = (props) => {
     setdisable(false);
     props.navigation.setOptions({
       headerRight: () => (
-        <ActivityIndicator
-          color="black"
-          size={"small"}
-          animating={disable}
-          hidesWhenStopped={true}
-        />
+        <></>
       ),
     });
   };
@@ -158,7 +158,7 @@ const ClosedCameras = (props) => {
 
   const Item = ({ item }) => {
     if (moment().unix() - item.end >= 2592000) {
-      _deleteFeedItemIndex(item.UUID);
+      //_deleteFeedItemIndex(item.UUID);
     }
     storage.delete(`user.Gallery.Friend.Feed.${item.pin}`);
     storage.delete(`user.Member.Join.Feed.${item.pin}`);

@@ -32,6 +32,7 @@ import email from "react-native-email";
 import DeviceInfo from "react-native-device-info";
 import { getLocales } from "expo-localization";
 import moment from "moment/min/moment-with-locales"
+import RNFS from 'react-native-fs';
 
 const Profile = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
@@ -47,7 +48,7 @@ const Profile = (props) => {
     Alert.alert(i18n.t("CacheCleared"))
 
     try {
-      FastImage.clearMemoryCache();
+      RNFS.clearCache();
       FastImage.clearDiskCache();
     } catch (error) {
       console.error("Error clearing cache:", error);

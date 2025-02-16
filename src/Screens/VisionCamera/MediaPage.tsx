@@ -19,8 +19,9 @@ import momentDurationFormatSetup from "moment-duration-format";
 import moment from "moment/min/moment-with-locales";
 import FormData from "form-data";
 import { ActivityIndicator } from "react-native-paper";
-import { handleUpload } from "../SubViews/upload";
-import * as i18n from "../../../i18n";
+import axios from "axios";
+import { axiosPull } from "../../utils/axiosPull";
+
 import { useFocusEffect } from "@react-navigation/native";
 import { storage, updateItemFeed } from "../../context/components/Storage";
 import { useMMKVObject } from "react-native-mmkv";
@@ -108,7 +109,7 @@ const MediaPage = (props: {
     }, [props])
   );
 
-  const createEvent = async () => {
+  const createEvent = () => {
     setAnimating(true);
     var formData = new FormData();
     formData.append("pin", props.route.params.pin);
@@ -129,35 +130,48 @@ const MediaPage = (props: {
       type: constants.mimes(source.uri.split(".").pop()), // set MIME type
       uri: source.uri,
     });
-    await CameraRoll.saveAsset(source.uri);
 
-    handleUpload(
-      constants.url + "/camera/upload.php",
-      formData,
-      props.route.params.user,
-      "camera",
-      props.route.params.pin,
-      props.route.params.owner,
-      i18n.t("Uploading2"),
-      source.uri,
-      uploading
-    );
-
-    if (props.route.params.owner != props.route.params.user) {
-      setCredits(String(parseInt(credits) - 1));
-      updateItemFeed(
-        JSON.stringify(cameraData),
-        props.route.params.pin,
-        String(parseInt(credits) - 1),
-        `user.Camera.Friend.Feed.${props.route.params.owner}`,
-        "1"
-      );
+    const postConclusion = async () => {
+      await axios({
+        method: "POST",
+        url: constants.url + "/camera/upload.php",
+        data: formData,
+        headers: {
+          Accept: "application/json",
+          "content-Type": "multipart/form-data",
+        },
+      }).then(async (res) => {
+        await CameraRoll.saveAsset(source.uri);
+        await axiosPull._pullGalleryFeed(props.route.params.pin);
+        await axiosPull._pullFriendCameraFeed(props.route.params.owner, "user", props.route.params.user);
+        await axiosPull._pullCameraFeed(props.route.params.user, "owner");
+        if (props.route.params.owner != props.route.params.user) {
+          setCredits(String(parseInt(credits) - 1));
+          updateItemFeed(
+            JSON.stringify(cameraData),
+            props.route.params.pin,
+            String(parseInt(credits) - 1),
+            `user.Camera.Friend.Feed.${props.route.params.owner}`,
+            "1"
+          );
+        }
+        StatusBar.setHidden(false, 'none');
+        props.navigation.pop(2);
+      });
     }
-    setTimeout(() => {
-      setAnimating(false);
-                  StatusBar.setHidden(false, 'none');
-      props.navigation.pop(2);
-    }, 1000);
+  
+    postConclusion();
+    // handleUpload(
+    //   constants.url + "/camera/upload.php",
+    //   formData,
+    //   props.route.params.user,
+    //   "camera",
+    //   props.route.params.pin,
+    //   props.route.params.owner,
+    //   i18n.t("Uploading2"),
+    //   source.uri,
+    //   uploading
+    // );
   };
 
   return (

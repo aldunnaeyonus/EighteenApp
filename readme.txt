@@ -34,6 +34,8 @@ NPM Installs
 react-devtools
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from '../../../utils/constants';
 
+setImages(images.filter((i) => i !== uri)):
+
 npx uri-scheme open "snapseighteenapp://friends/45/user" --ios
 
 npx uri-scheme open "snapseighteenapp://join/SNAP-UL49-PY965-1736841682-6AB/1737273600/45" --ios

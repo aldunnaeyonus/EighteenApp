@@ -85,7 +85,7 @@ const PhotoGallery = (props) => {
       });
     });
 
-  if (pickedImages.length > 0){
+  if (pickedImages.length > 2){
     handleUpload(
       constants.url + "/camera/upload.php",
       formData,
@@ -98,8 +98,8 @@ const PhotoGallery = (props) => {
       uploading
     );
   }else{
-    storage.set("uploadData", JSON.stringify({"message": i18n.t("Uploading") + " " + i18n.t("PleaseWait"), "display":"flex", "image":pickedImages[0]}));
-const postConclusion = async () => {
+   storage.set("uploadData", JSON.stringify({"message": i18n.t("Uploading") + " " + i18n.t("PleaseWait"), "display":"flex", "image":pickedImages[0]}));
+   const postConclusion = async () => {
     await axios({
       method: "POST",
       url: constants.url + "/camera/upload.php",

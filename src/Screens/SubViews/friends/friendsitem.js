@@ -110,7 +110,7 @@ const FriendListItem = (props) => {
           style={{
             position: "absolute",
             height: 60,
-            backgroundColor: "rgba(0, 0, 0, 0.60)",
+            backgroundColor: "rgba(0, 0, 0, 0.30)",
             width: SCREEN_WIDTH,
             bottom: 0,
           }}
