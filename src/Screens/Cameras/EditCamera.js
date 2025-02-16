@@ -83,7 +83,6 @@ const EditCamera = (props) => {
   const [media, setMedia] = useState(
     constants.media_amount.indexOf(props.route.params.shots)
   );
-  const [loading, setLoading] = useState(false);
   const [name, setName] = useState(props.route.params.title);
   const [image, setImage] = useState(props.route.params.illustration);
   const [maximumDate] = useState();
@@ -378,9 +377,6 @@ let deviceLanguage =
         });
     var fileName = "";
     var formData = new FormData();
-
-    setLoading(true);
-
     fileName =
       "SNAP18-cover-" +
       user.user_id +
@@ -440,7 +436,6 @@ let deviceLanguage =
         },
       }).then((res) => {
         const postLoading = async () => {
-        setLoading(false);
         setIsAI(false);
         await axiosPull._pullCameraFeed(user, "owner");
 
@@ -1416,20 +1411,7 @@ let deviceLanguage =
               )}
             </View>
           </ScrollView>
-                    {
-                    loading && (
-                      <View
-                      style={[StyleSheet.absoluteFill, {  backgroundColor:'rgba(0,0,0,0.4)', alignItems:'center', justifyContent:'center'
-                      },]}>
-                          <ActivityIndicator
-                                  size={80}
-                                  animating={loading}
-                                  color={MD2Colors.orange900}
-                                />
-                <ListItem.Subtitle style={{color:'white', fontSize:20, fontWeight:'bold', marginTop:20}}>{i18n.t("PleaseWait")}</ListItem.Subtitle>
-                      </View>
-                    )
-          }
+                    
         </SafeAreaView>
       </SafeAreaProvider>
     </>
