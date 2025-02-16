@@ -478,7 +478,6 @@ let deviceLanguage =
               fileName
           );
         }
-        props.navigation.goBack();
 
         }
         postLoading();
@@ -487,6 +486,7 @@ let deviceLanguage =
 
     }
     preLoading();
+    props.navigation.goBack();
 
     // handleUpload(
     //   constants.url + "/camera/save.php",

@@ -78,7 +78,6 @@ const CreateCamera = (props) => {
   const [errorColor] = useState(verified ? "#fafbfc" : "#ffa3a6");
   let notification = new NotifService();
   const [cameraStatus] = ImagePicker.useCameraPermissions();
-  const [loading, setLoading] = useState(false);
 
   const MODE_VALUES = Platform.select({
     ios: Object.values(IOS_MODE),
@@ -368,7 +367,6 @@ const CreateCamera = (props) => {
   };
 
   const createEvent = () => {
-    setLoading(true);
     props.navigation.setOptions({
       headerRight: () => (
         <ActivityIndicator color="black" size={"small"} animating={true} />
@@ -427,6 +425,7 @@ const CreateCamera = (props) => {
     formData.append("isAI", "0");
    
     const preLoading = async () => {
+      storage.set("uploadData", JSON.stringify({"message": i18n.t("Uploading") + " " + i18n.t("PleaseWait"), "display":"flex", "image":image}));
       await axios({
         method: "POST",
         url: constants.url + "/camera/create.php",
@@ -437,7 +436,7 @@ const CreateCamera = (props) => {
         },
       }).then((res) => {
         const postLoading = async () => {
-        setLoading(false);
+        storage.set("uploadData", JSON.stringify({"message": "", "display":"none", "image":""}));
         await CameraRoll.saveAsset(image);
         await axiosPull._pullGalleryFeed(props.route.params.pin);
         await axiosPull._pullFriendCameraFeed(props.route.params.owner, "user", props.route.params.user);
@@ -465,12 +464,13 @@ const CreateCamera = (props) => {
            pin + "-end",
            constants.urldata + "/" + user.user_id + "/events/" + pin + "/" + fileName
          );
-        props.navigation.goBack();
         }
         postLoading();
       });
     }
     preLoading();
+    props.navigation.goBack();
+
     // handleUpload(
     //   constants.url + "/camera/create.php",
     //   formData,
@@ -1390,20 +1390,6 @@ const CreateCamera = (props) => {
               )}
             </View>
           </ScrollView>
-          {
-          loading && (
-            <View
-            style={[StyleSheet.absoluteFill, {  backgroundColor:'rgba(0,0,0,0.4)', alignItems:'center', justifyContent:'center'
-            },]}>
-                <ActivityIndicator
-                        size={80}
-                        animating={loading}
-                        color={MD2Colors.orange900}
-                      />
-      <ListItem.Subtitle style={{color:'white', fontSize:20, fontWeight:'bold', marginTop:20}}>{i18n.t("PleaseWait")}</ListItem.Subtitle>
-            </View>
-          )
-}
         </SafeAreaView>
       </SafeAreaProvider>
     </>

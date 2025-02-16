@@ -85,21 +85,8 @@ const PhotoGallery = (props) => {
       });
     });
 
-  if (pickedImages.length > 2){
-    handleUpload(
-      constants.url + "/camera/upload.php",
-      formData,
-      props.route.params.user,
-      "gallery",
-      props.route.params.pin,
-      props.route.params.owner,
-      i18n.t("Uploading2"),
-      pickedImages[0],
-      uploading
-    );
-  }else{
-   storage.set("uploadData", JSON.stringify({"message": i18n.t("Uploading") + " " + i18n.t("PleaseWait"), "display":"flex", "image":pickedImages[0]}));
    const postConclusion = async () => {
+    storage.set("uploadData", JSON.stringify({"message": i18n.t("Uploading") + " " + i18n.t("PleaseWait"), "display":"flex", "image":pickedImages[0]}));
     await axios({
       method: "POST",
       url: constants.url + "/camera/upload.php",
@@ -108,18 +95,13 @@ const PhotoGallery = (props) => {
         Accept: "application/json",
         "content-Type": "multipart/form-data",
       },
-    }).then(async (res) => {
+    }).then((res) => {
+      const postLoading = async () => {
       storage.set("uploadData", JSON.stringify({"message": "", "display":"none", "image":""}));
       await axiosPull._pullGalleryFeed(props.route.params.pin);
       await axiosPull._pullFriendCameraFeed(props.route.params.owner, "user", props.route.params.user);
       await axiosPull._pullCameraFeed(props.route.params.user, "owner");
-    });
-  }
-
-  postConclusion();
-  }
-
-  setCredits(parseInt(credits) - pickedImages.length);
+      setCredits(parseInt(credits) - pickedImages.length);
   if (props.route.params.owner != props.route.params.user) {
     updateItemFeed(
       JSON.stringify(cameraData),
@@ -128,7 +110,13 @@ const PhotoGallery = (props) => {
       `user.Camera.Friend.Feed.${props.route.params.owner}`,
       "1"
     );
+      }  
+      }
+      postLoading();
+    });
   }
+  postConclusion();
+
     setPickedImages([]);
   };
 

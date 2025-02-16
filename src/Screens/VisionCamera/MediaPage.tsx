@@ -21,7 +21,7 @@ import FormData from "form-data";
 import { ActivityIndicator } from "react-native-paper";
 import axios from "axios";
 import { axiosPull } from "../../utils/axiosPull";
-
+import * as i18n from "../../../i18n";
 import { useFocusEffect } from "@react-navigation/native";
 import { storage, updateItemFeed } from "../../context/components/Storage";
 import { useMMKVObject } from "react-native-mmkv";
@@ -132,6 +132,7 @@ const MediaPage = (props: {
     });
 
     const postConclusion = async () => {
+            storage.set("uploadData", JSON.stringify({"message": i18n.t("Uploading") + " " + i18n.t("PleaseWait"), "display":"flex", "image":source.uri}));
       await axios({
         method: "POST",
         url: constants.url + "/camera/upload.php",
@@ -141,6 +142,8 @@ const MediaPage = (props: {
           "content-Type": "multipart/form-data",
         },
       }).then(async (res) => {
+        const postLoading = async () => {
+          storage.set("uploadData", JSON.stringify({"message": "", "display":"none", "image":""}));
         await CameraRoll.saveAsset(source.uri);
         await axiosPull._pullGalleryFeed(props.route.params.pin);
         await axiosPull._pullFriendCameraFeed(props.route.params.owner, "user", props.route.params.user);
@@ -156,11 +159,14 @@ const MediaPage = (props: {
           );
         }
         StatusBar.setHidden(false, 'none');
-        props.navigation.pop(2);
+      }
+      postLoading();
       });
     }
   
     postConclusion();
+    props.navigation.pop(2);
+
     // handleUpload(
     //   constants.url + "/camera/upload.php",
     //   formData,

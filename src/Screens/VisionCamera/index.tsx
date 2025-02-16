@@ -243,6 +243,7 @@ const VisionCamera = (props: {
     });
 
     const postConclusion = async () => {
+      storage.set("uploadData", JSON.stringify({"message": i18n.t("Uploading") + " " + i18n.t("PleaseWait"), "display":"flex", "image":path}));
       await axios({
         method: "POST",
         url: constants.url + "/camera/upload.php",
@@ -251,10 +252,14 @@ const VisionCamera = (props: {
           Accept: "application/json",
           "content-Type": "multipart/form-data",
         },
-      }).then(async (res) => {
+      }).then((res) => {
+        const postLoading = async () => {
+        storage.set("uploadData", JSON.stringify({"message": "", "display":"none", "image":""}));
         await axiosPull._pullGalleryFeed(props.route.params.pin);
         await axiosPull._pullFriendCameraFeed(props.route.params.owner, "user", props.route.params.user);
         await axiosPull._pullCameraFeed(props.route.params.user, "owner");
+        }
+        postLoading();
       });
     }
   
