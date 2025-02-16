@@ -55,7 +55,7 @@ const FriendHeader = (props) => {
          <View
             style={{
               padding: 7,
-              width: 110,
+              width: 100,
               alignContent: "space-between",
               alignItems: "center",
             }}
@@ -115,7 +115,7 @@ const FriendHeader = (props) => {
                 alignItems: "center",
                 justifyContent: "space-around",
                 textAlign: "center",
-                width: 110,
+                width: 100,
                 marginTop: 2,
                 fontWeight: "500",
                 fontSize: 13,
@@ -132,7 +132,7 @@ const FriendHeader = (props) => {
           <View
             style={{
               padding: 7,
-              width: 110,
+              width: 100,
               alignContent: "space-between",
               alignItems: "center",
             }}
@@ -163,7 +163,7 @@ const FriendHeader = (props) => {
                   <View
                     style={{
                       marginTop: -5,
-                      marginLeft: 65,
+                      marginLeft: 55,
                       backgroundColor: "#ea5504",
                       width: 22,
                       height: 22,
@@ -224,7 +224,7 @@ const FriendHeader = (props) => {
                 alignItems: "center",
                 justifyContent: "space-around",
                 textAlign: "center",
-                width: 110,
+                width: 100,
                 marginTop: 2,
                 fontWeight: "400",
                 fontSize: 13,

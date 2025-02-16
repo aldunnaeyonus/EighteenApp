@@ -171,7 +171,6 @@ const onCheckVersion = () => {
           storage.set("uploadData", JSON.stringify({"message": "", "display":"none", "image":""}));
           storage.set("user.Join.Feed", JSON.stringify([]));
           storage.set("user.Friend.Feed", JSON.stringify([]));
-          storage.set("uploadData", JSON.stringify(["message"]));
           storage.set("user.Camera.Feed", JSON.stringify([]));
           storage.set("user.Camera.Friend.Feed", JSON.stringify([]));
           storage.set("user.Member.Join.Feed", JSON.stringify([]));

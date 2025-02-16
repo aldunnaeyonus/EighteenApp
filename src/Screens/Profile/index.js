@@ -58,6 +58,13 @@ const Profile = (props) => {
 
   const logout = useCallback(() => {
     const execute = async () => {
+                storage.set("uploadData", JSON.stringify({"message": "", "display":"none", "image":""}));
+                storage.set("user.Join.Feed", JSON.stringify([]));
+                storage.set("user.Friend.Feed", JSON.stringify([]));
+                storage.set("user.Camera.Feed", JSON.stringify([]));
+                storage.set("user.Camera.Friend.Feed", JSON.stringify([]));
+                storage.set("user.Member.Join.Feed", JSON.stringify([]));
+                storage.set("user.AllFriend.Feed", JSON.stringify([]));
       await AsyncStorage.removeItem("UUID");
       await AsyncStorage.removeItem("logedIn");
       await AsyncStorage.removeItem("user_id");
