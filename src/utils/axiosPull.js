@@ -125,7 +125,7 @@ export const _pullFriendsFeedABC = async (id) => {
   const response = await postData("/users/friends.php", data);
   const myData = []
     .concat(response)
-    .sort((a, b) => (a.friend_handle > b.friend_handle ? -1 : 1));
+    .sort((a, b) => (a.friend_handle - b.friend_handle));
 
   storage.set("user.AllFriend.Feed", JSON.stringify(myData));
 };
