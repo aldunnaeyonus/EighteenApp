@@ -47,44 +47,67 @@ const FriendHeader = (props) => {
         </TouchableOpacity>
       </View>
       <ScrollView
-        style={{ height: 100 }}
+        style={{ height: 100, marginBottom:15 }}
         horizontal
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicatorr={false}
       >
-        <View
-          key={"A0"}
-          style={{
-            padding: 7,
-            width: 110,
-            alignContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <TouchableOpacity
+         <View
+            style={{
+              padding: 7,
+              width: 110,
+              alignContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+        <TouchableOpacity
             onPress={() => props._createCamera(user.user_id)}
           >
+          <View style={{borderWidth: 3, borderRadius: 38, borderBottomColor: "rgba(116, 198, 190, 1)", borderTopColor: "#ea5504", borderRightColor: 'rgba(250, 190, 0, 1)', width: 76, height: 76, alignContent: "center", alignItems: "center", justifyContent:'center'}}>
             <Image
               indicator={Progress}
-              key={user.user_avatar}
-              style={{
-                height: 70,
-                width: 70,
-                marginLeft: 14,
-                marginRight: 16,
+              style={{      
+                borderWidth: 2,
                 borderRadius: 35,
-                backgroundColor: "#f2f2f2",
-                overflow: "hidden",
-                borderWidth: 1,
-                backgroundColor: "white",
-              }}
-              resizeMode={FastImage.resizeMode.contain}
+                borderColor: "white", width: 70, height: 70, overflow: "hidden"
+                }}
               source={{
-                priority: FastImage.priority.high,
                 cache: FastImage.cacheControl.immutable,
+                priority: FastImage.priority.high,
                 uri: user.user_avatar,
               }}
             />
+            
+          </View>
+          {user.isPro == "1" && (
+            <View style={{ position: "absolute" }}>
+              <View
+                style={{
+                  marginTop: 63,
+                  marginLeft: 50,
+                  backgroundColor: "transparent",
+                  width: 22,
+                  height: 22,
+                  justifyContent: "center",
+                }}
+              >
+                <FastImage
+                  style={{
+                    marginLeft: 5,
+                    marginTop: -17,
+                    width: 22,
+                    height: 22,
+                    textAlignVertical: "center",
+                    textAlignVertical: "center",
+                  }}
+                  resizeMode={FastImage.resizeMode.contain}
+                  source={require("../../../../assets/verified.png")}
+                  />
+              </View>
+            </View>
+          )}
+          </TouchableOpacity>
+                    
             <Text
               ellipsizeMode="tail"
               numberOfLines={1}
@@ -100,39 +123,13 @@ const FriendHeader = (props) => {
             >
               {i18n.t("AddCamera")}
             </Text>
-            {user.isPro == "1" && (
-              <View style={{ position: "absolute" }}>
-                <View
-                  style={{
-                    marginTop: 50,
-                    marginLeft: 60,
-                    backgroundColor: "transparent",
-                    width: 22,
-                    height: 22,
-                    justifyContent: "center",
-                  }}
-                >
-                  <FastImage
-                    style={{
-                      marginLeft: 4,
-                      marginTop: 1,
-                      width: 22,
-                      height: 22,
-                      textAlignVertical: "center",
-                      textAlignVertical: "center",
-                    }}
-                    resizeMode={FastImage.resizeMode.contain}
-                    source={require("../../../../assets/verified.png")}
-                  />
-                </View>
-              </View>
-            )}
-          </TouchableOpacity>
-        </View>
+          </View>
 
+           
         {friendData.map((grids) => (
+
+
           <View
-            key={"b" + grids.UUID}
             style={{
               padding: 7,
               width: 110,
@@ -140,49 +137,28 @@ const FriendHeader = (props) => {
               alignItems: "center",
             }}
           >
-            <TouchableOpacity
-              onPress={async () => {
-                props.goToFriend(grids.friendID);
+        <TouchableOpacity
+            onPress={async () => {
+              props.goToFriend(grids.friendID);
+            }}
+          >
+          <View style={{borderWidth: 3, borderRadius: 38, borderColor: "#ea5504", width: 76, height: 76, alignContent: "center", alignItems: "center", justifyContent:'center'}}>
+            <Image
+              indicator={Progress}
+              style={{      
+                borderWidth: 2,
+                borderRadius: 35,
+                borderColor: "white", width: 70, height: 70, overflow: "hidden"
+                }}
+              source={{
+                cache: FastImage.cacheControl.immutable,
+                priority: FastImage.priority.high,
+                uri: grids.friend_avatar,
               }}
-            >
-              <Image
-                key={"bb" + grids.UUID}
-                ref={(friends) => friends + parseInt(grids.friendID)}
-                indicator={Progress}
-                style={{
-                  height: 70,
-                  width: 70,
-                  marginLeft: 14,
-                  marginRight: 16,
-                  borderRadius: 35,
-                  borderColor: "black",
-                  backgroundColor: "#f2f2f2",
-                  overflow: "hidden",
-                  borderWidth: 1,
-                }}
-                resizeMode={FastImage.resizeMode.contain}
-                source={{
-                  cache: FastImage.cacheControl.immutable,
-                  priority: FastImage.priority.high,
-                  uri: grids.friend_avatar,
-                }}
-              />
-              <Text
-                ellipsizeMode="tail"
-                numberOfLines={1}
-                style={{
-                  alignItems: "center",
-                  justifyContent: "space-around",
-                  textAlign: "center",
-                  width: 100,
-                  marginTop: 2,
-                  fontSize: 13,
-                  textTransform: "lowercase",
-                }}
-              >
-                {grids.friend_handle}
-              </Text>
-              {grids.friend_events > 0 ? (
+            />
+            
+          </View>
+          {grids.friend_events > 0 ? (
                 <View style={{ position: "absolute" }}>
                   <View
                     style={{
@@ -212,35 +188,52 @@ const FriendHeader = (props) => {
               ) : (
                 <></>
               )}
-              {grids.friend_isPro == "1" && (
-                <View style={{ position: "absolute" }}>
-                  <View
-                    style={{
-                      marginTop: 50,
-                      marginLeft: 60,
-                      backgroundColor: "transparent",
-                      width: 22,
-                      height: 22,
-                      justifyContent: "center",
-                    }}
-                  >
-                    <FastImage
-                      style={{
-                        marginLeft: 4,
-                        marginTop: 1,
-                        width: 22,
-                        height: 22,
-                        textAlignVertical: "center",
-                        textAlignVertical: "center",
-                      }}
-                      resizeMode={FastImage.resizeMode.contain}
-                      source={require("../../../../assets/verified.png")}
-                    />
-                  </View>
-                </View>
-              )}
-            </TouchableOpacity>
+          {grids.friend_isPro == "1" && (
+            <View style={{ position: "absolute" }}>
+              <View
+                style={{
+                  marginTop: 63,
+                  marginLeft: 50,
+                  backgroundColor: "transparent",
+                  width: 22,
+                  height: 22,
+                  justifyContent: "center",
+                }}
+              >
+                <FastImage
+                  style={{
+                    marginLeft: 5,
+                    marginTop: -17,
+                    width: 22,
+                    height: 22,
+                    textAlignVertical: "center",
+                    textAlignVertical: "center",
+                  }}
+                  resizeMode={FastImage.resizeMode.contain}
+                  source={require("../../../../assets/verified.png")}
+                  />
+              </View>
+            </View>
+          )}
+          </TouchableOpacity>
+                    
+            <Text
+              ellipsizeMode="tail"
+              numberOfLines={1}
+              style={{
+                alignItems: "center",
+                justifyContent: "space-around",
+                textAlign: "center",
+                width: 110,
+                marginTop: 2,
+                fontWeight: "400",
+                fontSize: 13,
+              }}
+            >
+                {grids.friend_handle}
+                </Text>
           </View>
+
         ))}
       </ScrollView>
     </>

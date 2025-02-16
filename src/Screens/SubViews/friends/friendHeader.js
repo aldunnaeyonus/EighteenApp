@@ -40,7 +40,7 @@ const FriendHeader = (props) => {
                 <FastImage
                   style={{
                     marginLeft: 4,
-                    marginTop: 1,
+                    marginTop: -3,
                     width: 22,
                     height: 22,
                     textAlignVertical: "center",
