@@ -194,8 +194,9 @@ const GetPro = (props) => {
       <SafeAreaView
         style={{
           backgroundColor: "transparent",
-          height: SCREEN_HEIGHT,
+          height: '100%',
           width: SCREEN_WIDTH,
+          marginBottom: 20
         }}
         edges={["left", "right"]}
       >
