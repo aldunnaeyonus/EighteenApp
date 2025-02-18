@@ -267,7 +267,7 @@ const AccountDetails = (props) => {
             alignItems: "center",
           }}
         >
-          <Text style={{ textAlign: "center", color: "gray" }}>
+          <Text style={{ textAlign: "center", color: "gray", fontSize:15 }}>
             {i18n.t("Email address changes")}
           </Text>
         </View>
