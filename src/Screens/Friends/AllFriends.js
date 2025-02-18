@@ -108,6 +108,7 @@ const AllFriends = (props) => {
           data={search.length > 0 ? friendDataTemp : friendData}
           extraData={search.length > 0 ? friendDataTemp : friendData}
           scrollEventThrottle={16}
+          stickyHeaderIndices={[0]}
           ListHeaderComponent={
             <SearchBar
               inputContainerStyle={{ backgroundColor: "white" }}
