@@ -14,6 +14,15 @@ export const media_amount = ["1", "2", "3", "4", "5", "10", "15", "18"];
 export const camera_amount_PRO = ["10", "18", "25", "50", "100", "150", "250", "500", "1000"];
 export const languages = ["French","German","Italian","Dutch","Danish","Polish","Portuguese","Norwegian","Swedish","Finish","English","Spanish", "Japanese", "Chinese", "Ukrainian", "Greek", "South Korean"];
 
+enum COLOR_SCHEME {
+  LIGHT = 'light',
+  DARK = 'dark',
+}
+export const COLORS = {
+  [COLOR_SCHEME.LIGHT]: '#000',
+  [COLOR_SCHEME.DARK]: '#fff',
+};
+
 export const ANDROID_DISPLAY = Object.freeze({
   default: 'default',
   spinner: 'spinner',
@@ -317,6 +326,7 @@ export const constants = {
   flyerdataEvent,
   ANDROID_EVT_TYPE,
   EVENT_TYPE_DISMISSED,
+  COLORS,
   EVENT_TYPE_SET,
   ANDROID_DISPLAY,
   MIN_MS,

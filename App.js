@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
-import { Text, LogBox, Platform} from "react-native";
+import { Text, LogBox, Platform, useColorScheme} from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, DarkTheme, DefaultTheme,  } from "@react-navigation/native";
 import Handle from "./src/Screens/LoginReg/Handle";
 import Verification from "./src/Screens/LoginReg/Verification";
 import Begin from "./src/Screens/LoginReg";
@@ -45,6 +45,7 @@ import TempCamera from "./src/Screens/Cameras/TempCamera";
 import { getLocales } from 'expo-localization';
 import { ToastProvider } from 'react-native-styled-toast'
 import { storage } from "./src/context/components/Storage";
+import { COLORS } from "./src/utils/constants";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -69,7 +70,9 @@ export default function App() {
       restartAfterInstall: false,
     });
   };
-
+  const colorScheme = useColorScheme();
+//const colorScheme = useColorScheme();
+//const colors = COLORS[colorScheme ?? 'dark'];
 const onCheckVersion = () => {
     fetch(constants.updateJSON).then(async (data) => {
       const result = await data.json();
@@ -184,7 +187,6 @@ const onCheckVersion = () => {
     fetchData();
   }, [signIn, ready, owner]);
 
-
   if (!ready) {
     setI18nConfig(localLang, constants.url);
     return (
@@ -201,6 +203,7 @@ const onCheckVersion = () => {
       <ToastProvider maxToasts={1} offset={65} position="TOP">
           <MenuProvider>
         <NavigationContainer
+          theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
           linking={linking}
           fallback={
             <FastImage
@@ -256,7 +259,7 @@ const onCheckVersion = () => {
                   title: "",
                   headerShown: true,
                   gestureEnabled: false,
-                  headerTintColor: "#000",
+                  headerTintColor: COLORS[colorScheme ?? 'dark'],
                   headerBackTitleVisible: false,
                 }}
               >
@@ -278,7 +281,9 @@ const onCheckVersion = () => {
                   title: i18n.t("allfriends"),
                   headerShown: true,
                   gestureEnabled: false,
-                  headerTintColor: "#000",
+                  headerTintColor:  COLORS[colorScheme ?? 'dark'],
+                  headerBackTitleStyle:  COLORS[colorScheme ?? 'dark'],
+                  headerTitleStyle:  COLORS[colorScheme ?? 'dark'],
                   headerBackTitleVisible: false,
                 }}
               >
@@ -433,7 +438,9 @@ const onCheckVersion = () => {
                   title: i18n.t("SnapEighteen"),
                   headerShown: true,
                   gestureEnabled: false,
-                  headerTintColor: "#000",
+                  headerTintColor:  COLORS[colorScheme ?? 'dark'],
+                  headerBackTitleStyle:  COLORS[colorScheme ?? 'dark'],
+                  headerTitleStyle:  COLORS[colorScheme ?? 'dark'],
                   headerBackTitleVisible: false,
                   headerBackVisible: false,
                 }}
