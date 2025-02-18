@@ -7,6 +7,7 @@ const Image = createImageProgress(FastImage);
 import * as i18n from "../../../../i18n";
 import { storage } from "../../../context/components/Storage";
 import { useMMKVObject } from "react-native-mmkv";
+import { SCREEN_WIDTH } from "../../../utils/constants";
 
 const FriendHeader = (props) => {
     const [friendData] = useMMKVObject("user.Friend.Feed", storage);
@@ -16,7 +17,7 @@ const FriendHeader = (props) => {
     <>
       <View
         style={{
-          width: "95%",
+          width: '95%' ,
           height: 25,
           flexDirection: "row",
           justifyContent: "space-between",
@@ -47,7 +48,7 @@ const FriendHeader = (props) => {
         </TouchableOpacity>
       </View>
       <ScrollView
-        style={{ height: 100, marginBottom:15 }}
+        style={{ height: 100, marginBottom:15, width:SCREEN_WIDTH }}
         horizontal
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicatorr={false}

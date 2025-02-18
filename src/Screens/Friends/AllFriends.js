@@ -64,6 +64,7 @@ const AllFriends = (props) => {
       }
       const fetchData = async () => {
         await axiosPull._pullFriendsFeedABC(user.user_id);
+        storage.delete("user.Friend.Feed_Temp");
       };
       fetchData();
     }, [props, user, refreshing])

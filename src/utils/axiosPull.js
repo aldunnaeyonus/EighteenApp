@@ -168,7 +168,7 @@ export const _pullMembersFeed = async (pin,owner, UUID) => {
   const response = await postData("/camera/members.php", data);
   const myData = []
     .concat(response)
-    .sort((a, b) => String(a.user_handle).localeCompare(String(b.user_handle)));
+    .sort((a, b) => (a.user_handle - b.user_handle));
   storage.set(`user.Member.Join.Feed.${pin}`, JSON.stringify(myData));
 };
 

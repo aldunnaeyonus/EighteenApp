@@ -12,17 +12,21 @@ import { axiosPull } from "../../utils/axiosPull";
 import { useToast } from "react-native-styled-toast";
 import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../i18n";
+import { SearchBar } from "react-native-elements";
 
 const JoinedMembers = (props) => {
   const AnimatedFlatlist = Animated.FlatList;
   const contentOffset = useSharedValue(0);
-  const [data, setData] = useMMKVObject(
+  const [data] = useMMKVObject(
     "user.Member.Join.Feed." + props.route.params.pin,
     storage
   );
   const [refreshing, setRefreshing] = useState(false);
   const { toast } = useToast();
-
+  const [friendDataTemp, setFriendDataTemp] = useMMKVObject(
+    "user.Friend.Feed_Temp",
+    storage
+  );
   const moreCredits = async (user, pin, UUID) => {
     const data = {
       owner: user,
@@ -32,6 +36,23 @@ const JoinedMembers = (props) => {
     await axiosPull._pullMembersFeed(pin, user, UUID)
     await axiosPull._pullCameraFeed(props.route.params.owner, "owner");
   }
+  const [search, setSearch] = useState("");
+  const searchFunction = (text) => {
+    if (text.length <= 0) {
+      _clear();
+      setSearch("");
+    } else {
+      const updatedData = data.filter((item) => {
+        const item_data = `${item.user_handle.toLowerCase()}`;
+        return item_data.indexOf(text.toLowerCase()) > -1;
+      });
+      setFriendDataTemp(updatedData);
+      setSearch(text);
+    }
+  };
+  const _clear = async () => {
+    await axiosPull._pullMembersFeed(props.route.params.owner, props.route.params.pin, props.route.params.UUID);
+  };
 
   const _removeUser = (user_id, pin, UUID, name, title) => {
     Alert.alert(
@@ -51,9 +72,10 @@ const JoinedMembers = (props) => {
         {
           text: i18n.t("Remove"),
           onPress: async () => {
-            _deleteFeedItemIndex(user_id, pin);
+            //_deleteFeedItemIndex(user_id, pin);
             const data = { owner: user_id, pin: pin, id: UUID };
             await axiosPull.postData("/camera/deleteMember.php", data);
+            await axiosPull._pullMembersFeed(user_id, pin, UUID);
           },
           style: "destructive",
         },
@@ -68,20 +90,20 @@ const JoinedMembers = (props) => {
     });
   };
 
-  const _deleteFeedItemIndex = (user_id, pin) => {
-    data.forEach((res, index) => {
-      if (res.user_id == user_id) {
-        setData((prevState) => {
-          prevState.splice(index, 1);
-          storage.set(
-            "user.Member.Join.Feed." + pin,
-            JSON.stringify(prevState)
-          );
-          return [...prevState];
-        });
-      }
-    });
-  };
+  // const _deleteFeedItemIndex = (user_id, pin) => {
+  //   data.forEach((res, index) => {
+  //     if (res.user_id == user_id) {
+  //       setData((prevState) => {
+  //         prevState.splice(index, 1);
+  //         storage.set(
+  //           "user.Member.Join.Feed." + pin,
+  //           JSON.stringify(prevState)
+  //         );
+  //         return [...prevState];
+  //       });
+  //     }
+  //   });
+  // };
 
   const _refresh = async () => {
     setRefreshing(true);
@@ -137,6 +159,7 @@ const JoinedMembers = (props) => {
       fetchData();
       return () => {
         clearInterval(timeout);
+                storage.delete("user.Friend.Feed_Temp");
       };
     }, [data, props, refreshing])
   );
@@ -155,9 +178,22 @@ const JoinedMembers = (props) => {
         <AnimatedFlatlist
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicatorr={false}
-          data={data}
-          extraData={data}
+          data={search.length > 0 ? friendDataTemp : data}
+          extraData={search.length > 0 ? friendDataTemp : data}
+          stickyHeaderIndices={[0]}
           scrollEventThrottle={16}
+          ListHeaderComponent={
+            <SearchBar
+              inputContainerStyle={{ backgroundColor: "white" }}
+              containerStyle={{ backgroundColor: "white" }}
+              placeholder={i18n.t("Enter Member Username")}
+              lightTheme
+              value={search}
+              onClear={_clear}
+              onChangeText={(text) => searchFunction(text)}
+              autoCorrect={false}
+            />
+          }
           ListEmptyComponent={
            <View style={style.empty}>
             <View style={style.fake}>
