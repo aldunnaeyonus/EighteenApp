@@ -399,6 +399,7 @@ const Friends = (props) => {
             data={cameraData}
             extraData={cameraData}
             scrollEventThrottle={16}
+            stickyHeaderIndices={[0]}
             ListEmptyComponent={
               isFriend == "1" && (
                   <View style={style.empty}>
