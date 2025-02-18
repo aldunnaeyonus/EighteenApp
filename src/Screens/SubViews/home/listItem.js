@@ -500,7 +500,7 @@ const ListItem = (props) => {
             justifyContent: "space-between",
           }}
         >
-          <Text style={{ color: "grey", fontSize: 15 }}>
+          <Text style={{ color: "grey", fontSize: 13 }}>
             {eventStart} - {eventEnd}
           </Text>
         </View>
