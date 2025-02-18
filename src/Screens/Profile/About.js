@@ -61,7 +61,7 @@ const Abouts = () => {
                             <Text style={style.name}>{user.user_handle}</Text>
                           </View>
                           <Text style={{
-                            textAlign:'center', margin:30, fontSize:13, color:'grey'
+                            textAlign:'center', margin:30, fontSize:15, color:'grey'
                           }}>{i18n.t('TooKeep')}</Text>
                 <ListItem
               containerStyle={{ paddingHorizontal: 50, paddingVertical:20 }}
