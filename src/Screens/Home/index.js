@@ -821,6 +821,7 @@ const Home = (props) => {
         <AnimatedFlatList
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicatorr={false}
+          stickyHeaderIndices={[0]}
           data={cameraData}
           extraData={cameraData}
           scrollEventThrottle={16}
