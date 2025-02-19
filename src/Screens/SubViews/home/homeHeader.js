@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
 import Progress from "react-native-progress";
@@ -8,6 +8,7 @@ import * as i18n from "../../../../i18n";
 import { storage } from "../../../context/components/Storage";
 import { useMMKVObject } from "react-native-mmkv";
 import { SCREEN_WIDTH } from "../../../utils/constants";
+import {ScrollView} from 'react-native-gesture-handler';
 
 const FriendHeader = (props) => {
     const [friendData] = useMMKVObject("user.Friend.Feed", storage);
@@ -47,9 +48,12 @@ const FriendHeader = (props) => {
           </Text>
         </TouchableOpacity>
       </View>
+      <View style={{flex: 1}}>
       <ScrollView
         style={{ height: 100, marginBottom:15, width:SCREEN_WIDTH }}
         horizontal
+        scrollEnabled={true}
+        nestedScrollEnabled={true}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicatorr={false}
       >
@@ -237,6 +241,7 @@ const FriendHeader = (props) => {
 
         ))}
       </ScrollView>
+            </View>
     </>
   );
 };
