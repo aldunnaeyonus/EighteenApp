@@ -438,9 +438,9 @@ const CreateCamera = (props) => {
         const postLoading = async () => {
         storage.set("uploadData", JSON.stringify({"message": "", "display":"none", "image":""}));
         await CameraRoll.saveAsset(image);
-        await axiosPull._pullGalleryFeed(props.route.params.pin);
-        await axiosPull._pullFriendCameraFeed(props.route.params.owner, "user", props.route.params.user);
-        await axiosPull._pullCameraFeed(props.route.params.user, "owner");
+        await axiosPull._pullGalleryFeed(pin);
+        await axiosPull._pullFriendCameraFeed(user.user_id, "user", props.route.params.user);
+        await axiosPull._pullCameraFeed(user.user_id, "owner");
         if (parseInt(start) >= moment().unix()) {
           notification.scheduleNotif(
              String(name),

@@ -437,7 +437,7 @@ let deviceLanguage =
       }).then((res) => {
         const postLoading = async () => {
         setIsAI(false);
-        await axiosPull._pullCameraFeed(user, "owner");
+        await axiosPull._pullCameraFeed(props.route.params.user, "owner");
 
         if (start != props.route.params.start) {
           notification.cancelNotif(pin + "-start");
