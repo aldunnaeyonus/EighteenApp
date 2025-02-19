@@ -43,9 +43,7 @@ const GetPro = (props) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useFocusEffect(
-    useCallback(() => {
-            StatusBar.setHidden(true, 'none');
-      
+    useCallback(() => {      
       if (!props.unsubscribe) {
         toast({
           message: i18n.t("No internet connection"),
@@ -88,9 +86,6 @@ const GetPro = (props) => {
           </TouchableOpacity>
         ),
       });
-            return () => {
-              StatusBar.setHidden(false, 'none');
-            };
     }, [props.unsubscribe])
   );
 

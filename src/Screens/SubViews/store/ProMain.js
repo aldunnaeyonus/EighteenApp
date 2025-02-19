@@ -39,10 +39,23 @@ const ProMain = (props) => {
                   Linking.openURL('https://play.google.com/store/account/subscriptions');
                   }
                 }}
-              >
-                {i18n.t("Cancel anytime")}
+              >{i18n.t("Cancel anytime")}
               </Text>
-            </Text>
+              <Text>{" "} - {" "} </Text>
+           <Text
+           onPress={() => {
+            Platform.OS == "ios" ? props.handleBuySubscription(props.item.item.productId) : props.handleBuySubscription(props.item.item.productId,props.item.item.subscriptionOfferDetails[1].offerToken );
+          }}
+                style={{
+                  fontFamily: 'HelveticaNeue-Medium',
+                  color: "#ea5504",
+                  fontWeight: "600",
+                  textAlign: "center", 
+                }}
+                >
+                  {i18n.t("subscribe")}
+                  </Text>
+        </Text>  
       </View>
       <View
             
