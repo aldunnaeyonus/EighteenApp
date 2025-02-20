@@ -201,9 +201,9 @@ const JoinedMembers = (props) => {
               <View
               style={[
                 style.fakeLine,
-                { width: 150, height:20, marginRight:25},
+                { width: 150, height:20, marginRight:25,  opacity:0.7},
               ]} />
-              <View style={style.fakeSquare} />
+              <View style={[style.fakeSquare, { opacity:0.4}]} />
           </View>
           <EmptyStateView
               headerText={""}
