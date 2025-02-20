@@ -203,7 +203,7 @@ const onCheckVersion = () => {
       <ToastProvider maxToasts={1} offset={65} position="TOP">
           <MenuProvider>
         <NavigationContainer
-          theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+          theme={colorScheme === 'dark' ? DefaultTheme : DefaultTheme}
           linking={linking}
           fallback={
             <FastImage
@@ -259,7 +259,7 @@ const onCheckVersion = () => {
                   title: "",
                   headerShown: true,
                   gestureEnabled: false,
-                  headerTintColor: COLORS[colorScheme ?? 'dark'],
+                  headerTintColor: COLORS[colorScheme ?? 'light'],
                   headerBackTitleVisible: false,
                 }}
               >
@@ -281,9 +281,9 @@ const onCheckVersion = () => {
                   title: i18n.t("allfriends"),
                   headerShown: true,
                   gestureEnabled: false,
-                  headerTintColor:  COLORS[colorScheme ?? 'dark'],
-                  headerBackTitleStyle:  COLORS[colorScheme ?? 'dark'],
-                  headerTitleStyle:  COLORS[colorScheme ?? 'dark'],
+                  headerTintColor:  COLORS[colorScheme ?? 'light'],
+                  headerBackTitleStyle:  COLORS[colorScheme ?? 'light'],
+                  headerTitleStyle:  COLORS[colorScheme ?? 'light'],
                   headerBackTitleVisible: false,
                 }}
               >
@@ -438,9 +438,9 @@ const onCheckVersion = () => {
                   title: i18n.t("SnapEighteen"),
                   headerShown: true,
                   gestureEnabled: false,
-                  headerTintColor:  COLORS[colorScheme ?? 'dark'],
-                  headerBackTitleStyle:  COLORS[colorScheme ?? 'dark'],
-                  headerTitleStyle:  COLORS[colorScheme ?? 'dark'],
+                  headerTintColor:  COLORS[colorScheme ?? 'light'],
+                  headerBackTitleStyle:  COLORS[colorScheme ?? 'light'],
+                  headerTitleStyle:  COLORS[colorScheme ?? 'light'],
                   headerBackTitleVisible: false,
                   headerBackVisible: false,
                 }}
