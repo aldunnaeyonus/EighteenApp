@@ -172,10 +172,18 @@ const Friends = (props) => {
   };
 
   const deleteMember = async () => {
-    const data = { owner: props.route.params.userID, user: user.user_id };
-    await axiosPull.postData("/camera/removeUser.php", data);
+                const data = {
+                  user: props.route.params.userID,
+                  pin: "",
+                  type: "block",
+                  title: "",
+                  owner: user.user_id,
+                  locale: getLocales()[0].languageCode,
+                };
+    await axiosPull.postData("/camera/report.php", data);
+    await axiosPull._pullFriendsFeed(user.user_id);
     storage.delete("user.Camera.Friend.Feed." + props.route.params.userID);
-
+    
     props.navigation.pop(1);
   };
 
