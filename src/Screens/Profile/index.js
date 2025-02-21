@@ -386,7 +386,7 @@ Language Code: ${getLocales()[0].languageCode}`,
           <View style={[styles.dividerTableStyle]} />
           <ListItem
             containerStyle={{ paddingVertical: 5 }}
-            key="1"
+            key="29"
             onPress={() => {
               blocked()
             }}
