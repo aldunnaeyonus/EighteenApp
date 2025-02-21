@@ -89,6 +89,13 @@ const GetPro = (props) => {
     }, [props.unsubscribe])
   );
 
+  const eula = useCallback(() => {
+    props.navigation.navigate("WebView", {
+      url: constants.url + "/EULA.html",
+      name: "EULA",
+    });
+  });
+
   const privacy = useCallback(() => {
     props.navigation.navigate("WebView", {
       url: constants.url + "/privacyPolicy.html",
@@ -205,6 +212,7 @@ const GetPro = (props) => {
             <ProFooter
               privacy={privacy}
               terms={terms}
+              eula={eula}
               openSubscriptions={openSubscriptions}
             />
           }

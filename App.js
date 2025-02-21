@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
-import { LogBox, Platform, useColorScheme} from "react-native";
+import { Text, LogBox, Platform, useColorScheme, TextInput} from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer, DefaultTheme,  } from "@react-navigation/native";
@@ -51,8 +51,9 @@ export default function App() {
   const Stack = createNativeStackNavigator();
   setup({ storekitMode: "STOREKIT2_MODE" });
   const [isConnected, setIsConnected] = useState(true);
-  //Text.defaultProps = Text.defaultProps || {};
-  //Text.defaultProps.allowFontScaling = false;
+  Text.defaultProps = Text.defaultProps || {};
+  Text.defaultProps.allowFontScaling = false;
+
   LogBox.ignoreAllLogs(true);
   const [signIn, setSignIn] = useState(false);
   const [ready, setReady] = useState(false);

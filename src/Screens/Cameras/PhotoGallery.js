@@ -24,7 +24,6 @@ import { axiosPull } from "../../utils/axiosPull";
 import { useToast } from "react-native-styled-toast";
 import { useMMKVObject } from "react-native-mmkv";
 import { useFocusEffect } from "@react-navigation/native";
-import { handleUpload } from "../SubViews/upload";
 import * as i18n from "../../../i18n";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PhotoEditor from "@baronha/react-native-photo-editor";
@@ -98,7 +97,7 @@ const PhotoGallery = (props) => {
     }).then((res) => {
       const postLoading = async () => {
       storage.set("uploadData", JSON.stringify({"message": "", "display":"none", "image":""}));
-      await axiosPull._pullGalleryFeed(props.route.params.pin);
+      await axiosPull._pullGalleryFeed(props.route.params.pin, props.route.params.user);
       await axiosPull._pullFriendCameraFeed(props.route.params.owner, "user", props.route.params.user);
       await axiosPull._pullCameraFeed(props.route.params.user, "owner");
       setCredits(parseInt(credits) - pickedImages.length);
@@ -293,15 +292,13 @@ const PhotoGallery = (props) => {
       var timeout = setInterval(async () => {
         await axiosPull._pullGalleryFeed(
           props.route.params.pin,
-          props.route.params.user,
-          props.route.params.owner
+          props.route.params.user
         );
       }, 15000);
       const fetchData = async () => {
         await axiosPull._pullGalleryFeed(
           props.route.params.pin,
-          props.route.params.user,
-          props.route.params.owner
+          props.route.params.user
         );
         preLoadImages();
       };

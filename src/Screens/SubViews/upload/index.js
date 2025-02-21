@@ -46,7 +46,7 @@ export const handleUpload = async (
             await BackgroundService.stop();
             break;
           case "gallery":
-            await axiosPull._pullGalleryFeed(pin);
+            await axiosPull._pullGalleryFeed(pin, user);
             await axiosPull._pullFriendCameraFeed(name, "user", user);
             await axiosPull._pullCameraFeed(user, "owner");
             await BackgroundService.stop();
@@ -56,7 +56,7 @@ export const handleUpload = async (
             await BackgroundService.stop();
             break;
           case "camera":
-            await axiosPull._pullGalleryFeed(pin);
+            await axiosPull._pullGalleryFeed(pin,user);
             await axiosPull._pullFriendCameraFeed(name, "user", user);
             await axiosPull._pullCameraFeed(user, "owner");
             await BackgroundService.stop();

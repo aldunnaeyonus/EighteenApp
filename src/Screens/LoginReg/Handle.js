@@ -11,7 +11,8 @@ import { ActivityIndicator } from "react-native-paper";
 import * as i18n from "../../../i18n";
 import * as RNLocalize from "react-native-localize";
 import { getLocales } from 'expo-localization';
-import { SCREEN_WIDTH } from "../../utils/constants";
+import { SCREEN_WIDTH, constants } from "../../utils/constants";
+import ProFooter from "../SubViews/store/ProFooter";
 
 
 const Handle = (props) => {
@@ -95,6 +96,30 @@ const Handle = (props) => {
   }
   execute();
   }, [email]);
+  const openSubscriptions = async () => {
+
+  };
+
+  const eula = useCallback(() => {
+    props.navigation.navigate("WebView", {
+      url: constants.url + "/EULA.html",
+      name: "EULA",
+    });
+  });
+
+  const privacy = useCallback(() => {
+      props.navigation.navigate("WebView", {
+        url: constants.url + "/privacyPolicy.html",
+        name: i18n.t("Privacy Policy"),
+      });
+    });
+  
+    const terms = useCallback(() => {
+      props.navigation.navigate("WebView", {
+        url: constants.url + "/termsUsePolicy.html",
+        name: i18n.t("Terms & Use"),
+      });
+    });
 
   return (
     <KeyboardAwareScrollView style={{ backgroundColor: "#fff" }}>
@@ -208,6 +233,13 @@ const Handle = (props) => {
             </Text>
           </TouchableOpacity>
           <Text style={styles.smalltitleText}>{i18n.t("Log in easily")}</Text>
+          <Text style={[styles.smalltitleText,{marginTop:25, marginBottom:25}]}>{i18n.t("agree")}</Text>
+          <ProFooter
+              privacy={privacy}
+              terms={terms}
+              eula={eula}
+              openSubscriptions={openSubscriptions}
+            />
         </View>
       </SafeAreaProvider>
     </KeyboardAwareScrollView>

@@ -10,8 +10,8 @@ const ProFooter = (props) => {
         width: SCREEN_WIDTH,
         marginTop: 10,
         marginBottom: 30,
-        justifyContent: "center",
-        alignContent: "center",
+        justifyContent: "space-between",
+        alignContent: "space-between",
         alignItems: "center",
       }}
     >
@@ -23,6 +23,16 @@ const ProFooter = (props) => {
         >
           <Text style={{ textAlign: "center", color: "grey" }}>
             {i18n.t("Terms & Use")}
+          </Text>
+        </TouchableOpacity>
+        {"           "}
+        <TouchableOpacity
+          onPress={() => {
+            props.eula();
+          }}
+        >
+          <Text style={{ textAlign: "center", color: "grey" }}>
+            EULA
           </Text>
         </TouchableOpacity>
         {"           "}

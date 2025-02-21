@@ -145,7 +145,7 @@ const MediaPage = (props: {
         const postLoading = async () => {
           storage.set("uploadData", JSON.stringify({"message": "", "display":"none", "image":""}));
         await CameraRoll.saveAsset(source.uri);
-        await axiosPull._pullGalleryFeed(props.route.params.pin);
+        await axiosPull._pullGalleryFeed(props.route.params.pin, props.route.params.user);
         await axiosPull._pullFriendCameraFeed(props.route.params.owner, "user", props.route.params.user);
         await axiosPull._pullCameraFeed(props.route.params.user, "owner");
         if (props.route.params.owner != props.route.params.user) {

@@ -3,7 +3,8 @@ import {
   TouchableOpacity,
   Share,
   FlatList,
-  StatusBar
+  StatusBar,
+  Alert
 } from "react-native";
 import React, { useState, useRef, useCallback } from "react";
 import { Icon } from "react-native-elements";
@@ -92,6 +93,36 @@ const PhotoViewer = (props) => {
     }, [props.unsubscribe])
   );
 
+  const _reportContent = async () => {
+      Alert.alert(
+        i18n.t("ReportContent"),
+        i18n.t("Areyousureyou"),
+        [
+          {
+            text: i18n.t("Cancel"),
+            onPress: () => console.log("Cancel Pressed"),
+            style: "destructive",
+          },
+          {
+            text: i18n.t("ReportContent"),
+            onPress: async () => {
+              const data = {
+                user: props.route.params.data[activeIndex].user_id,
+                pin: props.route.params.data[activeIndex].image_id,
+                title: props.route.params.data[activeIndex].uri,
+                type: "content",
+                locale: getLocales()[0].languageCode,
+              };
+              await axiosPull.postData("/camera/report.php", data);
+              Alert.alert("", i18n.t("AreportContent"));
+            },
+            style: "default",
+          },
+        ],
+        { cancelable: false }
+      );
+    };
+
 const onMomentumScrollBegin = () => {
   canMomentum.current = true;
 };
@@ -166,7 +197,7 @@ const getItemLayout = (_, index) => (
         <View
         style={{
           position: "absolute",
-          right: 25,
+          right: 15,
           zIndex:2,
           top: 30,
           padding: 10,
@@ -176,15 +207,27 @@ const getItemLayout = (_, index) => (
           gap: 20,
         }}
       >
-         <TouchableOpacity
+        
+        <TouchableOpacity
               onPress={() => {
-                props.navigation.goBack();
+
               }}
             >
         <Icon
-          name={"close"}
-          size={30}
-          onPress={props.navigation.goBack}
+          type={'ionicon'}
+          name={"eye-off-sharp"}
+          size={25}
+          color="white"
+        />
+       </TouchableOpacity>
+         <TouchableOpacity
+              onPress={() => {
+                _reportContent()
+              }}
+            >
+        <Icon
+          name={"report"}
+          size={25}
           color="white"
         />
        </TouchableOpacity>
@@ -196,13 +239,24 @@ const getItemLayout = (_, index) => (
             >
               <Icon
                 type="material-community"
-                size={30}
+                size={25}
                 name="share"
                 color="#fff"
               />
             </TouchableOpacity>
        : <></>
       }
+       <TouchableOpacity
+              onPress={() => {
+                props.navigation.goBack();
+              }}
+            >
+        <Icon
+          name={"close"}
+          size={25}
+          color="white"
+        />       
+        </TouchableOpacity>
       </View>
       </SafeAreaView>
     </SafeAreaProvider>
