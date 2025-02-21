@@ -42,7 +42,7 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
 import NotifService from "../../../NotifService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ActivityIndicator, MD2Colors } from "react-native-paper";
+import { ActivityIndicator } from "react-native-paper";
 import axios from "axios";
 import { axiosPull } from "../../utils/axiosPull";
 import RNFS from 'react-native-fs';

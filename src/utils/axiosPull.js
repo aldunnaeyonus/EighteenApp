@@ -76,13 +76,13 @@ export const _pullUser = async (id, screen) => {
 };
 
 export const _resetBadge = async (owner, pin) => {
- const data = {
-   owner: owner,
-   pin: pin
+  const data = {
+    owner: owner,
+    pin: pin,
   };
   const response = await postData("/camera/resetBadge.php", data);
   return JSON.stringify(response);
-}
+};
 export const _pullGalleryArray = async (pin) => {
   const data = {
     pin: pin,
@@ -95,7 +95,6 @@ export const _pullGalleryFeed = async (pin, user) => {
   const data = {
     pin: pin,
     user: user,
-
   };
   const response = await postData("/camera/gallery.php", data);
   const myData = []
@@ -118,6 +117,18 @@ export const _pullFriendCameraFeed = async (owner_ID, type, myID) => {
   storage.set(`user.Camera.Friend.Feed.${owner_ID}`, JSON.stringify(myData));
 };
 
+export const _pullBlockedFriendsFeedABC = async (id) => {
+  const data = {
+    owner: id,
+  };
+  const response = await postData("/users/blocked.php", data);
+  const myData = []
+    .concat(response)
+    .sort((a, b) => a.friend_handle - b.friend_handle);
+
+  storage.set("user.Friend.Blocked", JSON.stringify(myData));
+};
+
 export const _pullFriendsFeedABC = async (id) => {
   const data = {
     owner: id,
@@ -125,7 +136,7 @@ export const _pullFriendsFeedABC = async (id) => {
   const response = await postData("/users/friends.php", data);
   const myData = []
     .concat(response)
-    .sort((a, b) => (a.friend_handle - b.friend_handle));
+    .sort((a, b) => a.friend_handle - b.friend_handle);
 
   storage.set("user.AllFriend.Feed", JSON.stringify(myData));
 };
@@ -137,12 +148,11 @@ export const _pullFriendsFeed = async (id) => {
   const response = await postData("/users/friends.php", data);
   const myData = []
     .concat(response)
-    .sort((a, b) => (a.friend_post_date - b.friend_post_date));
+    .sort((a, b) => a.friend_post_date - b.friend_post_date);
   storage.set("user.Friend.Feed", JSON.stringify(myData));
 };
 
 export const _pullFriendFeed = async (id) => {
-
   const data = {
     owner: id,
   };
@@ -159,7 +169,7 @@ export const _pullHistoryFeed = async (owner) => {
   storage.set("user.Media.Feed", JSON.stringify(myData));
 };
 
-export const _pullMembersFeed = async (pin,owner, UUID) => {
+export const _pullMembersFeed = async (pin, owner, UUID) => {
   const data = {
     owner: owner,
     pin: pin,
@@ -168,7 +178,7 @@ export const _pullMembersFeed = async (pin,owner, UUID) => {
   const response = await postData("/camera/members.php", data);
   const myData = []
     .concat(response)
-    .sort((a, b) => (a.user_handle - b.user_handle));
+    .sort((a, b) => a.user_handle - b.user_handle);
   storage.set(`user.Member.Join.Feed.${pin}`, JSON.stringify(myData));
 };
 
@@ -186,5 +196,6 @@ export const axiosPull = {
   _getProStatus,
   _pullGalleryArray,
   _pullFriendFeed,
-  _pullFriendsFeedABC
+  _pullFriendsFeedABC,
+  _pullBlockedFriendsFeedABC,
 };

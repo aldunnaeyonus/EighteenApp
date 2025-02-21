@@ -46,6 +46,8 @@ import { getLocales } from 'expo-localization';
 import { ToastProvider } from 'react-native-styled-toast'
 import { storage } from "./src/context/components/Storage";
 import { COLORS } from "./src/utils/constants";
+import Blocked from "./src/Screens/Profile/Blocked"; 
+
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -179,6 +181,7 @@ const onCheckVersion = () => {
           storage.set("user.Camera.Friend.Feed", JSON.stringify([]));
           storage.set("user.Member.Join.Feed", JSON.stringify([]));
           storage.set("user.AllFriend.Feed", JSON.stringify([]));
+          storage.set("user.Friend.Blocked", JSON.stringify([]));
       }
       
       setTimeout(() => {
@@ -468,6 +471,26 @@ const onCheckVersion = () => {
               >
                 {(props) => (
                   <JoinedMembers
+                    {...props}
+                    UUID={owner}
+                    loggedIn={signIn}
+                    unsubscribe={isConnected}
+                  />
+                )}
+              </Stack.Screen>
+
+              <Stack.Screen
+                name="Blocked"
+                options={{
+                  title: i18n.t("Blocked"),
+                  headerShown: true,
+                  gestureEnabled: false,
+                  headerTintColor: "#000",
+                  headerBackTitleVisible: false,
+                }}
+              >
+                {(props) => (
+                  <Blocked
                     {...props}
                     UUID={owner}
                     loggedIn={signIn}

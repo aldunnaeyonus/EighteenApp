@@ -108,6 +108,10 @@ const Profile = (props) => {
     });
   });
 
+  const blocked = useCallback(() => {
+    props.navigation.navigate("Blocked");
+  });
+
   const privacy = useCallback(() => {
     props.navigation.navigate("WebView", {
       url: constants.url + "/privacyPolicy.html",
@@ -382,6 +386,32 @@ Language Code: ${getLocales()[0].languageCode}`,
           <View style={[styles.dividerTableStyle]} />
           <ListItem
             containerStyle={{ paddingVertical: 5 }}
+            key="1"
+            onPress={() => {
+              blocked()
+            }}
+          >
+            <Icon
+              type="antdesign"
+              name="deleteuser"
+              size={20}
+              color="#3D4849"
+              containerStyle={{
+                width: 28,
+                height: 28,
+                borderRadius: 6,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            />
+            <ListItem.Content>
+              <ListItem.Title>{i18n.t("Blocked")}</ListItem.Title>
+            </ListItem.Content>
+            <ListItem.Chevron />
+          </ListItem>
+          <View style={[styles.dividerTableStyle]} />
+          <ListItem
+            containerStyle={{ paddingVertical: 5 }}
             fkey="26"
             onPress={() => {
               setmodalVisable(true);
@@ -515,7 +545,7 @@ Language Code: ${getLocales()[0].languageCode}`,
             </ListItem>
             <View style={[styles.dividerTableStyle]} />
 
-            <InfoText text={i18n.t("Account Actions")} />
+            <InfoText text={i18n.t("SupportEmailHeader")} />
             <View style={[styles.dividerTableStyleShort]} />
             <ListItem
               containerStyle={{ paddingVertical: 5 }}
@@ -538,12 +568,14 @@ Language Code: ${getLocales()[0].languageCode}`,
                 }}
               />
               <ListItem.Content>
-                <ListItem.Title>{i18n.t("Support")}</ListItem.Title>
+                <ListItem.Title>{i18n.t("SupportEmail")}</ListItem.Title>
               </ListItem.Content>
               <ListItem.Chevron />
             </ListItem>
-            <View style={[styles.dividerTableStyleShort]} />
+            <View style={[styles.dividerTableStyle]} />
 
+            <InfoText text={i18n.t("Account Actions")} />
+            <View style={[styles.dividerTableStyleShort]} />
             <ListItem
               containerStyle={{ paddingVertical: 5 }}
               key="25"

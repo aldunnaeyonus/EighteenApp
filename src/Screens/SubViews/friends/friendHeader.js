@@ -14,7 +14,7 @@ const FriendHeader = (props) => {
         <View style={style.leftContainer}>
           <View style={[style.containers, { width: 70 + 6, height: 70 + 6 }]}>
             <Image
-            key={props.user_id}
+            key={"B"+props.user_id}
               style={[
                 style.image,
                 { width: 70, height: 70, overflow: "hidden" },

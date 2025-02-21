@@ -58,6 +58,7 @@ const FriendHeader = (props) => {
         showsVerticalScrollIndicatorr={false}
       >
          <View
+                     key={user.user_id}
             style={{
               padding: 7,
               width: 100,
@@ -66,6 +67,7 @@ const FriendHeader = (props) => {
             }}
           >
         <TouchableOpacity
+                    key={"B"+user.user_id}
             onPress={() => props._createCamera(user.user_id)}
           >
           <View style={{borderWidth: 3, borderRadius: 38, borderBottomColor: "rgba(116, 198, 190, 1)", borderTopColor: "#ea5504", borderRightColor: 'rgba(250, 190, 0, 1)', width: 76, height: 76, alignContent: "center", alignItems: "center", justifyContent:'center'}}>
@@ -85,7 +87,7 @@ const FriendHeader = (props) => {
             
           </View>
           {user.isPro == "1" && (
-            <View style={{ position: "absolute" }}>
+            <View style={{ position: "absolute" }} key={"A"+user.user_id}>
               <View
                 style={{
                   marginTop: 63,
@@ -135,6 +137,7 @@ const FriendHeader = (props) => {
 
 
           <View
+          key={"C"+grids.friendID}
             style={{
               padding: 7,
               width: 100,
@@ -143,6 +146,7 @@ const FriendHeader = (props) => {
             }}
           >
         <TouchableOpacity
+                  key={"D"+grids.friendID}
             onPress={async () => {
               props.goToFriend(grids.friendID);
             }}
@@ -164,7 +168,9 @@ const FriendHeader = (props) => {
             
           </View>
           {grids.friend_events > 0 ? (
-                <View style={{ position: "absolute" }}>
+                <View 
+                key={"E"+grids.friendID}
+                style={{ position: "absolute" }}>
                   <View
                     style={{
                       marginTop: -5,
@@ -194,7 +200,9 @@ const FriendHeader = (props) => {
                 <></>
               )}
           {grids.friend_isPro == "1" && (
-            <View style={{ position: "absolute" }}>
+            <View                   
+            key={"F"+grids.friendID}
+            style={{ position: "absolute" }}>
               <View
                 style={{
                   marginTop: 63,
@@ -223,6 +231,7 @@ const FriendHeader = (props) => {
           </TouchableOpacity>
                     
             <Text
+             key={"G"+grids.friendID}
               ellipsizeMode="tail"
               numberOfLines={1}
               style={{
