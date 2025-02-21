@@ -32,7 +32,7 @@ const ProFooter = (props) => {
           }}
         >
           <Text style={{ textAlign: "center", color: "grey" }}>
-            EULA
+            {i18n.t("EULAShort")}
           </Text>
         </TouchableOpacity>
         {"           "}

@@ -158,6 +158,13 @@ Language Code: ${getLocales()[0].languageCode}`,
     }).catch(console.error);
   };
 
+  const eula = useCallback(() => {
+    props.navigation.navigate("WebView", {
+      url: constants.url + "/EULA.html",
+      name: "EULA",
+    });
+  });
+
   const preview = useCallback(() => {
     Alert.alert(
       i18n.t("Delete Account"),
@@ -669,6 +676,32 @@ Language Code: ${getLocales()[0].languageCode}`,
             />
             <ListItem.Content>
               <ListItem.Title>{i18n.t("Terms & Use")}</ListItem.Title>
+            </ListItem.Content>
+            <ListItem.Chevron />
+          </ListItem>
+          <View style={[styles.dividerTableStyleShort]} />
+          <ListItem
+            containerStyle={{ paddingVertical: 5 }}
+            key="28"
+            onPress={() => {
+              eula();
+            }}
+          >
+            <Icon
+              type="material"
+              name="policy"
+              size={20}
+              color="#3D4849"
+              containerStyle={{
+                width: 28,
+                height: 28,
+                borderRadius: 6,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            />
+            <ListItem.Content>
+              <ListItem.Title>{i18n.t("EULA")}</ListItem.Title>
             </ListItem.Content>
             <ListItem.Chevron />
           </ListItem>
