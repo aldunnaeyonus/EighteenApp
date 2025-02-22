@@ -77,7 +77,6 @@ const AndroidPermissions = () => {
     >
       <PermissionItem
         title={i18n.t("ViewSettings")}
-        iconContainerBackgroundColor={'transparent'}
         example={0}
         iconStatusColor={"transparent"}
         subtitle={i18n.t("opensettings")}
@@ -89,7 +88,6 @@ const AndroidPermissions = () => {
           
       <PermissionItem
         title={i18n.t("Camera")}
-        iconContainerBackgroundColor={'transparent'}
         example={1}
         iconStatusColor={camera == "granted" ? "green" : "red"}
         subtitle={i18n.t("To access camera")}
@@ -103,7 +101,6 @@ const AndroidPermissions = () => {
 
       <PermissionItem
         title={i18n.t("Notifications")}
-        iconContainerBackgroundColor={'transparent'}
         example={2}
         iconStatusColor={notifications == "granted" ? "green" : "red"}
         subtitle={i18n.t("getnotifications")}
@@ -117,7 +114,6 @@ const AndroidPermissions = () => {
 
       <PermissionItem
         title={i18n.t("Location")}
-        iconContainerBackgroundColor={'transparent'}
         example={3}
         iconStatusColor={accuracy == "granted" ? "green" : "red"}
         subtitle={i18n.t("Location Status")}
@@ -131,7 +127,6 @@ const AndroidPermissions = () => {
 
       <PermissionItem
         title={i18n.t("Photo Library")}
-        iconContainerBackgroundColor={'transparent'}
         example={4}
         iconStatusColor={photo == "granted" ? "green" : "red"}
         subtitle={i18n.t("To access photo")}
@@ -145,7 +140,6 @@ const AndroidPermissions = () => {
 
       <PermissionItem
         title={i18n.t("Microphone")}
-        iconContainerBackgroundColor={'transparent'}
         example={6}
         iconStatusColor={mic == "granted" ? "green" : "red"}
         subtitle={i18n.t("To access microphone")}

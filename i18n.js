@@ -25,7 +25,6 @@ export const setI18nConfig = (codeLang, url) => {
   const fallback = { languageTag: DEFAULT_LANGUAGE, isRTL: false };
   const lang = codeLang ? { languageTag: codeLang, isRTL: false } : null;
   const { languageTag, isRTL } = lang ? lang : fallback;
-  translate.cache.clear();
   I18nManager.forceRTL(isRTL);
   i18n.locale = languageTag;
   loadTranslations(languageTag, url);

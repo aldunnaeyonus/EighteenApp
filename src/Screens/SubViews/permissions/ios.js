@@ -6,7 +6,6 @@ import React, { useState, useCallback } from "react";
 import { request, PERMISSIONS, check } from "react-native-permissions";
 import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../../i18n";
-import { Linking } from "react-native";
 
 const IOSPermissions = () => {
   const [camera, setCamera] = useState("");
@@ -62,6 +61,7 @@ const IOSPermissions = () => {
   return (
     <PermissionModal
       ref={(ref) => (permModal = ref)}
+      gradient={true}
       panGestureEnabled={true}
       closeOnOverlayTap={true}
       title={i18n.t("Permissions")}
@@ -70,7 +70,6 @@ const IOSPermissions = () => {
 
       <PermissionItem
         title={i18n.t("Camera")}
-        iconContainerBackgroundColor={"transparent"}
         example={1}
         iconStatusColor={camera == "granted" ? "green" : "red"}
         subtitle={i18n.t("To access camera")}

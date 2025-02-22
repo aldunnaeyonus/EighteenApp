@@ -1,9 +1,10 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Platform, Image, Linking } from "react-native";
+import { View, Text, TouchableOpacity, Platform, Image, Linking, StyleSheet } from "react-native";
 import * as i18n from "../../../../i18n";
 import { ListItem } from "@rneui/themed";
 import { Icon } from "react-native-elements";
 import { SCREEN_WIDTH } from "../../../utils/constants";
+import FeatherIcon from 'react-native-vector-icons/Feather';
 
 
 const ProMain = (props) => {
@@ -25,7 +26,30 @@ const ProMain = (props) => {
               alignItems: "center",
             }}
           >
-      <Text style={{ fontSize: 20, textAlign: "center", color:'black',fontWeight: "600", }}> {Platform.OS == "ios" ? props.item.item.localizedPrice : props.item.item.subscriptionOfferDetails[1].pricingPhases.pricingPhaseList[0].formattedPrice} {i18n.t("monthly")}{"\n\n"}
+            <View
+                              style={[
+                                styles.radio,
+                                  { borderColor: '#F82E08', backgroundColor: '#feeae6', width:'80%' }
+                              ]}>
+                              <FeatherIcon
+                                color={'#F82E08'}
+                                name={'check-circle'}
+                                size={24} />
+                              <View style={styles.radioBody}>
+                                <View>
+                                  <Text style={styles.radioLabel}>{props.item.item.title}</Text>
+                                   <Text style={styles.radioText}>{i18n.t("Monthly")}</Text>
+                                </View>
+                                <Text
+                                  style={[
+                                    styles.radioPrice,
+                                    styles.radioPriceActive,
+                                  ]}>
+                                  {Platform.OS == "ios" ? props.item.item.localizedPrice : props.item.item.subscriptionOfferDetails[1].pricingPhases.pricingPhaseList[0].formattedPrice}
+                                </Text>
+                              </View>
+                            </View>
+      <Text style={{ fontSize: 20, textAlign: "center", color:'black',fontWeight: "600", }}>
               <Text
                 style={{
                   fontSize: 15,
@@ -243,4 +267,48 @@ const ProMain = (props) => {
   );
 };
 
+const styles = StyleSheet.create({
+  /** Radio */
+  radio: {
+    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    borderWidth: 2,
+    borderColor: 'transparent',
+    borderStyle: 'solid',
+    borderRadius: 8,
+    marginBottom: 16,
+    backgroundColor: '#fff',
+  },
+  radioBody: {
+    paddingLeft: 10,
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+  },
+  radioLabel: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: '#1d1d1d',
+  },
+  radioText: {
+    marginTop: 6,
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#889797',
+  },
+  radioPrice: {
+    fontSize: 16,
+    marginLeft:-35,
+    fontWeight: '600',
+    color: '#1d1d1d',
+  },
+  radioPriceActive: {
+  },
+
+});
 export default ProMain;
