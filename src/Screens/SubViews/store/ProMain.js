@@ -25,10 +25,10 @@ const ProMain = (props) => {
               alignItems: "center",
             }}
           >
-      <Text style={{ fontFamily: 'HelveticaNeue-Medium', textAlign: "center", color:'grey' }}> {Platform.OS == "ios" ? props.item.item.localizedPrice : props.item.item.subscriptionOfferDetails[1].pricingPhases.pricingPhaseList[0].formattedPrice} {i18n.t("monthly")} - {" "}
+      <Text style={{ fontSize: 20, textAlign: "center", color:'black',fontWeight: "600", }}> {Platform.OS == "ios" ? props.item.item.localizedPrice : props.item.item.subscriptionOfferDetails[1].pricingPhases.pricingPhaseList[0].formattedPrice} {i18n.t("monthly")}{"\n\n"}
               <Text
                 style={{
-                  fontFamily: 'HelveticaNeue-Medium',
+                  fontSize: 15,
                   color: "#ea5504",
                   fontWeight: "600",
                 }}
@@ -41,12 +41,15 @@ const ProMain = (props) => {
                 }}
               >{i18n.t("Cancel anytime")}
               </Text>
-              <Text>{" "} - {" "} </Text>
+              <Text style={{
+                  fontSize: 15,
+                }}>{" "} - {" "} </Text>
            <Text
            onPress={() => {
             Platform.OS == "ios" ? props.handleBuySubscription(props.item.item.productId) : props.handleBuySubscription(props.item.item.productId,props.item.item.subscriptionOfferDetails[1].offerToken );
           }}
                 style={{
+                  fontSize: 15,
                   fontFamily: 'HelveticaNeue-Medium',
                   color: "#ea5504",
                   fontWeight: "600",

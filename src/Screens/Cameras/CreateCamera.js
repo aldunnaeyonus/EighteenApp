@@ -425,7 +425,7 @@ const CreateCamera = (props) => {
     formData.append("isAI", "0");
    
     const preLoading = async () => {
-      storage.set("uploadData", JSON.stringify({"message": i18n.t("Uploading") + " " + i18n.t("PleaseWait"), "display":"flex", "image":image}));
+      storage.set("uploadData", JSON.stringify({"message": i18n.t("CreatingEvent") + " " + i18n.t("PleaseWait"), "display":"flex", "image":image}));
       await axios({
         method: "POST",
         url: constants.url + "/camera/create.php",

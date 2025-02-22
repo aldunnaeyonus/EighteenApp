@@ -50,7 +50,9 @@ const IOSPermissions = () => {
           photo == "granted" &&
           accuracy == "granted"
         ) {
-          this.permModal.closeModal();
+          //this.permModal.closeModal();
+          this.permModal.openModal();
+
         } else {
           this.permModal.openModal();
         }
@@ -65,17 +67,7 @@ const IOSPermissions = () => {
       title={i18n.t("Permissions")}
       subtitle={i18n.t("PermissionsText")}
     >
-      <PermissionItem
-        title={i18n.t("ViewSettings")}
-        iconContainerBackgroundColor={"transparent"}
-        example={0}
-        iconStatusColor={"transparent"}
-        subtitle={i18n.t("opensettings")}
-        source={require("../../../../assets/permissions.png")}
-        onPress={() => {
-          Linking.openSettings();
-        }}
-      />
+
       <PermissionItem
         title={i18n.t("Camera")}
         iconContainerBackgroundColor={"transparent"}

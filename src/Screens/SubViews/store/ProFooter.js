@@ -15,33 +15,48 @@ const ProFooter = (props) => {
         alignItems: "center",
       }}
     >
-      <Text style={{ textAlign: "center", color: "grey" }}>
+      <Text style={{ textAlign: "center", color: "#ea5504", }}>
         <TouchableOpacity
+        style={{
+          justifyContent: "space-between",
+          alignContent: "space-between",
+          alignItems: "center",
+        }}
           onPress={() => {
             props.terms();
           }}
         >
-          <Text style={{ textAlign: "center", color: "grey" }}>
+          <Text style={{ textAlign: "center", color: "#ea5504" }}>
             {i18n.t("Terms & Use")}
           </Text>
         </TouchableOpacity>
-        {"           "}
+        {"     "}
         <TouchableOpacity
+         style={{
+          justifyContent: "space-between",
+          alignContent: "space-between",
+          alignItems: "center",
+        }}
           onPress={() => {
             props.eula();
           }}
         >
-          <Text style={{ textAlign: "center", color: "grey" }}>
-            {i18n.t("EULAShort")}
+          <Text style={{ textAlign: "center", color: "#ea5504" }}>
+            EULA
           </Text>
         </TouchableOpacity>
-        {"           "}
+        {"     "}
         <TouchableOpacity
+         style={{
+          justifyContent: "space-between",
+          alignContent: "space-between",
+          alignItems: "center",
+        }}
           onPress={() => {
             props.privacy();
           }}
         >
-          <Text style={{ textAlign: "center", color: "grey" }}>
+          <Text style={{ textAlign: "center", color: "#ea5504" }}>
             {i18n.t("Privacy Policy")}
           </Text>
         </TouchableOpacity>
