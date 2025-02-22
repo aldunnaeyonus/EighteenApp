@@ -187,7 +187,7 @@ const Handle = (props) => {
                 width: "85%",
                 marginRight: 50,
                 color: "#3D4849",
-                fontSize: 22,
+                fontSize: 20,
                 fontFamily: "HelveticaNeue-Bold",
               }}
             />

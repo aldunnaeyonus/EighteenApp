@@ -47,7 +47,7 @@ Launch Packager
     /Users/andrewdunn/Documents/GitHubDunn/SnapEighteen/node_modules/expo/scripts/launchPackager.command ; exit;    
 
 Patch Packager
-    npx patch-package @baronha/react-native-photo-editor --use-yarn
+    npx patch-package react-native-permissions-modal --use-yarn
 
 diskutil resetUserPermissions / `id -u`
 

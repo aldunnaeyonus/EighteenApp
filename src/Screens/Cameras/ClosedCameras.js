@@ -22,6 +22,7 @@ import * as FileSystem from "expo-file-system";
 import RefreshView from "../../utils/refreshView";
 import Animated from "react-native-reanimated";
 import { getLocales } from "expo-localization";
+import * as ImagePicker from "expo-image-picker";
 
 const ClosedCameras = (props) => {
   const [filteredDataSource] = useMMKVObject("user.Media.Feed", storage);
@@ -32,6 +33,7 @@ const ClosedCameras = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
   const AnimatedFlatList = Animated.FlatList;
   let [localLang] = useState(getLocales()[0].languageCode);
+  const [cameraStatus] = ImagePicker.useMediaLibraryPermissions()
 
   const _refresh = async () => {
     serRefreshing(true);
@@ -42,6 +44,30 @@ const ClosedCameras = (props) => {
   };
 
   const handleDownloadAction = async (array) => {
+    if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
+              await ImagePicker.getMediaLibraryPermissionsAsync();
+            }else if (cameraStatus.status == ImagePicker.PermissionStatus.DENIED) {
+          Alert.alert(
+          i18n.t("Permissions"),
+          i18n.t("UseLibrary"),
+          [
+            {
+              text: i18n.t("Cancel"),
+              onPress: () => console.log("Cancel Pressed"),
+              style: "destructive",
+            },
+            {
+              text: i18n.t("Settings"),
+              onPress: () => {
+                            Linking.openSettings();
+                
+              },
+              style: "default",
+            },
+          ],
+          { cancelable: false }
+        )
+            }else{
     Alert.alert(i18n.t("DownloadingEventFiles"), i18n.t("Theventfiles"));
     setStartDownload(true);
     JSON.parse(array).map(async (item) => {
@@ -64,6 +90,7 @@ const ClosedCameras = (props) => {
     if (count <= 0) {
       setStartDownload(false);
     }
+  }
   };
 
   const _deleteFeedItemIndex = (UUID) => {

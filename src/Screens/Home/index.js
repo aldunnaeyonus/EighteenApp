@@ -8,7 +8,6 @@ import {
   Text,
   TouchableOpacity,
   Linking,
-  ImageBackground,
   TouchableWithoutFeedback,
 } from "react-native";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
@@ -40,6 +39,7 @@ import {
 import RNFS from "react-native-fs";
 import RNImageToPdf from "react-native-image-to-pdf";
 import RNPrint from "react-native-print";
+import * as ImagePicker from "expo-image-picker";
 
 const Home = (props) => {
   const [cameraData, setcameraData] = useMMKVObject(
@@ -72,6 +72,7 @@ const Home = (props) => {
     url: "",
     message: "",
   });
+    const [cameraStatus] = ImagePicker.useCameraPermissions();
   const codeScanner = useCodeScanner({
     codeTypes: ["qr"],
     onCodeScanned: async (codes) => {
@@ -105,7 +106,7 @@ const Home = (props) => {
     },
   });
 
-  const _gotoCamera = (
+  const _gotoCamera = async (
     pin,
     title,
     owner,
@@ -116,6 +117,29 @@ const Home = (props) => {
     tCredits,
     camera_add_social
   ) => {
+                      if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
+                        await ImagePicker.requestCameraPermissionsAsync();
+                      } else if (cameraStatus.status == ImagePicker.PermissionStatus.DENIED) {
+                        Alert.alert(
+                          i18n.t("Permissions"),
+                          i18n.t("UseCamera"),
+                          [
+                            {
+                              text: i18n.t("Cancel"),
+                              onPress: () => console.log("Cancel Pressed"),
+                              style: "destructive",
+                            },
+                            {
+                              text: i18n.t("Settings"),
+                              onPress: () => {
+                                Linking.openSettings();
+                              },
+                              style: "default",
+                            },
+                          ],
+                          { cancelable: false }
+                        );
+                      }else{
     props.navigation.navigate("CameraPage", {
       owner: owner,
       pin: pin,
@@ -128,6 +152,7 @@ const Home = (props) => {
       start: start,
       user: user.user_id,
     });
+  }
   };
 
   const _gotoAllFriends = () => {

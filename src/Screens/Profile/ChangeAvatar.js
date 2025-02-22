@@ -6,6 +6,7 @@ import {
   Platform,
   View,
   Alert,
+  Linking
 } from "react-native";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
 import { constants, SCREEN_WIDTH } from "../../utils/constants";
@@ -23,7 +24,7 @@ import axios from "axios";
 
 const ChangeData = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
-  const [cameraStatus] = ImagePicker.useCameraPermissions()
+  const [cameraStatus] = ImagePicker.useMediaLibraryPermissions()
   const [avatars, setAvatars] = useState([]);
 
   const pullData=async ()=> {
@@ -106,11 +107,11 @@ const ChangeData = (props) => {
 
   const pickImage = async () => {
 if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
-          await ImagePicker.requestCameraPermissionsAsync();
+          await ImagePicker.getMediaLibraryPermissionsAsync();
         }else if (cameraStatus.status == ImagePicker.PermissionStatus.DENIED) {
       Alert.alert(
       i18n.t("Permissions"),
-      i18n.t("To access photo"),
+      i18n.t("UseLibrary"),
       [
         {
           text: i18n.t("Cancel"),
@@ -118,9 +119,9 @@ if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
           style: "destructive",
         },
         {
-          text: i18n.t("ViewSettings"),
+          text: i18n.t("Settings"),
           onPress: () => {
-            _editItemFeed(UUID, owner, pin)
+            Linking.openSettings();
           },
           style: "default",
         },

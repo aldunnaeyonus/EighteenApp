@@ -6,6 +6,7 @@ import {
   Modal,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  Linking,
   Text,
 } from "react-native";
 import RefreshableWrapper from "react-native-fresh-refresh";
@@ -31,6 +32,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { ActivityIndicator, MD2Colors } from "react-native-paper";
 import Loading from "../SubViews/home/Loading";
 import { getLocales } from "expo-localization";
+import * as ImagePicker from "expo-image-picker";
 
 const Friends = (props) => {
   const [cameraData] = useMMKVObject(
@@ -42,7 +44,7 @@ const Friends = (props) => {
     storage
   );
   const [uploading] = useMMKVObject("uploadData", storage);
-
+  const [cameraStatus] = ImagePicker.useCameraPermissions();
   const [ready, setReady] = useState(false);
   const [refreshing, serRefreshing] = useState(false);
   const [isFriend, setisFriend] = useState("2");
@@ -187,7 +189,7 @@ const Friends = (props) => {
     props.navigation.pop(1);
   };
 
-  const _gotoCamera = (
+  const _gotoCamera = async (
     pin,
     title,
     owner,
@@ -198,6 +200,29 @@ const Friends = (props) => {
     tCredits,
     camera_add_social
   ) => {
+     if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
+                            await ImagePicker.requestCameraPermissionsAsync();
+                          } else if (cameraStatus.status == ImagePicker.PermissionStatus.DENIED) {
+                            Alert.alert(
+                              i18n.t("Permissions"),
+                              i18n.t("UseCamera"),
+                              [
+                                {
+                                  text: i18n.t("Cancel"),
+                                  onPress: () => console.log("Cancel Pressed"),
+                                  style: "destructive",
+                                },
+                                {
+                                  text: i18n.t("Settings"),
+                                  onPress: () => {
+                                    Linking.openSettings();
+                                  },
+                                  style: "default",
+                                },
+                              ],
+                              { cancelable: false }
+                            );
+                          }else{
     props.navigation.navigate("CameraPage", {
       owner: owner,
       pin: pin,
@@ -210,6 +235,7 @@ const Friends = (props) => {
       start: start,
       user: user.user_id,
     });
+  }
   };
 
   const _gotoStore = (pin, owner, name) => {

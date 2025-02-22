@@ -19,11 +19,22 @@ const ProMain = (props) => {
 
       }}
     >
+
        <View
             style={{
               justifyContent: "center",
               alignContent: "center",
               alignItems: "center",
+            }}
+          >
+        <TouchableOpacity
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            onPress={() => {
+              Platform.OS == "ios" ? props.handleBuySubscription(props.item.item.productId) : props.handleBuySubscription(props.item.item.productId,props.item.item.subscriptionOfferDetails[1].offerToken );
             }}
           >
             <View
@@ -49,7 +60,7 @@ const ProMain = (props) => {
                                 </Text>
                               </View>
                             </View>
-
+                            </TouchableOpacity>
       <Text style={{ fontSize: 20, textAlign: "center", color:'black',fontWeight: "600", }}>
               <Text
                 style={{

@@ -7,7 +7,7 @@ import {
   Alert,
   NativeModules,
   TouchableWithoutFeedback,
-  StyleSheet,
+  Linking
 } from "react-native";
 import { TouchableOpacity } from "react-native";
 import styles from "../../styles/SliderEntry.style";
@@ -47,6 +47,7 @@ import axios from "axios";
 import { axiosPull } from "../../utils/axiosPull";
 import RNFS from 'react-native-fs';
 
+
 const CreateCamera = (props) => {
   var newDate = new Date();
   const [switch2, setSwitch2] = useState(true);
@@ -78,6 +79,7 @@ const CreateCamera = (props) => {
   const [errorColor] = useState(verified ? "#fafbfc" : "#ffa3a6");
   let notification = new NotifService();
   const [cameraStatus] = ImagePicker.useCameraPermissions();
+  const [libraryStatus] = ImagePicker.useMediaLibraryPermissions();
 
   const MODE_VALUES = Platform.select({
     ios: Object.values(IOS_MODE),
@@ -243,12 +245,12 @@ const CreateCamera = (props) => {
   };
 
   const pickImage = async () => {
-    if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
+    if (libraryStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
       await ImagePicker.requestCameraPermissionsAsync();
-    } else if (cameraStatus.status == ImagePicker.PermissionStatus.DENIED) {
+    } else if (libraryStatus.status == ImagePicker.PermissionStatus.DENIED) {
       Alert.alert(
         i18n.t("Permissions"),
-        i18n.t("To access photo"),
+        i18n.t("UseLibrary"),
         [
           {
             text: i18n.t("Cancel"),
@@ -256,9 +258,9 @@ const CreateCamera = (props) => {
             style: "destructive",
           },
           {
-            text: i18n.t("ViewSettings"),
+            text: i18n.t("Settings"),
             onPress: () => {
-              _editItemFeed(UUID, owner, pin);
+              Linking.openSettings();
             },
             style: "default",
           },
@@ -654,14 +656,39 @@ const CreateCamera = (props) => {
                       backgroundColor: "#3D4849",
                       borderRadius: 22,
                     }}
-                    onPress={() => {
+                    onPress={async () => {
+                      if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
+                        await ImagePicker.requestCameraPermissionsAsync();
+                      } else if (cameraStatus.status == ImagePicker.PermissionStatus.DENIED) {
+                        Alert.alert(
+                          i18n.t("Permissions"),
+                          i18n.t("UseCamera"),
+                          [
+                            {
+                              text: i18n.t("Cancel"),
+                              onPress: () => console.log("Cancel Pressed"),
+                              style: "destructive",
+                            },
+                            {
+                              text: i18n.t("Settings"),
+                              onPress: () => {
+                                Linking.openSettings();
+                              },
+                              style: "default",
+                            },
+                          ],
+                          { cancelable: false }
+                        );
+                      }else{
                       setTimeout(() => {
                         setIsAI(false);
+
                         props.navigation.navigate("TempCameraPage", {
                           title: String(name),
                         });
                       }, 200);
                       setModalUpload(false);
+                    }
                     }}
                   />
                   <Text

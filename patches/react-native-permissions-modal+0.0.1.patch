@@ -38,11 +38,30 @@ index 948d68a..b6c483f 100644
 -};
 -
  export default PermissionItem;
+diff --git a/node_modules/react-native-permissions-modal/lib/components/PermissionItem/PermissionItem.style.js b/node_modules/react-native-permissions-modal/lib/components/PermissionItem/PermissionItem.style.js
+index 3f3f5ba..7406e44 100644
+--- a/node_modules/react-native-permissions-modal/lib/components/PermissionItem/PermissionItem.style.js
++++ b/node_modules/react-native-permissions-modal/lib/components/PermissionItem/PermissionItem.style.js
+@@ -37,12 +37,12 @@ export default {
+     width: width * 0.7
+   },
+   titleTextStyle: {
+-    fontSize: 14,
++    fontSize: 15,
+     color: "#6a6a6a",
+     fontWeight: "600"
+   },
+   subtitleTextStyle: {
+-    fontSize: 12,
++    fontSize: 13,
+     color: "#949494"
+   },
+   contextContainer: {
 diff --git a/node_modules/react-native-permissions-modal/lib/components/PermissionModal/PermissionModal.js b/node_modules/react-native-permissions-modal/lib/components/PermissionModal/PermissionModal.js
-index a9a8523..ee22f47 100644
+index a9a8523..ea9b56a 100644
 --- a/node_modules/react-native-permissions-modal/lib/components/PermissionModal/PermissionModal.js
 +++ b/node_modules/react-native-permissions-modal/lib/components/PermissionModal/PermissionModal.js
-@@ -23,7 +23,11 @@ export default class PermissionModal extends React.PureComponent {
+@@ -23,12 +23,16 @@ export default class PermissionModal extends React.PureComponent {
    };
  
    renderContent = () => {
@@ -55,6 +74,12 @@ index a9a8523..ee22f47 100644
      return (
        <View style={styles.content}>
          <View>
+           <Text style={styles.titleStyle}>{title}</Text>
+-          <Text numberOfLines={3} style={styles.subtitleStyle}>
++          <Text numberOfLines={5} style={styles.subtitleStyle}>
+             {subtitle}
+           </Text>
+         </View>
 @@ -56,8 +60,3 @@ PermissionModal.propTypes = {
    subtitle: PropTypes.string
  };
@@ -65,18 +90,20 @@ index a9a8523..ee22f47 100644
 -    "Phasellus id scelerisque sem. Vivamus consequat leo turpis, vitae sagittis lacus efficitur eu.Phasellus id scelerisque sem. Vivamus consequat leo turpis, vitae sagittis lacus efficitur eu."
 -};
 diff --git a/node_modules/react-native-permissions-modal/lib/components/PermissionModal/PermissionModal.style.js b/node_modules/react-native-permissions-modal/lib/components/PermissionModal/PermissionModal.style.js
-index 84250d3..b3958e3 100644
+index 84250d3..7d2363b 100644
 --- a/node_modules/react-native-permissions-modal/lib/components/PermissionModal/PermissionModal.style.js
 +++ b/node_modules/react-native-permissions-modal/lib/components/PermissionModal/PermissionModal.style.js
-@@ -14,9 +14,9 @@ export default StyleSheet.create({
-     fontWeight: "600"
+@@ -15,11 +15,10 @@ export default StyleSheet.create({
    },
    subtitleStyle: {
--    fontSize: 15,
-+    fontSize: 17,
-     fontSize: 14,
+     fontSize: 15,
+-    fontSize: 14,
 -    color: "#666",
 +    color: "#333",
      lineHeight: 22,
      paddingTop: 10,
      paddingBottom: 10,
+-    fontWeight: "200"
++    fontWeight: "400"
+   }
+ });

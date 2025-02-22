@@ -8,6 +8,7 @@ import {
   Modal,
   StatusBar,
   TouchableWithoutFeedback,
+  Linking
 } from "react-native";
 import React, { useState, useRef, useCallback } from "react";
 import { constants, SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
@@ -31,7 +32,6 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 const stickers = [];
 import Loading from "../SubViews/home/Loading";
 import { getLocales } from "expo-localization";
-import { useCameraPermission } from "react-native-vision-camera";
 import axios from "axios";
 
 
@@ -49,8 +49,9 @@ const PhotoGallery = (props) => {
       ? "99"
       : props.route.params.credits
   );
-  const { hasPermission, requestPermission } = useCameraPermission();
   const [cameraStatus] = ImagePicker.useCameraPermissions();
+    const [libraryStatus] = ImagePicker.useMediaLibraryPermissions();
+
   const [modalUpload, setModalUpload] = useState(false);
   const { toast } = useToast();
   const [cameraData] = useMMKVObject(
@@ -120,12 +121,12 @@ const PhotoGallery = (props) => {
   };
 
   const pickImageChooser = async () => {
-    if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
+    if (libraryStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
       await ImagePicker.requestCameraPermissionsAsync();
-    } else if (cameraStatus.status == ImagePicker.PermissionStatus.DENIED) {
+    } else if (libraryStatus.status == ImagePicker.PermissionStatus.DENIED) {
       Alert.alert(
         i18n.t("Permissions"),
-        i18n.t("To access photo"),
+        i18n.t("UseLibrary"),
         [
           {
             text: i18n.t("Cancel"),
@@ -133,9 +134,9 @@ const PhotoGallery = (props) => {
             style: "destructive",
           },
           {
-            text: i18n.t("ViewSettings"),
+            text: i18n.t("Settings"),
             onPress: () => {
-              _editItemFeed(UUID, owner, pin);
+              Linking.openSettings();
             },
             style: "default",
           },
@@ -243,11 +244,7 @@ const PhotoGallery = (props) => {
           credits > 0 || props.route.params.owner == props.route.params.user ? (
             <TouchableOpacity
               onPress={() => {
-                if (hasPermission) {
                   openCloseModal();
-                } else {
-                  requestPermission();
-                }
               }}
             >
               <Icon
@@ -518,7 +515,30 @@ const PhotoGallery = (props) => {
                         backgroundColor: "rgba(250, 190, 0, 1)",
                         borderRadius: 22,
                       }}
-                      onPress={() => {
+                      onPress={async () => {
+                                              if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
+                                                await ImagePicker.requestCameraPermissionsAsync();
+                                              } else if (cameraStatus.status == ImagePicker.PermissionStatus.DENIED) {
+                                                Alert.alert(
+                                                  i18n.t("Permissions"),
+                                                  i18n.t("UseCamera"),
+                                                  [
+                                                    {
+                                                      text: i18n.t("Cancel"),
+                                                      onPress: () => console.log("Cancel Pressed"),
+                                                      style: "destructive",
+                                                    },
+                                                    {
+                                                      text: i18n.t("Settings"),
+                                                      onPress: () => {
+                                                        Linking.openSettings();
+                                                      },
+                                                      style: "default",
+                                                    },
+                                                  ],
+                                                  { cancelable: false }
+                                                );
+                                              }else{
                         props.navigation.navigate("CameraPage", {
                           owner: props.route.params.owner,
                           pin: props.route.params.pin,
@@ -533,6 +553,7 @@ const PhotoGallery = (props) => {
                           user: props.route.params.user,
                         });
                         setModalUpload(false);
+                      }
                       }}
                     />
                     <Text

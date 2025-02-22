@@ -33,7 +33,7 @@ import Progress from "react-native-progress";
 import { useToast } from "react-native-styled-toast";
 import moment from "moment";
 import { useFocusEffect } from "@react-navigation/native";
-import { ActivityIndicator, MD2Colors } from "react-native-paper";
+import { ActivityIndicator } from "react-native-paper";
 import * as i18n from "../../../i18n";
 import { useMMKVObject } from "react-native-mmkv";
 import { Icon } from "react-native-elements";
@@ -69,6 +69,7 @@ const EditCamera = (props) => {
   const { toast } = useToast();
   const [minimumDate] = useState(new Date());
   const [cameraStatus] = ImagePicker.useCameraPermissions();
+  const [libraryStatus] = ImagePicker.useMediaLibraryPermissions();
 
   const [selectedIndex, setSelectedIndex] = useState(
     isPro
@@ -92,7 +93,7 @@ const EditCamera = (props) => {
   const [verified, setVerified] = useState(true);
   const [errorColor] = useState(verified ? "#fafbfc" : "#ffa3a6");
   const [isAI, setIsAI] = useState(false);
-let deviceLanguage =
+  let deviceLanguage =
     Platform.OS === "ios"
       ? NativeModules.SettingsManager.settings.AppleLocale
       : NativeModules.I18nManager.localeIdentifier;
@@ -262,12 +263,12 @@ let deviceLanguage =
   };
 
   const pickImage = async () => {
-    if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
-      await ImagePicker.requestCameraPermissionsAsync();
-    } else if (cameraStatus.status == ImagePicker.PermissionStatus.DENIED) {
+    if (libraryStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
+      await ImagePicker.getMediaLibraryPermissionsAsync();
+    } else if (libraryStatus.status == ImagePicker.PermissionStatus.DENIED) {
       Alert.alert(
         i18n.t("Permissions"),
-        i18n.t("To access photo"),
+        i18n.t("UseLibrary"),
         [
           {
             text: i18n.t("Cancel"),
@@ -275,9 +276,9 @@ let deviceLanguage =
             style: "destructive",
           },
           {
-            text: i18n.t("ViewSettings"),
+            text: i18n.t("Settings"),
             onPress: () => {
-              _editItemFeed(UUID, owner, pin);
+              Linking.openSettings();
             },
             style: "default",
           },
@@ -370,11 +371,11 @@ let deviceLanguage =
   );
 
   const createEvent = () => {
-     props.navigation.setOptions({
-          headerRight: () => (
-            <ActivityIndicator color="black" size={"small"} animating={true} />
-          ),
-        });
+    props.navigation.setOptions({
+      headerRight: () => (
+        <ActivityIndicator color="black" size={"small"} animating={true} />
+      ),
+    });
     var fileName = "";
     var formData = new FormData();
     fileName =
@@ -389,9 +390,9 @@ let deviceLanguage =
     formData.append("purchases", switch3 ? "1" : "0");
     formData.append(
       "length",
-        isPro
-          ? constants.camera_time_text_PRO[selectedIndex]
-          : constants.camera_time_text[selectedIndex]
+      isPro
+        ? constants.camera_time_text_PRO[selectedIndex]
+        : constants.camera_time_text[selectedIndex]
     );
     formData.append("ai_description", dname);
     formData.append(
@@ -434,52 +435,51 @@ let deviceLanguage =
           Accept: "application/json",
           "content-Type": "multipart/form-data",
         },
-      }).then((res) => {
-        const postLoading = async () => {
-        setIsAI(false);
-        await axiosPull._pullCameraFeed(props.route.params.user, "owner");
+      })
+        .then((res) => {
+          const postLoading = async () => {
+            setIsAI(false);
+            await axiosPull._pullCameraFeed(props.route.params.user, "owner");
 
-        if (start != props.route.params.start) {
-          notification.cancelNotif(pin + "-start");
-          if (parseInt(start) >= moment().unix()) {
-            notification.scheduleNotif(
-              String(name),
-              i18n.t("EvnetStart"),
-              parseInt(start),
-              pin + "-start",
-              constants.urldata +
-                "/" +
-                user.user_id +
-                "/events/" +
-                pin +
-                "/" +
-                fileName
-            );
-          }
-        }
-        if (end != props.route.params.end) {
-          notification.cancelNotif(pin + "-end");
-          notification.scheduleNotif(
-            String(name),
-            i18n.t("EvnetEnd"),
-            parseInt(end),
-            pin + "-end",
-            constants.urldata +
-              "/" +
-              user.user_id +
-              "/events/" +
-              pin +
-              "/" +
-              fileName
-          );
-        }
-
-        }
-        postLoading();
-      
-      }).catch(console.error);
-
-    }
+            if (start != props.route.params.start) {
+              notification.cancelNotif(pin + "-start");
+              if (parseInt(start) >= moment().unix()) {
+                notification.scheduleNotif(
+                  String(name),
+                  i18n.t("EvnetStart"),
+                  parseInt(start),
+                  pin + "-start",
+                  constants.urldata +
+                    "/" +
+                    user.user_id +
+                    "/events/" +
+                    pin +
+                    "/" +
+                    fileName
+                );
+              }
+            }
+            if (end != props.route.params.end) {
+              notification.cancelNotif(pin + "-end");
+              notification.scheduleNotif(
+                String(name),
+                i18n.t("EvnetEnd"),
+                parseInt(end),
+                pin + "-end",
+                constants.urldata +
+                  "/" +
+                  user.user_id +
+                  "/events/" +
+                  pin +
+                  "/" +
+                  fileName
+              );
+            }
+          };
+          postLoading();
+        })
+        .catch(console.error);
+    };
     preLoading();
     props.navigation.goBack();
 
@@ -670,14 +670,44 @@ let deviceLanguage =
                       backgroundColor: "#3D4849",
                       borderRadius: 22,
                     }}
-                    onPress={() => {
-                      setTimeout(() => {
-                        setIsAI(false);
-                        props.navigation.navigate("TempCameraPage", {
-                          title: String(name),
-                        });
-                      }, 200);
-                      setModalUpload(false);
+                    onPress={async () => {
+                      if (
+                        cameraStatus.status ==
+                        ImagePicker.PermissionStatus.UNDETERMINED
+                      ) {
+                        await ImagePicker.requestCameraPermissionsAsync();
+                      } else if (
+                        cameraStatus.status ==
+                        ImagePicker.PermissionStatus.DENIED
+                      ) {
+                        Alert.alert(
+                          i18n.t("Permissions"),
+                          i18n.t("UseCamera"),
+                          [
+                            {
+                              text: i18n.t("Cancel"),
+                              onPress: () => console.log("Cancel Pressed"),
+                              style: "destructive",
+                            },
+                            {
+                              text: i18n.t("Settings"),
+                              onPress: () => {
+                                Linking.openSettings();
+                              },
+                              style: "default",
+                            },
+                          ],
+                          { cancelable: false }
+                        );
+                      } else {
+                        setTimeout(() => {
+                          setIsAI(false);
+                          props.navigation.navigate("TempCameraPage", {
+                            title: String(name),
+                          });
+                        }, 200);
+                        setModalUpload(false);
+                      }
                     }}
                   />
                   <Text
@@ -1411,7 +1441,6 @@ let deviceLanguage =
               )}
             </View>
           </ScrollView>
-                    
         </SafeAreaView>
       </SafeAreaProvider>
     </>
