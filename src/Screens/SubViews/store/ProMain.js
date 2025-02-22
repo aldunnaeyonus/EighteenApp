@@ -33,7 +33,7 @@ const ProMain = (props) => {
                               ]}>
                               <FeatherIcon
                                 color={'#F82E08'}
-                                name={'check-circle'}
+                                name={isOwned ? 'check-circle' : 'circle'}
                                 size={24} />
                               <View style={styles.radioBody}>
                                 <View>
@@ -49,6 +49,7 @@ const ProMain = (props) => {
                                 </Text>
                               </View>
                             </View>
+
       <Text style={{ fontSize: 20, textAlign: "center", color:'black',fontWeight: "600", }}>
               <Text
                 style={{
@@ -65,23 +66,7 @@ const ProMain = (props) => {
                 }}
               >{i18n.t("Cancel anytime")}
               </Text>
-              <Text style={{
-                  fontSize: 15,
-                }}>{" "} - {" "} </Text>
-           <Text
-           onPress={() => {
-            Platform.OS == "ios" ? props.handleBuySubscription(props.item.item.productId) : props.handleBuySubscription(props.item.item.productId,props.item.item.subscriptionOfferDetails[1].offerToken );
-          }}
-                style={{
-                  fontSize: 15,
-                  fontFamily: 'HelveticaNeue-Medium',
-                  color: "#ea5504",
-                  fontWeight: "600",
-                  textAlign: "center", 
-                }}
-                >
-                  {i18n.t("subscribe")}
-                  </Text>
+              
         </Text>  
       </View>
       <View
