@@ -589,10 +589,37 @@ const EditCamera = (props) => {
                             {
                               text: i18n.t("Continue"),
                               onPress: async () => {
-                                setTimeout(() => {
-                                  setIsAI(true);
-                                  AITexttoImage();
-                                }, 500);
+                                const proTitle = constants.badWords.some(
+                                  (word) =>
+                                    dname
+                                      .toLowerCase()
+                                      .includes(word.toLowerCase())
+                                );
+                                const title = constants.badWords.some((word) =>
+                                  name
+                                    .toLowerCase()
+                                    .includes(word.toLowerCase())
+                                );
+                                if (proTitle || title) {
+                                  Alert.alert(
+                                    i18n.t("BadWords"),
+                                    i18n.t("BadWordsDescription"),
+                                    [
+                                      {
+                                        text: i18n.t("Close"),
+                                        onPress: () =>
+                                          console.log("Cancel Pressed"),
+                                        style: "destructive",
+                                      },
+                                    ],
+                                    { cancelable: false }
+                                  );
+                                } else {
+                                  setTimeout(() => {
+                                    setIsAI(true);
+                                    AITexttoImage();
+                                  }, 500);
+                                }
                               },
                               style: "default",
                             },
