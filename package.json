@@ -33,7 +33,7 @@
     "@react-native-menu/menu": "^1.1.2",
     "@react-navigation/native": "^6.1.18",
     "@react-navigation/native-stack": "^6.11.0",
-    "yarn add": "^4.0.0-rc.8",
+    "@rneui/base": "^4.0.0-rc.8",
     "@rneui/themed": "^4.0.0-rc.8",
     "@svanboxel/visibility-sensor-react-native": "^1.0.2",
     "@tttstudios/react-native-empty-state": "^0.1.2",

@@ -7,7 +7,7 @@ import {
   Alert,
   NativeModules,
   TouchableWithoutFeedback,
-  Linking
+  Linking,
 } from "react-native";
 import { TouchableOpacity } from "react-native";
 import styles from "../../styles/SliderEntry.style";
@@ -45,8 +45,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ActivityIndicator } from "react-native-paper";
 import axios from "axios";
 import { axiosPull } from "../../utils/axiosPull";
-import RNFS from 'react-native-fs';
-
+import RNFS from "react-native-fs";
 
 const CreateCamera = (props) => {
   var newDate = new Date();
@@ -425,9 +424,16 @@ const CreateCamera = (props) => {
     });
     formData.append("photoName", fileName);
     formData.append("isAI", "0");
-   
+
     const preLoading = async () => {
-      storage.set("uploadData", JSON.stringify({"message": i18n.t("CreatingEvent") + " " + i18n.t("PleaseWait"), "display":"flex", "image":image}));
+      storage.set(
+        "uploadData",
+        JSON.stringify({
+          message: i18n.t("CreatingEvent") + " " + i18n.t("PleaseWait"),
+          display: "flex",
+          image: image,
+        })
+      );
       await axios({
         method: "POST",
         url: constants.url + "/camera/create.php",
@@ -438,38 +444,51 @@ const CreateCamera = (props) => {
         },
       }).then((res) => {
         const postLoading = async () => {
-        storage.set("uploadData", JSON.stringify({"message": "", "display":"none", "image":""}));
-        await CameraRoll.saveAsset(image);
-        await axiosPull._pullGalleryFeed(pin, user.user_id);
-        await axiosPull._pullFriendCameraFeed(user.user_id, "user", props.route.params.user);
-        await axiosPull._pullCameraFeed(user.user_id, "owner");
-        if (parseInt(start) >= moment().unix()) {
+          storage.set(
+            "uploadData",
+            JSON.stringify({ message: "", display: "none", image: "" })
+          );
+          await CameraRoll.saveAsset(image);
+          await axiosPull._pullGalleryFeed(pin, user.user_id);
+          await axiosPull._pullFriendCameraFeed(
+            user.user_id,
+            "user",
+            props.route.params.user
+          );
+          await axiosPull._pullCameraFeed(user.user_id, "owner");
+          if (parseInt(start) >= moment().unix()) {
+            notification.scheduleNotif(
+              String(name),
+              i18n.t("EvnetStart"),
+              parseInt(start),
+              pin + "-start",
+              constants.urldata +
+                "/" +
+                user.user_id +
+                "/events/" +
+                pin +
+                "/" +
+                fileName
+            );
+          }
+          RNFS.unlink(image);
           notification.scheduleNotif(
-             String(name),
-             i18n.t("EvnetStart"),
-             parseInt(start),
-             pin + "-start",
-             constants.urldata +
-               "/" +
-               user.user_id +
-               "/events/" +
-               pin +
-               "/" +
-               fileName
-           );
-         }
-         RNFS.unlink(image);
-         notification.scheduleNotif(
-           String(name),
-           i18n.t("EvnetEnd"),
-           parseInt(end),
-           pin + "-end",
-           constants.urldata + "/" + user.user_id + "/events/" + pin + "/" + fileName
-         );
-        }
+            String(name),
+            i18n.t("EvnetEnd"),
+            parseInt(end),
+            pin + "-end",
+            constants.urldata +
+              "/" +
+              user.user_id +
+              "/events/" +
+              pin +
+              "/" +
+              fileName
+          );
+        };
         postLoading();
       });
-    }
+    };
     preLoading();
     props.navigation.goBack();
 
@@ -575,10 +594,37 @@ const CreateCamera = (props) => {
                             {
                               text: i18n.t("Continue"),
                               onPress: async () => {
-                                setTimeout(() => {
-                                  setIsAI(true);
-                                  AITexttoImage();
-                                }, 500);
+                                const proTitle = constants.badWords.some(
+                                  (word) =>
+                                    dname
+                                      .toLowerCase()
+                                      .includes(word.toLowerCase())
+                                );
+                                const title = constants.badWords.some((word) =>
+                                  name
+                                    .toLowerCase()
+                                    .includes(word.toLowerCase())
+                                );
+                                if (proTitle || title) {
+                                  Alert.alert(
+                                    i18n.t("BadWords"),
+                                    i18n.t("BadWordsDescription"),
+                                    [
+                                      {
+                                        text: i18n.t("Close"),
+                                        onPress: () =>
+                                          console.log("Cancel Pressed"),
+                                        style: "destructive",
+                                      },
+                                    ],
+                                    { cancelable: false }
+                                  );
+                                } else {
+                                  setTimeout(() => {
+                                    setIsAI(true);
+                                    AITexttoImage();
+                                  }, 500);
+                                }
                               },
                               style: "default",
                             },
@@ -657,9 +703,15 @@ const CreateCamera = (props) => {
                       borderRadius: 22,
                     }}
                     onPress={async () => {
-                      if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
+                      if (
+                        cameraStatus.status ==
+                        ImagePicker.PermissionStatus.UNDETERMINED
+                      ) {
                         await ImagePicker.requestCameraPermissionsAsync();
-                      } else if (cameraStatus.status == ImagePicker.PermissionStatus.DENIED) {
+                      } else if (
+                        cameraStatus.status ==
+                        ImagePicker.PermissionStatus.DENIED
+                      ) {
                         Alert.alert(
                           i18n.t("Permissions"),
                           i18n.t("UseCamera"),
@@ -679,16 +731,16 @@ const CreateCamera = (props) => {
                           ],
                           { cancelable: false }
                         );
-                      }else{
-                      setTimeout(() => {
-                        setIsAI(false);
+                      } else {
+                        setTimeout(() => {
+                          setIsAI(false);
 
-                        props.navigation.navigate("TempCameraPage", {
-                          title: String(name),
-                        });
-                      }, 200);
-                      setModalUpload(false);
-                    }
+                          props.navigation.navigate("TempCameraPage", {
+                            title: String(name),
+                          });
+                        }, 200);
+                        setModalUpload(false);
+                      }
                     }}
                   />
                   <Text
