@@ -1,4 +1,4 @@
-import { TouchableOpacity, StatusBar } from "react-native";
+import { TouchableOpacity } from "react-native";
 import * as i18n from "../../../i18n";
 import { constants, SCREEN_WIDTH, SCREEN_HEIGHT} from "../../utils/constants";
 import { storage } from "../../context/components/Storage";

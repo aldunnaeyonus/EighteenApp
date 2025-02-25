@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Platform } from "react-native";
 import * as i18n from "../../../../i18n";
 import { SCREEN_WIDTH } from "../../../utils/constants";
 
@@ -61,6 +61,27 @@ const ProFooter = (props) => {
           </Text>
         </TouchableOpacity>
       </Text>
+
+
+
+      <View
+      style={{
+        width: SCREEN_WIDTH,
+        marginTop: 10,
+        marginBottom: 30,
+        justifyContent: "space-between",
+        alignContent: "space-between",
+        alignItems: "center",
+      }}
+    >
+       <Text style={{ textAlign: "center", color: "#000" }}>
+        
+        {Platform.OS == "android" ? 
+            i18n.t("GooglePRO")
+            : i18n.t("ApplePro")
+}
+          </Text>
+      </View>    
     </View>
   );
 };
