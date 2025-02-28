@@ -575,6 +575,19 @@ const EditCamera = (props) => {
                       if (name.length < 1) {
                         setisEditing(false);
                         setVerified(false);
+                         Alert.alert(
+                                                  i18n.t("e4"),
+                                                  i18n.t("EventName"),
+                                                  [
+                                                    {
+                                                      text: i18n.t("Close"),
+                                                      onPress: () =>
+                                                        console.log("Cancel Pressed"),
+                                                      style: "destructive",
+                                                    },
+                                                  ],
+                                                  { cancelable: false }
+                                                );
                       } else {
                         setVerified(true);
                         Alert.alert(

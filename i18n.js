@@ -4,9 +4,15 @@ import memoize from "lodash.memoize";
 
 export const DEFAULT_LANGUAGE = "en";
 const i18n = new I18n();
+let response = "";
 
 const loadTranslations = async (locale, url) => {
-  const response = await fetch(`${url}/translations/${locale}.json`);
+  response = await fetch(`${url}/translations/${locale}.json`);
+
+  if (response.status != 200) {
+    response = await fetch(`./assets/translations/${locale}.json`);
+  }
+  
   const translation = await response.json();
   i18n.translations = { [locale]: translation };
   i18n.enableFallback = true;

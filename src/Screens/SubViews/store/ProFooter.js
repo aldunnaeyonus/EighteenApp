@@ -67,7 +67,8 @@ const ProFooter = (props) => {
       <View
       style={{
         width: SCREEN_WIDTH,
-        marginTop: 10,
+        margin: 10,
+        padding:20,
         marginBottom: 30,
         justifyContent: "space-between",
         alignContent: "space-between",
@@ -76,12 +77,11 @@ const ProFooter = (props) => {
     >
        <Text style={{ textAlign: "center", color: "#000" }}>
         
-        {Platform.OS == "android" ? 
+        {Platform.OS == "android" && 
             i18n.t("GooglePRO")
-            : i18n.t("ApplePro")
-}
+        }
           </Text>
-      </View>    
+      </View>       
     </View>
   );
 };
