@@ -302,12 +302,13 @@
     "SupportEmailHeader": "Need Support",
     "SearchBlocked": "Search Blocked Members",
     "EULAShort":"EULA",
-    "Monthly":"Subscription is billed monthly.",
+    "Monthly":"Get pro access for 1 Year.",
     "UseCamera":"To take photos and videos, \"Snap Eighteen\" requires access to your camera. You can grant access in your device's Settings.",
     "UseLibrary":"To select photos and videos, \"Snap Eighteen\" requires access to your photo library. You can grant access in your device's Settings.",
     "BadWords":"Policy Violation",
     "BadWordsDescription":"The AI Image Description or Event Name are in violation of are policy and your Ai image cannot be rendered. Please remove the bad word and try again.",
     "GooglePRO":"Snap Eighteen can be used without a subscription. However, with a subscription, you get access to additional in-app features. The subscription payment above, will be charged to your Google Play account upon purchase confirmation and will be billed automatically on your subscription renewal date, monthly, unless canceled at least 24 hours before the end of the current period. You can manage or cancel your subscription anytime in your Google Play Subscription settings. If a subscription purchased through Google Play’s billing system, our general policy  your subscription will remain valid for the current billing period, and you will continue to receive their subscription content for the remainder of the current billing period, regardless of the cancellation date. Cancellation goes into effect after the current billing period has passed.",
     "ApplePro":"Snap Eighteen can be used without a subscription. However, with a subscription, you get access to additional in-app features. The subscription payment above, will be charged to your Apple account upon purchase confirmation and will be billed automatically on your subscription renewal date, monthly, unless canceled at least 24 hours before the end of the current period. You can manage or cancel your subscription anytime in your Apple Subscription settings. If a subscription purchased through Apple billing system, our general policy  your subscription will remain valid for the current billing period, and you will continue to receive their subscription content for the remainder of the current billing period, regardless of the cancellation date. Cancellation goes into effect after the current billing period has passed.",
-    "EventName":"Snap Eighteen Event Name must be longer than 3 characters."
+    "EventName":"Snap Eighteen Event Name must be longer than 3 characters.",
+    "Expires":"Expires"
 }

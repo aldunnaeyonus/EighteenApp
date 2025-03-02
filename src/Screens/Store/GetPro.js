@@ -4,8 +4,9 @@ import { constants, SCREEN_WIDTH, SCREEN_HEIGHT} from "../../utils/constants";
 import { storage } from "../../context/components/Storage";
 import { useMMKVObject } from "react-native-mmkv";
 import {
+  isIosStorekit2,
   PurchaseError,
-  requestSubscription,
+  requestPurchase,
   useIAP,
   withIAPContext,
 } from "react-native-iap";
@@ -18,7 +19,6 @@ import { useFocusEffect } from "@react-navigation/native";
 import { Icon } from "react-native-elements";
 import ProFooter from "../SubViews/store/ProFooter";
 import ProMain from "../SubViews/store/ProMain";
-import { deepLinkToSubscriptions } from "react-native-iap";
 import { isIos, isPlay } from "react-native-iap/src/internal";
 export { isIos, isPlay };
 import { axiosPull } from "../../utils/axiosPull";
@@ -27,15 +27,13 @@ import { ActivityIndicator, MD2Colors } from "react-native-paper";
 
 const GetPro = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
-  const [ownedSubscriptions, setOwnedSubscriptions] = useState([]);
   const { toast } = useToast();
-
   const {
     connected,
-    subscriptions,
-    getSubscriptions,
+    products,
     currentPurchase,
     finishTransaction,
+    getProducts,
   } = useIAP();
 
   const isFocused = useIsFocused();
@@ -110,41 +108,29 @@ const GetPro = (props) => {
     });
   });
 
-  const openSubscriptions = async () => {
+  const handleGetProducts = async () => {
     try {
-      await deepLinkToSubscriptions(constants.productSkusSubscriptions, true);
-    } catch (error) {
-      console.log("Error opening subscription management:", error);
-    }
-  };
-
-  const handleGetSubscriptions = async () => {
-    try {
-      await getSubscriptions({ skus: constants.productSkusSubscriptions });
-    } catch (error) {
-      errorLog({ message: "handleGetSubscriptions", error });
-    }
-    setIsLoading(false);
-  };
-
-  const handleBuySubscription = async (productId, offerToken) => {
-    if (isPlay && !offerToken) {
-      console.warn(
-        `There are no subscription Offers for selected product (Only requiered for Google Play purchases): ${productId}`
-      );
-    }
-    try {
-      await requestSubscription({
-        sku: productId,
-        ...(offerToken && {
-          subscriptionOffers: [{ sku: productId, offerToken }],
-        }),
+      await getProducts({
+        skus: constants.productSkusPro,
       });
+      setIsLoading(false);
+    } catch (error) {
+      errorLog({ message: "handleGetProducts", error });
+    }
+  };
+
+  const handleBuyProduct = async (sku) => {
+    try {
+      if (Platform.OS === "ios") {
+        await requestPurchase({ sku });
+      } else if (Platform.OS === "android") {
+        await requestPurchase({ skus: [sku] });
+      }
     } catch (error) {
       if (error instanceof PurchaseError) {
         errorLog({ message: `[${error.code}]: ${error.message}`, error });
       } else {
-        errorLog({ message: "handleBuySubscription", error });
+        errorLog({ message: "handleBuyProduct", error });
       }
     }
   };
@@ -152,7 +138,10 @@ const GetPro = (props) => {
   useEffect(() => {
     const checkCurrentPurchase = async () => {
       try {
-        if (currentPurchase?.productId) {
+        if (
+          (isIosStorekit2() && currentPurchase?.transactionId) ||
+          currentPurchase?.transactionReceipt
+        ) {
           await finishTransaction({
             purchase: currentPurchase,
             isConsumable: true,
@@ -165,16 +154,12 @@ const GetPro = (props) => {
             token: String(currentPurchase.purchaseToken),
             user: user.user_id,
             pin: String(currentPurchase.purchaseToken),
-            currentPurchase: "9.99",
+            currentPurchase: currentPurchase?.localizedPrice,
             sku: String(currentPurchase?.productId),
             eventName: "Snap Eighteen Pro",
           };
           await axiosPull.postData("/store/index.php", data);
           await axiosPull._pullUser(user.user_id, "GetPro");
-          setOwnedSubscriptions((prev) => [
-            ...prev,
-            currentPurchase?.productId,
-          ]);
         }
       } catch (error) {
         if (error instanceof PurchaseError) {
@@ -184,11 +169,13 @@ const GetPro = (props) => {
         }
       }
     };
+
     checkCurrentPurchase();
-  }, [currentPurchase, finishTransaction, connected, isFocused]);
+  }, [currentPurchase, finishTransaction, connected]);
+
 
   useEffect(() => {
-    handleGetSubscriptions();
+    handleGetProducts();
   }, [isFocused]);
 
   return (
@@ -203,7 +190,7 @@ const GetPro = (props) => {
         edges={["left", "right"]}
       >
         <AnimatedFlatlist
-          extraData={subscriptions}
+          extraData={products}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicatorr={false}
           scrollEventThrottle={16}
@@ -213,17 +200,16 @@ const GetPro = (props) => {
               privacy={privacy}
               terms={terms}
               eula={eula}
-              openSubscriptions={openSubscriptions}
             />
           }
           style={{ backgroundColor: "white", marginTop: -3 }}
           numColumns={1}
-          data={subscriptions}
+          data={products}
           renderItem={(item) => (
             <ProMain
               item={item}
-              handleBuySubscription={handleBuySubscription}
-              owned={ownedSubscriptions}
+              handleBuyProduct={handleBuyProduct}
+              products={products}
               isPlay={isPlay}
               isIos={isIos}
             />

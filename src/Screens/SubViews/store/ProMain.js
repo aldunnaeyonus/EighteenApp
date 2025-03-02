@@ -1,15 +1,19 @@
-import React from "react";
-import { View, Text, TouchableOpacity, Platform, Image, Linking, StyleSheet } from "react-native";
+import React, { useState  } from "react";
+import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import * as i18n from "../../../../i18n";
 import { ListItem } from "@rneui/themed";
 import { Icon } from "react-native-elements";
 import { SCREEN_WIDTH } from "../../../utils/constants";
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import { useMMKVObject } from "react-native-mmkv";
+import { storage } from "../../../context/components/Storage";
+import moment from "moment/min/moment-with-locales";
+import { getLocales } from "expo-localization";
 
 
 const ProMain = (props) => {
-  const Owned = props.owned.find((item) => item === props.item.item.productId);
-  const isOwned = Owned === props.item.item.productId;
+  const [user] = useMMKVObject("user.Data", storage);
+  let [localLang] = useState(getLocales()[0].languageCode);
 
   return (
     <View
@@ -34,7 +38,7 @@ const ProMain = (props) => {
               justifyContent: 'center',
             }}
             onPress={() => {
-              Platform.OS == "ios" ? props.handleBuySubscription(props.item.item.productId) : props.handleBuySubscription(props.item.item.productId,props.item.item.subscriptionOfferDetails[1].offerToken );
+              user.isPro != "1" ? props.handleBuyProduct(props.item.item.productId) : null;
             }}
           >
             <View
@@ -44,41 +48,23 @@ const ProMain = (props) => {
                               ]}>
                               <FeatherIcon
                                 color={'#F82E08'}
-                                name={isOwned ? 'check-circle' : 'circle'}
+                                name={user.isPro == "1" ? 'check-circle' : 'circle'}
                                 size={24} />
                               <View style={styles.radioBody}>
                                 <View>
                                   <Text style={styles.radioLabel}>{props.item.item.title}</Text>
-                                   <Text style={styles.radioText}>{i18n.t("Monthly")}</Text>
+                                   <Text style={styles.radioText}>{user.isPro == "1" ? i18n.t("Expires") + " "+moment.unix(user.proExire).locale(localLang).format("LLL") : i18n.t("Monthly")}</Text>
                                 </View>
                                 <Text
                                   style={[
                                     styles.radioPrice,
                                     styles.radioPriceActive,
                                   ]}>
-                                  {Platform.OS == "ios" ? props.item.item.localizedPrice : props.item.item.subscriptionOfferDetails[1].pricingPhases.pricingPhaseList[0].formattedPrice}
+                                 {props.item.item.localizedPrice}
                                 </Text>
                               </View>
                             </View>
                             </TouchableOpacity>
-      <Text style={{ fontSize: 20, textAlign: "center", color:'black',fontWeight: "600", }}>
-              <Text
-                style={{
-                  fontSize: 15,
-                  color: "#ea5504",
-                  fontWeight: "600",
-                }}
-                onPress={() => {
-                  if (Platform.OS == "ios") {
-                    Linking.openURL('https://apps.apple.com/account/subscriptions');
-                  }else  if (Platform.OS == "android") {
-                  Linking.openURL('https://play.google.com/store/account/subscriptions');
-                  }
-                }}
-              >{i18n.t("Cancel anytime")}
-              </Text>
-              
-        </Text>  
       </View>
       <View
             
@@ -212,53 +198,6 @@ const ProMain = (props) => {
                 </ListItem.Content>
               </ListItem>
       </View>
-
-     {!isOwned ? (
-        <>
-
-          <TouchableOpacity
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: 8,
-              paddingVertical: 16,
-              paddingHorizontal: 24,
-              borderWidth: 1,
-              margin:25,
-              backgroundColor: 'rgba(234, 85, 4, 1)"',
-              borderColor: 'rgba(234, 85, 4, 1)"',
-            }}
-            onPress={() => {
-              Platform.OS == "ios" ? props.handleBuySubscription(props.item.item.productId) : props.handleBuySubscription(props.item.item.productId,props.item.item.subscriptionOfferDetails[1].offerToken );
-            }}
-          >
-            <Text
-              style={{
-                textTransform: "uppercase",
-                fontSize: 17,
-                fontFamily: "HelveticaNeue-Light",
-                fontWeight: 600,
-                color: "#fff",
-              }}
-            >
-              {i18n.t("subscribe")}
-            </Text>
-          </TouchableOpacity>
-        </>
-      ) : (
-        <Text
-          style={{
-            
-            fontFamily: "HelveticaNeue",
-            fontSize: 22,
-            fontWeight: "bold",
-            textAlign: "center",
-          }}
-        >
-        {i18n.t("Subscribed")}
-        </Text>
-      )}
     </View>
   );
 };
@@ -295,7 +234,7 @@ const styles = StyleSheet.create({
     marginTop: 6,
     fontSize: 16,
     fontWeight: '500',
-    color: '#889797',
+    color: '#333',
   },
   radioPrice: {
     fontSize: 16,

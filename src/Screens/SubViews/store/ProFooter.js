@@ -60,28 +60,7 @@ const ProFooter = (props) => {
             {i18n.t("Privacy Policy")}
           </Text>
         </TouchableOpacity>
-      </Text>
-
-
-
-      <View
-      style={{
-        width: SCREEN_WIDTH,
-        margin: 10,
-        padding:20,
-        marginBottom: 30,
-        justifyContent: "space-between",
-        alignContent: "space-between",
-        alignItems: "center",
-      }}
-    >
-       <Text style={{ textAlign: "center", color: "#000" }}>
-        
-        {Platform.OS == "android" && 
-            i18n.t("GooglePRO")
-        }
-          </Text>
-      </View>       
+      </Text>     
     </View>
   );
 };

@@ -243,6 +243,18 @@ export const productSkusSubscriptions = Platform.select({
   default:[],
 }) as string[];
 
+export const productSkusPro = Platform.select({
+  ios: [
+    '0000365'
+  ],
+
+  android: [
+    'com.dunn_carabali.eighteen.pro.365',
+  ],
+
+  default:[],
+}) as string[];
+
 export const productSkus = Platform.select({
   ios: [
     '000200',
@@ -344,5 +356,6 @@ export const constants = {
   updateJSON,
   mimes,
   badWords,
-  historyActionsPro
+  historyActionsPro,
+  productSkusPro
 };

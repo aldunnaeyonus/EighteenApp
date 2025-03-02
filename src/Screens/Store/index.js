@@ -123,7 +123,7 @@ const Products = (props) => {
             token: String(currentPurchase?.purchaseToken),
             user: props.route.params.user,
             pin: props.route.params.pin,
-            currentPurchase: "",
+            currentPurchase: currentPurchase?.localizedPrice,
             sku: String(currentPurchase?.productId),
             eventName: props.route.params.eventName,
           };
