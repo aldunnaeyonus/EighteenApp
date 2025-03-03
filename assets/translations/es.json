@@ -302,11 +302,12 @@
     "SupportEmailHeader": "¿Necesitas ayuda?",
         "SearchBlocked": "Buscar miembros bloqueados",
             "EULAShort":"CLUF", 
-    "Monthly":"La suscripción se factura mensualmente.",
+    "Monthly":"Obtén acceso pro por 1 año.",
         "UseCamera":"Para tomar fotos y videos, \"Snap Eighteen\" necesita acceder a tu cámara. Puedes otorgar acceso en la configuración de tu dispositivo.",
     "UseLibrary":"Para seleccionar fotos y videos, \"Snap Eighteen\" necesita acceder a tu biblioteca de fotos. Puedes otorgar acceso en la configuración de tu dispositivo.",
         "BadWords":"Violación de la política",
     "BadWordsDescription":"La descripción de la imagen de IA o el nombre del evento infringen nuestra política y tu imagen de IA no se puede generar. Elimina la palabra inapropiada y vuelve a intentarlo.",
     "GooglePRO": "Esta aplicación se puede utilizar sin una suscripción. Con una suscripción, obtienes funciones adicionales. Los pagos se cargarán a tu cuenta de Google Play al confirmar la compra. Las suscripciones se renuevan automáticamente a menos que se cancelen al menos 24 horas antes del final del período actual. Puedes gestionar o cancelar suscripciones en la configuración de tu cuenta de Google Play en cualquier momento.",
-    "ApplePro": "Esta aplicación se puede utilizar sin una suscripción. Con una suscripción, obtienes funciones adicionales. Los pagos se cargarán a tu cuenta de Apple al confirmar la compra. Las suscripciones se renuevan automáticamente a menos que se cancelen al menos 24 horas antes del final del período actual. Puedes gestionar o cancelar suscripciones en la configuración de tu cuenta de Apple en cualquier momento."
+    "ApplePro": "Esta aplicación se puede utilizar sin una suscripción. Con una suscripción, obtienes funciones adicionales. Los pagos se cargarán a tu cuenta de Apple al confirmar la compra. Las suscripciones se renuevan automáticamente a menos que se cancelen al menos 24 horas antes del final del período actual. Puedes gestionar o cancelar suscripciones en la configuración de tu cuenta de Apple en cualquier momento.",
+        "Expires":"Caduca:"
 }

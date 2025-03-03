@@ -302,11 +302,12 @@
     "SupportEmailHeader": "Benötigen Sie Unterstützung?",
         "SearchBlocked": "Blockierte Mitglieder suchen",
             "EULAShort":"EULA",
-    "Monthly":"Das Abonnement wird monatlich abgerechnet.",
+    "Monthly":"Erhalte Pro-Zugang für 1 Jahr.",
         "UseCamera":"Um Fotos und Videos aufzunehmen, benötigt \"Snap Eighteen\" Zugriff auf Ihre Kamera. Sie können den Zugriff in den Einstellungen Ihres Geräts gewähren.",
     "UseLibrary":"Um Fotos und Videos auszuwählen, benötigt \"Snap Eighteen\" Zugriff auf Ihre Fotobibliothek. Sie können den Zugriff in den Einstellungen Ihres Geräts gewähren.",
         "BadWords":"Verstoß gegen die Richtlinien",
     "BadWordsDescription":"Die KI-Bildbeschreibung oder der Ereignisname verstoßen gegen unsere Richtlinien und Ihr KI-Bild kann nicht gerendert werden. Bitte entfernen Sie das unangemessene Wort und versuchen Sie es erneut.",
     "GooglePRO": "Diese App kann ohne Abonnement verwendet werden. Mit einem Abonnement erhalten Sie zusätzliche Funktionen. Zahlungen werden Ihrem Google Play-Konto bei Bestätigung des Kaufs belastet. Abonnements verlängern sich automatisch, es sei denn, sie werden mindestens 24 Stunden vor Ende des aktuellen Zeitraums gekündigt. Sie können Abonnements jederzeit in den Einstellungen Ihres Google Play-Kontos verwalten oder kündigen.",
-    "ApplePro": "Diese App kann ohne Abonnement verwendet werden. Mit einem Abonnement erhalten Sie zusätzliche Funktionen. Zahlungen werden Ihrem Apple-Konto bei Bestätigung des Kaufs belastet. Abonnements verlängern sich automatisch, es sei denn, sie werden mindestens 24 Stunden vor Ende des aktuellen Zeitraums gekündigt. Sie können Abonnements jederzeit in den Einstellungen Ihres Apple-Kontos verwalten oder kündigen."
+    "ApplePro": "Diese App kann ohne Abonnement verwendet werden. Mit einem Abonnement erhalten Sie zusätzliche Funktionen. Zahlungen werden Ihrem Apple-Konto bei Bestätigung des Kaufs belastet. Abonnements verlängern sich automatisch, es sei denn, sie werden mindestens 24 Stunden vor Ende des aktuellen Zeitraums gekündigt. Sie können Abonnements jederzeit in den Einstellungen Ihres Apple-Kontos verwalten oder kündigen.",
+"Expires":"Läuft ab:"
 }

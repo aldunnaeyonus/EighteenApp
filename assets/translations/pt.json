@@ -302,11 +302,12 @@
     "SupportEmailHeader": "Precisa de suporte?",
         "SearchBlocked": "Pesquisar membros bloqueados",
             "EULAShort":"CLUF",
-    "Monthly":"A assinatura é cobrada mensalmente.",
+    "Monthly":"Obtenha acesso pro por 1 ano.",
         "UseCamera":"Para tirar fotos e gravar vídeos, \"Snap Eighteen\" precisa acessar sua câmera. Você pode conceder acesso nas configurações do seu dispositivo.",
     "UseLibrary":"Para selecionar fotos e vídeos, \"Snap Eighteen\" precisa acessar sua biblioteca de fotos. Você pode conceder acesso nas configurações do seu dispositivo.",
         "BadWords":"Violação da política",
     "BadWordsDescription":"A descrição da imagem de IA ou o nome do evento violam nossa política e sua imagem de IA não pode ser renderizada. Remova a palavra inadequada e tente novamente.",
   "GooglePRO": "Este aplicativo pode ser usado sem uma assinatura. Com uma assinatura, você obtém recursos extras. Os pagamentos serão cobrados na sua conta do Google Play no momento da confirmação da compra. As assinaturas são renovadas automaticamente, a menos que sejam canceladas pelo menos 24 horas antes do final do período atual. Você pode gerenciar ou cancelar assinaturas nas configurações da sua conta do Google Play a qualquer momento.",
-  "ApplePro": "Este aplicativo pode ser usado sem uma assinatura. Com uma assinatura, você obtém recursos extras. Os pagamentos serão cobrados na sua conta Apple no momento da confirmação da compra. As assinaturas são renovadas automaticamente, a menos que sejam canceladas pelo menos 24 horas antes do final do período atual. Você pode gerenciar ou cancelar assinaturas nas configurações da sua conta Apple a qualquer momento."
+  "ApplePro": "Este aplicativo pode ser usado sem uma assinatura. Com uma assinatura, você obtém recursos extras. Os pagamentos serão cobrados na sua conta Apple no momento da confirmação da compra. As assinaturas são renovadas automaticamente, a menos que sejam canceladas pelo menos 24 horas antes do final do período atual. Você pode gerenciar ou cancelar assinaturas nas configurações da sua conta Apple a qualquer momento.",
+      "Expires":"Expira:"
 }

@@ -302,11 +302,12 @@
     "SupportEmailHeader": "Hai bisogno di supporto?",
         "SearchBlocked": "Cerca membri bloccati",
             "EULAShort":"EULA",
-    "Monthly":"L'abbonamento viene fatturato mensilmente.",
+    "Monthly":"Ottieni l'accesso pro per 1 anno.",
         "UseCamera":"Per scattare foto e registrare video, \"Snap Eighteen\" richiede l'accesso alla tua fotocamera. Puoi concedere l'accesso nelle impostazioni del tuo dispositivo.",
     "UseLibrary":"Per selezionare foto e video, \"Snap Eighteen\" richiede l'accesso alla tua libreria foto. Puoi concedere l'accesso nelle impostazioni del tuo dispositivo.",
         "BadWords":"Violazione della politica",
     "BadWordsDescription":"La descrizione dell'immagine IA o il nome dell'evento violano la nostra politica e l'immagine IA non può essere renderizzata. Rimuovi la parola inappropriata e riprova.",
     "GooglePRO": "Questa app può essere utilizzata senza un abbonamento. Con un abbonamento, ottieni funzionalità extra. I pagamenti verranno addebitati sul tuo account Google Play al momento della conferma dell'acquisto. Gli abbonamenti si rinnovano automaticamente a meno che non vengano annullati almeno 24 ore prima della fine del periodo corrente. Puoi gestire o annullare gli abbonamenti nelle impostazioni del tuo account Google Play in qualsiasi momento.",
-    "ApplePro": "Questa app può essere utilizzata senza un abbonamento. Con un abbonamento, ottieni funzionalità extra. I pagamenti verranno addebitati sul tuo account Apple al momento della conferma dell'acquisto. Gli abbonamenti si rinnovano automaticamente a meno che non vengano annullati almeno 24 ore prima della fine del periodo corrente. Puoi gestire o annullare gli abbonamenti nelle impostazioni del tuo account Apple in qualsiasi momento."
+    "ApplePro": "Questa app può essere utilizzata senza un abbonamento. Con un abbonamento, ottieni funzionalità extra. I pagamenti verranno addebitati sul tuo account Apple al momento della conferma dell'acquisto. Gli abbonamenti si rinnovano automaticamente a meno che non vengano annullati almeno 24 ore prima della fine del periodo corrente. Puoi gestire o annullare gli abbonamenti nelle impostazioni del tuo account Apple in qualsiasi momento.",
+        "Expires":"Scade:"
 }
