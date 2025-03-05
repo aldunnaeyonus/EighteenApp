@@ -186,7 +186,7 @@ const onCheckVersion = () => {
       
       setTimeout(() => {
         setReady(true);
-      }, 3000);
+      }, 5000);
     };
     fetchData();
   }, [signIn, ready, owner]);
