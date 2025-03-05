@@ -7,17 +7,18 @@ const i18n = new I18n();
 let response = "";
 
 const loadTranslations = async (locale, url) => {
-  response = await fetch(`${url}/translations/${locale}.json`);
-
-  if (response.status != 200) {
-    response = await fetch(`./assets/translations/${locale}.json`);
-  }
+ await fetch(`${url}/translations/${locale}.json`)
+.then(res => {
+ response = await res.json();
+})
+.catch(err => { 
+      response = await fetch(`./assets/translations/${locale}.json`).json();
+});
   
-  const translation = await response.json();
-  i18n.translations = { [locale]: translation };
+  i18n.translations = { [locale]: response };
   i18n.enableFallback = true;
   i18n.defaultLocale = DEFAULT_LANGUAGE;
-  i18n.store(translation);
+  i18n.store(response);
 };
 
 export const translate = memoize(
