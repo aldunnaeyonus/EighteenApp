@@ -79,6 +79,7 @@ const CreateCamera = (props) => {
   let notification = new NotifService();
   const [cameraStatus] = ImagePicker.useCameraPermissions();
   const [libraryStatus] = ImagePicker.useMediaLibraryPermissions();
+  const [seed, setSeed] = useState(72);
 
   const MODE_VALUES = Platform.select({
     ios: Object.values(IOS_MODE),
@@ -99,7 +100,7 @@ const CreateCamera = (props) => {
       width = 1024,
       height = 863,
       model = "flux",
-      seed = 72,
+      seed = seed,
       nologo = true,
       enhance = false,
     } = options;
@@ -203,7 +204,7 @@ const CreateCamera = (props) => {
       {
         width: 1024,
         height: 863,
-        seed: 72,
+        seed: seed,
         model: "flux",
         nologo: true,
         enhance: true,
