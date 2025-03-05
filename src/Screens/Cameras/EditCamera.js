@@ -101,6 +101,7 @@ const EditCamera = (props) => {
   const [end, setEnd] = useState(timestampEnd);
   const [isEditing, setisEditing] = useState(false);
   let notification = new NotifService();
+  const [seed, setSeed] = useState(72);
 
   const onChange = (event, selectDate) => {
     if (event.type === "set") {
@@ -178,7 +179,7 @@ const EditCamera = (props) => {
       width = 1024,
       height = 863,
       model = "flux",
-      seed = 72,
+      seed = seed,
       nologo = true,
       enhance = false,
     } = options;
@@ -198,13 +199,13 @@ const EditCamera = (props) => {
 
   const AITexttoImage = () => {
     const userImage = usePollinationsImages(
-      dname.length > 1
+      dname.length > 5
         ? dname
         : `Create a cinematic 4K photo shot on a 70mm, Ultra-Wide Angle, Depth of Field, Shutter Speed 1/1000, F/22 camera for a gathering that is titled ${name} and is in dramatic and stunning setting located in ${RNLocalize.getTimeZone()} and is also an award winning photo worthy of instagram.`,
       {
         width: 1024,
         height: 863,
-        seed: 72,
+        seed: seed,
         model: "flux",
         nologo: true,
         enhance: true,
@@ -1046,6 +1047,55 @@ const EditCamera = (props) => {
                           <Text>{i18n.t("Edit Image")}</Text>
                         </View>
                       </TouchableOpacity>
+                     {isAI ??
+                    <TouchableOpacity
+                        style={{
+                          width: "50%",
+                          height: 40,
+                          marginTop: 20,
+                        }}
+                        onPress={() => {
+                           Alert.alert(
+                          i18n.t("ReportAI"),
+                          i18n.t("RReportAIImage"),
+                          [
+                            {
+                              text: i18n.t("Cancel"),
+                              onPress: () => console.log("Cancel Pressed"),
+                              style: "destructive",
+                            },
+                            {
+                              text: i18n.t("Flag & Redraw"),
+                              onPress: () => {
+                         setSeed(seed - 1);
+                          AITexttoImage();
+                              },
+                              style: "default",
+                            },
+                          ],
+                          { cancelable: false }
+                        );
+                        }}
+                      >
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            gap: 10,
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Icon
+                            type="material"
+                            name="report-gmailerrorred"
+                            size={20}
+                            color="#3D4849"
+                          />
+
+                          <Text>{i18n.t("Flag")}</Text>
+                        </View>
+                      </TouchableOpacity>
+                    }
                       <TouchableOpacity
                         style={{
                           width: "50%",
