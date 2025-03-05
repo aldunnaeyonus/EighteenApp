@@ -198,7 +198,7 @@ const CreateCamera = (props) => {
 
   const AITexttoImage = async () => {
     const userImage = usePollinationsImages(
-      dname.length > 1
+      dname.length > 5
         ? dname
         : `Create a cinematic 4K photo shot on a 70mm, Ultra-Wide Angle, Depth of Field, Shutter Speed 1/1000, F/22 camera for a gathering that is titled ${name} and is in dramatic and stunning setting located in ${RNLocalize.getTimeZone()} and is also an award winning photo worthy of instagram.`,
       {
