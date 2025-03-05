@@ -9,7 +9,7 @@ let response = "";
 const loadTranslations = async (locale, url) => {
  await fetch(`${url}/translations/${locale}.json`)
 .then(res => {
- response = await res.json();
+      response = await res.json();
 })
 .catch(err => { 
       response = await fetch(`./assets/translations/${locale}.json`).json();
