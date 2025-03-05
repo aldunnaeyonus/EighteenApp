@@ -1053,7 +1053,7 @@ const CreateCamera = (props) => {
                           <Text>{i18n.t("Edit Image")}</Text>
                         </View>
                       </TouchableOpacity>
-                    {isAI ??
+                    {isAI ?
                     <TouchableOpacity
                         style={{
                           width: "50%",
@@ -1071,7 +1071,7 @@ const CreateCamera = (props) => {
                               style: "destructive",
                             },
                             {
-                              text: i18n.t("Flag & Redraw"),
+                              text: i18n.t("Flag&Redraw"),
                               onPress: () => {
                          setSeed(seed - 1);
                           AITexttoImage();
@@ -1100,7 +1100,7 @@ const CreateCamera = (props) => {
 
                           <Text>{i18n.t("Flag")}</Text>
                         </View>
-                      </TouchableOpacity>
+                      </TouchableOpacity> : <></>
                     }
                       <TouchableOpacity
                         style={{

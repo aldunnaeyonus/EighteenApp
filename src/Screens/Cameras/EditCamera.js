@@ -1047,7 +1047,7 @@ const EditCamera = (props) => {
                           <Text>{i18n.t("Edit Image")}</Text>
                         </View>
                       </TouchableOpacity>
-                     {isAI ??
+                     {isAI ?
                     <TouchableOpacity
                         style={{
                           width: "50%",
@@ -1094,7 +1094,7 @@ const EditCamera = (props) => {
 
                           <Text>{i18n.t("Flag")}</Text>
                         </View>
-                      </TouchableOpacity>
+                      </TouchableOpacity> : <></>
                     }
                       <TouchableOpacity
                         style={{
