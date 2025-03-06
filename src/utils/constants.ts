@@ -14,7 +14,8 @@ export const media_amount = ["1", "2", "3", "4", "5", "10", "15", "18"];
 export const camera_amount_PRO = ["10", "18", "25", "50", "100", "150", "250", "500", "1000"];
 export const languages = ["French","German","Italian","Dutch","Danish","Polish","Portuguese","Norwegian","Swedish","Finish","English","Spanish", "Japanese", "Chinese", "Ukrainian", "Greek", "South Korean"];
 export const badWords = ["nude","boobs","boobies", "titties","tits", "titts", "penis","dick","pussy","vagina","add","naked","flesh","sex","blow-job", "blow job", "blowjob", "nipple", "sex", "sexual", "sexually", "ass", "porn", "petofillia", "sexually", "exploit", "bestiality", "sexual", "illegal sexual", "fetishes", "Marijuana", "drugs", "death", "Alcohol", "Tobacco", "smoking", "creepshots", "dildos"];
-
+export const errorLog = () => {
+}
 enum COLOR_SCHEME {
   LIGHT = 'light',
   DARK = 'dark',
@@ -357,5 +358,6 @@ export const constants = {
   mimes,
   badWords,
   historyActionsPro,
-  productSkusPro
+  productSkusPro,
+  errorLog
 };
