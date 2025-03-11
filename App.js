@@ -47,7 +47,7 @@ import { ToastProvider } from 'react-native-styled-toast'
 import { storage } from "./src/context/components/Storage";
 import { COLORS } from "./src/utils/constants";
 import Blocked from "./src/Screens/Profile/Blocked"; 
-
+import { I18n } from "i18n-js";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -61,7 +61,8 @@ export default function App() {
   const [ready, setReady] = useState(false);
   const [owner, setOwner] = useState("0");
   let [localLang] = useState(getLocales()[0].languageCode)
-  
+  const i18n = new I18n();
+
   const startUpdate = async (url, urlversion, message) => {
     await hotUpdate.downloadBundleUri(ReactNativeBlobUtil, url, urlversion, {
       updateSuccess: () => {
@@ -192,7 +193,7 @@ const onCheckVersion = () => {
   }, [signIn, ready, owner]);
 
   if (!ready) {
-    setI18nConfig(localLang, constants.url);
+    setI18nConfig(localLang, i18n);
     return (
       <FastImage
       style={{flex:1, width:SCREEN_WIDTH, height:SCREEN_HEIGHT}}
