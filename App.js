@@ -47,7 +47,7 @@ import { ToastProvider } from 'react-native-styled-toast'
 import { storage } from "./src/context/components/Storage";
 import { COLORS } from "./src/utils/constants";
 import Blocked from "./src/Screens/Profile/Blocked"; 
-
+import { I18n } from "i18n-js";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
