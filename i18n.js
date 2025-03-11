@@ -3,7 +3,6 @@ import { I18n } from "i18n-js";
 import memoize from "lodash.memoize";
 
 export const DEFAULT_LANGUAGE = "en";
-const i18n = new I18n();
 
 const loadTranslations = async (locale, i18n) => {
   const response = await fetch(`/assets/translations/${locale}.json`);
@@ -20,7 +19,7 @@ export const translate = memoize(
 );
 
 export const t = translate;
-
+const i18n = new I18n();
 export const setI18nConfig = (codeLang, url) => {
   const fallback = { languageTag: DEFAULT_LANGUAGE, isRTL: false };
   const lang = codeLang ? { languageTag: codeLang, isRTL: false } : null;
