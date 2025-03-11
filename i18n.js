@@ -4,10 +4,9 @@ import memoize from "lodash.memoize";
 
 export const DEFAULT_LANGUAGE = "en";
 const i18n = new I18n();
-//  axios.get(`./assets/translations/${locale}.json`)
 
-const loadTranslations = async (locale, url) => {
-  const response = await fetch(`${url}/translations/${locale}.json`);
+const loadTranslations = async (locale) => {
+  const response = await fetch(`/assets/translations/${locale}.json`);
   const translation = await response.json();
   i18n.translations = { [locale]: translation };
   i18n.enableFallback = true;
