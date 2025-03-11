@@ -1,5 +1,4 @@
 import { I18nManager } from "react-native";
-import { I18n } from "i18n-js";
 import memoize from "lodash.memoize";
 
 export const DEFAULT_LANGUAGE = "en";
