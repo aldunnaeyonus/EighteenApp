@@ -61,7 +61,8 @@ export default function App() {
   const [ready, setReady] = useState(false);
   const [owner, setOwner] = useState("0");
   let [localLang] = useState(getLocales()[0].languageCode)
-  
+  const i18n = new I18n();
+
   const startUpdate = async (url, urlversion, message) => {
     await hotUpdate.downloadBundleUri(ReactNativeBlobUtil, url, urlversion, {
       updateSuccess: () => {
