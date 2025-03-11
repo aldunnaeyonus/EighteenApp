@@ -192,7 +192,7 @@ const onCheckVersion = () => {
   }, [signIn, ready, owner]);
 
   if (!ready) {
-    setI18nConfig(localLang, constants.url);
+    setI18nConfig(localLang);
     return (
       <FastImage
       style={{flex:1, width:SCREEN_WIDTH, height:SCREEN_HEIGHT}}
