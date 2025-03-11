@@ -309,5 +309,9 @@
     "BadWordsDescription":"La descripción de la imagen de IA o el nombre del evento infringen nuestra política y tu imagen de IA no se puede generar. Elimina la palabra inapropiada y vuelve a intentarlo.",
     "GooglePRO": "Esta aplicación se puede utilizar sin una suscripción. Con una suscripción, obtienes funciones adicionales. Los pagos se cargarán a tu cuenta de Google Play al confirmar la compra. Las suscripciones se renuevan automáticamente a menos que se cancelen al menos 24 horas antes del final del período actual. Puedes gestionar o cancelar suscripciones en la configuración de tu cuenta de Google Play en cualquier momento.",
     "ApplePro": "Esta aplicación se puede utilizar sin una suscripción. Con una suscripción, obtienes funciones adicionales. Los pagos se cargarán a tu cuenta de Apple al confirmar la compra. Las suscripciones se renuevan automáticamente a menos que se cancelen al menos 24 horas antes del final del período actual. Puedes gestionar o cancelar suscripciones en la configuración de tu cuenta de Apple en cualquier momento.",
-        "Expires":"Caduca:"
+        "Expires":"Caduca:",
+            "ReportAI":"Reportar imagen",
+    "Flag": "Marcar imagen",
+    "RReportAIImage":"Reportar la imagen generada por IA y la imagen de portada de IA rediseñada.",
+    "Flag&Redraw":"Marcar y redibujar"
 }

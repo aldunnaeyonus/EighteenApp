@@ -310,5 +310,9 @@
     "GooglePRO":"Snap Eighteen can be used without a subscription. However, with a subscription, you get access to additional in-app features. The subscription payment above, will be charged to your Google Play account upon purchase confirmation and will be billed automatically on your subscription renewal date, monthly, unless canceled at least 24 hours before the end of the current period. You can manage or cancel your subscription anytime in your Google Play Subscription settings. If a subscription purchased through Google Play’s billing system, our general policy  your subscription will remain valid for the current billing period, and you will continue to receive their subscription content for the remainder of the current billing period, regardless of the cancellation date. Cancellation goes into effect after the current billing period has passed.",
     "ApplePro":"Snap Eighteen can be used without a subscription. However, with a subscription, you get access to additional in-app features. The subscription payment above, will be charged to your Apple account upon purchase confirmation and will be billed automatically on your subscription renewal date, monthly, unless canceled at least 24 hours before the end of the current period. You can manage or cancel your subscription anytime in your Apple Subscription settings. If a subscription purchased through Apple billing system, our general policy  your subscription will remain valid for the current billing period, and you will continue to receive their subscription content for the remainder of the current billing period, regardless of the cancellation date. Cancellation goes into effect after the current billing period has passed.",
     "EventName":"Snap Eighteen Event Name must be longer than 3 characters.",
-    "Expires":"Expires:"
-}
+    "Expires":"Expires:",
+    "ReportAI":"Report Image",
+    "Flag": "Flag Image",
+    "RReportAIImage":"Report the AI generated image and redrawn AI cover image.",
+    "Flag&Redraw":"Flag & Redraw"
+}			

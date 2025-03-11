@@ -309,5 +309,9 @@
     "BadWordsDescription":"La descrizione dell'immagine IA o il nome dell'evento violano la nostra politica e l'immagine IA non può essere renderizzata. Rimuovi la parola inappropriata e riprova.",
     "GooglePRO": "Questa app può essere utilizzata senza un abbonamento. Con un abbonamento, ottieni funzionalità extra. I pagamenti verranno addebitati sul tuo account Google Play al momento della conferma dell'acquisto. Gli abbonamenti si rinnovano automaticamente a meno che non vengano annullati almeno 24 ore prima della fine del periodo corrente. Puoi gestire o annullare gli abbonamenti nelle impostazioni del tuo account Google Play in qualsiasi momento.",
     "ApplePro": "Questa app può essere utilizzata senza un abbonamento. Con un abbonamento, ottieni funzionalità extra. I pagamenti verranno addebitati sul tuo account Apple al momento della conferma dell'acquisto. Gli abbonamenti si rinnovano automaticamente a meno che non vengano annullati almeno 24 ore prima della fine del periodo corrente. Puoi gestire o annullare gli abbonamenti nelle impostazioni del tuo account Apple in qualsiasi momento.",
-        "Expires":"Scade:"
+        "Expires":"Scade:",
+            "ReportAI":"Segnala immagine",
+    "Flag": "Segnala immagine",
+    "RReportAIImage":"Segnala l'immagine generata dall'IA e l'immagine di copertina IA ridisegnata.",
+    "Flag&Redraw":"Segnala e ridisegna"
 }

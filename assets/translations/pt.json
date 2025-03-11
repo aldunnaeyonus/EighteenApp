@@ -309,5 +309,9 @@
     "BadWordsDescription":"A descrição da imagem de IA ou o nome do evento violam nossa política e sua imagem de IA não pode ser renderizada. Remova a palavra inadequada e tente novamente.",
   "GooglePRO": "Este aplicativo pode ser usado sem uma assinatura. Com uma assinatura, você obtém recursos extras. Os pagamentos serão cobrados na sua conta do Google Play no momento da confirmação da compra. As assinaturas são renovadas automaticamente, a menos que sejam canceladas pelo menos 24 horas antes do final do período atual. Você pode gerenciar ou cancelar assinaturas nas configurações da sua conta do Google Play a qualquer momento.",
   "ApplePro": "Este aplicativo pode ser usado sem uma assinatura. Com uma assinatura, você obtém recursos extras. Os pagamentos serão cobrados na sua conta Apple no momento da confirmação da compra. As assinaturas são renovadas automaticamente, a menos que sejam canceladas pelo menos 24 horas antes do final do período atual. Você pode gerenciar ou cancelar assinaturas nas configurações da sua conta Apple a qualquer momento.",
-      "Expires":"Expira:"
+      "Expires":"Expira:",
+          "ReportAI":"Reportar imagem",
+    "Flag": "Sinalizar imagem",
+    "RReportAIImage":"Reportar a imagem gerada por IA e a imagem de capa de IA redesenhada.",
+    "Flag&Redraw":"Sinalizar e redesenhar"
 }

@@ -309,5 +309,9 @@
     "BadWordsDescription":"Die KI-Bildbeschreibung oder der Ereignisname verstoßen gegen unsere Richtlinien und Ihr KI-Bild kann nicht gerendert werden. Bitte entfernen Sie das unangemessene Wort und versuchen Sie es erneut.",
     "GooglePRO": "Diese App kann ohne Abonnement verwendet werden. Mit einem Abonnement erhalten Sie zusätzliche Funktionen. Zahlungen werden Ihrem Google Play-Konto bei Bestätigung des Kaufs belastet. Abonnements verlängern sich automatisch, es sei denn, sie werden mindestens 24 Stunden vor Ende des aktuellen Zeitraums gekündigt. Sie können Abonnements jederzeit in den Einstellungen Ihres Google Play-Kontos verwalten oder kündigen.",
     "ApplePro": "Diese App kann ohne Abonnement verwendet werden. Mit einem Abonnement erhalten Sie zusätzliche Funktionen. Zahlungen werden Ihrem Apple-Konto bei Bestätigung des Kaufs belastet. Abonnements verlängern sich automatisch, es sei denn, sie werden mindestens 24 Stunden vor Ende des aktuellen Zeitraums gekündigt. Sie können Abonnements jederzeit in den Einstellungen Ihres Apple-Kontos verwalten oder kündigen.",
-"Expires":"Läuft ab:"
+"Expires":"Läuft ab:",
+    "ReportAI":"Bild melden",
+    "Flag": "Bild markieren",
+    "RReportAIImage":"Das KI-generierte Bild und das neu gezeichnete KI-Titelbild melden.",
+    "Flag&Redraw":"Markieren & Neu zeichnen"
 }

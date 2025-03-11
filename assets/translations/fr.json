@@ -309,5 +309,9 @@
     "BadWordsDescription":"La description de l'image IA ou le nom de l'événement enfreignent notre politique et votre image IA ne peut pas être générée. Veuillez supprimer le mot inapproprié et réessayer.",
     "GooglePRO": "Cette application peut être utilisée sans abonnement. Avec un abonnement, vous obtenez des fonctionnalités supplémentaires. Les paiements seront facturés à votre compte Google Play lors de la confirmation de l'achat. Les abonnements se renouvellent automatiquement sauf s'ils sont annulés au moins 24 heures avant la fin de la période en cours. Vous pouvez gérer ou annuler les abonnements dans les paramètres de votre compte Google Play à tout moment.",
     "ApplePro": "Cette application peut être utilisée sans abonnement. Avec un abonnement, vous obtenez des fonctionnalités supplémentaires. Les paiements seront facturés à votre compte Apple lors de la confirmation de l'achat. Les abonnements se renouvellent automatiquement sauf s'ils sont annulés au moins 24 heures avant la fin de la période en cours. Vous pouvez gérer ou annuler les abonnements dans les paramètres de votre compte Apple à tout moment.",
-        "Expires":"Expire :"
+        "Expires":"Expire :",
+            "ReportAI":"Signaler l'image",
+    "Flag": "Signaler l'image",
+    "RReportAIImage":"Signaler l'image générée par l'IA et l'image de couverture IA redessinée.",
+    "Flag&Redraw":"Signaler et redessiner"
 }
