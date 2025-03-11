@@ -19,9 +19,8 @@ export const translate = memoize(
 );
 
 export const t = translate;
-const i18n = new I18n();
 
-export const setI18nConfig = (codeLang) => {
+export const setI18nConfig = (codeLang, i18n) => {
   const fallback = { languageTag: DEFAULT_LANGUAGE, isRTL: false };
   const lang = codeLang ? { languageTag: codeLang, isRTL: false } : null;
   const { languageTag, isRTL } = lang ? lang : fallback;
