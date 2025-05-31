@@ -62,7 +62,7 @@ export default function App() {
   let [localLang] = useState(getLocales()[0].languageCode)
   setI18nConfig(localLang);
 
-  const startUpdate = async (url, urlversion, message) => {
+  const startUpdate = async (url, urlversion) => {
     await hotUpdate.downloadBundleUri(ReactNativeBlobUtil, url, urlversion, {
       updateSuccess: () => {
        
@@ -86,7 +86,6 @@ const onCheckVersion = () => {
                     ? result?.downloadIosUrl
                     : result?.downloadAndroidUrl,
                   result?.version,
-                  result?.whatsnew
                 );
         };
     });

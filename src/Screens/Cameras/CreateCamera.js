@@ -521,7 +521,6 @@ const CreateCamera = (props) => {
             <View style={styles.modalView}>
               <View
                 style={{
-                  flexDirection: "column",
                   marginTop: -20,
                   marginBottom: 25,
                 }}
@@ -531,7 +530,6 @@ const CreateCamera = (props) => {
                     flexDirection: "row",
                     justifyContent: "center",
                     alignItems: "center",
-                    gap: 70,
                     alignContent: "space-between",
                   }}
                 >
@@ -551,7 +549,8 @@ const CreateCamera = (props) => {
                   flexDirection: "row",
                   justifyContent: "center",
                   alignItems: "center",
-                  gap: 50,
+                  width:'auto',
+                  gap:10,
                   alignContent: "space-between",
                 }}
               >
@@ -560,6 +559,7 @@ const CreateCamera = (props) => {
                     flexDirection: "column",
                     alignContent: "center",
                     alignItems: "center",
+                     width:'33%',
                     justifyContent: "center",
                   }}
                 >
@@ -653,6 +653,7 @@ const CreateCamera = (props) => {
                     style={{
                       textAlign: "center",
                       marginTop: 10,
+                      width:'100%'
                     }}
                   >
                     {i18n.t("AI")}
@@ -663,6 +664,7 @@ const CreateCamera = (props) => {
                     flexDirection: "column",
                     alignContent: "center",
                     alignItems: "center",
+                                         width:'33%',
                     justifyContent: "center",
                   }}
                 >
@@ -691,6 +693,7 @@ const CreateCamera = (props) => {
                     style={{
                       textAlign: "center",
                       marginTop: 10,
+                                            width:'100%'
                     }}
                   >
                     {i18n.t("Gallery")}
@@ -700,6 +703,7 @@ const CreateCamera = (props) => {
                   style={{
                     flexDirection: "column",
                     alignContent: "center",
+                                         width:'33%',
                     alignItems: "center",
                     justifyContent: "center",
                   }}
@@ -762,6 +766,7 @@ const CreateCamera = (props) => {
                     style={{
                       textAlign: "center",
                       marginTop: 10,
+                                            width:'100%'
                     }}
                   >
                     {i18n.t("Camera")}
