@@ -70,3 +70,6 @@ Android Keystore
 key0
 snapeighteen
 ntrboy21
+
+
+KTS Errors Permissions requires a !! after the .
