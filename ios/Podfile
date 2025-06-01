@@ -48,7 +48,7 @@ setup_permissions([
 ])
 # @generated end setup
 $VCEnableFrameProcessors = false
-
+$VCEnableLocation = true
 target 'SnapEighteen' do
   use_expo_modules!
   config = use_native_modules!

@@ -1562,16 +1562,10 @@ PODS:
   - SSZipArchive (2.4.3)
   - VisionCamera (4.6.3):
     - VisionCamera/Core (= 4.6.3)
-    - VisionCamera/FrameProcessors (= 4.6.3)
     - VisionCamera/React (= 4.6.3)
   - VisionCamera/Core (4.6.3)
-  - VisionCamera/FrameProcessors (4.6.3):
-    - React
-    - React-callinvoker
-    - react-native-worklets-core
   - VisionCamera/React (4.6.3):
     - React-Core
-    - VisionCamera/FrameProcessors
   - Yoga (0.0.0)
 
 DEPENDENCIES:
@@ -1990,9 +1984,9 @@ SPEC CHECKSUMS:
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
-  VisionCamera: 88df4dae7196c93ecd331f105f0e5d7d95702cb3
+  VisionCamera: 598ab83c6bf4d65f5c32ec54361eed866505d388
   Yoga: 950bbfd7e6f04790fdb51149ed51df41f329fcc8
 
-PODFILE CHECKSUM: 7adb54fb978b105820c151b813e5bafb42b0c7bf
+PODFILE CHECKSUM: a5e1611c4929b83a014c706d82e1eb94742c9364
 
 COCOAPODS: 1.15.2
