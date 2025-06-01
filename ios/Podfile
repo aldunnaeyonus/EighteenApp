@@ -47,6 +47,7 @@ setup_permissions([
   'LocationWhenInUse',
 ])
 # @generated end setup
+$VCEnableFrameProcessors = false
 
 target 'SnapEighteen' do
   use_expo_modules!
