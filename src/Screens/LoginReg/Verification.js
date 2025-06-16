@@ -74,7 +74,7 @@ const Verification = (props) => {
           >
             <Icon
               type="material"
-              size={30}
+              size={25}
               name="arrow-back-ios-new"
               color="#fff"
               containerStyle={{

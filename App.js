@@ -32,6 +32,7 @@ import FastImage from "react-native-fast-image";
 import * as i18n from "./i18n";
 import { setI18nConfig } from "./i18n";
 import AboutProfile from "./src/Screens/Friends/AboutProfile";
+import GlobalFriends from "./src/Screens/Friends/GlobalFriends";
 import Languages from "./src/Screens/Profile/Languages";
 import Notifications from "./src/Screens/Profile/Notifications";
 import Abouts from "./src/Screens/Profile/About";
@@ -45,7 +46,7 @@ import TempCamera from "./src/Screens/Cameras/TempCamera";
 import { getLocales } from 'expo-localization';
 import { ToastProvider } from 'react-native-styled-toast'
 import { storage } from "./src/context/components/Storage";
-import { COLORS } from "./src/utils/constants";
+import { COLORS, stringToBoolean } from "./src/utils/constants";
 import Blocked from "./src/Screens/Profile/Blocked"; 
 
 export default function App() {
@@ -55,7 +56,7 @@ export default function App() {
   Text.defaultProps = Text.defaultProps || {};
   Text.defaultProps.allowFontScaling = false;
 
-  LogBox.ignoreAllLogs(true);
+  LogBox.ignoreAllLogs(  __DEV__ ? false : true);
   const [signIn, setSignIn] = useState(false);
   const [ready, setReady] = useState(false);
   const [owner, setOwner] = useState("0");
@@ -137,24 +138,7 @@ const onCheckVersion = () => {
     config,
   };
 
-  const stringToBoolean = (stringValue) => {
-    switch (stringValue?.toLowerCase()?.trim()) {
-      case "true":
-      case "yes":
-      case "1":
-        return true;
 
-      case "false":
-      case "no":
-      case "0":
-      case null:
-      case undefined:
-        return false;
-
-      default:
-        return JSON.parse(stringValue);
-    }
-  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -181,6 +165,7 @@ const onCheckVersion = () => {
           storage.set("user.Member.Join.Feed", JSON.stringify([]));
           storage.set("user.AllFriend.Feed", JSON.stringify([]));
           storage.set("user.Friend.Blocked", JSON.stringify([]));
+          storage.set("user.All.Global.Friend.Feed", JSON.stringify([]));
       }
       
       setTimeout(() => {
@@ -706,6 +691,25 @@ const onCheckVersion = () => {
               >
                 {(props) => (
                   <ClosedCameras
+                    {...props}
+                    UUID={owner}
+                    loggedIn={signIn}
+                    unsubscribe={isConnected}
+                  />
+                )}
+              </Stack.Screen>
+               <Stack.Screen
+                name="GlobalFriends"
+                options={{
+                  title: i18n.t("GlobalFriends"),
+                  headerShown: true,
+                  headerTintColor: "#000",
+                  gestureEnabled: false,
+                  headerBackTitleVisible: false,
+                }}
+              >
+                {(props) => (
+                  <GlobalFriends
                     {...props}
                     UUID={owner}
                     loggedIn={signIn}

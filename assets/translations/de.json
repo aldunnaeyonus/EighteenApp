@@ -313,5 +313,7 @@
     "ReportAI":"Bild melden",
     "Flag": "Bild markieren",
     "RReportAIImage":"Das KI-generierte Bild und das neu gezeichnete KI-Titelbild melden.",
-    "Flag&Redraw":"Markieren & Neu zeichnen"
+    "Flag&Redraw":"Markieren & Neu zeichnen",
+    "GlobalFriends":"Globale Freunde",
+    "SearchGlobalFriends": "Globale Freunde suchen"
 }

@@ -129,6 +129,18 @@ export const _pullBlockedFriendsFeedABC = async (id) => {
   storage.set("user.Friend.Blocked", JSON.stringify(myData));
 };
 
+export const _pullFriendsAllFeedABC = async (id) => {
+  const data = {
+    owner: id,
+  };
+  const response = await postData("/users/friendsAll.php", data);
+  const myData = []
+    .concat(response)
+    .sort((a, b) => a.friend_handle - b.friend_handle);
+
+  storage.set("user.All.Global.Friend.Feed", JSON.stringify(myData));
+};
+
 export const _pullFriendsFeedABC = async (id) => {
   const data = {
     owner: id,
@@ -197,5 +209,6 @@ export const axiosPull = {
   _pullGalleryArray,
   _pullFriendFeed,
   _pullFriendsFeedABC,
+  _pullFriendsAllFeedABC,
   _pullBlockedFriendsFeedABC,
 };

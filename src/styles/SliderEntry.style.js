@@ -275,7 +275,7 @@ export default StyleSheet.create({
         fontFamily: 'HelveticaNeue-Bold',
         fontSize: 17,
         color: '#3D4849',
-        textAlign:'left',
+        textAlign:'flex-start',
         fontWeight: 'bold',
       },
       titleTextTimeLeft: {

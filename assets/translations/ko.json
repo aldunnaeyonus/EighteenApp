@@ -313,5 +313,7 @@
           "ReportAI":"이미지 신고",
     "Flag": "이미지 신고",
     "RReportAIImage":"AI 생성 이미지 및 다시 그린 AI 표지 이미지를 신고합니다.",
-    "Flag&Redraw":"신고 및 다시 그리기"
+    "Flag&Redraw":"신고 및 다시 그리기",
+    "GlobalFriends":"글로벌 친구",
+    "SearchGlobalFriends": "글로벌 친구 검색"
 }

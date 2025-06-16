@@ -313,5 +313,7 @@
           "ReportAI":"画像を報告",
     "Flag": "画像をフラグ付け",
     "RReportAIImage":"AI生成画像と再描画されたAIカバー画像を報告します。",
-    "Flag&Redraw":"フラグ付けと再描画"
+    "Flag&Redraw":"フラグ付けと再描画",
+   "GlobalFriends":"グローバルフレンド",
+    "SearchGlobalFriends": "グローバルフレンドを検索"
 }

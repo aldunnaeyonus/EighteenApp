@@ -60,6 +60,10 @@
 	<string>Allow $(PRODUCT_NAME) to access your Face ID biometric data.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>$(PRODUCT_NAME) needs accesses your location add location meta data to photos.</string>
+	<key>NSLocationUsageDescription</key>
+	<string>$(PRODUCT_NAME) needs accesses your location add location meta data to photos.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>$(PRODUCT_NAME) needs accesses your location add location meta data to photos.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>$(PRODUCT_NAME) needs accesses your microphone to let users add sound to vidoes.</string>
 	<key>NSPhotoLibraryUsageDescription</key>

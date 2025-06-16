@@ -33,6 +33,7 @@ const stickers = [];
 import Loading from "../SubViews/home/Loading";
 import { getLocales } from "expo-localization";
 import axios from "axios";
+import FastImage from "react-native-fast-image";
 
 
 const PhotoGallery = (props) => {
@@ -228,7 +229,7 @@ const PhotoGallery = (props) => {
           >
             <Icon
               type="material"
-              size={30}
+              size={25}
               name="arrow-back-ios-new"
               color="#fff"
               containerStyle={{

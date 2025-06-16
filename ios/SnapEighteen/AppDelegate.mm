@@ -14,12 +14,12 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   self.moduleName = @"main";
-
+  
   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
   center.delegate = self;
-
+  
   self.initialProps = @{};
-
+  
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 
@@ -29,18 +29,18 @@
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
-   if (self.taskIdentifier != UIBackgroundTaskInvalid) {
-      [application endBackgroundTask:self.taskIdentifier];
-      self.taskIdentifier = UIBackgroundTaskInvalid;
-   }
-
-   __weak AppDelegate *weakSelf = self;
-   self.taskIdentifier = [application beginBackgroundTaskWithName:nil expirationHandler:^{
-      if (weakSelf) {
-          [application endBackgroundTask:weakSelf.taskIdentifier];
-          weakSelf.taskIdentifier = UIBackgroundTaskInvalid;
-      }
-   }];
+  if (self.taskIdentifier != UIBackgroundTaskInvalid) {
+    [application endBackgroundTask:self.taskIdentifier];
+    self.taskIdentifier = UIBackgroundTaskInvalid;
+  }
+  
+  __weak AppDelegate *weakSelf = self;
+  self.taskIdentifier = [application beginBackgroundTaskWithName:nil expirationHandler:^{
+    if (weakSelf) {
+      [application endBackgroundTask:weakSelf.taskIdentifier];
+      weakSelf.taskIdentifier = UIBackgroundTaskInvalid;
+    }
+  }];
 }
 
 - (NSURL *)bundleURL
@@ -48,23 +48,23 @@
 #if DEBUG
   return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@".expo/.virtual-metro-entry"];
 #else
-  //return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
-    return [OtaHotUpdate getBundle];
+    //return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+  return [OtaHotUpdate getBundle];
 #endif
 }
 
-// Linking API
+  // Linking API
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
   return [super application:application openURL:url options:options] || [RCTLinkingManager application:application openURL:url options:options];
 }
 
-// Universal Links
+  // Universal Links
 - (BOOL)application:(UIApplication *)application continueUserActivity:(nonnull NSUserActivity *)userActivity restorationHandler:(nonnull void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler {
   BOOL result = [RCTLinkingManager application:application continueUserActivity:userActivity restorationHandler:restorationHandler];
   return [super application:application continueUserActivity:userActivity restorationHandler:restorationHandler] || result;
 }
 
-// Explicitly define remote notification delegates to ensure compatibility with some third-party libraries
+  // Explicitly define remote notification delegates to ensure compatibility with some third-party libraries
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
@@ -74,8 +74,8 @@
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
-     NSNumber *badgeNumber = userInfo[@"aps"][@"badge"];
-    [UIApplication sharedApplication].applicationIconBadgeNumber = [UIApplication sharedApplication].applicationIconBadgeNumber + badgeNumber.integerValue;
+  NSNumber *badgeNumber = userInfo[@"aps"][@"badge"];
+  [UIApplication sharedApplication].applicationIconBadgeNumber = [UIApplication sharedApplication].applicationIconBadgeNumber + badgeNumber.integerValue;
   [RNCPushNotificationIOS didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
 }
   // Required for the registrationError event.

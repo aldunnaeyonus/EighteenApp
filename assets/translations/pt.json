@@ -313,5 +313,7 @@
           "ReportAI":"Reportar imagem",
     "Flag": "Sinalizar imagem",
     "RReportAIImage":"Reportar a imagem gerada por IA e a imagem de capa de IA redesenhada.",
-    "Flag&Redraw":"Sinalizar e redesenhar"
+    "Flag&Redraw":"Sinalizar e redesenhar",
+    "GlobalFriends":"Amigos globais",
+    "SearchGlobalFriends": "Pesquisar amigos globais"
 }

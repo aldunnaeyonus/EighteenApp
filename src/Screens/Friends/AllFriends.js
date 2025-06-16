@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
 import "moment-duration-format";
@@ -14,6 +14,9 @@ import { axiosPull } from "../../utils/axiosPull";
 import RefreshableWrapper from "react-native-fresh-refresh";
 import RefreshView from "../../utils/refreshView";
 import { SearchBar } from "react-native-elements";
+import {TouchableOpacity} from "react-native";
+import { Icon } from "react-native-elements";
+
 
 const AllFriends = (props) => {
   const [friendData] = useMMKVObject("user.AllFriend.Feed", storage);
@@ -40,6 +43,28 @@ const AllFriends = (props) => {
     await _pullFriendsFeedABC(user.user_id);
   };
 
+
+  useEffect(() => {
+      props.navigation.setOptions({
+        headerRight: () => (
+          <TouchableOpacity
+            onPress={() => { 
+              props.navigation.navigate("GlobalFriends");
+             }}  >
+            <Icon
+              type="material-community"
+              size={30}
+              name="cloud-search-outline"
+              color="#3D4849"
+              containerStyle={{
+                padding: 0,
+                height: 44,
+              }}
+            />
+          </TouchableOpacity>
+        ),
+      });
+  }, []);
   useFocusEffect(
     useCallback(() => {
       if (!props.unsubscribe) {

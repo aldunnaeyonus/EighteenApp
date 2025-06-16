@@ -307,9 +307,29 @@ Username: ${userName}
 --------------------------
 `};
 
+export const stringToBoolean = (stringValue: string) => {
+    switch (stringValue?.toLowerCase()?.trim()) {
+      case "true":
+      case "yes":
+      case "1":
+        return true;
+
+      case "false":
+      case "no":
+      case "0":
+      case null:
+      case undefined:
+        return false;
+
+      default:
+        return JSON.parse(stringValue);
+    }
+  };
+
 export const constants = {
   productSkus,
   mask,
+  stringToBoolean,
   feedbackTemplate,
   covertNumber,
   remove_duplicates,

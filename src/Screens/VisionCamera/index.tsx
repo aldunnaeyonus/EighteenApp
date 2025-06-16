@@ -199,8 +199,6 @@ const VisionCamera = (props: {
     { videoResolution: "max" },
     { photoAspectRatio: screenAspectRatio },
     { photoResolution: "max" },
-    { photoHdr: true },
-    { videoHdr: true },
     { videoStabilizationMode: 'auto' },
     { autoFocusSystem: 'phase-detection' },
     { fps: 240 },

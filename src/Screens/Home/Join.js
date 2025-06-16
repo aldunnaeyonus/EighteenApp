@@ -10,6 +10,9 @@ import * as i18n from "../../../i18n";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ListItem from "../SubViews/home/JoinItems";
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
+import {TouchableOpacity} from "react-native";
+import { Icon } from "react-native-elements";
+
 
 const Join = (props) => {
   const AnimatedFlatlist = Animated.FlatList;
@@ -24,19 +27,18 @@ const Join = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       setTitle("Loading...");
-      const canGoBack = props.navigation.canGoBack()
       props.navigation.setOptions({
         title: title,
         headerLeft: () => (
           <TouchableOpacity
-            onPress={() => { canGoBack ? props.navigate.goBack() : props.navigation.navigate("Home") }}  >
+            onPress={() => { props.navigation.navigate("Home") }}  >
             <Icon
               type="material"
-              size={30}
+              size={25}
               name="arrow-back-ios-new"
-              color="#fff"
+              color="#3D4849"
               containerStyle={{
-                padding: 7,
+                padding: 0,
                 height: 44,
               }}
             />

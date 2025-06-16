@@ -313,5 +313,7 @@
          "ReportAI":"举报图片",
     "Flag": "标记图片",
     "RReportAIImage":"举报AI生成的图片和重新绘制的AI封面图片。",
-    "Flag&Redraw":"标记并重新绘制"
+    "Flag&Redraw":"标记并重新绘制",
+    "GlobalFriends":"全球好友",
+    "SearchGlobalFriends": "搜索全球好友"
 }
