@@ -137,6 +137,7 @@ export const _pullFriendsAllFeedABC = async (id) => {
   const myData = []
     .concat(response)
         .sort((a, b) => String(a.friend_handle).localeCompare(String(b.friend_handle)));
+
   storage.set("user.All.Global.Friend.Feed", JSON.stringify(myData));
 };
 
@@ -147,7 +148,7 @@ export const _pullFriendsFeedABC = async (id) => {
   const response = await postData("/users/friends.php", data);
   const myData = []
     .concat(response)
-    .sort((a, b) => a.friend_handle - b.friend_handle);
+        .sort((a, b) => String(a.friend_handle).localeCompare(String(b.friend_handle)));
 
   storage.set("user.AllFriend.Feed", JSON.stringify(myData));
 };
