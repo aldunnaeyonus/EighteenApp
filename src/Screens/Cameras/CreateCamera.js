@@ -439,6 +439,10 @@ const CreateCamera = (props) => {
         method: "POST",
         url: constants.url + "/camera/create.php",
         data: formData,
+        onUploadProgress: progressEvent => {
+        let {loaded, total} = progressEvent;
+        console.log((loaded / total) * 100)
+    },
         headers: {
           Accept: "application/json",
           "content-Type": "multipart/form-data",

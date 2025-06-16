@@ -128,9 +128,11 @@ const TempCamera = (props: {
   const screenAspectRatio = constants.SCREEN_HEIGHT / constants.SCREEN_WIDTH;
 
   const format = useCameraFormat(device, [
+    { videoAspectRatio: screenAspectRatio },
+    { videoResolution: "max" },
     { photoAspectRatio: screenAspectRatio },
     { photoResolution: "max" },
-    { photoHdr: true },
+    { videoStabilizationMode: 'auto' },
     { autoFocusSystem: 'phase-detection' },
     { fps: 240 },
   ]);

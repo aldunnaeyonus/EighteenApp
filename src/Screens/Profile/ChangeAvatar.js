@@ -21,6 +21,7 @@ import { createImageProgress } from "react-native-image-progress";
 const Image = createImageProgress(FastImage);
 import Progress from "react-native-progress";
 import axios from "axios";
+import { axiosPull } from "../../utils/axiosPull";
 
 const ChangeData = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
@@ -74,6 +75,10 @@ const ChangeData = (props) => {
       method: "POST",
       url: constants.url + "/avatars/fetch.php",
       data: formData,
+       onUploadProgress: progressEvent => {
+        let {loaded, total} = progressEvent;
+        console.log((loaded / total) * 100)
+    },
       headers: {
         Accept: "application/json",
         "content-Type": "multipart/form-data",
@@ -85,7 +90,7 @@ const ChangeData = (props) => {
          <></>
         ),
       });
-      await axiosPull._pullUser(user, "Upload");
+      await axiosPull._pullUser(user.user_id, "Upload");
     });
   }
   postConclusion();
@@ -106,7 +111,7 @@ const ChangeData = (props) => {
   };
 
   const pickImage = async () => {
-if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
+      if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
           await ImagePicker.getMediaLibraryPermissionsAsync();
         }else if (cameraStatus.status == ImagePicker.PermissionStatus.DENIED) {
       Alert.alert(
@@ -144,7 +149,6 @@ if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
     <>
       <ScrollView style={{ backgroundColor: "white" }}>
         <TouchableOpacity
-          key={"A1"}
           onPress={() => {
             setTimeout(() => {
               pickImage();
@@ -172,7 +176,7 @@ if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
             >
               <View style={[styles.gridButton]}>
                 <Image
-                  key={grids.key}
+                  key={"AA"+grids.key}
                   indicator={Progress}
                   resizeMode={FastImage.resizeMode.contain}
                   style={{

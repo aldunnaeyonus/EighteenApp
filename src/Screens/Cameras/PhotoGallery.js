@@ -62,6 +62,7 @@ const PhotoGallery = (props) => {
   let [localLang] = useState(getLocales()[0].languageCode);
 
   const [uploading] = useMMKVObject("uploadData", storage);
+  
   const createEvent = async () => {
     setAnimating(false);
     var formData = new FormData();
@@ -92,6 +93,10 @@ const PhotoGallery = (props) => {
       method: "POST",
       url: constants.url + "/camera/upload.php",
       data: formData,
+      onUploadProgress: progressEvent => {
+        let {loaded, total} = progressEvent;
+        console.log((loaded / total) * 100)
+    },
       headers: {
         Accept: "application/json",
         "content-Type": "multipart/form-data",
