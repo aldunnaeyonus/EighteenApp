@@ -22,10 +22,10 @@ const Loading = (props) => {
       display:props.flex == "flex" ? 'flex' : 'none',
       margin:5,
       flex:1,
-      height: 40,
+      height: 'auto',
       borderRadius:6,
       overflow:'hidden',
-      width: SCREEN_WIDTH,
+      width: SCREEN_WIDTH - 10,
       flexDirection:'row',
       alignContent:'center',
       alignItems:'center',
@@ -85,6 +85,7 @@ const Loading = (props) => {
      style={{
         marginLeft:15,
         fontWeight:'600',
+        width: SCREEN_WIDTH - 100,
         fontSize:15
       }}
     >{props.message}</Text>
