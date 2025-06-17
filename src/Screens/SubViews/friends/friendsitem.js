@@ -557,7 +557,7 @@ const style = StyleSheet.create({
     backgroundColor: "#FFF",
     width: SCREEN_WIDTH,
     height: 425,
-    marginBottom: 60,
+    marginBottom: 20,
     flex: 1,
     marginTop: 0,
     alignSelf: "center",

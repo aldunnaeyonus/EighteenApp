@@ -411,10 +411,10 @@ const Friends = (props) => {
       <SafeAreaView
         style={{
           backgroundColor: "white",
-          height: SCREEN_HEIGHT,
+          height: SCREEN_HEIGHT - 60,
           width: SCREEN_WIDTH,
         }}
-        edges={["bottom", "left", "right"]}
+        edges={["bottom", "left", "right", "top"]}
       >
         <RefreshableWrapper
           contentOffset={contentOffset}
@@ -428,7 +428,7 @@ const Friends = (props) => {
           }}
         >
           <AnimatedFlatlist
-            style={{ flex: 1 }}
+            style={{ flex: 1}}
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicatorr={false}
             data={cameraData}
