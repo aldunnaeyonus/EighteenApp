@@ -129,14 +129,17 @@ export const _pullBlockedFriendsFeedABC = async (id) => {
   storage.set("user.Friend.Blocked", JSON.stringify(myData));
 };
 
-export const _pullFriendsAllFeedABC = async (id) => {
+export const _pullFriendsAllFeedABC = async (id, query) => {
   const data = {
     owner: id,
+    query: query,
   };
   const response = await postData("/users/friendsAll.php", data);
   const myData = []
     .concat(response)
-        .sort((a, b) => String(a.friend_handle).localeCompare(String(b.friend_handle)));
+    .sort((a, b) =>
+      String(a.friend_handle).localeCompare(String(b.friend_handle))
+    );
 
   storage.set("user.All.Global.Friend.Feed", JSON.stringify(myData));
 };
@@ -148,7 +151,9 @@ export const _pullFriendsFeedABC = async (id) => {
   const response = await postData("/users/friends.php", data);
   const myData = []
     .concat(response)
-        .sort((a, b) => String(a.friend_handle).localeCompare(String(b.friend_handle)));
+    .sort((a, b) =>
+      String(a.friend_handle).localeCompare(String(b.friend_handle))
+    );
 
   storage.set("user.AllFriend.Feed", JSON.stringify(myData));
 };

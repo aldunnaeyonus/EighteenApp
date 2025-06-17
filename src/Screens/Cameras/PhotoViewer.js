@@ -50,6 +50,7 @@ const PhotoViewer = (props) => {
   const _gotoShare = async (image) => {
     const shareOptions = {
       url: image,
+      title: ""
     };
     try {
       const ShareResponse = await Share.share(shareOptions);

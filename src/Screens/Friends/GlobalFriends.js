@@ -24,21 +24,28 @@ const GlobalFriends = (props) => {
   const contentOffset = useSharedValue(0);
   const [refreshing, serRefreshing] = useState(false);
   const [search, setSearch] = useState("");
-  const [friendDataTemp, setFriendDataTemp] = useMMKVObject(
-    "user.AllGlobalFriend.Feed_Temp",
-    storage
-  );
+
+  const _searchDB = async (search) => {
+    serRefreshing(false);
+    const datas = await axiosPull._pullFriendsAllFeedABC(user.user_id, search);
+    console.log(datas)
+  };
+
 
   const _refresh = async () => {
     serRefreshing(true);
-    await axiosPull._pullFriendsAllFeedABC(user.user_id);
+    setSearch("");
+    storage.set("user.All.Global.Friend.Feed", JSON.stringify([]));
+    await axiosPull._pullFriendsAllFeedABC(user.user_id, "");
     setTimeout(() => {
       serRefreshing(false);
     }, 1500);
   };
 
   const _clear = async () => {
-    await _pullFriendsAllFeedABC(user.user_id);
+    setSearch("");
+    storage.set("user.All.Global.Friend.Feed", JSON.stringify([]));
+    await axiosPull._pullFriendsAllFeedABC(user.user_id, "");
   };
 
   useFocusEffect(
@@ -64,9 +71,7 @@ const GlobalFriends = (props) => {
         });
       }
       const fetchData = async () => {
-        await axiosPull._pullFriendsAllFeedABC(user.user_id);
-        storage.delete("user.AllGlobalFriend.Feed_Temp");
-
+    await axiosPull._pullFriendsAllFeedABC(user.user_id, search);
       };
       fetchData();
     }, [props, user, refreshing])
@@ -80,15 +85,11 @@ const GlobalFriends = (props) => {
 
   const searchFunction = (text) => {
     if (text.length <= 0) {
+            setSearch("");
       _clear();
-      setSearch("");
     } else {
-      const updatedData = friendData.filter((item) => {
-        const item_data = `${item.friend_handle.toLowerCase()}`;
-        return item_data.indexOf(text.toLowerCase()) > -1;
-      });
-      setFriendDataTemp(updatedData);
-      setSearch(text);
+            setSearch(text);
+      _searchDB(text)
     }
   };
 
@@ -108,8 +109,8 @@ const GlobalFriends = (props) => {
         <AnimatedFlatlist
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicatorr={false}
-          data={search.length > 0 ? friendDataTemp : friendData}
-          extraData={search.length > 0 ? friendDataTemp : friendData}
+          data={friendData}
+          extraData={friendData}
           scrollEventThrottle={16}
           stickyHeaderIndices={[0]}
           ListHeaderComponent={
