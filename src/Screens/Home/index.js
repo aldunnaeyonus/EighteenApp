@@ -234,7 +234,7 @@ const Home = (props) => {
     await axiosPull._resetBadge(user.user_id, pin);
     await axiosPull._pullCameraFeed(user.user_id, "owner");
   };
-  setshareOptions;
+
   const _gotoShare = async (pin, time, owner, title) => {
     setshareOptions({
       title: title,
