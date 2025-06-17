@@ -428,6 +428,7 @@ const Friends = (props) => {
           }}
         >
           <AnimatedFlatlist
+            style={{ flex: 1 }}
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicatorr={false}
             data={cameraData}
