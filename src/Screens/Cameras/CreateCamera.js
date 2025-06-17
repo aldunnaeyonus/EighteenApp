@@ -387,6 +387,7 @@ const CreateCamera = (props) => {
     var formData = new FormData();
     var fileName = "";
     formData.append("owner", user.user_id);
+   formData.append("owner", user.user_id);
     formData.append("eventName", name);
     formData.append("purchases", switch3 ? "1" : "0");
     formData.append(
@@ -458,7 +459,7 @@ const CreateCamera = (props) => {
           await axiosPull._pullFriendCameraFeed(
             user.user_id,
             "user",
-            props.route.params.user
+            user.user_id
           );
           await axiosPull._pullCameraFeed(user.user_id, "owner");
           if (parseInt(start) >= moment().unix()) {
