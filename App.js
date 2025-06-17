@@ -38,7 +38,7 @@ import Notifications from "./src/Screens/Profile/Notifications";
 import Abouts from "./src/Screens/Profile/About";
 import GetPro from "./src/Screens/Store/GetPro";
 import { axiosPull } from "./src/utils/axiosPull";
-import hotUpdate  from 'react-native-ota-hot-update/src/index';
+import hotUpdate  from 'react-native-ota-hot-update';
 import { constants, SCREEN_WIDTH, SCREEN_HEIGHT } from "./src/utils/constants";
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import NotifService from "./NotifService";
@@ -66,9 +66,9 @@ export default function App() {
   const startUpdate = async (url, urlversion) => {
     await hotUpdate.downloadBundleUri(ReactNativeBlobUtil, url, urlversion, {
       updateSuccess: () => {
-       
+       console.log();
       },
-      updateFail(message) {
+      updateFail() {
         console.log(message);
       },
       restartAfterInstall: false,
@@ -78,7 +78,13 @@ export default function App() {
 //const colorScheme = useColorScheme();
 //const colors = COLORS[colorScheme ?? 'dark'];
 const onCheckVersion = () => {
-    fetch(constants.updateJSON).then(async (data) => {
+          fetch(constants.updateJSON, {
+            headers: {
+              'Cache-Control': 'no-cache, no-store, must-revalidate',
+              'Pragma': 'no-cache',
+              'Expires': 0,
+      },
+          }).then(async (data) => {
       const result = await data.json();
       const currentVersion = await hotUpdate.getCurrentVersion();
       if (parseInt(result?.version) > parseInt(currentVersion)) {

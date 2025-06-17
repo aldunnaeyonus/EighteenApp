@@ -27,7 +27,7 @@ import * as i18n from "../../../i18n";
 import ProfileHeader from "../SubViews/home/profileHeader";
 import { useIsFocused } from "@react-navigation/native";
 import Loading from "../SubViews/home/Loading";
-import hotUpdate from "react-native-ota-hot-update/src/index";
+import hotUpdate from "react-native-ota-hot-update";
 import email from "react-native-email";
 import DeviceInfo from "react-native-device-info";
 import { getLocales } from "expo-localization";
