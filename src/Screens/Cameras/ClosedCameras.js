@@ -33,7 +33,7 @@ const ClosedCameras = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
   const AnimatedFlatList = Animated.FlatList;
   let [localLang] = useState(getLocales()[0].languageCode);
-  const [cameraStatus] = ImagePicker.useMediaLibraryPermissions()
+  const [cameraStatus] = ImagePicker.useMediaLibraryPermissions();
 
   const _refresh = async () => {
     serRefreshing(true);
@@ -45,52 +45,51 @@ const ClosedCameras = (props) => {
 
   const handleDownloadAction = async (array) => {
     if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
-              await ImagePicker.getMediaLibraryPermissionsAsync();
-            }else if (cameraStatus.status == ImagePicker.PermissionStatus.DENIED) {
-          Alert.alert(
-          i18n.t("Permissions"),
-          i18n.t("UseLibrary"),
-          [
-            {
-              text: i18n.t("Cancel"),
-              onPress: () => console.log("Cancel Pressed"),
-              style: "destructive",
+      await ImagePicker.getMediaLibraryPermissionsAsync();
+    } else if (cameraStatus.status == ImagePicker.PermissionStatus.DENIED) {
+      Alert.alert(
+        i18n.t("Permissions"),
+        i18n.t("UseLibrary"),
+        [
+          {
+            text: i18n.t("Cancel"),
+            onPress: () => console.log("Cancel Pressed"),
+            style: "destructive",
+          },
+          {
+            text: i18n.t("Settings"),
+            onPress: () => {
+              Linking.openSettings();
             },
-            {
-              text: i18n.t("Settings"),
-              onPress: () => {
-                            Linking.openSettings();
-                
-              },
-              style: "default",
-            },
-          ],
-          { cancelable: false }
+            style: "default",
+          },
+        ],
+        { cancelable: false }
+      );
+    } else {
+      Alert.alert(i18n.t("DownloadingEventFiles"), i18n.t("Theventfiles"));
+      setStartDownload(true);
+      JSON.parse(array).map(async (item) => {
+        FileSystem.downloadAsync(
+          item.file_name,
+          FileSystem.documentDirectory + item.file_name.split("/").pop()
         )
-            }else{
-    Alert.alert(i18n.t("DownloadingEventFiles"), i18n.t("Theventfiles"));
-    setStartDownload(true);
-    JSON.parse(array).map(async (item) => {
-      FileSystem.downloadAsync(
-        item.file_name,
-        FileSystem.documentDirectory + item.file_name.split("/").pop()
-      )
-        .then(async ({ uri }) => {
-          await CameraRoll.saveAsset(uri, {
-            type: "auto",
+          .then(async ({ uri }) => {
+            await CameraRoll.saveAsset(uri, {
+              type: "auto",
+            });
+            setCount(count - 1);
+            FileSystem.deleteAsync(uri);
+          })
+          .catch((error) => {
+            setStartDownload(false);
+            console.log(error.message);
           });
-          setCount(count - 1);
-          FileSystem.deleteAsync(uri);
-        })
-        .catch((error) => {
-          setStartDownload(false);
-          console.log(error.message);
-        });
-    });
-    if (count <= 0) {
-      setStartDownload(false);
+      });
+      if (count <= 0) {
+        setStartDownload(false);
+      }
     }
-  }
   };
 
   const _deleteFeedItemIndex = (UUID) => {
@@ -120,7 +119,11 @@ const ClosedCameras = (props) => {
           onPress: () => {
             props.navigation.setOptions({
               headerRight: () => (
-                <ActivityIndicator color="black" size={"small"} animating={true} />
+                <ActivityIndicator
+                  color="black"
+                  size={"small"}
+                  animating={true}
+                />
               ),
             });
             setTimeout(() => {
@@ -146,9 +149,7 @@ const ClosedCameras = (props) => {
     await axiosPull._pullHistoryFeed(user.user_id);
     setdisable(false);
     props.navigation.setOptions({
-      headerRight: () => (
-        <></>
-      ),
+      headerRight: () => <></>,
     });
   };
 
@@ -167,6 +168,35 @@ const ClosedCameras = (props) => {
       };
     }, [filteredDataSource, refreshing, disable, count])
   );
+
+  const viewPhotos = async (
+    pin,
+    title,
+    owner,
+    UUID,
+    end,
+    start,
+    credits,
+    camera_add_social,
+    illustration
+  ) => {
+    props.navigation.navigate("MediaGallery", {
+      pin: pin,
+      title: title,
+      owner: owner,
+      user: user.user_id,
+      UUID: UUID,
+      avatar: user.user_avatar,
+      handle: user.user_handle,
+      end: end,
+      start: start,
+      credits: credits,
+      camera_add_social: camera_add_social,
+      illustration: illustration,
+      type: "owner",
+    });
+    await axiosPull._pullCameraFeed(user.user_id, "owner");
+  };
 
   const actionFeed = async (pin, UUID, title) => {
     setdisable(true);
@@ -310,6 +340,18 @@ const ClosedCameras = (props) => {
                 _deleteFeedItem(item.UUID, item.owner, item.pin);
               } else if (nativeEvent.event == "Download-" + item.UUID) {
                 actionFeed(item.pin, item.UUID, item.title);
+              } else if (nativeEvent.event == "PhotoViewer-" + item.UUID) {
+                viewPhotos(
+                  item.pin,
+                  item.title,
+                  item.owner,
+                  item.UUID,
+                  item.end,
+                  item.start,
+                  item.credits,
+                  item.camera_add_social,
+                  item.illustration
+                );
               } else if (nativeEvent.event == "Save-" + item.UUID) {
                 const array = await axiosPull._pullGalleryArray(item.pin);
                 setCount(parseInt(JSON.parse(array).length));
@@ -354,24 +396,21 @@ const ClosedCameras = (props) => {
         <AnimatedFlatList
           extraData={filteredDataSource}
           ListEmptyComponent={
-       <View style={styles.empty}>
+            <View style={styles.empty}>
               <View style={styles.fake}>
                 <View style={styles.fakeSquare} />
                 <View>
-                <View style={styles.fakeLine} />
-                <View style={styles.fakeLine} />
-
+                  <View style={styles.fakeLine} />
+                  <View style={styles.fakeLine} />
+                </View>
+              </View>
+              <EmptyStateView
+                headerText={i18n.t("Download Media")}
+                subHeaderText={i18n.t("Ended")}
+                headerTextStyle={styles.headerTextStyle}
+                subHeaderTextStyle={styles.subHeaderTextStyle}
+              />
             </View>
-            </View>
-            <EmptyStateView
-              headerText={i18n.t("Download Media")}
-              subHeaderText={i18n.t("Ended")}
-              headerTextStyle={styles.headerTextStyle}
-              subHeaderTextStyle={styles.subHeaderTextStyle}
-            />
-            </View>
-
-
           }
           style={{ flex: 1 }}
           data={filteredDataSource}
@@ -469,35 +508,35 @@ const styles = StyleSheet.create({
     marginLeft: -5,
     justifyContent: "center",
   },
-      /** Fake */
-      fake: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginBottom: 24,
-        opacity:0.4
-      },
-      fakeSquare: {
-        width: 75,
-        height: 75,
-        margin:10,
-        backgroundColor: '#e8e9ed',
-        borderRadius: 0,
-      },
-      fakeLine: {
-        width: 200,
-        height: 15,
-        borderRadius: 4,
-        backgroundColor: '#e8e9ed',
-        marginBottom: 8,
-      },
-      empty: {
-        flexGrow: 1,
-        flexShrink: 1,
-        flexBasis: 0,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: 50,
-      },
+  /** Fake */
+  fake: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 24,
+    opacity: 0.4,
+  },
+  fakeSquare: {
+    width: 75,
+    height: 75,
+    margin: 10,
+    backgroundColor: "#e8e9ed",
+    borderRadius: 0,
+  },
+  fakeLine: {
+    width: 200,
+    height: 15,
+    borderRadius: 4,
+    backgroundColor: "#e8e9ed",
+    marginBottom: 8,
+  },
+  empty: {
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 50,
+  },
 });
 export default ClosedCameras;

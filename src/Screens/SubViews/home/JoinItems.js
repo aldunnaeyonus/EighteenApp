@@ -40,16 +40,24 @@ const JoinItems = (props) => {
   let eventEnd = startDate(props.item.item.end);
 
   const durationAsString = (end, start) => {
-    return parseInt(start) > moment().unix()
-      ? i18n.t("Event Starts in:") +
-          moment
-            .duration(parseInt(start) - moment().unix(), "seconds").locale(localLang)
-            .humanize(true)
-      : i18n.t("Event Ends in:") +
-          moment
-            .duration(parseInt(end), "seconds").locale(localLang)
-            .humanize(true);
-  };
+      return parseInt(start) >= moment().unix()
+        ? i18n.t("Event Starts in:") +
+            moment
+              .duration(parseInt(start) - moment().unix(), "seconds")
+              .locale(localLang)
+              .humanize(true)
+        : parseInt(end) < moment().unix() ?
+              i18n.t("EventEnded") +
+            moment
+              .duration(parseInt(end), "seconds")
+              .locale(localLang)
+              .humanize(true)
+        : i18n.t("Event Ends in:") +
+            moment
+              .duration(parseInt(end), "seconds")
+              .locale(localLang)
+              .humanize(true);
+    };
 
   let endEventTime = durationAsString(
     parseInt(props.item.item.end) - moment().unix(),

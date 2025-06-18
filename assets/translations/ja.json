@@ -315,5 +315,6 @@
     "RReportAIImage":"AI生成画像と再描画されたAIカバー画像を報告します。",
     "Flag&Redraw":"フラグ付けと再描画",
    "GlobalFriends":"グローバルフレンド",
-    "SearchGlobalFriends": "グローバルフレンドを検索"
+    "SearchGlobalFriends": "グローバルフレンドを検索",
+        "EventEnded": "イベント終了"
 }

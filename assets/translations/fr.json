@@ -315,5 +315,6 @@
     "RReportAIImage":"Signaler l'image générée par l'IA et l'image de couverture IA redessinée.",
     "Flag&Redraw":"Signaler et redessiner",
     "GlobalFriends":"Amis mondiaux",
-    "SearchGlobalFriends": "Rechercher des amis mondiaux"
+    "SearchGlobalFriends": "Rechercher des amis mondiaux",
+        "EventEnded": "Événement terminé"
 }

@@ -42,6 +42,11 @@ export const historyActionsPro = (UUID: String) => [
       destructive: true,
     },
   },
+    {
+    id: "PhotoViewer-" + UUID,
+    title: i18n.t('e15'),
+    titleColor: "black",
+  },
   {
     id: "Download-" + UUID,
     title: i18n.t('SendLink'),

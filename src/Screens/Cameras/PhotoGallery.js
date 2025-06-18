@@ -41,6 +41,8 @@ const PhotoGallery = (props) => {
     `user.Gallery.Friend.Feed.${props.route.params.pin}`,
     storage
   );
+  const now = new Date();
+  const timestampInSeconds = Math.floor(now.getTime()); 
   const AnimatedFlatlist = Animated.FlatList;
   const [animating, setAnimating] = useState(false);
   const photo = useRef();
@@ -247,7 +249,9 @@ const PhotoGallery = (props) => {
           </TouchableOpacity>
         ),
         headerRight: () =>
-          credits > 0 || props.route.params.owner == props.route.params.user ? (
+          props.route.params.end < timestampInSeconds ? 
+        <></>
+        : credits > 0 || props.route.params.owner == props.route.params.user ? (
             <TouchableOpacity
               onPress={() => {
                   openCloseModal();
@@ -326,11 +330,17 @@ const PhotoGallery = (props) => {
     ])
   );
 
-  const durationAsString = (end, start) => {
+const durationAsString = (end, start) => {
     return parseInt(start) >= moment().unix()
       ? i18n.t("Event Starts in:") +
           moment
             .duration(parseInt(start) - moment().unix(), "seconds")
+            .locale(localLang)
+            .humanize(true)
+      : parseInt(end) < moment().unix() ?
+            i18n.t("EventEnded") +
+          moment
+            .duration(parseInt(end), "seconds")
             .locale(localLang)
             .humanize(true)
       : i18n.t("Event Ends in:") +
