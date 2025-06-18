@@ -75,7 +75,8 @@ const VisionCamera = (props: {
 }) => {
   momentDurationFormatSetup(moment);
   const [uiRotation, setUiRotation] = useState(0);
-
+    const now = new Date();
+  const timestampInSeconds = Math.floor(now.getTime()); 
   const uiStyle: ViewStyle = {
     transform: [{ rotate: `${uiRotation}deg` }],
   };
@@ -113,7 +114,7 @@ const VisionCamera = (props: {
             .duration(parseInt(start) - moment().unix(), "seconds")
             .locale(String(localLang))
             .humanize(true)
-      : parseInt(end) < moment().unix() ?
+      : parseInt(end) < timestampInSeconds ?
             i18n.t("EventEnded") +
           moment
             .duration(parseInt(end), "seconds")

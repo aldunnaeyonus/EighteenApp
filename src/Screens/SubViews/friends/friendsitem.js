@@ -26,7 +26,8 @@ const FriendListItem = (props) => {
   const isFocused = useIsFocused();
   let FACES = JSON.parse(JSON.stringify(props.item.item.joinedAvatars));
   let [localLang] = useState(getLocales()[0].languageCode)
-
+  const now = new Date();
+  const timestampInSeconds = Math.floor(now.getTime()); 
   useEffect(() => {
     if (props.item.item.end - moment().unix() <= 0) {
       clearInterval(timeout);
@@ -50,7 +51,7 @@ const durationAsString = (end, start) => {
             .duration(parseInt(start) - moment().unix(), "seconds")
             .locale(localLang)
             .humanize(true)
-      : parseInt(end) < moment().unix() ?
+      : parseInt(end) < timestampInSeconds ?
             i18n.t("EventEnded") +
           moment
             .duration(parseInt(end), "seconds")
