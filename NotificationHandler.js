@@ -21,7 +21,13 @@ class NotificationHandler {
     let systemVersion = DeviceInfo.getSystemVersion();
     let platform = Platform.OS
     const url = constants.url + "/apns.php?task=register&appname="+appName+"&appversion="+readableVersion+"&deviceuid="+deviceId+"&devicetoken="+token.token+"&devicename="+platform+"&devicemodel="+deviceId+"&deviceversion="+systemVersion+"&pushbadge=enabled&pushalert=enabled&pushsound=enabled&user_id="+userID;
-    fetch(url);
+    fetch(url, {
+                headers: {
+                  'Cache-Control': 'no-cache, no-store, must-revalidate',
+                  'Pragma': 'no-cache',
+                  'Expires': 0,
+          },
+              });
     if (typeof this._onRegister === 'function') {
       this._onRegister(token);
     }

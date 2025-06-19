@@ -332,7 +332,8 @@ export const stringToBoolean = (stringValue: string) => {
     }
   };
 
-const durationAsString = (end: any, start: any) => {
+export const durationAsString = (end: any, start: any, localLang: any) => {
+  
     return parseInt(start) >= moment().unix()
       ? i18n.t("Event Starts in:") +
           moment

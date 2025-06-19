@@ -41,8 +41,6 @@ const PhotoGallery = (props) => {
     `user.Gallery.Friend.Feed.${props.route.params.pin}`,
     storage
   );
-  const now = new Date();
-  const timestampInSeconds = Math.floor(now.getTime()); 
   const AnimatedFlatlist = Animated.FlatList;
   const [animating, setAnimating] = useState(false);
   const photo = useRef();
@@ -333,7 +331,8 @@ const PhotoGallery = (props) => {
 
   let endEventTime = durationAsString(
     parseInt(props.route.params.end),
-    parseInt(props.route.params.start)
+    parseInt(props.route.params.start),
+    localLang
   );
 
   const showModalFunction = (index) => {

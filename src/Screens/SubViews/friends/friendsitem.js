@@ -43,13 +43,15 @@ const FriendListItem = (props) => {
   let eventEnd = startDate(props.item.item.end);
   let endEventTime = durationAsString(
     parseInt(props.item.item.end),
-    parseInt(props.item.item.start)
+    parseInt(props.item.item.start),
+    localLang
   );
 
   let timeout = setInterval(() => {
     endEventTime = durationAsString(
       parseInt(props.item.item.end),
-      parseInt(props.item.item.start)
+      parseInt(props.item.item.start),
+      localLang
     );
   }, 45000);
 

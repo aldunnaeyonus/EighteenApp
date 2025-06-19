@@ -24,8 +24,7 @@ import { getLocales } from "expo-localization";
 const ListItem = (props) => {
   let [localLang] = useState(getLocales()[0].languageCode);
   let FACES = JSON.parse(JSON.stringify(props.item.item.joinedAvatars));
-    const now = new Date();
-  const timestampInSeconds = Math.floor(now.getTime()); 
+
   useFocusEffect(
     useCallback(() => {
       if (props.item.item.end - moment().unix() <= 0) {
@@ -47,13 +46,15 @@ const ListItem = (props) => {
 
   let endEventTime = durationAsString(
     parseInt(props.item.item.end),
-    parseInt(props.item.item.start)
+    parseInt(props.item.item.start),
+    localLang
   );
 
   let timeout = setInterval(() => {
     endEventTime = durationAsString(
       parseInt(props.item.item.end),
-      parseInt(props.item.item.start)
+      parseInt(props.item.item.start),
+      localLang
     );
   }, 45000);
 

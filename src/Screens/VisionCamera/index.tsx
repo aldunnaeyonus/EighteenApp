@@ -52,7 +52,6 @@ import "moment-duration-format";
 import PhotoEditor from "@baronha/react-native-photo-editor";
 const stickers: never[] = [];
 import axios from "axios";
-import { useMMKVObject } from "react-native-mmkv";
 import { ViewStyle } from "react-native";
 import { getLocales } from "expo-localization";
 import { axiosPull } from "../../utils/axiosPull";
@@ -75,8 +74,6 @@ const VisionCamera = (props: {
 }) => {
   momentDurationFormatSetup(moment);
   const [uiRotation, setUiRotation] = useState(0);
-    const now = new Date();
-  const timestampInSeconds = Math.floor(now.getTime()); 
   const uiStyle: ViewStyle = {
     transform: [{ rotate: `${uiRotation}deg` }],
   };
@@ -105,11 +102,11 @@ const VisionCamera = (props: {
     device = preferredDevice;
   }
   const [isCameraInitialized, setIsCameraInitialized] = useState(false);
-  const [uploading] = useMMKVObject("uploadData", storage);
  
   let endEventTime = durationAsString(
     parseInt(props.route.params.end),
-    parseInt(props.route.params.start)
+    parseInt(props.route.params.start),
+    localLang
   );
   const camera = useRef<Camera>(null);
 

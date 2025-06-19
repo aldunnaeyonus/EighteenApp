@@ -14,6 +14,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { ActivityIndicator } from "react-native-paper";
 import * as i18n from "../../../i18n";
 import { SCREEN_WIDTH } from "../../utils/constants";
+import NotifService from "../../../NotifService";
 
 const Verification = (props) => {
   const [handleStatus, setHandleStatus] = useState("");
@@ -114,6 +115,8 @@ const Verification = (props) => {
         await AsyncStorage.setItem("current", "0");
         await AsyncStorage.setItem("logedIn", "1");
         await AsyncStorage.setItem("user_id", response[0].user_id);
+        new NotifService();
+
         setTimeout(() => {
           setIsLoading(false);
           props.navigation.navigate("Home");

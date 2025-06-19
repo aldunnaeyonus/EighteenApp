@@ -18,8 +18,7 @@ import { SCREEN_WIDTH, SCREEN_HEIGHT, durationAsString } from "../../../utils/co
 
 const JoinItems = (props) => {
     let [localLang] = useState(getLocales()[0].languageCode)
-    const now = new Date();
-  const timestampInSeconds = Math.floor(now.getTime()); 
+
   let FACES = JSON.parse(JSON.stringify(props.item.item.joinedAvatars));
   useFocusEffect(
     useCallback(() => {
@@ -42,13 +41,15 @@ const JoinItems = (props) => {
 
   let endEventTime = durationAsString(
     parseInt(props.item.item.end),
-    parseInt(props.item.item.start)
+    parseInt(props.item.item.start),
+    localLang
   );
 
   let timeout = setInterval(() => {
     endEventTime = durationAsString(
       parseInt(props.item.item.end),
-      parseInt(props.item.item.start)
+      parseInt(props.item.item.start),
+      localLang
     );
   }, 45000);
 

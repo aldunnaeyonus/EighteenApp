@@ -148,7 +148,6 @@ const onCheckVersion = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      new NotifService();
     };
     fetchData();
   }, []);
@@ -161,6 +160,7 @@ const onCheckVersion = () => {
       const logedIn = await AsyncStorage.getItem("logedIn");
       setSignIn(stringToBoolean(logedIn));
       if (signIn) {
+      new NotifService();
       await axiosPull._getProStatus(owner, Platform.OS);
       }else{
           storage.set("uploadData", JSON.stringify({"message": "", "display":"none", "image":""}));
