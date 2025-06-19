@@ -20,7 +20,7 @@ import * as i18n from "../../../../i18n";
 import CreditsFont from "../camera/credits";
 import FacePile from "react-native-face-pile";
 import { getLocales } from 'expo-localization';
-import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../../utils/constants";
+import { SCREEN_WIDTH, SCREEN_HEIGHT, durationAsString } from "../../../utils/constants";
 
 const FriendListItem = (props) => {
   const isFocused = useIsFocused();
@@ -41,28 +41,6 @@ const FriendListItem = (props) => {
 
   let eventStart = startDate(props.item.item.start);
   let eventEnd = startDate(props.item.item.end);
-
-const durationAsString = (end, start) => {
-    return parseInt(start) >= moment().unix()
-      ? i18n.t("Event Starts in:") +
-          moment
-            .duration(parseInt(start) - moment().unix(), "seconds")
-            .locale(localLang)
-            .humanize(true)
-      : parseInt(end) <= moment().unix() ?
-          i18n.t("EventEnded") +
-          moment
-            .duration(parseInt(end), "seconds")
-            .locale(localLang)
-            .humanize(true)
-      : i18n.t("Event Ends in:") +
-          moment
-            .duration(parseInt(end), "seconds")
-            .locale(localLang)
-            .humanize(true);
-  };
-
-
   let endEventTime = durationAsString(
     parseInt(props.item.item.end),
     parseInt(props.item.item.start)
