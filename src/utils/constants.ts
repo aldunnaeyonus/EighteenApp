@@ -2,6 +2,7 @@ import { Dimensions, Platform } from 'react-native';
 import "moment-duration-format";
 import * as i18n from '../../i18n';
 import { getLocales } from 'expo-localization';
+import moment from "moment/min/moment-with-locales"
 
 
 export const MIN_MS = 60000;
