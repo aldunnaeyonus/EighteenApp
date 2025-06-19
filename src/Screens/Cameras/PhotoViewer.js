@@ -293,7 +293,11 @@ const PhotoViewer = (props) => {
                 _reportContent();
               }}
             >
-              <Icon name={"report"} size={25} color="white" />
+              <Icon 
+                type={"material"} 
+                name={"report-problem"} 
+                size={25} 
+                color="white" />
             </TouchableOpacity>
           )}
           {props.route.params.share == "1" ||
