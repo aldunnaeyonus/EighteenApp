@@ -363,6 +363,7 @@ const PhotoGallery = (props) => {
           extraData={filteredDataSource}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
+                  nestedScrollEnabled={true}
           scrollEventThrottle={16}
           ListHeaderComponent={
             <>
@@ -397,7 +398,7 @@ const PhotoGallery = (props) => {
             </View>
           }
           ref={photo}
-          style={{ backgroundColor: "white", marginTop: 0 }}
+          style={{ backgroundColor: "white", marginTop: 0, flex: 1 }}
           numColumns={4}
           data={filteredDataSource}
           keyExtractor={(item) => item.image_id}

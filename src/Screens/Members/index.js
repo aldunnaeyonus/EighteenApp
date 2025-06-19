@@ -176,11 +176,13 @@ const JoinedMembers = (props) => {
         onRefresh={_refresh}
       >
         <AnimatedFlatlist
+                    style={{ flex: 1}}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicatorr={false}
           data={search.length > 0 ? friendDataTemp : data}
           extraData={search.length > 0 ? friendDataTemp : data}
           stickyHeaderIndices={[0]}
+                  nestedScrollEnabled={true}
           scrollEventThrottle={16}
           ListHeaderComponent={
             <SearchBar

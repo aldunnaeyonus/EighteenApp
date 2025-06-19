@@ -147,7 +147,10 @@ const ChangeData = (props) => {
   };
   return (
     <>
-      <ScrollView style={{ backgroundColor: "white" }}>
+      <ScrollView 
+      style={{ backgroundColor: "white", flex: 1 }}
+              nestedScrollEnabled={true}
+      >
         <TouchableOpacity
           onPress={() => {
             setTimeout(() => {

@@ -395,6 +395,7 @@ const ClosedCameras = (props) => {
       >
         <AnimatedFlatList
           extraData={filteredDataSource}
+          nestedScrollEnabled={true}
           ListEmptyComponent={
             <View style={styles.empty}>
               <View style={styles.fake}>

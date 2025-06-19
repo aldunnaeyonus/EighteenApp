@@ -50,7 +50,7 @@ const FriendHeader = (props) => {
       </View>
       <View style={{flex: 1}}>
       <ScrollView
-        style={{ height: 100, marginBottom:15, width:SCREEN_WIDTH }}
+        style={{ height: 100, marginBottom:15, width:SCREEN_WIDTH, flex: 1 }}
         horizontal
         scrollEnabled={true}
         nestedScrollEnabled={true}

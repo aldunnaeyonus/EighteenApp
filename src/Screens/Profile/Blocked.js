@@ -126,6 +126,8 @@ const Blocked = (props) => {
           extraData={search.length > 0 ? friendDataTemp : friendData}
           scrollEventThrottle={16}
           stickyHeaderIndices={[0]}
+                  nestedScrollEnabled={true}
+                              style={{ flex: 1}}
           ListHeaderComponent={
             <SearchBar
               inputContainerStyle={{ backgroundColor: "white" }}

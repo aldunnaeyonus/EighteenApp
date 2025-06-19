@@ -6,8 +6,8 @@ import { constants, SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
 
 const Languages = () => {
   return (
-    <ScrollView style={{ backgroundColor: "white" }}>
-      <View style={{ width: SCREEN_WIDTH, height: SCREEN_HEIGHT, backgroundColor: "#fff" }}>
+    <ScrollView style={{ backgroundColor: "white" }} nestedScrollEnabled={true}>
+      <View style={{ width: SCREEN_WIDTH, height: SCREEN_HEIGHT, backgroundColor: "#fff", flex: 1 }}>
         {constants.languages
           .sort((a, b) => (b > a ? -1 : 1))
           .map((lang, index) => (

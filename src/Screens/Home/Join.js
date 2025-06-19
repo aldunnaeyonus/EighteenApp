@@ -115,8 +115,10 @@ const Join = (props) => {
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicatorr={false}
         data={data}
+                    style={{ flex: 1}}
         extraData={data}
         scrollEventThrottle={16}
+                nestedScrollEnabled={true}
         renderItem={(item, index) => (
           <ListItem
               item={item}

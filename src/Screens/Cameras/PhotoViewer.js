@@ -224,13 +224,14 @@ const PhotoViewer = (props) => {
         <FlatList
           ref={newphoto}
           extraData={galleryData}
+          nestedScrollEnabled={true}
           showsHorizontalScrollIndicator={false}
           onMomentumScrollBegin={onMomentumScrollBegin}
           onMomentumScrollEnd={onMomentumScrollEnd}
           pagingEnabled
           horizontal
           getItemLayout={getItemLayout}
-          style={{ backgroundColor: "black" }}
+          style={{ backgroundColor: "black", flex: 1 }}
           data={galleryData}
           keyExtractor={(item) => item.image_id}
           renderItem={({ item, index }) => (
@@ -244,7 +245,7 @@ const PhotoViewer = (props) => {
           horizontal
           getItemLayout={getItemLayoutBottom}
           keyExtractor={(item) => item.image_id}
-          style={{ position: "absolute", bottom: 90, width: SCREEN_WIDTH }}
+          style={{ position: "absolute", bottom: 90, width: SCREEN_WIDTH, flex: 1 }}
           extraData={galleryData}
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ paddingHorizontal: 10 }}

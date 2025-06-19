@@ -433,6 +433,7 @@ const Friends = (props) => {
             showsVerticalScrollIndicatorr={false}
             data={cameraData}
             extraData={cameraData}
+                    nestedScrollEnabled={true}
             scrollEventThrottle={16}
             ListEmptyComponent={
               isFriend == "1" && (

@@ -846,6 +846,8 @@ const Home = (props) => {
         <AnimatedFlatList
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicatorr={false}
+                  nestedScrollEnabled={true}
+                              style={{ flex: 1}}
           data={cameraData}
           extraData={cameraData}
           scrollEventThrottle={16}

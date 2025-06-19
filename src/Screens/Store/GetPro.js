@@ -193,6 +193,7 @@ const GetPro = (props) => {
           extraData={products}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicatorr={false}
+                  nestedScrollEnabled={true}
           scrollEventThrottle={16}
           ListHeaderComponent={<ProHeader />}
           ListFooterComponent={
@@ -202,7 +203,7 @@ const GetPro = (props) => {
               eula={eula}
             />
           }
-          style={{ backgroundColor: "white", marginTop: -3 }}
+          style={{ backgroundColor: "white", marginTop: -3, flex: 1 }}
           numColumns={1}
           data={products}
           renderItem={(item) => (

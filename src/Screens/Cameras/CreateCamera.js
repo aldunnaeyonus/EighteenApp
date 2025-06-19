@@ -819,9 +819,10 @@ const CreateCamera = (props) => {
           edges={["bottom", "left", "right"]}
         >
           <ScrollView
-            style={{ backgroundColor: "#fff", marginBottom: 0 }}
+            style={{ backgroundColor: "#fff", marginBottom: 0, flex: 1 }}
             keyboardShouldPersistTaps={"never"}
             keyboardDismissMode="on-drag"
+                    nestedScrollEnabled={true}
             showsVerticalScrollIndicator={false}
           >
             <View style={styles.container}>

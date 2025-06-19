@@ -74,7 +74,10 @@ const AccountDetails = (props) => {
   };
 
   return (
-    <ScrollView style={{ backgroundColor: "white" }}>
+    <ScrollView 
+    style={{ backgroundColor: "white", flex: 1 }}
+            nestedScrollEnabled={true}
+    >
       <ListItem key="0">
         <Icon
           type="material-community"

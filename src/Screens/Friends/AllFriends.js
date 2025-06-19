@@ -129,8 +129,10 @@ const AllFriends = (props) => {
         }}
       >
         <AnimatedFlatlist
+          style={{ flex: 1 }}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicatorr={false}
+                  nestedScrollEnabled={true}
           data={search.length > 0 ? friendDataTemp : friendData}
           extraData={search.length > 0 ? friendDataTemp : friendData}
           scrollEventThrottle={16}

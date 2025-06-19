@@ -107,8 +107,10 @@ const GlobalFriends = (props) => {
         }}
       >
         <AnimatedFlatlist
+                    style={{ flex: 1}}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicatorr={false}
+                  nestedScrollEnabled={true}
           data={friendData}
           extraData={friendData}
           scrollEventThrottle={16}

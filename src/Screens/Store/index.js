@@ -155,7 +155,10 @@ const Products = (props) => {
             }}
             edges={["left", "right"]}
           >
-    <ScrollView showsVerticalScrollIndicator={false} style={{backgroundColor: 'white', paddingTop:130,height: '100%',width: SCREEN_WIDTH}}>
+    <ScrollView 
+    showsVerticalScrollIndicator={false} 
+    nestedScrollEnabled={true} 
+    style={{backgroundColor: 'white', paddingTop:130,height: '100%',width: SCREEN_WIDTH, flex: 1}}>
       <View style={styles.header}>
         <Text style={styles.title}>{i18n.t("In App Extras")}</Text>
         <Text style={styles.subtitle}>{i18n.t("storeslogan")}</Text>

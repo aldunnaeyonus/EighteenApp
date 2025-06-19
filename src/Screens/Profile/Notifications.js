@@ -69,8 +69,9 @@ const Notifications = (props) => {
   }, [isFocused, switch2, switch4]);
 
   return (
-    <SafeAreaProvider style={{ backgroundColor: "#fff" }}>
+    <SafeAreaProvider style={{ backgroundColor: "#fff", flex: 1 }}>
       <ScrollView
+              nestedScrollEnabled={true}
         style={{ backgroundColor: "#fff", marginBottom: 0 }}
         showsVerticalScrollIndicator={false}
       >

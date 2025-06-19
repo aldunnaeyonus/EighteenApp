@@ -213,9 +213,10 @@ Language Code: ${getLocales()[0].languageCode}`,
 
   return (
     <ScrollView
-      style={{ width: SCREEN_WIDTH, backgroundColor: "#fff" }}
+      style={{ width: SCREEN_WIDTH, backgroundColor: "#fff", flex: 1 }}
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
+              nestedScrollEnabled={true}
     >
       <Modal
         visible={modalVisable}
