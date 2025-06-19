@@ -11,7 +11,7 @@ import {
   Linking
 } from "react-native";
 import React, { useState, useRef, useCallback } from "react";
-import { constants, SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
+import { constants, SCREEN_WIDTH, SCREEN_HEIGHT, durationAsString } from "../../utils/constants";
 import { Icon } from "react-native-elements";
 import * as ImagePicker from "expo-image-picker";
 import FormData from "form-data";
@@ -330,28 +330,9 @@ const PhotoGallery = (props) => {
     ])
   );
 
-const durationAsString = (end, start) => {
-    return parseInt(start) >= moment().unix()
-      ? i18n.t("Event Starts in:") +
-          moment
-            .duration(parseInt(start) - moment().unix(), "seconds")
-            .locale(localLang)
-            .humanize(true)
-      : parseInt(end) < timestampInSeconds ?
-            i18n.t("EventEnded") +
-          moment
-            .duration(parseInt(end), "seconds")
-            .locale(localLang)
-            .humanize(true)
-      : i18n.t("Event Ends in:") +
-          moment
-            .duration(parseInt(end), "seconds")
-            .locale(localLang)
-            .humanize(true);
-  };
 
   let endEventTime = durationAsString(
-    parseInt(props.route.params.end) - moment().unix(),
+    parseInt(props.route.params.end),
     parseInt(props.route.params.start)
   );
 
