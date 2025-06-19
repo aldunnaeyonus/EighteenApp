@@ -30,7 +30,7 @@ import Reanimated, {
   useSharedValue,
 } from "react-native-reanimated";
 import { CaptureButton } from "./CaptureButton";
-import { constants } from "../../utils/constants";
+import { constants, durationAsString } from "../../utils/constants";
 import type { PinchGestureHandlerGestureEvent } from "react-native-gesture-handler";
 import {
   PinchGestureHandler,
@@ -106,29 +106,9 @@ const VisionCamera = (props: {
   }
   const [isCameraInitialized, setIsCameraInitialized] = useState(false);
   const [uploading] = useMMKVObject("uploadData", storage);
-
-  const durationAsString = (end: any, start: any) => {
-    return parseInt(start) >= moment().unix()
-      ? i18n.t("Event Starts in:") +
-          moment
-            .duration(parseInt(start) - moment().unix(), "seconds")
-            .locale(String(localLang))
-            .humanize(true)
-      : parseInt(end) < timestampInSeconds ?
-            i18n.t("EventEnded") +
-          moment
-            .duration(parseInt(end), "seconds")
-            .locale(String(localLang))
-            .humanize(true)
-      : i18n.t("Event Ends in:") +
-          moment
-            .duration(parseInt(end), "seconds")
-            .locale(String(localLang))
-            .humanize(true);
-  };
-  
+ 
   let endEventTime = durationAsString(
-    parseInt(props.route.params.end) - moment().unix(),
+    parseInt(props.route.params.end),
     parseInt(props.route.params.start)
   );
   const camera = useRef<Camera>(null);
