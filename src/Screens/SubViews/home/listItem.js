@@ -13,7 +13,7 @@ import { createImageProgress } from "react-native-image-progress";
 const Image = createImageProgress(FastImage);
 import Progress from "react-native-progress";
 import { Icon } from "react-native-elements";
-import { constants, SCREEN_WIDTH, SCREEN_HEIGHT } from "../../../utils/constants";
+import { constants, SCREEN_WIDTH, SCREEN_HEIGHT, durationAsString } from "../../../utils/constants";
 import styles from "../../../styles/SliderEntry.style";
 import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../../i18n";
@@ -45,33 +45,14 @@ const ListItem = (props) => {
   let eventStart = startDate(props.item.item.start);
   let eventEnd = startDate(props.item.item.end);
 
-const durationAsString = (end, start) => {
-    return parseInt(start) >= moment().unix()
-      ? i18n.t("Event Starts in:") +
-          moment
-            .duration(parseInt(start) - moment().unix(), "seconds")
-            .locale(localLang)
-            .humanize(true)
-      : parseInt(end) < timestampInSeconds ?
-            i18n.t("EventEnded") +
-          moment
-            .duration(parseInt(end), "seconds")
-            .locale(localLang)
-            .humanize(true)
-      : i18n.t("Event Ends in:") +
-          moment
-            .duration(parseInt(end), "seconds")
-            .locale(localLang)
-            .humanize(true);
-  };
   let endEventTime = durationAsString(
-    parseInt(props.item.item.end) - moment().unix(),
+    parseInt(props.item.item.end),
     parseInt(props.item.item.start)
   );
 
   let timeout = setInterval(() => {
     endEventTime = durationAsString(
-      parseInt(props.item.item.end) - moment().unix(),
+      parseInt(props.item.item.end),
       parseInt(props.item.item.start)
     );
   }, 45000);
