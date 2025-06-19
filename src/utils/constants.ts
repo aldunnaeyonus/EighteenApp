@@ -331,7 +331,28 @@ export const stringToBoolean = (stringValue: string) => {
     }
   };
 
+const durationAsString = (end: any, start: any) => {
+    return parseInt(start) >= moment().unix()
+      ? i18n.t("Event Starts in:") +
+          moment
+            .duration(parseInt(start) - moment().unix(), "seconds")
+            .locale(localLang)
+            .humanize(true)
+      : parseInt(end) <= moment().unix() ?
+          i18n.t("EventEnded") +
+          moment
+            .duration(parseInt(end), "seconds")
+            .locale(localLang)
+            .humanize(true)
+      : i18n.t("Event Ends in:") +
+          moment
+            .duration(parseInt(end), "seconds")
+            .locale(localLang)
+            .humanize(true);
+  };
+
 export const constants = {
+  durationAsString,
   productSkus,
   mask,
   stringToBoolean,
