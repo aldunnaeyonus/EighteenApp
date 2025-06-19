@@ -280,8 +280,8 @@ const PhotoViewer = (props) => {
               }}
             >
               <Icon
-                type={"ionicon"}
-                name={"eye-off-sharp"}
+                type={"material"}
+                name={"hide-image"}
                 size={25}
                 color="white"
               />
