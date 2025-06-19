@@ -57,7 +57,7 @@ const Products = (props) => {
         >
           <Icon
             type="material"
-            size={25}
+            size={30}
             name="arrow-back-ios-new"
             color="#fff"
             containerStyle={{
