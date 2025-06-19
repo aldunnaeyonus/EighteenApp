@@ -342,12 +342,12 @@ const durationAsString = (end: any, start: any) => {
       : parseInt(end) <= moment().unix() ?
           i18n.t("EventEnded") +
           moment
-            .duration(parseInt(end), "seconds")
+            .duration(parseInt(end) - moment().unix(), "seconds")
             .locale(localLang)
             .humanize(true)
       : i18n.t("Event Ends in:") +
           moment
-            .duration(parseInt(end), "seconds")
+            .duration(parseInt(end) - moment().unix(), "seconds")
             .locale(localLang)
             .humanize(true);
   };
