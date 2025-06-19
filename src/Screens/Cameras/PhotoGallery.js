@@ -243,13 +243,13 @@ const PhotoGallery = (props) => {
                 padding: 7,
                 height: 44,
                 backgroundColor: "rgba(0, 0, 0, 0.60)",
-                borderRadius: 22,
+                borderRadius: 25,
               }}
             />
           </TouchableOpacity>
         ),
         headerRight: () =>
-          props.route.params.end < timestampInSeconds ? 
+          parseInt(props.route.params.end) <= moment.unix() ? 
         <></>
         : credits > 0 || props.route.params.owner == props.route.params.user ? (
             <TouchableOpacity
