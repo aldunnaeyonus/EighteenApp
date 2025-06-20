@@ -71,7 +71,7 @@ export default function App() {
       updateFail() {
         console.log(message);
       },
-      restartAfterInstall: false,
+      restartAfterInstall: true,
     });
   };
   const colorScheme = useColorScheme();
