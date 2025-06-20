@@ -12,7 +12,7 @@ import {
 import "moment-duration-format";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { storage } from "../../context/components/Storage";
-import Animated, { useSharedValue } from "react-native-reanimated";
+import Animated from "react-native-reanimated";
 import { useMMKVObject } from "react-native-mmkv";
 import FriendHeader from "../SubViews/friends/friendHeader";
 import { Icon } from "react-native-elements";
@@ -31,6 +31,7 @@ import { ActivityIndicator, MD2Colors } from "react-native-paper";
 import Loading from "../SubViews/home/Loading";
 import { getLocales } from "expo-localization";
 import * as ImagePicker from "expo-image-picker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Friends = (props) => {
   const [cameraData] = useMMKVObject(
@@ -154,35 +155,35 @@ const Friends = (props) => {
   };
 
   const addMember = async () => {
-    if (props.route.params.userID != user.user_id){
-    const data = { user: props.route.params.userID, owner: user.user_id };
-    await axiosPull.postData("/users/add.php", data);
-    await axiosPull._pullFriendCameraFeed(
-      props.route.params.userID,
-      "user",
-      user.user_id
-    );
-    const datas = { friend: props.route.params.userID, owner: user.user_id };
-    const results = await axiosPull.postData("/users/check.php", datas);
-    setisFriend(results[0]["response"]);
-    Alert.alert(i18n.t("SnapEighteen"), i18n.t("FreiendsNow"));
-    await axiosPull._pullFriendFeed(props.route.params.userID);
-  }
+    if (props.route.params.userID != user.user_id) {
+      const data = { user: props.route.params.userID, owner: user.user_id };
+      await axiosPull.postData("/users/add.php", data);
+      await axiosPull._pullFriendCameraFeed(
+        props.route.params.userID,
+        "user",
+        user.user_id
+      );
+      const datas = { friend: props.route.params.userID, owner: user.user_id };
+      const results = await axiosPull.postData("/users/check.php", datas);
+      setisFriend(results[0]["response"]);
+      Alert.alert(i18n.t("SnapEighteen"), i18n.t("FreiendsNow"));
+      await axiosPull._pullFriendFeed(props.route.params.userID);
+    }
   };
 
   const deleteMember = async () => {
-                const data = {
-                  user: props.route.params.userID,
-                  pin: "",
-                  type: "block",
-                  title: "",
-                  owner: user.user_id,
-                  locale: getLocales()[0].languageCode,
-                };
+    const data = {
+      user: props.route.params.userID,
+      pin: "",
+      type: "block",
+      title: "",
+      owner: user.user_id,
+      locale: getLocales()[0].languageCode,
+    };
     await axiosPull.postData("/camera/report.php", data);
     await axiosPull._pullFriendsFeed(user.user_id);
     storage.delete("user.Camera.Friend.Feed." + props.route.params.userID);
-    
+
     props.navigation.pop(1);
   };
 
@@ -197,42 +198,64 @@ const Friends = (props) => {
     tCredits,
     camera_add_social
   ) => {
-     if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
-                            await ImagePicker.requestCameraPermissionsAsync();
-                          } else if (cameraStatus.status == ImagePicker.PermissionStatus.DENIED) {
-                            Alert.alert(
-                              i18n.t("Permissions"),
-                              i18n.t("UseCamera"),
-                              [
-                                {
-                                  text: i18n.t("Cancel"),
-                                  onPress: () => console.log("Cancel Pressed"),
-                                  style: "destructive",
-                                },
-                                {
-                                  text: i18n.t("Settings"),
-                                  onPress: () => {
-                                    Linking.openSettings();
-                                  },
-                                  style: "default",
-                                },
-                              ],
-                              { cancelable: false }
-                            );
-                          }else{
-    props.navigation.navigate("CameraPage", {
-      owner: owner,
-      pin: pin,
-      title: title,
-      credits: credits,
-      tCredits: tCredits,
-      UUID: UUID,
-      end: end,
-      camera_add_social: camera_add_social,
-      start: start,
-      user: user.user_id,
-    });
-  }
+    if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
+      await ImagePicker.requestCameraPermissionsAsync();
+    } else if (cameraStatus.status == ImagePicker.PermissionStatus.DENIED) {
+      Alert.alert(
+        i18n.t("Permissions"),
+        i18n.t("UseCamera"),
+        [
+          {
+            text: i18n.t("Cancel"),
+            onPress: () => console.log("Cancel Pressed"),
+            style: "destructive",
+          },
+          {
+            text: i18n.t("Settings"),
+            onPress: () => {
+              Linking.openSettings();
+            },
+            style: "default",
+          },
+        ],
+        { cancelable: false }
+      );
+    } else {
+      if ((await AsyncStorage.getItem("uploadEnabled")) == "1") {
+        openCloseModal();
+      } else {
+        Alert.alert(
+          i18n.t("ActiveUpload"),
+          i18n.t("WhileActiveUpload"),
+          [
+            {
+              text: i18n.t("Cancel"),
+              onPress: () => console.log("Cancel Pressed"),
+              style: "default",
+            },
+            {
+              text: i18n.t("Continue"),
+              onPress: async () => {
+                props.navigation.navigate("CameraPage", {
+                  owner: owner,
+                  pin: pin,
+                  title: title,
+                  credits: credits,
+                  tCredits: tCredits,
+                  UUID: UUID,
+                  end: end,
+                  camera_add_social: camera_add_social,
+                  start: start,
+                  user: user.user_id,
+                });
+              },
+              style: "destructive",
+            },
+          ],
+          { cancelable: false }
+        );
+      }
+    }
   };
 
   const _gotoStore = (pin, owner, name) => {
@@ -333,9 +356,9 @@ const Friends = (props) => {
                 }}
                 color="#3D4849"
               />
-            ) :
-            props.route.params.userID == user.user_id ? <></> : 
-              isFriend == "1" ? (
+            ) : props.route.params.userID == user.user_id ? (
+              <></>
+            ) : isFriend == "1" ? (
               <Icon
                 containerStyle={{ marginLeft: 5 }}
                 type="material"
@@ -381,24 +404,24 @@ const Friends = (props) => {
   if (!ready) {
     return (
       <SafeAreaView
-      style={{
-        backgroundColor: "white",
-        height: SCREEN_HEIGHT,
-        width: SCREEN_WIDTH,
-      }}
-      edges={["bottom", "left", "right"]}
-    >
-      <ActivityIndicator
-        size={80}
         style={{
-          position: "absolute",
-          top: SCREEN_HEIGHT / 3.5,
-          left: SCREEN_WIDTH / 2 - 40,
+          backgroundColor: "white",
+          height: SCREEN_HEIGHT,
+          width: SCREEN_WIDTH,
         }}
-        animating={isLoading}
-        hidesWhenStopped={true}
-        color={MD2Colors.orange900}
-      />
+        edges={["bottom", "left", "right"]}
+      >
+        <ActivityIndicator
+          size={80}
+          style={{
+            position: "absolute",
+            top: SCREEN_HEIGHT / 3.5,
+            left: SCREEN_WIDTH / 2 - 40,
+          }}
+          animating={isLoading}
+          hidesWhenStopped={true}
+          color={MD2Colors.orange900}
+        />
       </SafeAreaView>
     );
   }
@@ -420,86 +443,111 @@ const Friends = (props) => {
           showsVerticalScrollIndicatorr={false}
           nestedScrollEnabled={true}
           bounces={true}
-          style={{ flex: 1, height: SCREEN_HEIGHT, width: SCREEN_WIDTH}}
-            data={cameraData}
-            extraData={cameraData}
-            scrollEventThrottle={16}
-            ListEmptyComponent={
-              isFriend == "1" && (
-                  <View style={style.empty}>
-                    <View style={style.fake}>
-                      <View style={style.fakeSquare} >
-                      <Image
-                              source={require("../../../assets/elementor-placeholder-image.png")}
-                              resizeMode={FastImage.resizeMode.cover}
-                              style={{
-                                position: "absolute",
-                                height: 175,
-                                width: SCREEN_WIDTH - 150,
-                                borderRadius: 10,
-                                overflow: "hidden",
-                              }}
-                            />
-                        </View>
-                      <View
-                      style={[
-                        style.fakeLine,
-                        { width: SCREEN_WIDTH - 150, height:40, marginBottom: 0, position: "absolute", bottom:0, },
-                      ]} />
-                       <View
-                      style={[
-                        style.fakeLine,
-                        { width:30, height:120, marginBottom: 0, position: "absolute", top:8, right:5 },
-                      ]} />
-                     <View
-                      style={[
-                        style.fakeLine,
-                        { width:150, height:20, marginBottom: 0, position: "absolute", bottom:10, left:5, backgroundColor: '#e8e9ed', },
-                      ]} />
+          style={{ flex: 1, height: SCREEN_HEIGHT, width: SCREEN_WIDTH }}
+          data={cameraData}
+          extraData={cameraData}
+          scrollEventThrottle={16}
+          ListEmptyComponent={
+            isFriend == "1" && (
+              <View style={style.empty}>
+                <View style={style.fake}>
+                  <View style={style.fakeSquare}>
+                    <Image
+                      source={require("../../../assets/elementor-placeholder-image.png")}
+                      resizeMode={FastImage.resizeMode.cover}
+                      style={{
+                        position: "absolute",
+                        height: 175,
+                        width: SCREEN_WIDTH - 150,
+                        borderRadius: 10,
+                        overflow: "hidden",
+                      }}
+                    />
                   </View>
-                  <EmptyStateView
-                      headerText={""}
-                      subHeaderText={i18n.t("A gallery")}
-                      headerTextStyle={style.headerTextStyle}
-                      subHeaderTextStyle={style.subHeaderTextStyle} />
-                  </View>
-              )
-            }
-            ListHeaderComponent={
-              <>
-                <FriendHeader
-                  id={props.route.params.userID}
-                  name={friendData.friend_handle}
-                  motto={friendData.friend_motto}
-                  avatar={friendData.friend_avatar}
-                  join={friendData.friend_join}
-                  create={friendData.friend_camera}
-                  upload={friendData.friend_media}
-                  isPro={friendData.friend_isPro}
+                  <View
+                    style={[
+                      style.fakeLine,
+                      {
+                        width: SCREEN_WIDTH - 150,
+                        height: 40,
+                        marginBottom: 0,
+                        position: "absolute",
+                        bottom: 0,
+                      },
+                    ]}
+                  />
+                  <View
+                    style={[
+                      style.fakeLine,
+                      {
+                        width: 30,
+                        height: 120,
+                        marginBottom: 0,
+                        position: "absolute",
+                        top: 8,
+                        right: 5,
+                      },
+                    ]}
+                  />
+                  <View
+                    style={[
+                      style.fakeLine,
+                      {
+                        width: 150,
+                        height: 20,
+                        marginBottom: 0,
+                        position: "absolute",
+                        bottom: 10,
+                        left: 5,
+                        backgroundColor: "#e8e9ed",
+                      },
+                    ]}
+                  />
+                </View>
+                <EmptyStateView
+                  headerText={""}
+                  subHeaderText={i18n.t("A gallery")}
+                  headerTextStyle={style.headerTextStyle}
+                  subHeaderTextStyle={style.subHeaderTextStyle}
                 />
+              </View>
+            )
+          }
+          ListHeaderComponent={
+            <>
+              <FriendHeader
+                id={props.route.params.userID}
+                name={friendData.friend_handle}
+                motto={friendData.friend_motto}
+                avatar={friendData.friend_avatar}
+                join={friendData.friend_join}
+                create={friendData.friend_camera}
+                upload={friendData.friend_media}
+                isPro={friendData.friend_isPro}
+              />
 
-                <Loading
-                  message={uploading.message}
-                  flex={uploading.display}
-                  image={uploading.image}
-                />
-              </>
-            }
-            keyExtractor={(item) => item.UUID}
-            renderItem={(item, index) =>
-              isFriend == "1" && (
-                <FriendListItem
-                  item={item}
-                  index={index}
-                  _gotoMedia={_gotoMedia}
-                  _gotoCamera={_gotoCamera}
-                  _gotoStore={_gotoStore}
-                  _autoJoin={_autoJoin}
-                  _repotPost={_repotPost}
-                />
-              )
-            }
-          />
+              <Loading
+                message={uploading.message}
+                flex={uploading.display}
+                image={uploading.image}
+              />
+            </>
+          }
+          keyExtractor={(item) => item.UUID}
+          renderItem={(item, index) =>
+            isFriend == "1" && (
+              <FriendListItem
+                item={item}
+                index={index}
+                _gotoMedia={_gotoMedia}
+                _gotoCamera={_gotoCamera}
+                _gotoStore={_gotoStore}
+                _autoJoin={_autoJoin}
+                _repotPost={_repotPost}
+              />
+            )
+          }
+        />
         <Modal
           visible={modalActionVisable}
           animationType="slide"
@@ -856,43 +904,43 @@ const style = StyleSheet.create({
     shadowRadius: 4,
     elevation: 7,
   },
-    /** Fake */
-    fake: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginBottom: 24,
-      opacity:0.4
-    },
-    fakeCircle: {
-      width: 44,
-      height: 44,
-      borderRadius: 9999,
-      backgroundColor: '#e8e9ed',
-      marginRight: 16,
-    },
-    fakeSquare: {
-      width: SCREEN_WIDTH - 150,
-      height: 175,
-      backgroundColor: '#e8e9ed',
-      borderRadius: 10,
-    },
-    fakeLine: {
-      width: 200,
-      height: 10,
-      borderRadius: 4,
-      backgroundColor: '#e8e9ed',
-      marginBottom: 8,
-      opacity:0.6
-    },
-    empty: {
-      flexGrow: 1,
-      flexShrink: 1,
-      flexBasis: 0,
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginTop: 50,
-    },
+  /** Fake */
+  fake: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 24,
+    opacity: 0.4,
+  },
+  fakeCircle: {
+    width: 44,
+    height: 44,
+    borderRadius: 9999,
+    backgroundColor: "#e8e9ed",
+    marginRight: 16,
+  },
+  fakeSquare: {
+    width: SCREEN_WIDTH - 150,
+    height: 175,
+    backgroundColor: "#e8e9ed",
+    borderRadius: 10,
+  },
+  fakeLine: {
+    width: 200,
+    height: 10,
+    borderRadius: 4,
+    backgroundColor: "#e8e9ed",
+    marginBottom: 8,
+    opacity: 0.6,
+  },
+  empty: {
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 50,
+  },
 });
 
 export default Friends;

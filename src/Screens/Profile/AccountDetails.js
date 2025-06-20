@@ -8,6 +8,7 @@ import { axiosPull } from "../../utils/axiosPull";
 import { useIsFocused } from "@react-navigation/native";
 import * as i18n from "../../../i18n";
 import { ActivityIndicator } from "react-native-paper";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AccountDetails = (props) => {
   const [user] = useMMKVObject("user.Data", storage);

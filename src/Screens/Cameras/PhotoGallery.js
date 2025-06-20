@@ -8,10 +8,15 @@ import {
   Modal,
   StatusBar,
   TouchableWithoutFeedback,
-  Linking
+  Linking,
 } from "react-native";
 import React, { useState, useRef, useCallback } from "react";
-import { constants, SCREEN_WIDTH, SCREEN_HEIGHT, durationAsString } from "../../utils/constants";
+import {
+  constants,
+  SCREEN_WIDTH,
+  SCREEN_HEIGHT,
+  durationAsString,
+} from "../../utils/constants";
 import { Icon } from "react-native-elements";
 import * as ImagePicker from "expo-image-picker";
 import FormData from "form-data";
@@ -35,7 +40,6 @@ import { getLocales } from "expo-localization";
 import axios from "axios";
 import FastImage from "react-native-fast-image";
 
-
 const PhotoGallery = (props) => {
   const [filteredDataSource] = useMMKVObject(
     `user.Gallery.Friend.Feed.${props.route.params.pin}`,
@@ -51,7 +55,7 @@ const PhotoGallery = (props) => {
       : props.route.params.credits
   );
   const [cameraStatus] = ImagePicker.useCameraPermissions();
-    const [libraryStatus] = ImagePicker.useMediaLibraryPermissions();
+  const [libraryStatus] = ImagePicker.useMediaLibraryPermissions();
 
   const [modalUpload, setModalUpload] = useState(false);
   const { toast } = useToast();
@@ -62,7 +66,7 @@ const PhotoGallery = (props) => {
   let [localLang] = useState(getLocales()[0].languageCode);
 
   const [uploading] = useMMKVObject("uploadData", storage);
-  
+
   const createEvent = async () => {
     setAnimating(false);
     var formData = new FormData();
@@ -87,43 +91,60 @@ const PhotoGallery = (props) => {
       });
     });
 
-   const postConclusion = async () => {
-    storage.set("uploadData", JSON.stringify({"message": i18n.t("Uploading") + " " + i18n.t("PleaseWait"), "display":"flex", "image":pickedImages[0]}));
-    await AsyncStorage.setItem("uploadEnabled", "0");
-    await axios({
-      method: "POST",
-      url: constants.url + "/camera/upload.php",
-      data: formData,
-      onUploadProgress: progressEvent => {
-        let {loaded, total} = progressEvent;
-        console.log((loaded / total) * 100)
-    },
-      headers: {
-        Accept: "application/json",
-        "content-Type": "multipart/form-data",
-      },
-    }).then(async (res) => {
-     await AsyncStorage.setItem("uploadEnabled", "1");
-      const postLoading = async () => {
-      storage.set("uploadData", JSON.stringify({"message": "", "display":"none", "image":""}));
-      await axiosPull._pullGalleryFeed(props.route.params.pin, props.route.params.user);
-      await axiosPull._pullFriendCameraFeed(props.route.params.owner, "user", props.route.params.user);
-      await axiosPull._pullCameraFeed(props.route.params.user, "owner");
-      setCredits(parseInt(credits) - pickedImages.length);
-  if (props.route.params.owner != props.route.params.user) {
-    updateItemFeed(
-      JSON.stringify(cameraData),
-      props.route.params.pin,
-      String(parseInt(credits) - pickedImages.length),
-      `user.Camera.Friend.Feed.${props.route.params.owner}`,
-      "1"
-    );
-      }  
-      }
-      postLoading();
-    });
-  }
-  postConclusion();
+    const postConclusion = async () => {
+      storage.set(
+        "uploadData",
+        JSON.stringify({
+          message: i18n.t("Uploading") + " " + i18n.t("PleaseWait"),
+          display: "flex",
+          image: pickedImages[0],
+        })
+      );
+      await AsyncStorage.setItem("uploadEnabled", "0");
+      await axios({
+        method: "POST",
+        url: constants.url + "/camera/upload.php",
+        data: formData,
+        onUploadProgress: (progressEvent) => {
+          let { loaded, total } = progressEvent;
+          console.log((loaded / total) * 100);
+        },
+        headers: {
+          Accept: "application/json",
+          "content-Type": "multipart/form-data",
+        },
+      }).then(async (res) => {
+        await AsyncStorage.setItem("uploadEnabled", "1");
+        const postLoading = async () => {
+          storage.set(
+            "uploadData",
+            JSON.stringify({ message: "", display: "none", image: "" })
+          );
+          await axiosPull._pullGalleryFeed(
+            props.route.params.pin,
+            props.route.params.user
+          );
+          await axiosPull._pullFriendCameraFeed(
+            props.route.params.owner,
+            "user",
+            props.route.params.user
+          );
+          await axiosPull._pullCameraFeed(props.route.params.user, "owner");
+          setCredits(parseInt(credits) - pickedImages.length);
+          if (props.route.params.owner != props.route.params.user) {
+            updateItemFeed(
+              JSON.stringify(cameraData),
+              props.route.params.pin,
+              String(parseInt(credits) - pickedImages.length),
+              `user.Camera.Friend.Feed.${props.route.params.owner}`,
+              "1"
+            );
+          }
+        };
+        postLoading();
+      });
+    };
+    postConclusion();
 
     setPickedImages([]);
   };
@@ -249,12 +270,35 @@ const PhotoGallery = (props) => {
           </TouchableOpacity>
         ),
         headerRight: () =>
-          parseInt(props.route.params.end) <= moment.unix() ? 
-        <></>
-        : credits > 0 || props.route.params.owner == props.route.params.user ? (
+          parseInt(props.route.params.end) <= moment.unix() ? (
+            <></>
+          ) : credits > 0 ||
+            props.route.params.owner == props.route.params.user ? (
             <TouchableOpacity
-              onPress={() => {
+              onPress={async () => {
+                if ((await AsyncStorage.getItem("uploadEnabled")) == "1") {
                   openCloseModal();
+                } else {
+                  Alert.alert(
+                    i18n.t("ActiveUpload"),
+                    i18n.t("WhileActiveUpload"),
+                    [
+                      {
+                        text: i18n.t("Cancel"),
+                        onPress: () => console.log("Cancel Pressed"),
+                        style: "default",
+                      },
+                      {
+                        text: i18n.t("Continue"),
+                        onPress: async () => {
+                          openCloseModal();
+                        },
+                        style: "destructive",
+                      },
+                    ],
+                    { cancelable: false }
+                  );
+                }
               }}
             >
               <Icon
@@ -330,7 +374,6 @@ const PhotoGallery = (props) => {
     ])
   );
 
-
   let endEventTime = durationAsString(
     parseInt(props.route.params.end),
     parseInt(props.route.params.start),
@@ -365,7 +408,7 @@ const PhotoGallery = (props) => {
           extraData={filteredDataSource}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
-                  nestedScrollEnabled={true}
+          nestedScrollEnabled={true}
           scrollEventThrottle={16}
           ListHeaderComponent={
             <>
@@ -387,16 +430,16 @@ const PhotoGallery = (props) => {
             <View style={style.empty}>
               <View style={style.fake}>
                 <View style={style.fakeSquare} />
-                <View style={[style.fakeSquare, {opacity: 0.5}]} />
-                <View style={[style.fakeSquare, {opacity: 0.4}]} />
-            </View>
+                <View style={[style.fakeSquare, { opacity: 0.5 }]} />
+                <View style={[style.fakeSquare, { opacity: 0.4 }]} />
+              </View>
 
-            <EmptyStateView
-              headerText={props.route.params.title.toUpperCase()}
-              subHeaderText={i18n.t("A gallery")}
-              headerTextStyle={style.headerTextStyle}
-              subHeaderTextStyle={style.subHeaderTextStyle}
-            />
+              <EmptyStateView
+                headerText={props.route.params.title.toUpperCase()}
+                subHeaderText={i18n.t("A gallery")}
+                headerTextStyle={style.headerTextStyle}
+                subHeaderTextStyle={style.subHeaderTextStyle}
+              />
             </View>
           }
           ref={photo}
@@ -515,44 +558,50 @@ const PhotoGallery = (props) => {
                         borderRadius: 22,
                       }}
                       onPress={async () => {
-                                              if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
-                                                await ImagePicker.requestCameraPermissionsAsync();
-                                              } else if (cameraStatus.status == ImagePicker.PermissionStatus.DENIED) {
-                                                Alert.alert(
-                                                  i18n.t("Permissions"),
-                                                  i18n.t("UseCamera"),
-                                                  [
-                                                    {
-                                                      text: i18n.t("Cancel"),
-                                                      onPress: () => console.log("Cancel Pressed"),
-                                                      style: "destructive",
-                                                    },
-                                                    {
-                                                      text: i18n.t("Settings"),
-                                                      onPress: () => {
-                                                        Linking.openSettings();
-                                                      },
-                                                      style: "default",
-                                                    },
-                                                  ],
-                                                  { cancelable: false }
-                                                );
-                                              }else{
-                        props.navigation.navigate("CameraPage", {
-                          owner: props.route.params.owner,
-                          pin: props.route.params.pin,
-                          title: props.route.params.title,
-                          credits: credits,
-                          tCredits: "",
-                          UUID: props.route.params.UUID,
-                          end: props.route.params.end,
-                          camera_add_social:
-                            props.route.params.camera_add_social,
-                          start: props.route.params.start,
-                          user: props.route.params.user,
-                        });
-                        setModalUpload(false);
-                      }
+                        if (
+                          cameraStatus.status ==
+                          ImagePicker.PermissionStatus.UNDETERMINED
+                        ) {
+                          await ImagePicker.requestCameraPermissionsAsync();
+                        } else if (
+                          cameraStatus.status ==
+                          ImagePicker.PermissionStatus.DENIED
+                        ) {
+                          Alert.alert(
+                            i18n.t("Permissions"),
+                            i18n.t("UseCamera"),
+                            [
+                              {
+                                text: i18n.t("Cancel"),
+                                onPress: () => console.log("Cancel Pressed"),
+                                style: "destructive",
+                              },
+                              {
+                                text: i18n.t("Settings"),
+                                onPress: () => {
+                                  Linking.openSettings();
+                                },
+                                style: "default",
+                              },
+                            ],
+                            { cancelable: false }
+                          );
+                        } else {
+                          props.navigation.navigate("CameraPage", {
+                            owner: props.route.params.owner,
+                            pin: props.route.params.pin,
+                            title: props.route.params.title,
+                            credits: credits,
+                            tCredits: "",
+                            UUID: props.route.params.UUID,
+                            end: props.route.params.end,
+                            camera_add_social:
+                              props.route.params.camera_add_social,
+                            start: props.route.params.start,
+                            user: props.route.params.user,
+                          });
+                          setModalUpload(false);
+                        }
                       }}
                     />
                     <Text
@@ -649,42 +698,42 @@ const style = StyleSheet.create({
     marginBottom: 15,
     textAlign: "center",
   },
-    /** Fake */
-    fake: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginBottom: 24,
-      opacity:0.4
-    },
-    fakeCircle: {
-      width: 44,
-      height: 44,
-      borderRadius: 9999,
-      backgroundColor: '#e8e9ed',
-      marginRight: 16,
-    },
-    fakeSquare: {
-      width: 100,
-      height: 100,
-      margin:10,
-      backgroundColor: '#e8e9ed',
-      borderRadius: 0,
-    },
-    fakeLine: {
-      width: 200,
-      height: 10,
-      borderRadius: 4,
-      backgroundColor: 'lightgrey',
-      marginBottom: 8,
-    },
-    empty: {
-      flexGrow: 1,
-      flexShrink: 1,
-      flexBasis: 0,
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginTop: 50,
-    },
+  /** Fake */
+  fake: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 24,
+    opacity: 0.4,
+  },
+  fakeCircle: {
+    width: 44,
+    height: 44,
+    borderRadius: 9999,
+    backgroundColor: "#e8e9ed",
+    marginRight: 16,
+  },
+  fakeSquare: {
+    width: 100,
+    height: 100,
+    margin: 10,
+    backgroundColor: "#e8e9ed",
+    borderRadius: 0,
+  },
+  fakeLine: {
+    width: 200,
+    height: 10,
+    borderRadius: 4,
+    backgroundColor: "lightgrey",
+    marginBottom: 8,
+  },
+  empty: {
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 50,
+  },
 });
 export default PhotoGallery;

@@ -317,5 +317,7 @@
     "Flag&Redraw":"Flag & Redraw",
     "GlobalFriends":"Global Friends",
     "SearchGlobalFriends": "Search Global Friends",
-    "EventEnded": "Event Ended "
+    "EventEnded": "Event Ended ",
+    "ActiveUpload":"Active Upload",
+    "WhileActiveUpload":"A file is currently uploading. If you leave now, you risk losing your upload."
 }			

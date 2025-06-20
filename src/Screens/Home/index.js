@@ -38,6 +38,7 @@ import RNFS from "react-native-fs";
 import RNImageToPdf from "react-native-image-to-pdf";
 import RNPrint from "react-native-print";
 import * as ImagePicker from "expo-image-picker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Home = (props) => {
   const [cameraData, setcameraData] = useMMKVObject(
@@ -71,7 +72,7 @@ const Home = (props) => {
     url: "",
     message: "",
   });
-    const [cameraStatus] = ImagePicker.useCameraPermissions();
+  const [cameraStatus] = ImagePicker.useCameraPermissions();
   const codeScanner = useCodeScanner({
     codeTypes: ["qr"],
     onCodeScanned: async (codes) => {
@@ -116,42 +117,42 @@ const Home = (props) => {
     tCredits,
     camera_add_social
   ) => {
-                      if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
-                        await ImagePicker.requestCameraPermissionsAsync();
-                      } else if (cameraStatus.status == ImagePicker.PermissionStatus.DENIED) {
-                        Alert.alert(
-                          i18n.t("Permissions"),
-                          i18n.t("UseCamera"),
-                          [
-                            {
-                              text: i18n.t("Cancel"),
-                              onPress: () => console.log("Cancel Pressed"),
-                              style: "destructive",
-                            },
-                            {
-                              text: i18n.t("Settings"),
-                              onPress: () => {
-                                Linking.openSettings();
-                              },
-                              style: "default",
-                            },
-                          ],
-                          { cancelable: false }
-                        );
-                      }else{
-    props.navigation.navigate("CameraPage", {
-      owner: owner,
-      pin: pin,
-      title: title,
-      credits: credits,
-      tCredits: tCredits,
-      UUID: UUID,
-      end: end,
-      camera_add_social: camera_add_social,
-      start: start,
-      user: user.user_id,
-    });
-  }
+    if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
+      await ImagePicker.requestCameraPermissionsAsync();
+    } else if (cameraStatus.status == ImagePicker.PermissionStatus.DENIED) {
+      Alert.alert(
+        i18n.t("Permissions"),
+        i18n.t("UseCamera"),
+        [
+          {
+            text: i18n.t("Cancel"),
+            onPress: () => console.log("Cancel Pressed"),
+            style: "destructive",
+          },
+          {
+            text: i18n.t("Settings"),
+            onPress: () => {
+              Linking.openSettings();
+            },
+            style: "default",
+          },
+        ],
+        { cancelable: false }
+      );
+    } else {
+      props.navigation.navigate("CameraPage", {
+        owner: owner,
+        pin: pin,
+        title: title,
+        credits: credits,
+        tCredits: tCredits,
+        UUID: UUID,
+        end: end,
+        camera_add_social: camera_add_social,
+        start: start,
+        user: user.user_id,
+      });
+    }
   };
 
   const _gotoAllFriends = () => {
@@ -440,9 +441,33 @@ const Home = (props) => {
   };
 
   const _createCamera = async (userID) => {
-    props.navigation.navigate("CreateCamera", {
-      UUID: userID,
-    });
+    if ((await AsyncStorage.getItem("uploadEnabled")) == "1") {
+      props.navigation.navigate("CreateCamera", {
+        UUID: userID,
+      });
+    } else {
+      Alert.alert(
+        i18n.t("ActiveUpload"),
+        i18n.t("WhileActiveUpload"),
+        [
+          {
+            text: i18n.t("Cancel"),
+            onPress: () => console.log("Cancel Pressed"),
+            style: "default",
+          },
+          {
+            text: i18n.t("Continue"),
+            onPress: async () => {
+              props.navigation.navigate("CreateCamera", {
+                UUID: userID,
+              });
+            },
+            style: "destructive",
+          },
+        ],
+        { cancelable: false }
+      );
+    }
   };
   const fetchImage = async (qrCodeURL) => {
     try {
@@ -834,91 +859,116 @@ const Home = (props) => {
         </TouchableWithoutFeedback>
       </Modal>
 
-        <AnimatedFlatList
-          refreshing={refreshing} // Added pull to refesh state
-          onRefresh={_refresh} // Added pull to refresh control
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicatorr={false}
-          nestedScrollEnabled={true}
-          bounces={true}
-          style={{ flex: 1, height: SCREEN_HEIGHT, width: SCREEN_WIDTH}}
-          data={cameraData}
-          extraData={cameraData}
-          scrollEventThrottle={16}
-          ListEmptyComponent={
-            <View style={style.empty}>
-              <View style={style.fake}>
-                <View style={style.fakeSquare} >
+      <AnimatedFlatList
+        refreshing={refreshing} // Added pull to refesh state
+        onRefresh={_refresh} // Added pull to refresh control
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicatorr={false}
+        nestedScrollEnabled={true}
+        bounces={true}
+        style={{ flex: 1, height: SCREEN_HEIGHT, width: SCREEN_WIDTH }}
+        data={cameraData}
+        extraData={cameraData}
+        scrollEventThrottle={16}
+        ListEmptyComponent={
+          <View style={style.empty}>
+            <View style={style.fake}>
+              <View style={style.fakeSquare}>
                 <Image
-                        source={require("../../../assets/elementor-placeholder-image.png")}
-                        resizeMode={FastImage.resizeMode.cover}
-                        style={{
-                          position: "absolute",
-                          height: 175,
-                          width: SCREEN_WIDTH - 150,
-                          borderRadius: 10,
-                          overflow: "hidden",
-                        }}
-                      />
-                  </View>
-                <View
+                  source={require("../../../assets/elementor-placeholder-image.png")}
+                  resizeMode={FastImage.resizeMode.cover}
+                  style={{
+                    position: "absolute",
+                    height: 175,
+                    width: SCREEN_WIDTH - 150,
+                    borderRadius: 10,
+                    overflow: "hidden",
+                  }}
+                />
+              </View>
+              <View
                 style={[
                   style.fakeLine,
-                  { width: SCREEN_WIDTH - 150, height:40, marginBottom: 0, position: "absolute", bottom:0, },
-                ]} />
-                 <View
+                  {
+                    width: SCREEN_WIDTH - 150,
+                    height: 40,
+                    marginBottom: 0,
+                    position: "absolute",
+                    bottom: 0,
+                  },
+                ]}
+              />
+              <View
                 style={[
                   style.fakeLine,
-                  { width:30, height:120, marginBottom: 0, position: "absolute", top:8, right:5 },
-                ]} />
-               <View
+                  {
+                    width: 30,
+                    height: 120,
+                    marginBottom: 0,
+                    position: "absolute",
+                    top: 8,
+                    right: 5,
+                  },
+                ]}
+              />
+              <View
                 style={[
                   style.fakeLine,
-                  { width:150, height:20, marginBottom: 0, position: "absolute", bottom:10, left:5, backgroundColor: '#e8e9ed', },
-                ]} />
+                  {
+                    width: 150,
+                    height: 20,
+                    marginBottom: 0,
+                    position: "absolute",
+                    bottom: 10,
+                    left: 5,
+                    backgroundColor: "#e8e9ed",
+                  },
+                ]}
+              />
             </View>
             <EmptyStateView
-                headerText={i18n.t("Capturing Moments, Crafting Memories!")}
-                subHeaderText={i18n.t("Start")}
-                headerTextStyle={style.headerTextStyle}
-                subHeaderTextStyle={style.subHeaderTextStyle} />
-            </View>
-          }
-          ListHeaderComponent={
-            <>
-              <FriendHeader
-                _createCamera={_createCamera}
-                _gotoAllFriends={_gotoAllFriends}
-                goToFriend={goToFriend}
-              />
-              <Loading
-                message={uploading.message}
-                flex={uploading.display}
-                image={uploading.image}
-              />
-            </>
-          }
-          keyExtractor={(item, index) => index}
-          renderItem={(item, index) => (
-            <ListItem
-              item={item}
-              index={index}
-              isPro={user == undefined ? "" : user.isPro}
-              _gotoStore={_gotoStore}
-              _deleteFeedItem={_deleteFeedItem}
-              _joinFeedItem={_joinFeedItem}
-              _deleteFeedItemIndex={_deleteFeedItemIndex}
-              _editEvent={_editEvent}
-              _gotoMedia={_gotoMedia}
-              _gotoCamera={_gotoCamera}
-              setQrCodeURL={setQrCodeURL}
-              _gotoQRCode={_gotoQRCode}
-              _gotoShare={_gotoShare}
-              _editItem={_editItem}
-              _addMax={_addMax}
+              headerText={i18n.t("Capturing Moments, Crafting Memories!")}
+              subHeaderText={i18n.t("Start")}
+              headerTextStyle={style.headerTextStyle}
+              subHeaderTextStyle={style.subHeaderTextStyle}
             />
-          )}
-        />
+          </View>
+        }
+        ListHeaderComponent={
+          <>
+            <FriendHeader
+              _createCamera={_createCamera}
+              _gotoAllFriends={_gotoAllFriends}
+              goToFriend={goToFriend}
+            />
+            <Loading
+              message={uploading.message}
+              flex={uploading.display}
+              image={uploading.image}
+            />
+          </>
+        }
+        keyExtractor={(item, index) => index}
+        renderItem={(item, index) => (
+          <ListItem
+            item={item}
+            index={index}
+            isPro={user == undefined ? "" : user.isPro}
+            _gotoStore={_gotoStore}
+            _deleteFeedItem={_deleteFeedItem}
+            _joinFeedItem={_joinFeedItem}
+            _deleteFeedItemIndex={_deleteFeedItemIndex}
+            _editEvent={_editEvent}
+            _gotoMedia={_gotoMedia}
+            _gotoCamera={_gotoCamera}
+            setQrCodeURL={setQrCodeURL}
+            _gotoQRCode={_gotoQRCode}
+            _gotoShare={_gotoShare}
+            _editItem={_editItem}
+            _addMax={_addMax}
+          />
+        )}
+      />
     </SafeAreaProvider>
   );
 };
@@ -1046,39 +1096,39 @@ const style = StyleSheet.create({
   },
   /** Fake */
   fake: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     marginBottom: 24,
-    opacity:0.4
+    opacity: 0.4,
   },
   fakeCircle: {
     width: 44,
     height: 44,
     borderRadius: 9999,
-    backgroundColor: '#e8e9ed',
+    backgroundColor: "#e8e9ed",
     marginRight: 16,
   },
   fakeSquare: {
     width: SCREEN_WIDTH - 150,
     height: 175,
-    backgroundColor: '#e8e9ed',
+    backgroundColor: "#e8e9ed",
     borderRadius: 10,
   },
   fakeLine: {
     width: 200,
     height: 10,
     borderRadius: 4,
-    backgroundColor: '#e8e9ed',
+    backgroundColor: "#e8e9ed",
     marginBottom: 8,
-    opacity:0.6
+    opacity: 0.6,
   },
   empty: {
     flexGrow: 1,
     flexShrink: 1,
     flexBasis: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginTop: 50,
   },
 });
