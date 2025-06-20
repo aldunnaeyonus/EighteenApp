@@ -59,6 +59,7 @@ class NotificationHandler {
 
 const handler = new NotificationHandler();
 
+if (Platform.OS == 'ios' || Platform.OS == 'android '){
 PushNotification.configure({
   // (optional) Called when Token is generated (iOS and Android)
   onRegister: handler.onRegister.bind(handler),
@@ -90,5 +91,5 @@ PushNotification.configure({
    */
   requestPermissions: true,
 });
-
+}
 export default handler;
