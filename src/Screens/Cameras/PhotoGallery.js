@@ -270,7 +270,7 @@ const PhotoGallery = (props) => {
           </TouchableOpacity>
         ),
         headerRight: () =>
-          parseInt(props.route.params.end) <= moment.unix() ? (
+          parseInt(props.route.params.end) <= moment().unix() ? (
             <></>
           ) : credits > 0 ||
             props.route.params.owner == props.route.params.user ? (
