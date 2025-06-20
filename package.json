@@ -16,12 +16,12 @@
     "postinstall": "npx patch-package",
     "export-ios": "npx react-native bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios' && mkdir -p ios/output && npx react-native bundle --platform ios --entry-file='index.js' --bundle-output ios/output/main.jsbundle --dev=false --assets-dest ios/output && cd ios && find output -type f | zip main.jsbundle.zip -@ && cd .. && rm -rf ios/output",
     "export-android": "npx react-native bundle --platform='android' --entry-file='index.js' --bundle-output='./android/app/src/main/assets/index.android.bundle' --dev=false --assets-dest='./android/app/src/main/res' && mkdir -p android/output && npx react-native bundle --platform='android' --entry-file='index.js' --bundle-output android/output/index.android.bundle --dev=false --assets-dest android/output && cd android && find output -type f | zip index.android.bundle.zip -@ && cd .. && rm -rf android/output"
-
   },
   "dependencies": {
     "@baronha/react-native-photo-editor": "^1.1.6",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@expo/metro-runtime": "~3.2.3",
     "@mui/material": "^6.1.0",
     "@pollinations/react": "^2.0.7",
     "@react-native-async-storage/async-storage": "2.0.0",
@@ -105,6 +105,7 @@
     "react-native-vector-icons": "^10.2.0",
     "react-native-video": "^6.5.0",
     "react-native-vision-camera": "^4.6.3",
+    "react-native-web": "~0.19.10",
     "react-native-webview": "13.12.2",
     "react-native-worklets-core": "^1.5.0",
     "react-native-zoom-reanimated": "^1.4.8",
