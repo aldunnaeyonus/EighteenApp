@@ -20,11 +20,9 @@ import Progress from "react-native-progress";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Icon } from "react-native-elements";
 import { storage } from "../../context/components/Storage";
-import RefreshableWrapper from "react-native-fresh-refresh";
 import Animated from "react-native-reanimated";
 import { useMMKVObject } from "react-native-mmkv";
 import ListItem from "../SubViews/home/listItem";
-import RefreshView from "../../utils/refreshView";
 import FriendHeader from "../SubViews/home/homeHeader";
 import { axiosPull } from "../../utils/axiosPull";
 import * as i18n from "../../../i18n";
@@ -52,7 +50,8 @@ const Home = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
   const [refreshing, setRefreshing] = useState(false);
   const [qrCodeURL, setQrCodeURL] = useState("");
-  const AnimatedFlatList = Animated.FlatList;
+  const AnimatedFlatList = Animated.createAnimatedComponent(Animated.FlatList);
+
   const isFocused = useIsFocused();
   const [uploading] = useMMKVObject("uploadData", storage);
   var timeout;
@@ -835,19 +834,14 @@ const Home = (props) => {
         </TouchableWithoutFeedback>
       </Modal>
 
-      <RefreshableWrapper
-        defaultAnimationEnabled={true}
-        Loader={() => <RefreshView />}
-        isLoading={refreshing}
-        onRefresh={() => {
-          _refresh();
-        }}
-      >
         <AnimatedFlatList
+          refreshing={refreshing} // Added pull to refesh state
+          onRefresh={_refresh} // Added pull to refresh control
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicatorr={false}
-                  nestedScrollEnabled={true}
-                              style={{ flex: 1}}
+          nestedScrollEnabled={true}
+          bounces={true}
+          style={{ flex: 1, height: SCREEN_HEIGHT, width: SCREEN_WIDTH}}
           data={cameraData}
           extraData={cameraData}
           scrollEventThrottle={16}
@@ -925,7 +919,6 @@ const Home = (props) => {
             />
           )}
         />
-      </RefreshableWrapper>
     </SafeAreaProvider>
   );
 };

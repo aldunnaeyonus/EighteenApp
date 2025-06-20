@@ -9,14 +9,12 @@ import {
   Linking,
   Text,
 } from "react-native";
-import RefreshableWrapper from "react-native-fresh-refresh";
 import "moment-duration-format";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { storage } from "../../context/components/Storage";
 import Animated, { useSharedValue } from "react-native-reanimated";
 import { useMMKVObject } from "react-native-mmkv";
 import FriendHeader from "../SubViews/friends/friendHeader";
-import RefreshView from "../../utils/refreshView";
 import { Icon } from "react-native-elements";
 import { axiosPull } from "../../utils/axiosPull";
 import { useToast } from "react-native-styled-toast";
@@ -48,8 +46,7 @@ const Friends = (props) => {
   const [ready, setReady] = useState(false);
   const [refreshing, serRefreshing] = useState(false);
   const [isFriend, setisFriend] = useState("2");
-  const contentOffset = useSharedValue(0);
-  const AnimatedFlatlist = Animated.FlatList;
+  const AnimatedFlatList = Animated.createAnimatedComponent(Animated.FlatList);
   const [user] = useMMKVObject("user.Data", storage);
   const { toast } = useToast();
   const [modalVisable, setmodalVisable] = useState(false);
@@ -416,24 +413,16 @@ const Friends = (props) => {
         }}
         edges={["bottom", "left", "right", "top"]}
       >
-        <RefreshableWrapper
-          contentOffset={contentOffset}
-          managedLoading={true}
+        <AnimatedFlatList
+          refreshing={refreshing} // Added pull to refesh state
+          onRefresh={_refresh} // Added pull to refresh control
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicatorr={false}
+          nestedScrollEnabled={true}
           bounces={true}
-          defaultAnimationEnabled={true}
-          Loader={() => <RefreshView refreshing={refreshing} />}
-          isLoading={refreshing}
-          onRefresh={() => {
-            _refresh();
-          }}
-        >
-          <AnimatedFlatlist
-            style={{ flex: 1}}
-            showsHorizontalScrollIndicator={false}
-            showsVerticalScrollIndicatorr={false}
+          style={{ flex: 1, height: SCREEN_HEIGHT, width: SCREEN_WIDTH}}
             data={cameraData}
             extraData={cameraData}
-                    nestedScrollEnabled={true}
             scrollEventThrottle={16}
             ListEmptyComponent={
               isFriend == "1" && (
@@ -511,7 +500,6 @@ const Friends = (props) => {
               )
             }
           />
-        </RefreshableWrapper>
         <Modal
           visible={modalActionVisable}
           animationType="slide"

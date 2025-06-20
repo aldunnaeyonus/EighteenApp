@@ -371,7 +371,7 @@ const EditCamera = (props) => {
     ])
   );
 
-  const createEvent = () => {
+  const createEvent = async () => {
     props.navigation.setOptions({
       headerRight: () => (
         <ActivityIndicator color="black" size={"small"} animating={true} />
@@ -426,6 +426,7 @@ const EditCamera = (props) => {
     } else {
       formData.append("photoCount", "0");
     }
+    await AsyncStorage.setItem("uploadEnabled", "0");
 
     const preLoading = async () => {
       await axios({
@@ -441,7 +442,8 @@ const EditCamera = (props) => {
           "content-Type": "multipart/form-data",
         },
       })
-        .then((res) => {
+        .then(async (res) => {
+            await AsyncStorage.setItem("uploadEnabled", "1");
           const postLoading = async () => {
             setIsAI(false);
             await axiosPull._pullCameraFeed(props.route.params.user, "owner");

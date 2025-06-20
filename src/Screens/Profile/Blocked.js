@@ -4,25 +4,23 @@ import EmptyStateView from "@tttstudios/react-native-empty-state";
 import "moment-duration-format";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { storage } from "../../context/components/Storage";
-import Animated, { useSharedValue } from "react-native-reanimated";
+import Animated from "react-native-reanimated";
 import { useMMKVObject } from "react-native-mmkv";
 import { useToast } from "react-native-styled-toast";
 import BlockedItems from "../SubViews/friends/blockedItems";
 import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../i18n";
 import { axiosPull } from "../../utils/axiosPull";
-import RefreshableWrapper from "react-native-fresh-refresh";
-import RefreshView from "../../utils/refreshView";
 import { SearchBar } from "react-native-elements";
 import { getLocales } from "expo-localization";
 import { ActivityIndicator } from "react-native-paper";
+import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
 
 const Blocked = (props) => {
   const [friendData] = useMMKVObject("user.Friend.Blocked", storage);
-  const AnimatedFlatlist = Animated.FlatList;
+  const AnimatedFlatList = Animated.createAnimatedComponent(Animated.FlatList);
   const { toast } = useToast();
   const [user] = useMMKVObject("user.Data", storage);
-  const contentOffset = useSharedValue(0);
   const [refreshing, serRefreshing] = useState(false);
   const [search, setSearch] = useState("");
   const [friendDataTemp, setFriendDataTemp] = useMMKVObject(
@@ -108,26 +106,18 @@ const Blocked = (props) => {
 
   return (
     <SafeAreaProvider style={{ backgroundColor: "#fff" }}>
-      <RefreshableWrapper
-        contentOffset={contentOffset}
-        managedLoading={true}
-        bounces={true}
-        defaultAnimationEnabled={true}
-        Loader={() => <RefreshView refreshing={refreshing} />}
-        isLoading={refreshing}
-        onRefresh={() => {
-          _refresh();
-        }}
-      >
-        <AnimatedFlatlist
+        <AnimatedFlatList
+          refreshing={refreshing} // Added pull to refesh state
+          onRefresh={_refresh} // Added pull to refresh control
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicatorr={false}
+          nestedScrollEnabled={true}
+          bounces={true}
+          style={{ flex: 1, height: SCREEN_HEIGHT, width: SCREEN_WIDTH}}
           data={search.length > 0 ? friendDataTemp : friendData}
           extraData={search.length > 0 ? friendDataTemp : friendData}
           scrollEventThrottle={16}
           stickyHeaderIndices={[0]}
-                  nestedScrollEnabled={true}
-                              style={{ flex: 1}}
           ListHeaderComponent={
             <SearchBar
               inputContainerStyle={{ backgroundColor: "white" }}
@@ -162,7 +152,6 @@ const Blocked = (props) => {
             <BlockedItems index={index} item={item} unblock={unblock} />
           )}
         />
-      </RefreshableWrapper>
     </SafeAreaProvider>
   );
 };

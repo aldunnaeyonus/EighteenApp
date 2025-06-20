@@ -22,6 +22,7 @@ const Image = createImageProgress(FastImage);
 import Progress from "react-native-progress";
 import axios from "axios";
 import { axiosPull } from "../../utils/axiosPull";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ChangeData = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
@@ -69,7 +70,7 @@ const ChangeData = (props) => {
     } else{
       formData.append("avatar", String(icon));
     }
-
+    await AsyncStorage.setItem("uploadEnabled", "0");
   const postConclusion = async () => {
     await axios({
       method: "POST",
@@ -84,6 +85,7 @@ const ChangeData = (props) => {
         "content-Type": "multipart/form-data",
       },
     }).then(async (res) => {
+      await AsyncStorage.setItem("uploadEnabled", "1");
       updateStorage(user, 'user_avatar', (types == "1") ? String("SNAP18-avatar-" + user.user_id + "-" + icon.split("/").pop()) : icon, 'user.Data')
       props.navigation.setOptions({
         headerRight: () => (

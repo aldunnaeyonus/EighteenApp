@@ -4,26 +4,24 @@ import EmptyStateView from "@tttstudios/react-native-empty-state";
 import "moment-duration-format";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { storage } from "../../context/components/Storage";
-import Animated, { useSharedValue } from "react-native-reanimated";
+import Animated from "react-native-reanimated";
 import { useMMKVObject } from "react-native-mmkv";
 import { useToast } from "react-native-styled-toast";
 import AllFriendsListItem from "../SubViews/friends/allfriends";
 import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../i18n";
 import { axiosPull } from "../../utils/axiosPull";
-import RefreshableWrapper from "react-native-fresh-refresh";
-import RefreshView from "../../utils/refreshView";
 import { SearchBar } from "react-native-elements";
 import {TouchableOpacity} from "react-native";
 import { Icon } from "react-native-elements";
+import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
 
 
 const AllFriends = (props) => {
   const [friendData] = useMMKVObject("user.AllFriend.Feed", storage);
-  const AnimatedFlatlist = Animated.FlatList;
+  const AnimatedFlatList = Animated.createAnimatedComponent(Animated.FlatList);
   const { toast } = useToast();
   const [user] = useMMKVObject("user.Data", storage);
-  const contentOffset = useSharedValue(0);
   const [refreshing, serRefreshing] = useState(false);
   const [search, setSearch] = useState("");
   const [friendDataTemp, setFriendDataTemp] = useMMKVObject(
@@ -117,22 +115,14 @@ const AllFriends = (props) => {
 
   return (
     <SafeAreaProvider style={{ backgroundColor: "#fff" }}>
-      <RefreshableWrapper
-        contentOffset={contentOffset}
-        managedLoading={true}
-        bounces={true}
-        defaultAnimationEnabled={true}
-        Loader={() => <RefreshView refreshing={refreshing} />}
-        isLoading={refreshing}
-        onRefresh={() => {
-          _refresh();
-        }}
-      >
-        <AnimatedFlatlist
-          style={{ flex: 1 }}
+        <AnimatedFlatList
+          refreshing={refreshing} // Added pull to refesh state
+          onRefresh={_refresh} // Added pull to refresh control
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicatorr={false}
-                  nestedScrollEnabled={true}
+          nestedScrollEnabled={true}
+          bounces={true}
+          style={{ flex: 1, height: SCREEN_HEIGHT, width: SCREEN_WIDTH}}
           data={search.length > 0 ? friendDataTemp : friendData}
           extraData={search.length > 0 ? friendDataTemp : friendData}
           scrollEventThrottle={16}
@@ -177,7 +167,6 @@ const AllFriends = (props) => {
             />
           )}
         />
-      </RefreshableWrapper>
     </SafeAreaProvider>
   );
 };

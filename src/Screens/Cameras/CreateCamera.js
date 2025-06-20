@@ -368,7 +368,7 @@ const CreateCamera = (props) => {
     return result;
   };
 
-  const createEvent = () => {
+  const createEvent = async () => {
     props.navigation.setOptions({
       headerRight: () => (
         <ActivityIndicator color="black" size={"small"} animating={true} />
@@ -426,6 +426,7 @@ const CreateCamera = (props) => {
     });
     formData.append("photoName", fileName);
     formData.append("isAI", "0");
+    await AsyncStorage.setItem("uploadEnabled", "0");
 
     const preLoading = async () => {
       storage.set(
@@ -448,7 +449,8 @@ const CreateCamera = (props) => {
           Accept: "application/json",
           "content-Type": "multipart/form-data",
         },
-      }).then((res) => {
+      }).then(async (res) => {
+        await AsyncStorage.setItem("uploadEnabled", "1");
         const postLoading = async () => {
           storage.set(
             "uploadData",

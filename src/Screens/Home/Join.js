@@ -15,7 +15,7 @@ import { Icon } from "react-native-elements";
 
 
 const Join = (props) => {
-  const AnimatedFlatlist = Animated.FlatList;
+  const AnimatedFlatList = Animated.createAnimatedComponent(Animated.FlatList);
   const [title, setTitle] = useState("Join Event");
   const [refreshing, setRefreshing] = useState(true);
   const { toast } = useToast();
@@ -111,14 +111,15 @@ const Join = (props) => {
     <SafeAreaProvider
       style={{ backgroundColor: "#fff", width: SCREEN_WIDTH, height: SCREEN_HEIGHT }}
     >
-      <AnimatedFlatlist
-        showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicatorr={false}
+        <AnimatedFlatList
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicatorr={false}
+          nestedScrollEnabled={true}
+          bounces={true}
+          style={{ flex: 1, height: SCREEN_HEIGHT, width: SCREEN_WIDTH}}
         data={data}
-                    style={{ flex: 1}}
         extraData={data}
         scrollEventThrottle={16}
-                nestedScrollEnabled={true}
         renderItem={(item, index) => (
           <ListItem
               item={item}

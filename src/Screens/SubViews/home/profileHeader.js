@@ -53,7 +53,7 @@ const ProfileHeader = (props) => {
             </View>
           )}
           <Text style={style.name}>
-          {((props.name.toUpperCase()).length > 10) ? (((props.name.toUpperCase()).substring(0,maxlimit-3)) + '...') : props.name == null ? i18n.t("Profile Page") : props.name.toUpperCase()}
+          {((props.name.toUpperCase()).length > 10) ? (((props.name.toUpperCase()).substring(0,7)) + '...') : props.name == null ? i18n.t("Profile Page") : props.name.toUpperCase()}
           </Text>
         </View>
         <View style={style.container1}>

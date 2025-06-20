@@ -156,6 +156,7 @@ const onCheckVersion = () => {
     const fetchData = async () => {
       onCheckVersion();
       const owner = await AsyncStorage.getItem("user_id");
+      await AsyncStorage.setItem("uploadEnabled", "1");
       setOwner(owner);
       const logedIn = await AsyncStorage.getItem("logedIn");
       setSignIn(stringToBoolean(logedIn));

@@ -1,22 +1,20 @@
 import React, { useState, useCallback } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StyleSheet, Alert, View } from "react-native";
-import RefreshableWrapper from "react-native-fresh-refresh";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
 import { storage } from "../../context/components/Storage";
 import { useMMKVObject } from "react-native-mmkv";
-import Animated, { useSharedValue } from "react-native-reanimated";
-import RefreshView from "../../utils/refreshView";
+import Animated from "react-native-reanimated";
 import MemberListItem from "../SubViews/members/memberView";
 import { axiosPull } from "../../utils/axiosPull";
 import { useToast } from "react-native-styled-toast";
 import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../i18n";
 import { SearchBar } from "react-native-elements";
+import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
 
 const JoinedMembers = (props) => {
-  const AnimatedFlatlist = Animated.FlatList;
-  const contentOffset = useSharedValue(0);
+  const AnimatedFlatList = Animated.createAnimatedComponent(Animated.FlatList);
   const [data] = useMMKVObject(
     "user.Member.Join.Feed." + props.route.params.pin,
     storage
@@ -166,23 +164,17 @@ const JoinedMembers = (props) => {
 
   return (
     <SafeAreaProvider style={{ backgroundColor: "#fff", flex: 1 }}>
-      <RefreshableWrapper
-        contentOffset={contentOffset}
-        managedLoading={true}
-        bounces={true}
-        defaultAnimationEnabled={true}
-        Loader={() => <RefreshView refreshing={refreshing} />}
-        isLoading={refreshing}
-        onRefresh={_refresh}
-      >
-        <AnimatedFlatlist
-                    style={{ flex: 1}}
+        <AnimatedFlatList
+          refreshing={refreshing} // Added pull to refesh state
+          onRefresh={_refresh} // Added pull to refresh control
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicatorr={false}
+          nestedScrollEnabled={true}
+          bounces={true}
+          style={{ flex: 1, height: SCREEN_HEIGHT, width: SCREEN_WIDTH}}
           data={search.length > 0 ? friendDataTemp : data}
           extraData={search.length > 0 ? friendDataTemp : data}
           stickyHeaderIndices={[0]}
-                  nestedScrollEnabled={true}
           scrollEventThrottle={16}
           ListHeaderComponent={
             <SearchBar
@@ -229,7 +221,6 @@ const JoinedMembers = (props) => {
             />
           )}
         />
-      </RefreshableWrapper>
     </SafeAreaProvider>
   );
 };

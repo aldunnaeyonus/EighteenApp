@@ -17,9 +17,8 @@ import { ActivityIndicator } from "react-native-paper";
 import { MenuView } from "@react-native-menu/menu";
 import { constants, SCREEN_WIDTH } from "../../utils/constants";
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
-import RefreshableWrapper from "react-native-fresh-refresh";
+import { SCREEN_HEIGHT } from "../../utils/constants";
 import * as FileSystem from "expo-file-system";
-import RefreshView from "../../utils/refreshView";
 import Animated from "react-native-reanimated";
 import { getLocales } from "expo-localization";
 import * as ImagePicker from "expo-image-picker";
@@ -31,7 +30,7 @@ const ClosedCameras = (props) => {
   const [startDownload, setStartDownload] = useState(false);
   const [count, setCount] = useState(0);
   const [user] = useMMKVObject("user.Data", storage);
-  const AnimatedFlatList = Animated.FlatList;
+  const AnimatedFlatList = Animated.createAnimatedComponent(Animated.FlatList);
   let [localLang] = useState(getLocales()[0].languageCode);
   const [cameraStatus] = ImagePicker.useMediaLibraryPermissions();
 
@@ -385,17 +384,15 @@ const ClosedCameras = (props) => {
   };
   return (
     <View style={styles.container}>
-      <RefreshableWrapper
-        defaultAnimationEnabled={true}
-        Loader={() => <RefreshView />}
-        isLoading={refreshing}
-        onRefresh={() => {
-          _refresh();
-        }}
-      >
         <AnimatedFlatList
-          extraData={filteredDataSource}
+          refreshing={refreshing} // Added pull to refesh state
+          onRefresh={_refresh} // Added pull to refresh control
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicatorr={false}
           nestedScrollEnabled={true}
+          bounces={true}
+          style={{ flex: 1, height: SCREEN_HEIGHT, width: SCREEN_WIDTH}}
+          extraData={filteredDataSource}
           ListEmptyComponent={
             <View style={styles.empty}>
               <View style={styles.fake}>
@@ -413,7 +410,6 @@ const ClosedCameras = (props) => {
               />
             </View>
           }
-          style={{ flex: 1 }}
           data={filteredDataSource}
           keyExtractor={(item) => item.UUID}
           renderItem={Item}
@@ -441,7 +437,6 @@ const ClosedCameras = (props) => {
             </View>
           }
         />
-      </RefreshableWrapper>
     </View>
   );
 };
