@@ -16,8 +16,6 @@ import {
   Camera,
   PhotoFile,
   TakePhotoOptions,
-  runAtTargetFps,
-  useFrameProcessor,
   CameraProps,
   VideoFile,
 } from "react-native-vision-camera";
@@ -121,17 +119,6 @@ const VisionCamera = (props: {
     },
     [device?.supportsFocus]
   );
-
-  const frameProcessor = useFrameProcessor((frame) => {
-    "worklet";
-
-    runAtTargetFps(10, () => {
-      "worklet";
-      //console.log(`${frame.timestamp}: ${frame.width}x${frame.height} ${frame.pixelFormat} Frame (${frame.orientation})`)
-      //examplePlugin(frame)
-      // exampleKotlinSwiftPlugin(frame)
-    });
-  }, []);
 
   const SCALE_FULL_ZOOM = 3;
   const MAX_ZOOM_FACTOR = 10;
