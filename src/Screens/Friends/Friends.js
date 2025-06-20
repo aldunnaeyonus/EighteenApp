@@ -222,7 +222,18 @@ const Friends = (props) => {
       );
     } else {
       if ((await AsyncStorage.getItem("uploadEnabled")) == "1") {
-        openCloseModal();
+         props.navigation.navigate("CameraPage", {
+                  owner: owner,
+                  pin: pin,
+                  title: title,
+                  credits: credits,
+                  tCredits: tCredits,
+                  UUID: UUID,
+                  end: end,
+                  camera_add_social: camera_add_social,
+                  start: start,
+                  user: user.user_id,
+                });
       } else {
         Alert.alert(
           i18n.t("ActiveUpload"),

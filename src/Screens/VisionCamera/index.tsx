@@ -55,6 +55,7 @@ import axios from "axios";
 import { ViewStyle } from "react-native";
 import { getLocales } from "expo-localization";
 import { axiosPull } from "../../utils/axiosPull";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const VisionCamera = (props: {
   route: {
@@ -227,6 +228,7 @@ const VisionCamera = (props: {
 
     const postConclusion = async () => {
       storage.set("uploadData", JSON.stringify({"message": i18n.t("Uploading") + " " + i18n.t("PleaseWait"), "display":"flex", "image":path}));
+      await AsyncStorage.setItem("uploadEnabled", "0");
       await axios({
         method: "POST",
         url: constants.url + "/camera/upload.php",
@@ -235,7 +237,8 @@ const VisionCamera = (props: {
           Accept: "application/json",
           "content-Type": "multipart/form-data",
         },
-      }).then((res) => {
+      }).then(async (res) => {
+        await AsyncStorage.setItem("uploadEnabled", "1");
         const postLoading = async () => {
         storage.set("uploadData", JSON.stringify({"message": "", "display":"none", "image":""}));
         await axiosPull._pullGalleryFeed(props.route.params.pin, props.route.params.user);
@@ -387,7 +390,6 @@ const VisionCamera = (props: {
               format={format}
               enableLocation={location.hasPermission}
               lowLightBoost={canToggleNightMode}
-              frameProcessor={frameProcessor}
             />
           </TapGestureHandler>
         </Reanimated.View>
