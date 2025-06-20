@@ -161,7 +161,6 @@ const FriendListItem = (props) => {
               containerStyle={{
                 alignSelf: "flex-end",
                 width: 40,
-                paddingTop: 5,
                 height: 40,
                 marginRight: 5,
                 marginTop: 5,

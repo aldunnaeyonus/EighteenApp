@@ -50,7 +50,7 @@ const PhotoViewer = (props) => {
   const _gotoShare = async (image) => {
     const shareOptions = {
       url: image,
-      title: ""
+      title: "",
     };
     try {
       const ShareResponse = await Share.share(shareOptions);
@@ -245,7 +245,12 @@ const PhotoViewer = (props) => {
           horizontal
           getItemLayout={getItemLayoutBottom}
           keyExtractor={(item) => item.image_id}
-          style={{ position: "absolute", bottom: 90, width: SCREEN_WIDTH, flex: 1 }}
+          style={{
+            position: "absolute",
+            bottom: 90,
+            width: SCREEN_WIDTH,
+            flex: 1,
+          }}
           extraData={galleryData}
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ paddingHorizontal: 10 }}
@@ -264,17 +269,15 @@ const PhotoViewer = (props) => {
         <View
           style={{
             position: "absolute",
-            right: 15,
+            right: 10,
             zIndex: 2,
-            top: 30,
-            padding: 10,
+            top: 40,
             borderRadius: 5,
-            backgroundColor: "rgba(0, 0, 0, 0.40)",
-            flexDirection: "row",
-            gap: 20,
+            flexDirection: "column",
+            justifyContent: "flex-end",
+            backgroundColor: "transparent",
           }}
         >
-          {galleryData[activeIndex].user_id != props.route.params.user && (
             <TouchableOpacity
               onPress={() => {
                 _hideContent();
@@ -285,22 +288,38 @@ const PhotoViewer = (props) => {
                 name={"hide-image"}
                 size={25}
                 color="white"
+                containerStyle={{
+                  alignSelf: "flex-end",
+                  width: 40,
+                  paddingTop: 5,
+                  height: 40,
+                  marginRight: 5,
+                  borderTopRightRadius: 5,
+                  borderTopLeftRadius: 5,
+                  backgroundColor: "rgba(0, 0, 0, 0.60)",
+                }}
               />
             </TouchableOpacity>
-          )}
-          {galleryData[activeIndex].user_id != props.route.params.user && (
             <TouchableOpacity
               onPress={() => {
                 _reportContent();
               }}
             >
-              <Icon 
-                type={"material"} 
-                name={"report-problem"} 
-                size={25} 
-                color="white" />
+              <Icon
+                type={"material"}
+                name={"report-problem"}
+                size={25}
+                color="white"
+                containerStyle={{
+                  alignSelf: "flex-end",
+                  width: 40,
+                  paddingTop: 5,
+                  height: 40,
+                  marginRight: 5,
+                  backgroundColor: "rgba(0, 0, 0, 0.60)",
+                }}
+              />
             </TouchableOpacity>
-          )}
           {props.route.params.share == "1" ||
           props.route.params.owner == props.route.params.user ? (
             <TouchableOpacity
@@ -313,6 +332,14 @@ const PhotoViewer = (props) => {
                 size={25}
                 name="share"
                 color="#fff"
+                containerStyle={{
+                  alignSelf: "flex-end",
+                  width: 40,
+                  paddingTop: 5,
+                  height: 40,
+                  marginRight: 5,
+                  backgroundColor: "rgba(0, 0, 0, 0.60)",
+                }}
               />
             </TouchableOpacity>
           ) : (
@@ -323,7 +350,21 @@ const PhotoViewer = (props) => {
               props.navigation.goBack();
             }}
           >
-            <Icon name={"close"} size={25} color="white" />
+            <Icon 
+            name={"close"} 
+            size={25} 
+            color="white" 
+            containerStyle={{
+                  alignSelf: "flex-end",
+                  width: 40,
+                  paddingTop: 5,
+                  height: 40,
+                  marginRight: 5,
+                  borderBottomRightRadius: 5,
+                  borderBottomLeftRadius: 5,
+                  backgroundColor: "rgba(0, 0, 0, 0.60)",
+                }}
+            />
           </TouchableOpacity>
         </View>
       </SafeAreaView>
