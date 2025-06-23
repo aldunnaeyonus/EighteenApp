@@ -164,7 +164,7 @@ const onCheckVersion = () => {
       new NotifService();
       await axiosPull._getProStatus(owner, Platform.OS);
       }else{
-          storage.set("uploadData", JSON.stringify({"message": "", "display":"none", "image":""}));
+          storage.set("uploadData", JSON.stringify({"message": "", "display":"none", "image":"", "progress":""}));
           storage.set("user.Join.Feed", JSON.stringify([]));
           storage.set("user.Friend.Feed", JSON.stringify([]));
           storage.set("user.Camera.Feed", JSON.stringify([]));
