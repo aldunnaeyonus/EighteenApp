@@ -367,6 +367,20 @@ const CreateCamera = (props) => {
     }
     return result;
   };
+const handleProgressUpdate = (progressEvent) => {
+   let {loaded, total} = progressEvent;
+   const percentCompleted = progressEvent.total ? Math.max(Math.round((loaded * 100) / total) - 5, 0) : 0;
+   storage.set(
+        "uploadData",
+        JSON.stringify({
+          message: i18n.t("CreatingEvent") + " " + i18n.t("PleaseWait"),
+          display: "flex",
+          image: image,
+          progress: percentCompleted
+        }),
+      );
+}, 100); // Wait 100ms before calling the update function
+
 
   const createEvent = async () => {
     props.navigation.setOptions({
@@ -429,22 +443,13 @@ const CreateCamera = (props) => {
     await AsyncStorage.setItem("uploadEnabled", "0");
 
     const preLoading = async () => {
-      storage.set(
-        "uploadData",
-        JSON.stringify({
-          message: i18n.t("CreatingEvent") + " " + i18n.t("PleaseWait"),
-          display: "flex",
-          image: image,
-        })
-      );
       await axios({
         method: "POST",
         url: constants.url + "/camera/create.php",
         data: formData,
         onUploadProgress: progressEvent => {
-        let {loaded, total} = progressEvent;
-        console.log((loaded / total) * 100)
-    },
+          handleProgressUpdate(progressEvent);
+        },
         headers: {
           Accept: "application/json",
           "content-Type": "multipart/form-data",
@@ -454,7 +459,7 @@ const CreateCamera = (props) => {
         const postLoading = async () => {
           storage.set(
             "uploadData",
-            JSON.stringify({ message: "", display: "none", image: "" })
+            JSON.stringify({ message: "", display: "none", image: "", "" }),
           );
           await CameraRoll.saveAsset(image);
           await axiosPull._pullGalleryFeed(pin, user.user_id);
