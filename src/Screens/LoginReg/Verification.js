@@ -82,7 +82,7 @@ const Verification = (props) => {
                 padding: 7,
                 height: 44,
                 backgroundColor: "rgba(0, 0, 0, 0.60)",
-                borderRadius: 20,
+                borderRadius: 22,
               }}
               textStyle={{ color: "white" }}
             />
