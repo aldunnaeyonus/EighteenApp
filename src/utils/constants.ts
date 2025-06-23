@@ -6,12 +6,12 @@ import moment from "moment/min/moment-with-locales"
 
 
 export const MIN_MS = 60000;
-export const camera_time_text = ["8 Hours", "18 Hours", "36 Hours"];
+export const camera_time_text = ["8 Hours", "18 Hours", "36 Hours", "48 Hours"];
 export const camera_time_text_PRO = ["1 Day", "2 Days", "1 Week", "2 Weeks", "1 Month"];
-export const camera_time_seconds = ["28800", "64800", "129600",];
+export const camera_time_seconds = ["28800", "64800", "129600","172800"];
 export const camera_time_seconds_PRO = ["86400", "432000", "604800","1209600", "2678400"];
-export const camera_amount = ["1", "2", "3", "4", "5", "10", "15", "18"];
-export const media_amount = ["1", "2", "3", "4", "5", "10", "15", "18"];
+export const camera_amount = ["0", "1", "2", "3", "4", "5", "10", "15", "18"];
+export const media_amount = ["0", "1", "2", "3", "4", "5", "10", "15", "18"];
 export const camera_amount_PRO = ["10", "18", "25", "50", "100", "150", "250", "500", "1000"];
 export const languages = ["French","German","Italian","Dutch","Danish","Polish","Portuguese","Norwegian","Swedish","Finish","English","Spanish", "Japanese", "Chinese", "Ukrainian", "Greek", "South Korean"];
 export const badWords = ["nude","boobs","boobies", "titties","tits", "titts", "penis","dick","pussy","vagina","add","naked","flesh","sex","blow-job", "blow job", "blowjob", "nipple", "sex", "sexual", "sexually", "ass", "porn", "petofillia", "sexually", "exploit", "bestiality", "sexual", "illegal sexual", "fetishes", "Marijuana", "drugs", "death", "Alcohol", "Tobacco", "smoking", "creepshots", "dildos"];
