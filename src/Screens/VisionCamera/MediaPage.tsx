@@ -132,7 +132,7 @@ const MediaPage = (props: {
     });
 
     const postConclusion = async () => {
-            storage.set("uploadData", JSON.stringify({"message": i18n.t("Uploading") + " " + i18n.t("PleaseWait"), "display":"flex", "image":source.uri}));
+            storage.set("uploadData", JSON.stringify({"message": i18n.t("Uploading") + " " + i18n.t("PleaseWait"), "display":"flex", "image":source.uri, progress:""}));
       await axios({
         method: "POST",
         url: constants.url + "/camera/upload.php",
@@ -143,7 +143,7 @@ const MediaPage = (props: {
         },
       }).then(async (res) => {
         const postLoading = async () => {
-          storage.set("uploadData", JSON.stringify({"message": "", "display":"none", "image":""}));
+          storage.set("uploadData", JSON.stringify({"message": "", "display":"none", "image":"",  progress:""}));
         await CameraRoll.saveAsset(source.uri);
         await axiosPull._pullGalleryFeed(props.route.params.pin, props.route.params.user);
         await axiosPull._pullFriendCameraFeed(props.route.params.owner, "user", props.route.params.user);
