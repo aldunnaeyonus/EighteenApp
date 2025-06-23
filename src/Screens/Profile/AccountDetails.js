@@ -16,6 +16,7 @@ const AccountDetails = (props) => {
   const [motto, setMootto] = useState(user.user_motto);
   const [handle, setHandle] = useState(user.user_handle);
   const [switch4, setSwitch4] = useState((user.privacy == "1" ? true : false));
+  const [switch5, setSwitch5] = useState((user.mevms == "1" ? true : false));
   const isFocused = useIsFocused();
 
   useEffect(() => {
@@ -44,12 +45,15 @@ const AccountDetails = (props) => {
       motto,
       handle,
       switch4,
+      switch5,
     ]);
 
   const toggleSwitch4 = () => {
     setSwitch4(!switch4);
   };
-
+  const toggleSwitch5 = () => {
+    setSwitch4(!switch5);
+  };
   const _saveUserData = async () => {
     props.navigation.setOptions({
       headerRight: () => (
@@ -62,6 +66,7 @@ const AccountDetails = (props) => {
       handle: handle,
       motto: motto,
       privacy: switch4 ? "1" : "0",
+      mevms: switch5 ? "1" : "0",
     };
     const response = await axiosPull.postData("/users/save.php", data);
     if (response[0].errorMessage == "logout") {
@@ -258,6 +263,42 @@ const AccountDetails = (props) => {
               style={{ alignSelf: "flex-end" }}
               value={switch4}
               onValueChange={(value) => toggleSwitch4(value)}
+            />
+          </ListItem.Content>
+        </ListItem>
+
+        <View style={[styles.dividerStyle]} />
+        <ListItem key="14">
+          <Icon
+            type="material"
+            name="privacy-tip"
+            size={25}
+            color="#3D4849"
+            containerStyle={{
+              width: 28,
+              height: 28,
+              borderRadius: 6,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          />
+          <ListItem.Content>
+            <ListItem.Title style={styles.imageUserNameTitleBlack}>
+              {i18n.t("Show Active Member Events")}
+            </ListItem.Title>
+            <ListItem.Subtitle>{i18n.t("Show Active Member Events Description")}</ListItem.Subtitle>
+          </ListItem.Content>
+        </ListItem>
+        <View style={[styles.dividerStyle]} />
+        <ListItem
+          containerStyle={{ height: 65, backgroundColor: "#fafbfc" }}
+          key="17"
+        >
+          <ListItem.Content>
+            <Switch
+              style={{ alignSelf: "flex-end" }}
+              value={switch5}
+              onValueChange={(value) => toggleSwitch5(value)}
             />
           </ListItem.Content>
         </ListItem>
