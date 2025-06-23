@@ -214,7 +214,7 @@ const VisionCamera = (props: {
     });
 
     const postConclusion = async () => {
-      storage.set("uploadData", JSON.stringify({"message": i18n.t("Uploading") + " " + i18n.t("PleaseWait"), "display":"flex", "image":path}));
+      storage.set("uploadData", JSON.stringify({"message": i18n.t("Uploading") + " " + i18n.t("PleaseWait"), "display":"flex", "image":path, "progress":""}));
       await AsyncStorage.setItem("uploadEnabled", "0");
       await axios({
         method: "POST",
@@ -227,7 +227,7 @@ const VisionCamera = (props: {
       }).then(async (res) => {
         await AsyncStorage.setItem("uploadEnabled", "1");
         const postLoading = async () => {
-        storage.set("uploadData", JSON.stringify({"message": "", "display":"none", "image":""}));
+        storage.set("uploadData", JSON.stringify({"message": "", "display":"none", "image":"", progress:""}));
         await axiosPull._pullGalleryFeed(props.route.params.pin, props.route.params.user);
         await axiosPull._pullFriendCameraFeed(props.route.params.owner, "user", props.route.params.user);
         await axiosPull._pullCameraFeed(props.route.params.user, "owner");
