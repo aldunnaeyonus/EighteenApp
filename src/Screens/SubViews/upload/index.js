@@ -27,7 +27,7 @@ export const handleUpload = async (
     },
     color: "#ff00ff",
   };
-  storage.set("uploadData", JSON.stringify({"message": message, "display":"flex", "image":umageURI}));
+  storage.set("uploadData", JSON.stringify({"message": message, "display":"flex", "image":umageURI, "progress: ""}));
 
   await BackgroundService.start(async () => {
     await axios({
