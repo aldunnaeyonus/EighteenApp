@@ -320,5 +320,7 @@
     "EventEnded": "Event Ended ",
     "ActiveUpload":"Active Upload",
     "WhileActiveUpload":"A file is currently uploading. If you leave now, you risk losing your upload.",
-    "or":"-- OR --"
+    "or":"-- OR --",
+    "Show Active Member Events Description":"“Display events that your active members are hosting directly on your main event screen.",
+    "Show Active Member Events":"Active Member Events"
 }			
