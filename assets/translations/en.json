@@ -321,7 +321,9 @@
     "ActiveUpload":"Active Upload",
     "WhileActiveUpload":"A file is currently uploading. If you leave now, you risk losing your upload.",
     "or":"-- OR --",
-    "Show Active Member Events Description":"“Display events that your active members are hosting directly on your main event screen.",
+    "Show Active Member Events Description":"Display events that your active members are hosting directly on your main event screen.",
     "Show Active Member Events":"Active Member Events",
-    "LongWaitTime": "Server response is taking longer than usual. Please hang tight—we’re still trying to connect and sync your media."
+    "LongWaitTime": "Server response is taking longer than usual. Please hang tight—we are still trying to connect and sync your media.",
+    "Hidden Email":"Hidden Email Option",
+    "HIddenEmail":"You've chosen to hide your email. To log in next time, please select the Login with Hidden Email option."
 }			

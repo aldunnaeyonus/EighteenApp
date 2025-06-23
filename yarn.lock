@@ -3872,6 +3872,11 @@ abort-controller@^3.0.0:
   dependencies:
     event-target-shim "^5.0.0"
 
+abs-svg-path@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/abs-svg-path/-/abs-svg-path-0.1.1.tgz#df601c8e8d2ba10d4a76d625e236a9a39c2723bf"
+  integrity sha512-d8XPSGjfyzlXC3Xx891DJRyZfqk5JU0BJrDQcsWomFIV1/BIzPW5HDH5iDdWpqWaav0YVIEzT1RHTwWr0FFshA==
+
 accepts@^1.3.7, accepts@^1.3.8, accepts@~1.3.7:
   version "1.3.8"
   resolved "https://registry.yarnpkg.com/accepts/-/accepts-1.3.8.tgz#0bf0be125b67014adcb0b0921e62db7bffe16b2e"
@@ -4998,6 +5003,11 @@ core-js-compat@^3.38.0, core-js-compat@^3.38.1:
   dependencies:
     browserslist "^4.24.2"
 
+core-js@^3.43.0:
+  version "3.43.0"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.43.0.tgz#f7258b156523208167df35dea0cfd6b6ecd4ee88"
+  integrity sha512-N6wEbTTZSYOY2rYAn85CuvWWkCK6QweMn7/4Nr3w+gDBeBhk/x4EJeY6FPo4QzDoJZxVTv8U7CMvgWk6pOHHqA==
+
 core-util-is@~1.0.0:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.3.tgz#a6042d3634c2b27e9328f837b965fac83808db85"
@@ -6024,6 +6034,11 @@ execa@^5.0.0, execa@^5.1.1:
     signal-exit "^3.0.3"
     strip-final-newline "^2.0.0"
 
+expo-apple-authentication@^7.2.4:
+  version "7.2.4"
+  resolved "https://registry.yarnpkg.com/expo-apple-authentication/-/expo-apple-authentication-7.2.4.tgz#fd66339064de8d81526ec9d58d2fae8ebf87f088"
+  integrity sha512-T2agaLLPT4Ax97FeXImB7BCCEzEJ0gB+ZwlFa/FXBtbp6WFKcGRlTVKiX2YPYLZzN5QjXcmQ9HHJ17jRthNHMg==
+
 expo-application@^5.9.1:
   version "5.9.1"
   resolved "https://registry.yarnpkg.com/expo-application/-/expo-application-5.9.1.tgz#a12e0cf2741b6f084cc49cd0121ad0a70c770459"
@@ -6110,10 +6125,10 @@ expo-modules-core@1.12.26:
   dependencies:
     invariant "^2.2.4"
 
-expo-secure-store@~13.0.2:
-  version "13.0.2"
-  resolved "https://registry.yarnpkg.com/expo-secure-store/-/expo-secure-store-13.0.2.tgz#ba8f6076fc38062a28bb2ce5edab9cd28ef88598"
-  integrity sha512-3QYgoneo8p8yeeBPBiAfokNNc2xq6+n8+Ob4fAlErEcf4H7Y72LH+K/dx0nQyWau2ZKZUXBxyyfuHFyVKrEVLg==
+expo-secure-store@^14.2.3:
+  version "14.2.3"
+  resolved "https://registry.yarnpkg.com/expo-secure-store/-/expo-secure-store-14.2.3.tgz#8e74da512e671cec5f7b88679def3d54b59cd49d"
+  integrity sha512-hYBbaAD70asKTFd/eZBKVu+9RTo9OSTMMLqXtzDF8ndUGjpc6tmRCoZtrMHlUo7qLtwL5jm+vpYVBWI8hxh/1Q==
 
 expo-status-bar@~1.12.1:
   version "1.12.1"
@@ -7870,6 +7885,11 @@ just-diff@^6.0.0:
   resolved "https://registry.yarnpkg.com/just-diff/-/just-diff-6.0.2.tgz#03b65908543ac0521caf6d8eb85035f7d27ea285"
   integrity sha512-S59eriX5u3/QhMNq3v/gm8Kd0w8OS6Tz2FS1NG4blv+z0MuQcBRJyFWjdovM0Rad4/P4aUPFtnkNjMjyMlMSYA==
 
+jwt-decode@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/jwt-decode/-/jwt-decode-4.0.0.tgz#2270352425fd413785b2faf11f6e755c5151bd4b"
+  integrity sha512-+KJGIyHgkGuIq3IEBNftfhW/LfWhXUIY6OmyVWjliu5KH1y0fw7VQ8YndE2O4qZdMSd9SqbnC8GOcZEy0Om7sA==
+
 keyv@^4.5.4:
   version "4.5.4"
   resolved "https://registry.yarnpkg.com/keyv/-/keyv-4.5.4.tgz#a879a99e29452f942439f2a405e3af8b31d4de93"
@@ -9390,6 +9410,13 @@ normalize-path@^3.0.0:
   resolved "https://registry.yarnpkg.com/normalize-path/-/normalize-path-3.0.0.tgz#0dcd69ff23a1c9b11fd0978316644a0388216a65"
   integrity sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==
 
+normalize-svg-path@^1.0.1:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/normalize-svg-path/-/normalize-svg-path-1.1.0.tgz#0e614eca23c39f0cffe821d6be6cd17e569a766c"
+  integrity sha512-r9KHKG2UUeB5LoTouwDzBy2VxXlHsiM6fyLQvnJa0S5hrhzqElH/CH7TUGhT1fVvIYBIKf3OpY4YJ4CK+iaqHg==
+  dependencies:
+    svg-arc-to-cubic-bezier "^3.0.0"
+
 npm-audit-report@^6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/npm-audit-report/-/npm-audit-report-6.0.0.tgz#0262e5e2b674fabf0ea47e900fc7384b83de0fbb"
@@ -9956,6 +9983,11 @@ parse-png@^2.1.0:
   dependencies:
     pngjs "^3.3.0"
 
+parse-svg-path@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/parse-svg-path/-/parse-svg-path-0.1.2.tgz#7a7ec0d1eb06fa5325c7d3e009b859a09b5d49eb"
+  integrity sha512-JyPSBnkTJ0AI8GGJLfMXvKq42cj5c006fnLz6fXy6zfoVjJizi8BNTpu8on8ziI1cKy9d9DGNuY17Ce7wuejpQ==
+
 parseurl@~1.3.3:
   version "1.3.3"
   resolved "https://registry.yarnpkg.com/parseurl/-/parseurl-1.3.3.tgz#9da19e7bee8d12dff0513ed5b76957793bc2e8d4"
@@ -10434,6 +10466,13 @@ react-native-blob-util@0.19.11:
     base-64 "0.1.0"
     glob "^10.3.10"
 
+react-native-circular-progress-indicator@^4.4.2:
+  version "4.4.2"
+  resolved "https://registry.yarnpkg.com/react-native-circular-progress-indicator/-/react-native-circular-progress-indicator-4.4.2.tgz#5475d045950e6fcc622e54fb63863b274790fb8e"
+  integrity sha512-BlgshzIIIk0TP/CZY+5oyRsHl2Sb2l6cK5tzfmrVETfn6pN8dhOKrV0i3Z6i0SM8wRgncdUUSRBpCPAexh7JoQ==
+  dependencies:
+    react-native-redash "*"
+
 react-native-circular-progress@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/react-native-circular-progress/-/react-native-circular-progress-1.4.1.tgz#46d94e73e5973bb415937b912ba56ce1947f66b7"
@@ -10656,6 +10695,15 @@ react-native-reanimated@~3.15.2:
     "@babel/preset-typescript" "^7.16.7"
     convert-source-map "^2.0.0"
     invariant "^2.2.4"
+
+react-native-redash@*:
+  version "18.1.3"
+  resolved "https://registry.yarnpkg.com/react-native-redash/-/react-native-redash-18.1.3.tgz#725c3efc1908425f1579d8103c27ded94d03e8f6"
+  integrity sha512-RKdmAjs87iwA8iD7UOQ11rlQL+tZh56O5+5cV1M37Jk+4uH1Fvs22G3Q5v/wGx+0ncwz3wMolLLCezONOodTlA==
+  dependencies:
+    abs-svg-path "^0.1.1"
+    normalize-svg-path "^1.0.1"
+    parse-svg-path "^0.1.2"
 
 react-native-safe-area-context@4.11.0:
   version "4.11.0"
@@ -12119,6 +12167,11 @@ supports-preserve-symlinks-flag@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz#6eda4bd344a3c94aea376d4cc31bc77311039e09"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
+
+svg-arc-to-cubic-bezier@^3.0.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/svg-arc-to-cubic-bezier/-/svg-arc-to-cubic-bezier-3.2.0.tgz#390c450035ae1c4a0104d90650304c3bc814abe6"
+  integrity sha512-djbJ/vZKZO+gPoSDThGNpKDO+o+bAeA4XQKovvkNCqnIS2t+S4qnLAGQhyyrulhCFRl1WWzAp0wUDV8PpTVU3g==
 
 svg-parser@^2.0.4:
   version "2.0.4"

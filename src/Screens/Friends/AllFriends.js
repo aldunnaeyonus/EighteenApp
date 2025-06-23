@@ -51,12 +51,12 @@ const AllFriends = (props) => {
              }}  >
             <Icon
               type="material-community"
-              size={30}
+              size={25}
               name="cloud-search-outline"
               color="#3D4849"
               containerStyle={{
-                padding: 0,
                 height: 44,
+                top:5
               }}
             />
           </TouchableOpacity>

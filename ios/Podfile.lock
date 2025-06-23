@@ -10,6 +10,8 @@ PODS:
     - React-Core
   - Expo (51.0.39):
     - ExpoModulesCore
+  - ExpoAppleAuthentication (7.2.4):
+    - ExpoModulesCore
   - ExpoAsset (10.0.10):
     - ExpoModulesCore
   - ExpoFileSystem (17.0.1):
@@ -1581,6 +1583,7 @@ DEPENDENCIES:
   - EXConstants (from `../node_modules/expo-constants/ios`)
   - EXImageLoader (from `../node_modules/expo-image-loader/ios`)
   - Expo (from `../node_modules/expo`)
+  - ExpoAppleAuthentication (from `../node_modules/expo-apple-authentication/ios`)
   - ExpoAsset (from `../node_modules/expo-asset/ios`)
   - ExpoFileSystem (from `../node_modules/expo-file-system/ios`)
   - ExpoFont (from `../node_modules/expo-font/ios`)
@@ -1701,6 +1704,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-image-loader/ios"
   Expo:
     :path: "../node_modules/expo"
+  ExpoAppleAuthentication:
+    :path: "../node_modules/expo-apple-authentication/ios"
   ExpoAsset:
     :path: "../node_modules/expo-asset/ios"
   ExpoFileSystem:
@@ -1893,6 +1898,7 @@ SPEC CHECKSUMS:
   EXConstants: 409690fbfd5afea964e5e9d6c4eb2c2b59222c59
   EXImageLoader: ab589d67d6c5f2c33572afea9917304418566334
   Expo: 8c995afb875c15bf8439af0b20bcb9ed8f90d0bd
+  ExpoAppleAuthentication: 7e358fcbcbacb7685cddb0bbeede0acd677e58f6
   ExpoAsset: 323700f291684f110fb55f0d4022a3362ea9f875
   ExpoFileSystem: 80bfe850b1f9922c16905822ecbf97acd711dc51
   ExpoFont: 00756e6c796d8f7ee8d211e29c8b619e75cbf238

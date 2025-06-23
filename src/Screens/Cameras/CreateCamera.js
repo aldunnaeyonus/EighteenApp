@@ -80,6 +80,7 @@ const CreateCamera = (props) => {
   const [cameraStatus] = ImagePicker.useCameraPermissions();
   const [libraryStatus] = ImagePicker.useMediaLibraryPermissions();
   const [seed, setSeed] = useState(72);
+  const [percent, setPrecent] = useState(0);
 
   const MODE_VALUES = Platform.select({
     ios: Object.values(IOS_MODE),
@@ -369,17 +370,8 @@ const CreateCamera = (props) => {
   };
 const handleProgressUpdate = (progressEvent) => {
    let {loaded, total} = progressEvent;
-   const percentCompleted = progressEvent.total ? Math.max(Math.round((loaded * 100) / total) - 5, 0) : 0;
-   storage.set(
-        "uploadData",
-        JSON.stringify({
-          message: i18n.t("CreatingEvent") + " " + i18n.t("PleaseWait"),
-          display: "flex",
-          image: image,
-          progress: percentCompleted
-        }),
-      );
-}, 100); // Wait 100ms before calling the update function
+   setPrecent(total ? Math.max(Math.round((loaded * 100) / total) - 5, 0) : 0);
+} 
 
 
   const createEvent = async () => {
@@ -443,12 +435,21 @@ const handleProgressUpdate = (progressEvent) => {
     await AsyncStorage.setItem("uploadEnabled", "0");
 
     const preLoading = async () => {
+       storage.set(
+        "uploadData",
+        JSON.stringify({
+          message: i18n.t("CreatingEvent") + " " + i18n.t("PleaseWait"),
+          display: "flex",
+          image: image,
+          progress: 0
+        })
+      )
       await axios({
         method: "POST",
         url: constants.url + "/camera/create.php",
         data: formData,
         onUploadProgress: progressEvent => {
-          handleProgressUpdate(progressEvent);
+          //handleProgressUpdate(progressEvent);
         },
         headers: {
           Accept: "application/json",

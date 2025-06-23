@@ -67,7 +67,7 @@ const PhotoGallery = (props) => {
 
   const [uploading] = useMMKVObject("uploadData", storage);
 
-  const handleProgressUpdate = (progressEvent) => {
+  const handleProgressUpdate = ((progressEvent) => {
    let {loaded, total} = progressEvent;
    const percentCompleted = progressEvent.total ? Math.max(Math.round((loaded * 100) / total) - 5, 0) : 0;
    storage.set(

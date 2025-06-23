@@ -23,6 +23,7 @@ const IOSPermissions = () => {
     check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE).then((status) => {
       setAccuracy(status);
     });
+    
   };
 
   const checkMic = () => {
@@ -43,7 +44,8 @@ const IOSPermissions = () => {
       checkCamera();
       checkMic();
       checkAccuracy();
-        if (
+
+      if (
           camera == "granted" &&
           mic == "granted" &&
           photo == "granted" &&

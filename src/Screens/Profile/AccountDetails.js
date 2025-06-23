@@ -66,7 +66,7 @@ const AccountDetails = (props) => {
       handle: handle,
       motto: motto,
       privacy: switch4 ? "1" : "0",
-      mevms: switch5 ? "1" : "0",
+      showActive: switch5 ? "1" : "0",
     };
     const response = await axiosPull.postData("/users/save.php", data);
     if (response[0].errorMessage == "logout") {
@@ -256,7 +256,7 @@ const AccountDetails = (props) => {
         <View style={[styles.dividerStyle]} />
         <ListItem
           containerStyle={{ height: 65, backgroundColor: "#fafbfc" }}
-          key="17"
+          key="18"
         >
           <ListItem.Content>
             <Switch
