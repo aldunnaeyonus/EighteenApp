@@ -67,6 +67,20 @@ const PhotoGallery = (props) => {
 
   const [uploading] = useMMKVObject("uploadData", storage);
 
+  const handleProgressUpdate = (progressEvent) => {
+   let {loaded, total} = progressEvent;
+   const percentCompleted = progressEvent.total ? Math.max(Math.round((loaded * 100) / total) - 5, 0) : 0;
+   storage.set(
+        "uploadData",
+        JSON.stringify({
+          message: i18n.t("CreatingEvent") + " " + i18n.t("PleaseWait"),
+          display: "flex",
+          image: image,
+          progress: percentCompleted
+        }),
+      );
+}, 100); // Wait 100ms before calling the update function
+  
   const createEvent = async () => {
     setAnimating(false);
     var formData = new FormData();
@@ -92,22 +106,13 @@ const PhotoGallery = (props) => {
     });
 
     const postConclusion = async () => {
-      storage.set(
-        "uploadData",
-        JSON.stringify({
-          message: i18n.t("Uploading") + " " + i18n.t("PleaseWait"),
-          display: "flex",
-          image: pickedImages[0],
-        })
-      );
       await AsyncStorage.setItem("uploadEnabled", "0");
       await axios({
         method: "POST",
         url: constants.url + "/camera/upload.php",
         data: formData,
         onUploadProgress: (progressEvent) => {
-          let { loaded, total } = progressEvent;
-          console.log((loaded / total) * 100);
+            handleProgressUpdate(progressEvent);
         },
         headers: {
           Accept: "application/json",
@@ -118,7 +123,7 @@ const PhotoGallery = (props) => {
         const postLoading = async () => {
           storage.set(
             "uploadData",
-            JSON.stringify({ message: "", display: "none", image: "" })
+            JSON.stringify({ message: "", display: "none", image: "", progress: "" })
           );
           await axiosPull._pullGalleryFeed(
             props.route.params.pin,
