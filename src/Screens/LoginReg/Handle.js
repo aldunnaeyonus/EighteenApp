@@ -256,8 +256,8 @@ const Handle = (props) => {
                     //await createAccount(cachedName, credential.user, credential.identityToken);
                 } else {
                     //await createAccount(
-                        credential.fullName.givenName, credential.user, credential.identityToken,
-                    );
+                       // credential.fullName.givenName, credential.user, credential.identityToken,
+                    //);
                 }
             } catch (error) {
                 if (error.code === 'ERR_CANCELED') {
