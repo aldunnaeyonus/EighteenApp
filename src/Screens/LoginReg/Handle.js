@@ -13,6 +13,7 @@ import * as RNLocalize from "react-native-localize";
 import { getLocales } from 'expo-localization';
 import { SCREEN_WIDTH, constants } from "../../utils/constants";
 import ProFooter from "../SubViews/store/ProFooter";
+import * as AppleAuthentication from 'expo-apple-authentication';
 
 
 const Handle = (props) => {
@@ -232,6 +233,40 @@ const Handle = (props) => {
               {isLoading ? i18n.t("Loading") : i18n.t("Continue")}
             </Text>
           </TouchableOpacity>
+          <Text style={styles.smalltitleText}>{i18n.t("or")}</Text>
+       <AppleAuthentication.AppleAuthenticationButton
+        buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
+        buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
+        cornerRadius={8}
+        style={{ width: 250,  height: 44,}}
+        onPress={async () => {
+            try {
+                const credential: AppleAuthenticationCredential = await AppleAuthentication.signInAsync({
+                    requestedScopes: [
+                        AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+                        AppleAuthentication.AppleAuthenticationScope.EMAIL,
+                    ],
+                });
+                const cachedName: string = await Cache.getAppleLoginName(credential.user);
+                const detailsArePopulated: boolean = (!!credential.fullName.givenName && !!credential.email);
+                if (!detailsArePopulated && !cachedName) {
+                    await login(credential.identityToken);
+                } else if (!detailsArePopulated && cachedName) {
+                    await createAccount(cachedName, credential.user, credential.identityToken);
+                } else {
+                    await createAccount(
+                        credential.fullName.givenName, credential.user, credential.identityToken,
+                    );
+                }
+            } catch (error) {
+                if (error.code === 'ERR_CANCELED') {
+                    onError('Continue was cancelled.');
+                } else {
+                    onError(error.message);
+                }
+            }
+        }}
+      />
           <Text style={styles.smalltitleText}>{i18n.t("Log in easily")}</Text>
           <Text style={[styles.smalltitleText,{marginTop:25, marginBottom:25}]}>{i18n.t("agree")}</Text>
           <ProFooter
