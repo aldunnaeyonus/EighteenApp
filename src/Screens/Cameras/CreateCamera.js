@@ -459,7 +459,7 @@ const handleProgressUpdate = (progressEvent) => {
         const postLoading = async () => {
           storage.set(
             "uploadData",
-            JSON.stringify({ message: "", display: "none", image: "", "" }),
+            JSON.stringify({ message: "", display: "none", image: "", progress:"" }),
           );
           await CameraRoll.saveAsset(image);
           await axiosPull._pullGalleryFeed(pin, user.user_id);
