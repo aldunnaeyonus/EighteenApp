@@ -14,7 +14,7 @@ import { getLocales } from 'expo-localization';
 import { SCREEN_WIDTH, constants } from "../../utils/constants";
 import ProFooter from "../SubViews/store/ProFooter";
 import * as AppleAuthentication from 'expo-apple-authentication';
-
+//https://github.com/chelseafarley/apple-auth-tutorial
 
 const Handle = (props) => {
   const [handleStatus, setHandleStatus] = useState("");
