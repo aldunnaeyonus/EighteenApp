@@ -890,7 +890,7 @@ const EditCamera = (props) => {
                   </ListItem>
                   <View style={[styles.dividerStyle]} />
                   <ListItem
-                    containerStyle={{
+                    contnerStyle={{
                       height: "auto",
                       backgroundColor: errorColor,
                     }}
@@ -923,8 +923,6 @@ const EditCamera = (props) => {
                   <View style={[styles.dividerStyle]} />
                 </>
               )}
-
-              <View style={[styles.dividerStyle]} />
               <ListItem key="0">
                 <Icon
                   type="ionicon"
