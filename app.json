@@ -47,6 +47,7 @@
       "**/*"
     ],
     "ios": {
+      "usesAppleSignIn": true
       "infoPlist": {
         "NSCameraUsageDescription": "The $(PRODUCT_NAME) App needs accesses your microphone to let users add sound to vidoes.",
         "NSMicrophoneUsageDescription": "The $(PRODUCT_NAME) App needs accesses your microphone to let users add sound to vidoes.",
