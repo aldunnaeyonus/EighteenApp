@@ -233,7 +233,8 @@ const Handle = (props) => {
               {isLoading ? i18n.t("Loading") : i18n.t("Continue")}
             </Text>
           </TouchableOpacity>
-          <Text style={styles.smalltitleText}>{i18n.t("or")}</Text>
+{ Platform.OS == "ios" ?
+            <Text style={styles.smalltitleText}>{i18n.t("or")}</Text>
        <AppleAuthentication.AppleAuthenticationButton
         buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
         buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
@@ -250,11 +251,11 @@ const Handle = (props) => {
                 const cachedName: string = await Cache.getAppleLoginName(credential.user);
                 const detailsArePopulated: boolean = (!!credential.fullName.givenName && !!credential.email);
                 if (!detailsArePopulated && !cachedName) {
-                    await login(credential.identityToken);
+                   // await login(credential.identityToken);
                 } else if (!detailsArePopulated && cachedName) {
-                    await createAccount(cachedName, credential.user, credential.identityToken);
+                    //await createAccount(cachedName, credential.user, credential.identityToken);
                 } else {
-                    await createAccount(
+                    //await createAccount(
                         credential.fullName.givenName, credential.user, credential.identityToken,
                     );
                 }
@@ -267,6 +268,7 @@ const Handle = (props) => {
             }
         }}
       />
+   : <></> }
           <Text style={styles.smalltitleText}>{i18n.t("Log in easily")}</Text>
           <Text style={[styles.smalltitleText,{marginTop:25, marginBottom:25}]}>{i18n.t("agree")}</Text>
           <ProFooter
