@@ -229,8 +229,6 @@ const PhotoGallery = (props) => {
 
   useFocusEffect(
     useCallback(() => {
-      StatusBar.setHidden(true, "none");
-
       if (!props.unsubscribe) {
         toast({
           message: i18n.t("No internet connection"),
