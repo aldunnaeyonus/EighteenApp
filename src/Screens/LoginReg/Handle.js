@@ -30,14 +30,14 @@ const Handle = (props) => {
   const [disable, setDisable] = useState(true);
   let deviceLanguage = getLocales()[0].languageCode;
 
-    useEffect(() => {
-GoogleSignin.configure({
+useEffect(() => {
+  GoogleSignin.configure({
       scopes: ['https://www.googleapis.com/auth/drive'],
       webClientId: '433573575993-b31pdthd0u5bv1mrc0qoftvqoj7bloal.apps.googleusercontent.com',
       offlineAccess: true,
       forceCodeForRefreshToken: true,
       profileImageSize: 120
-});
+      });
   }, []);
 
   
