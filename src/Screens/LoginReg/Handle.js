@@ -18,6 +18,10 @@ import "core-js/stable/atob";
 import NotifService from "../../../NotifService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { storage } from "../../context/components/Storage";
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+} from "@react-native-google-signin/google-signin";
 
 const Handle = (props) => {
   const [handleStatus, setHandleStatus] = useState("");
@@ -110,46 +114,79 @@ const Handle = (props) => {
 
       const decodedToken = jwtDecode(credential.identityToken);
       const data = {
-          email: decodedToken.email,
-          device: Platform.OS,
-          location: RNLocalize.getCountry(),
-          tz: RNLocalize.getTimeZone(),
-          locale: deviceLanguage,
-        };
-         const response = await axiosPull.postData(
-          "/register/appleLogin.php",
-          data
-        );
+        email: decodedToken.email,
+        device: Platform.OS,
+        location: RNLocalize.getCountry(),
+        tz: RNLocalize.getTimeZone(),
+        locale: deviceLanguage,
+      };
+      const response = await axiosPull.postData(
+        "/register/appleLogin.php",
+        data
+      );
       if (decodedToken.email_verified) {
         Alert.alert(
-        i18n.t("Hidden Email"),
-        i18n.t("HIddenEmail"),
-        [
-          {
-            text: i18n.t("Continue"),
-            onPress: () => {{
-  
-            setTimeout(async () => {
-              storage.set("user.Data", JSON.stringify(response[0]));
-              await AsyncStorage.setItem("current", "0");
-              await AsyncStorage.setItem("logedIn", "1");
-              await AsyncStorage.setItem("user_id", response[0].user_id);
-              new NotifService();
-                props.navigation.navigate("Home");
-              }, 500);
-            }},
-            style: "default",
-          },
-        ],
-        { cancelable: false }
-      );
-
-        
-
-
+          i18n.t("Hidden Email"),
+          i18n.t("HIddenEmail"),
+          [
+            {
+              text: i18n.t("Continue"),
+              onPress: () => {
+                {
+                  setTimeout(async () => {
+                    storage.set("user.Data", JSON.stringify(response[0]));
+                    await AsyncStorage.setItem("current", "0");
+                    await AsyncStorage.setItem("logedIn", "1");
+                    await AsyncStorage.setItem("user_id", response[0].user_id);
+                    new NotifService();
+                    props.navigation.navigate("Home");
+                  }, 500);
+                }
+              },
+              style: "default",
+            },
+          ],
+          { cancelable: false }
+        );
       }
     } catch (error) {
-      console.error("Error decoding JWT:", error);
+      console.log("Error decoding JWT:", error);
+    }
+  };
+
+  const signInWithGoogle = async () => {
+    try {
+      await GoogleSignin.hasPlayServices(); //executes normally
+
+      const userInfo = await GoogleSignin.signIn();
+      const userEmail = userInfo.user.email;
+      console.log(userEmail)
+      
+      const data = {
+        email: userEmail,
+        device: Platform.OS,
+        location: RNLocalize.getCountry(),
+        tz: RNLocalize.getTimeZone(),
+        locale: deviceLanguage,
+      };
+      const response = await axiosPull.postData(
+        "/register/appleLogin.php",
+        data
+      );
+      if (response[0].errorResponse == "Member") {
+      setTimeout(async () => {
+        storage.set("user.Data", JSON.stringify(response[0]));
+        await AsyncStorage.setItem("current", "0");
+        await AsyncStorage.setItem("logedIn", "1");
+        await AsyncStorage.setItem("user_id", response[0].user_id);
+        new NotifService();
+        props.navigation.navigate("Home");
+      }, 500);
+    }
+      
+    } catch (error) {
+      console.log(error);
+      console.error("Google Sign-In Error", error);
     }
   };
 
@@ -225,9 +262,7 @@ const Handle = (props) => {
               }}
             />
           </View>
-
           <Text style={styles.smalltitleTextError}>{handleStatus}</Text>
-
           <TouchableOpacity
             disabled={disable}
             style={{
@@ -267,6 +302,35 @@ const Handle = (props) => {
           <Text style={[styles.smalltitleText, { marginTop: -5 }]}>
             {i18n.t("Log in easily")}
           </Text>
+          <Text
+            style={[
+              styles.smalltitleText,
+              { marginBottom: 40, marginBottom: 20, fontWeight: "bold" },
+            ]}
+          >
+            {i18n.t("or")}
+          </Text>
+          {Platform.OS == "android" ? (
+            <View
+              style={{
+                width: "auto",
+                height: "auto",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <GoogleSigninButton
+                label="Contimue with Google"
+                size={GoogleSigninButton.Size.Wide}
+                color={GoogleSigninButton.Color.Dark}
+                onPress={async () => {
+                  signInWithGoogle();
+                }}
+              />
+            </View>
+          ) : (
+            <></>
+          )}
 
           {Platform.OS == "ios" ? (
             <View
@@ -277,14 +341,6 @@ const Handle = (props) => {
                 justifyContent: "center",
               }}
             >
-              <Text
-                style={[
-                  styles.smalltitleText,
-                  { marginBottom: 40, marginBottom: 20, fontWeight: "bold" },
-                ]}
-              >
-                {i18n.t("or")}
-              </Text>
               <AppleAuthentication.AppleAuthenticationButton
                 buttonType={
                   AppleAuthentication.AppleAuthenticationButtonType.CONTINUE

@@ -41,7 +41,6 @@
       ],
       "expo-localization",
       "expo-asset",
-      "expo-secure-store",
       "expo-build-properties"
     ],
     "assetBundlePatterns": [

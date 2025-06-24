@@ -124,15 +124,19 @@ const CreateCamera = (props) => {
       const path = await PhotoEditor.open({
         path: image,
         stickers,
-      });
+      })
+      if (path){
       setImage(path);
       setisEditing(false);
+      }
     } catch (e) {
+      setImage("");
       console.log("e", e);
       setisEditing(false);
     }
     await AsyncStorage.removeItem("media.path");
   };
+
   const cameraChange = (value) => {
     setCameras(value);
   };
@@ -284,26 +288,7 @@ const CreateCamera = (props) => {
 
   useFocusEffect(
     useCallback(() => {
-      if (!props.unsubscribe) {
-        toast({
-          message: i18n.t("No internet connection"),
-          toastStyles: {
-            bg: "#3D4849",
-            borderRadius: 5,
-          },
-          duration: 5000,
-          color: "white",
-          iconColor: "white",
-          iconFamily: "Entypo",
-          iconName: "info-with-circle",
-          closeButtonStyles: {
-            px: 4,
-            bg: "translucent",
-          },
-          closeIconColor: "white",
-          hideAccent: true,
-        });
-      }
+     
       const pickImage = async () => {
         const value = await AsyncStorage.getItem("media.path");
         if (value != undefined) {
