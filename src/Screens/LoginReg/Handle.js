@@ -31,12 +31,11 @@ const Handle = (props) => {
   let deviceLanguage = getLocales()[0].languageCode;
 
 useEffect(() => {
+  //cd android && ./gradlew signingReport
   GoogleSignin.configure({
-      scopes: ['https://www.googleapis.com/auth/drive'],
+      scopes: ['profile', 'email']
       webClientId: '433573575993-b31pdthd0u5bv1mrc0qoftvqoj7bloal.apps.googleusercontent.com',
-      offlineAccess: true,
-      forceCodeForRefreshToken: true,
-      profileImageSize: 120
+      androidClientId:'433573575993-j34idj9ltmoa4hppl52bal8am65uhnor.apps.googleusercontent.com',
       });
   }, []);
 
