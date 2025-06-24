@@ -330,7 +330,6 @@ useEffect(() => {
               }}
             >
               <GoogleSigninButton
-                label="Contimue with Google"
                 size={GoogleSigninButton.Size.Wide}
                 color={GoogleSigninButton.Color.Dark}
                 onPress={async () => {
