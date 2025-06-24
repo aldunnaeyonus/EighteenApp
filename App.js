@@ -144,14 +144,6 @@ const onCheckVersion = () => {
     config,
   };
 
-
-
-  useEffect(() => {
-    const fetchData = async () => {
-    };
-    fetchData();
-  }, []);
-
   useEffect(() => {
     const fetchData = async () => {
       onCheckVersion();
