@@ -969,7 +969,15 @@ const Home = (props) => {
             _addMax={_addMax}
           />
        ) : (
-         
+          <FriendListItem
+                item={item}
+                index={index}
+                _gotoMedia={_gotoMedia}
+                _gotoCamera={_gotoCamera}
+                _gotoStore={_gotoStore}
+                _autoJoin={_autoJoin}
+                _repotPost={_repotPost}
+              />
         )}
       />
     </SafeAreaProvider>
