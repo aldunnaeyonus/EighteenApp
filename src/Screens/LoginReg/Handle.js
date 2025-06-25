@@ -168,11 +168,8 @@ const Handle = (props) => {
   const signInWithGoogle = async () => {
     try {
       await GoogleSignin.hasPlayServices(); //executes normally
-
       const userInfo = await GoogleSignin.signIn();
       const userEmail = userInfo.data.user.email;
-      console.log(userEmail);
-
       const data = {
         email: userEmail,
         device: Platform.OS,
