@@ -1015,7 +1015,27 @@ const Home = (props) => {
                   <ListItem.Subtitle{i18n.t("w14")}</ListItem.Subtitle>
                 </ListItem.Content>
               </ListItem>
-            <Button title={{i18n.t("continue")}} onPress={() => setModalVisible(!modalVisible)} />
+          <TouchableOpacity
+            style={{
+              width: "90%",
+              height: 40,
+              margin: 20,
+            }}
+            onPress={() => {
+             setModalVisible(!modalVisible);  
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                gap: 10,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text> {i18n.t("continue")}</Text>
+            </View>
+          </TouchableOpacity>
           </View>
         </View>
       </Modal>
