@@ -1038,7 +1038,7 @@ const Home = (props) => {
                 color: "#fff",
               }}
             >
-              {i18n.t("continue")}
+              {i18n.t("Continue")}
             </Text>
           </TouchableOpacity>
          
