@@ -190,13 +190,13 @@ const Handle = (props) => {
         data
       );
       if (response[0].errorResponse == "Member") {
-        setIsLoading(false);
         setTimeout(async () => {
           storage.set("user.Data", JSON.stringify(response[0]));
           await AsyncStorage.setItem("current", "0");
           await AsyncStorage.setItem("logedIn", "1");
           await AsyncStorage.setItem("user_id", response[0].user_id);
           new NotifService();
+                  setIsLoading(false);
           props.navigation.navigate("Home");
         }, 500);
       }
@@ -206,8 +206,7 @@ const Handle = (props) => {
     try {
       GoogleSignin.signOut();
     } catch (error) {
-      setIsLoading(false);
-      console.log("Error decoding JWT:", error);
+      console.log("Error :", error);
     }
     }
   };
