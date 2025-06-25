@@ -55,7 +55,7 @@ const FriendHeader = (props) => {
             </View>
           )}
           <Text style={style.name}>
-            {((props.name.toUpperCase()).length > 10) ? (((props.name.toUpperCase()).substring(0,7)) + '...') : props.name == null ? i18n.t("Friends") : props.name.toUpperCase()}
+            {props.name.toLowerCase()}
           </Text>
         </View>
         <View style={style.container1}>
@@ -96,7 +96,7 @@ const style = StyleSheet.create({
   container4: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 10,
+    marginTop: 40,
     justifyContent: "space-between",
   },
   text1: {
@@ -156,9 +156,11 @@ const style = StyleSheet.create({
     textAlign: "center",
   },
   name: {
-    fontSize: 14,
-    numberOfLines:1,
-    ellipsizeMode: "tail",
+    position:'absolute',
+    fontSize: 15,
+    width:200,
+    left:5,
+    top: 100,
     fontWeight: "500",
     color: "#3D4849",
   },

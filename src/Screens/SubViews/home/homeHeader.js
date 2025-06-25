@@ -244,7 +244,7 @@ const FriendHeader = (props) => {
                 fontSize: 13,
               }}
             >
-                {grids.friend_handle}
+                {grids.friend_handle.toLowerCase()}
                 </Text>
           </View>
 
