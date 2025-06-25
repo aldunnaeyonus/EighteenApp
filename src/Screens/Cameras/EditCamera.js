@@ -289,10 +289,12 @@ const EditCamera = (props) => {
     } else {
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        aspect: [1, 1],
+        exif: true,
+        selectionLimit: 1,
+        allowsMultipleSelection: false,
         quality: 1,
+        orderedSelection: true,
       });
       if (!result.canceled) {
         setImage(result.assets[0].uri);
