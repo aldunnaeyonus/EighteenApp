@@ -124,6 +124,8 @@ const CreateCamera = (props) => {
       const path = await PhotoEditor.open({
         path: image,
         stickers,
+      }).then((res) => {
+          console.log("I thened ", res)
       })
       if (path){
       setImage(path);

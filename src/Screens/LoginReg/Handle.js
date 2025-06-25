@@ -33,7 +33,7 @@ const Handle = (props) => {
 useEffect(() => {
   //cd android && ./gradlew signingReport
   GoogleSignin.configure({
-      scopes: ['email']
+      scopes: ['profile', 'email'],
       webClientId: '433573575993-b31pdthd0u5bv1mrc0qoftvqoj7bloal.apps.googleusercontent.com',
       androidClientId:'433573575993-j34idj9ltmoa4hppl52bal8am65uhnor.apps.googleusercontent.com',
       });
