@@ -30,15 +30,17 @@ const Handle = (props) => {
   const [disable, setDisable] = useState(true);
   let deviceLanguage = getLocales()[0].languageCode;
 
-useEffect(() => {
-  //cd android && ./gradlew signingReport
-  GoogleSignin.configure({
-      scopes: ['profile', 'email'],
-      webClientId: '433573575993-b31pdthd0u5bv1mrc0qoftvqoj7bloal.apps.googleusercontent.com',
-      });
+  useEffect(() => {
+    //cd android && ./gradlew signingReport
+    GoogleSignin.configure({
+      scopes: ["profile", "email"],
+      webClientId:
+        "433573575993-b31pdthd0u5bv1mrc0qoftvqoj7bloal.apps.googleusercontent.com",
+      offlineAccess: false,
+      profileImageSize: 120,
+    });
   }, []);
 
-  
   const validate = (text) => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if (reg.test(text) === false) {
@@ -168,9 +170,9 @@ useEffect(() => {
       await GoogleSignin.hasPlayServices(); //executes normally
 
       const userInfo = await GoogleSignin.signIn();
-      const userEmail = userInfo.user.email;
-      console.log(userEmail)
-      
+      const userEmail = userInfo.data.user.email;
+      console.log(userEmail);
+
       const data = {
         email: userEmail,
         device: Platform.OS,
@@ -183,16 +185,15 @@ useEffect(() => {
         data
       );
       if (response[0].errorResponse == "Member") {
-      setTimeout(async () => {
-        storage.set("user.Data", JSON.stringify(response[0]));
-        await AsyncStorage.setItem("current", "0");
-        await AsyncStorage.setItem("logedIn", "1");
-        await AsyncStorage.setItem("user_id", response[0].user_id);
-        new NotifService();
-        props.navigation.navigate("Home");
-      }, 500);
-    }
-      
+        setTimeout(async () => {
+          storage.set("user.Data", JSON.stringify(response[0]));
+          await AsyncStorage.setItem("current", "0");
+          await AsyncStorage.setItem("logedIn", "1");
+          await AsyncStorage.setItem("user_id", response[0].user_id);
+          new NotifService();
+          props.navigation.navigate("Home");
+        }, 500);
+      }
     } catch (error) {
       console.error("Google Sign-In Error", error);
     }
