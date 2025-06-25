@@ -493,6 +493,11 @@ const Home = (props) => {
         await AsyncStorage.removeItem("user_id");
         props.navigation.navigate("Begin");
       }
+    const whatnew = await AsyncStorage.getItem("whatnew");
+     if (whatnew == null || whatnew == "0"){
+        setModalVisible(true)
+        await AsyncStorage.setItem("whatnew", "1");
+    }
     };
     fetchData();
 
