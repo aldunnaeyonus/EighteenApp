@@ -30,7 +30,6 @@ import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
 const Image = createImageProgress(FastImage);
 import Progress from "react-native-progress";
-import { useToast } from "react-native-styled-toast";
 import moment from "moment";
 import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../i18n";
@@ -63,7 +62,6 @@ const CreateCamera = (props) => {
   const [isEditing, setisEditing] = useState(false);
   const [modalUpload, setModalUpload] = useState(false);
   const [isAI, setIsAI] = useState(false);
-  const { toast } = useToast();
   const [user] = useMMKVObject("user.Data", storage);
   const [cameras, setCameras] = useState(0);
   const [media, setMedia] = useState(0);
@@ -81,6 +79,7 @@ const CreateCamera = (props) => {
   const [libraryStatus] = ImagePicker.useMediaLibraryPermissions();
   const [seed, setSeed] = useState(72);
   const [percent, setPrecent] = useState(0);
+  const [showClose, setShowClose] = useState(false);
 
   const MODE_VALUES = Platform.select({
     ios: Object.values(IOS_MODE),
@@ -125,12 +124,12 @@ const CreateCamera = (props) => {
         path: image,
         stickers,
       }).then(() => {
-          Alert.alert("Done")
-      })
-      if (path){
-      setImage(path);
-      setisEditing(false);
-      }
+        if (path) {
+          setImage(path);
+          setisEditing(false);
+        }
+        setShowClose(true);
+      });
     } catch (e) {
       setImage("");
       console.log("e", e);
@@ -295,7 +294,6 @@ const CreateCamera = (props) => {
 
   useFocusEffect(
     useCallback(() => {
-     
       const pickImage = async () => {
         const value = await AsyncStorage.getItem("media.path");
         if (value != undefined) {
@@ -306,7 +304,7 @@ const CreateCamera = (props) => {
       props.navigation.setOptions({
         title: isPro == "1" ? i18n.t("CreatePro") : i18n.t("Create"),
         headerRight: () =>
-          name.length > 0 && image.length > 0 ? (
+          showClose ? (
             <TouchableOpacity
               onPress={() => {
                 createEvent();
@@ -331,6 +329,7 @@ const CreateCamera = (props) => {
       verified,
       props,
       name,
+      showClose,
       isEditing,
       verified,
       image,
@@ -360,11 +359,10 @@ const CreateCamera = (props) => {
     }
     return result;
   };
-const handleProgressUpdate = (progressEvent) => {
-   let {loaded, total} = progressEvent;
-   setPrecent(total ? Math.max(Math.round((loaded * 100) / total) - 5, 0) : 0);
-} 
-
+  const handleProgressUpdate = (progressEvent) => {
+    let { loaded, total } = progressEvent;
+    setPrecent(total ? Math.max(Math.round((loaded * 100) / total) - 5, 0) : 0);
+  };
 
   const createEvent = async () => {
     props.navigation.setOptions({
@@ -385,7 +383,7 @@ const handleProgressUpdate = (progressEvent) => {
     var formData = new FormData();
     var fileName = "";
     formData.append("owner", user.user_id);
-   formData.append("owner", user.user_id);
+    formData.append("owner", user.user_id);
     formData.append("eventName", name);
     formData.append("purchases", switch3 ? "1" : "0");
     formData.append(
@@ -427,20 +425,20 @@ const handleProgressUpdate = (progressEvent) => {
     await AsyncStorage.setItem("uploadEnabled", "0");
 
     const preLoading = async () => {
-       storage.set(
+      storage.set(
         "uploadData",
         JSON.stringify({
           message: i18n.t("CreatingEvent") + " " + i18n.t("PleaseWait"),
           display: "flex",
           image: image,
-          progress: 0
+          progress: 0,
         })
-      )
+      );
       await axios({
         method: "POST",
         url: constants.url + "/camera/create.php",
         data: formData,
-        onUploadProgress: progressEvent => {
+        onUploadProgress: (progressEvent) => {
           //handleProgressUpdate(progressEvent);
         },
         headers: {
@@ -452,7 +450,12 @@ const handleProgressUpdate = (progressEvent) => {
         const postLoading = async () => {
           storage.set(
             "uploadData",
-            JSON.stringify({ message: "", display: "none", image: "", progress:"" }),
+            JSON.stringify({
+              message: "",
+              display: "none",
+              image: "",
+              progress: "",
+            })
           );
           await CameraRoll.saveAsset(image);
           await axiosPull._pullGalleryFeed(pin, user.user_id);
@@ -554,8 +557,8 @@ const handleProgressUpdate = (progressEvent) => {
                   flexDirection: "row",
                   justifyContent: "center",
                   alignItems: "center",
-                  width:'auto',
-                  gap:10,
+                  width: "auto",
+                  gap: 10,
                   alignContent: "space-between",
                 }}
               >
@@ -564,7 +567,7 @@ const handleProgressUpdate = (progressEvent) => {
                     flexDirection: "column",
                     alignContent: "center",
                     alignItems: "center",
-                     width:'33%',
+                    width: "33%",
                     justifyContent: "center",
                   }}
                 >
@@ -593,8 +596,7 @@ const handleProgressUpdate = (progressEvent) => {
                           [
                             {
                               text: i18n.t("Close"),
-                              onPress: () =>
-                                console.log("Cancel Pressed"),
+                              onPress: () => console.log("Cancel Pressed"),
                               style: "destructive",
                             },
                           ],
@@ -658,7 +660,7 @@ const handleProgressUpdate = (progressEvent) => {
                     style={{
                       textAlign: "center",
                       marginTop: 10,
-                      width:'100%'
+                      width: "100%",
                     }}
                   >
                     {i18n.t("AI")}
@@ -669,7 +671,7 @@ const handleProgressUpdate = (progressEvent) => {
                     flexDirection: "column",
                     alignContent: "center",
                     alignItems: "center",
-                                         width:'33%',
+                    width: "33%",
                     justifyContent: "center",
                   }}
                 >
@@ -698,7 +700,7 @@ const handleProgressUpdate = (progressEvent) => {
                     style={{
                       textAlign: "center",
                       marginTop: 10,
-                                            width:'100%'
+                      width: "100%",
                     }}
                   >
                     {i18n.t("Gallery")}
@@ -708,7 +710,7 @@ const handleProgressUpdate = (progressEvent) => {
                   style={{
                     flexDirection: "column",
                     alignContent: "center",
-                                         width:'33%',
+                    width: "33%",
                     alignItems: "center",
                     justifyContent: "center",
                   }}
@@ -771,7 +773,7 @@ const handleProgressUpdate = (progressEvent) => {
                     style={{
                       textAlign: "center",
                       marginTop: 10,
-                                            width:'100%'
+                      width: "100%",
                     }}
                   >
                     {i18n.t("Camera")}
@@ -822,7 +824,7 @@ const handleProgressUpdate = (progressEvent) => {
             style={{ backgroundColor: "#fff", marginBottom: 0, flex: 1 }}
             keyboardShouldPersistTaps={"never"}
             keyboardDismissMode="on-drag"
-                    nestedScrollEnabled={true}
+            nestedScrollEnabled={true}
             showsVerticalScrollIndicator={false}
           >
             <View style={styles.container}>
@@ -1064,55 +1066,57 @@ const handleProgressUpdate = (progressEvent) => {
                           <Text>{i18n.t("Edit Image")}</Text>
                         </View>
                       </TouchableOpacity>
-                    {isAI ?
-                    <TouchableOpacity
-                        style={{
-                          width: "50%",
-                          height: 40,
-                          marginTop: 20,
-                        }}
-                        onPress={() => {
-                           Alert.alert(
-                          i18n.t("ReportAI"),
-                          i18n.t("RReportAIImage"),
-                          [
-                            {
-                              text: i18n.t("Cancel"),
-                              onPress: () => console.log("Cancel Pressed"),
-                              style: "destructive",
-                            },
-                            {
-                              text: i18n.t("Flag&Redraw"),
-                              onPress: () => {
-                         setSeed(seed - 1);
-                          AITexttoImage();
-                              },
-                              style: "default",
-                            },
-                          ],
-                          { cancelable: false }
-                        );
-                        }}
-                      >
-                        <View
+                      {isAI ? (
+                        <TouchableOpacity
                           style={{
-                            flexDirection: "row",
-                            gap: 10,
-                            alignItems: "center",
-                            justifyContent: "center",
+                            width: "50%",
+                            height: 40,
+                            marginTop: 20,
+                          }}
+                          onPress={() => {
+                            Alert.alert(
+                              i18n.t("ReportAI"),
+                              i18n.t("RReportAIImage"),
+                              [
+                                {
+                                  text: i18n.t("Cancel"),
+                                  onPress: () => console.log("Cancel Pressed"),
+                                  style: "destructive",
+                                },
+                                {
+                                  text: i18n.t("Flag&Redraw"),
+                                  onPress: () => {
+                                    setSeed(seed - 1);
+                                    AITexttoImage();
+                                  },
+                                  style: "default",
+                                },
+                              ],
+                              { cancelable: false }
+                            );
                           }}
                         >
-                          <Icon
-                            type="material"
-                            name="report-gmailerrorred"
-                            size={20}
-                            color="#3D4849"
-                          />
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              gap: 10,
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <Icon
+                              type="material"
+                              name="report-gmailerrorred"
+                              size={20}
+                              color="#3D4849"
+                            />
 
-                          <Text>{i18n.t("Flag")}</Text>
-                        </View>
-                      </TouchableOpacity> : <></>
-                    }
+                            <Text>{i18n.t("Flag")}</Text>
+                          </View>
+                        </TouchableOpacity>
+                      ) : (
+                        <></>
+                      )}
                       <TouchableOpacity
                         style={{
                           width: "50%",

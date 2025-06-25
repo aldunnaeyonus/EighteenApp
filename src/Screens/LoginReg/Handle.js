@@ -32,6 +32,12 @@ const Handle = (props) => {
 
   useEffect(() => {
     //cd android && ./gradlew signingReport
+    try {
+      GoogleSignin.signOut();
+    } catch (error) {
+      setIsLoading(false);
+      console.log("Error decoding JWT:", error);
+    }
     GoogleSignin.configure({
       scopes: ["profile", "email"],
       webClientId:
@@ -150,6 +156,7 @@ const Handle = (props) => {
                     await AsyncStorage.setItem("logedIn", "1");
                     await AsyncStorage.setItem("user_id", response[0].user_id);
                     new NotifService();
+                    setIsLoading(false);
                     props.navigation.navigate("Home");
                   }, 500);
                 }
@@ -161,6 +168,7 @@ const Handle = (props) => {
         );
       }
     } catch (error) {
+      setIsLoading(false);
       console.log("Error decoding JWT:", error);
     }
   };
@@ -182,6 +190,7 @@ const Handle = (props) => {
         data
       );
       if (response[0].errorResponse == "Member") {
+        setIsLoading(false);
         setTimeout(async () => {
           storage.set("user.Data", JSON.stringify(response[0]));
           await AsyncStorage.setItem("current", "0");
@@ -193,6 +202,13 @@ const Handle = (props) => {
       }
     } catch (error) {
       console.error("Google Sign-In Error", error);
+      setIsLoading(false);
+    try {
+      GoogleSignin.signOut();
+    } catch (error) {
+      setIsLoading(false);
+      console.log("Error decoding JWT:", error);
+    }
     }
   };
 
@@ -329,6 +345,7 @@ const Handle = (props) => {
                 size={GoogleSigninButton.Size.Wide}
                 color={GoogleSigninButton.Color.Dark}
                 onPress={async () => {
+                  setIsLoading(true);
                   signInWithGoogle();
                 }}
               />
@@ -355,7 +372,10 @@ const Handle = (props) => {
                 }
                 cornerRadius={5}
                 style={{ width: 250, height: 50 }}
-                onPress={login}
+                onPress={() => {
+                  setIsLoading(true);
+                  login();
+                }}
               />
             </View>
           ) : (

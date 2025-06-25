@@ -288,7 +288,7 @@ const ClosedCameras = (props) => {
               style={styles.whiteIcon2}
             />
             <Text style={{ marginTop: 5 }}>
-            {i18nt.t(Ended:)} {moment.unix(item.end).locale(localLang).format("LLL")}
+            { i18n.t("Ended:")} {moment.unix(item.end).locale(localLang).format("LLL")}
             </Text>
           </View>
 

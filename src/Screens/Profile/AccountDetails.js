@@ -52,7 +52,7 @@ const AccountDetails = (props) => {
     setSwitch4(!switch4);
   };
   const toggleSwitch5 = () => {
-    setSwitch4(!switch5);
+    setSwitch5(!switch5);
   };
   const _saveUserData = async () => {
     props.navigation.setOptions({

@@ -96,7 +96,6 @@ const Verification = (props) => {
 
   const checkHandle = useCallback( (value) => {
     const execute = async ()=>{
-
       setHandleStatus("");
       const data = {
         code: value.toUpperCase(),

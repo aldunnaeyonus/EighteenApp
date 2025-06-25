@@ -1,7 +1,6 @@
 import {
   View,
   ScrollView,
-  StyleSheet,
   Platform,
   Text,
   Modal,
@@ -102,6 +101,7 @@ const EditCamera = (props) => {
   const [isEditing, setisEditing] = useState(false);
   let notification = new NotifService();
   const [seed, setSeed] = useState(72);
+  const [showClose, setShowClose] = useState(false);
 
   const onChange = (event, selectDate) => {
     if (event.type === "set") {
@@ -253,9 +253,12 @@ const EditCamera = (props) => {
       const path = await PhotoEditor.open({
         path: image,
         stickers,
-      });
+      }).then(() => {
+      setShowClose(true);
       setImage(path);
       setisEditing(false);
+      })
+
     } catch (e) {
       console.log("e", e);
       setisEditing(false);
@@ -336,7 +339,7 @@ const EditCamera = (props) => {
       pickImage();
       props.navigation.setOptions({
         headerRight: () =>
-          name.length > 0 && image.length > 0 ? (
+          showClose ? (
             <TouchableOpacity
               onPress={() => {
                 createEvent();
@@ -352,6 +355,7 @@ const EditCamera = (props) => {
       });
     }, [
       verified,
+      showClose,
       props,
       name,
       isEditing,

@@ -22,7 +22,7 @@ import { Icon } from "react-native-elements";
 import { storage } from "../../context/components/Storage";
 import Animated from "react-native-reanimated";
 import { useMMKVObject } from "react-native-mmkv";
-import ListItem from "../SubViews/home/listItem";
+import ListItems from "../SubViews/home/listItem";
 import FriendHeader from "../SubViews/home/homeHeader";
 import { axiosPull } from "../../utils/axiosPull";
 import * as i18n from "../../../i18n";
@@ -273,14 +273,7 @@ const Home = (props) => {
     });
   };
 
-    const _gotoStore = (pin, owner, name) => {
-    props.navigation.navigate("Purchase", {
-      pin: pin,
-      owner: owner,
-      type: "user",
-      eventName: name,
-    });
-  };
+
   const _addMax = async (pin, owner, pro) => {
     const data = {
       owner: owner,
@@ -397,19 +390,6 @@ const Home = (props) => {
     await axiosPull._pullFriendFeed(owner);
     await axiosPull._pullFriendCameraFeed(owner, "user", user.user_id);
   };
-  
-    const _autoJoin = async (owner, pin, end, id) => {
-    const data = {
-      owner: owner,
-      user: user.user_id,
-      pin: pin,
-      end: end,
-      id: id,
-    };
-    await axiosPull.postData("/camera/autoJoin.php", data);
-    await axiosPull._pullFriendFeed(owner);
-    await axiosPull._pullFriendCameraFeed(owner, "user", user.user_id);
-  };
   const _deleteFeedItemSource = async (UUID, owner, pin) => {
     _deleteFeedItemIndex(UUID);
     const data = {
@@ -494,8 +474,8 @@ const Home = (props) => {
         props.navigation.navigate("Begin");
       }
     const whatnew = await AsyncStorage.getItem("whatnew");
-     if (whatnew == null || whatnew == "0"){
-        setModalVisible(true)
+     if (whatnew == undefined || whatnew == "0"){
+        setModalVisibleAlert(true)
         await AsyncStorage.setItem("whatnew", "1");
     }
     };
@@ -605,7 +585,7 @@ const Home = (props) => {
         transparent={true}
         onRequestClose={() => {
           setModalShareVisable(false);
-        }}
+        } }
       >
         <TouchableWithoutFeedback
           onPressOut={() => setModalShareVisable(false)}
@@ -673,14 +653,12 @@ const Home = (props) => {
                       console.log(shareOptionsGallery);
                       setModalShareVisable(false);
                       try {
-                        const ShareResponse =
-                          await Share.share(shareOptionsGallery);
+                        const ShareResponse = await Share.share(shareOptionsGallery);
                         console.log("Result =>", ShareResponse);
                       } catch (error) {
                         console.log("Error =>", error);
                       }
-                    }}
-                  />
+                    } } />
                   <Text
                     style={{
                       textAlign: "center",
@@ -719,8 +697,7 @@ const Home = (props) => {
                       } catch (error) {
                         console.log("Error =>", error);
                       }
-                    }}
-                  />
+                    } } />
                   <Text
                     style={{
                       textAlign: "center",
@@ -746,7 +723,7 @@ const Home = (props) => {
               }}
               onPress={() => {
                 setModalShareVisable(false);
-              }}
+              } }
             >
               <Text
                 style={{
@@ -784,14 +761,12 @@ const Home = (props) => {
                   device={device}
                   androidPreviewViewType={"texture-view"}
                   isActive={true}
-                  codeScanner={codeScanner}
-                />
+                  codeScanner={codeScanner} />
               )}
               <Image
                 resizeMode="contain"
                 style={[StyleSheet.absoluteFill]}
-                source={require("../../../assets/scan.png")}
-              />
+                source={require("../../../assets/scan.png")} />
             </View>
             <TouchableOpacity
               style={{
@@ -808,7 +783,7 @@ const Home = (props) => {
               onPress={() => {
                 setmodalQRCodeVisable(false);
                 setisBarcodeScannerEnabled(false);
-              }}
+              } }
             >
               <Text
                 style={{
@@ -846,8 +821,7 @@ const Home = (props) => {
                   priority: FastImage.priority.high,
                   cache: FastImage.cacheControl.immutable,
                   uri: qrCodeURL,
-                }}
-              />
+                }} />
             </View>
             <View
               style={{
@@ -870,7 +844,7 @@ const Home = (props) => {
                 onPress={() => {
                   setQrCodeURL("");
                   setmodalVisable(false);
-                }}
+                } }
               >
                 <Text
                   style={{
@@ -913,7 +887,7 @@ const Home = (props) => {
                     ],
                     { cancelable: false }
                   );
-                }}
+                } }
               >
                 <Text
                   style={{
@@ -933,88 +907,61 @@ const Home = (props) => {
       <Modal
         animationType="fade" // or "fade", "none"
         transparent={true}
-        visible={modalVisible}
+        visible={modalVisibleAlert}
         onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
+          setModalVisibleAlert(!modalVisibleAlert);
+        } }
       >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-        <Text style={styles.modalTitle}>{i18n.t("w1")}</Text>
-        <Text style={styles.modalText}>{i18n.t("w2")}</Text>
+        <View style={style.centeredView}>
+          <View style={style.modalView2}>
+            <Text style={style.modalTitle}>{i18n.t("w1")}</Text>
+            <Text style={style.modalText}>{i18n.t("w2")}</Text>
 
-           <ListItem key="1">
-                <Icon
-                  type="ionicon"
-                  name="film-outline"
-                  size={25}
-                  color="#3D4849"
-                />
-                <ListItem.Content>
-                  <ListItem.Title>{i18n.t("w3")}</ListItem.Title>
-                  <ListItem.Subtitle{i18n.t("w4")}</ListItem.Subtitle>
-                </ListItem.Content>
-              </ListItem>
+            <ListItem key="1">
+              <Icon
+                type="ionicon"
+                name="film-outline"
+                size={25}
+                color="#3D4849" />
+              <ListItem.Content>
+                <ListItem.Title style={{fontWeight:'bold'}}>{i18n.t("w3")}</ListItem.Title>
+                <ListItem.Subtitle>{i18n.t("w4")}</ListItem.Subtitle>
+              </ListItem.Content>
+            </ListItem>
             <ListItem key="2">
-                <Icon
-                  type="material-community"
-                  name="face-man-profile"
-                  size={25}
-                  color="#3D4849"
-                />
-                <ListItem.Content>
-                  <ListItem.Title>{i18n.t("w5")}</ListItem.Title>
-                  <ListItem.Subtitle>{i18n.t("w6")}</ListItem.Subtitle>
-                </ListItem.Content>
-              </ListItem>
-                <ListItem key="5">
-                <Icon
+              <Icon
+                type="material-community"
+                name="face-man-profile"
+                size={25}
+                color="#3D4849" />
+              <ListItem.Content>
+                <ListItem.Title style={{fontWeight:'bold'}}>{i18n.t("w5")}</ListItem.Title>
+                <ListItem.Subtitle>{i18n.t("w6")}</ListItem.Subtitle>
+              </ListItem.Content>
+            </ListItem>
+            <ListItem key="3">
+              <Icon
                 type="ionicon"
                 name="notifications-circle-outline"
-                  size={25}
-                  color="#3D4849"
-                />
-                <ListItem.Content>
-                  <ListItem.Title>{i18n.t("w7")}</ListItem.Title>
-                  <ListItem.Subtitle>{i18n.t("w8")}</ListItem.Subtitle>
-                </ListItem.Content>
-              </ListItem>
-             <ListItem key="3">
-                <Icon
+                size={25}
+                color="#3D4849" />
+              <ListItem.Content>
+                <ListItem.Title style={{fontWeight:'bold'}}>{i18n.t("w7")}</ListItem.Title>
+                <ListItem.Subtitle>{i18n.t("w8")}</ListItem.Subtitle>
+              </ListItem.Content>
+            </ListItem>
+            <ListItem key="4">
+              <Icon
                 type="material-community"
                 name="account-edit-outline"
-                  size={25}
-                  color="#3D4849"
-                />
-                <ListItem.Content>
-                  <ListItem.Title>{i18n.t("w9")}</ListItem.Title>
-                  <ListItem.Subtitle>{i18n.t("w10")}</ListItem.Subtitle>
-                </ListItem.Content>
-              </ListItem>
-              <ListItem key="6">
-                <Icon
-                type="material-community"
-                name="chip"
-                  size={25}
-                  color="#3D4849"
-                />
-                <ListItem.Content>
-                  <ListItem.Title>{i18n.t("w11")}</ListItem.Title>
-                  <ListItem.Subtitle>{i18n.t("w12")}</ListItem.Subtitle>
-                </ListItem.Content>
-              </ListItem>
-                <ListItem key="4">
-                <Icon
-                type="material"
-                name="family-restroom"
-                  size={25}
-                  color="#3D4849"
-                />
-                <ListItem.Content>
-                  <ListItem.Title>{i18n.t("w13")}</ListItem.Title>
-                  <ListItem.Subtitle{i18n.t("w14")}</ListItem.Subtitle>
-                </ListItem.Content>
-              </ListItem>
+                size={25}
+                color="#3D4849" />
+              <ListItem.Content>
+                <ListItem.Title style={{fontWeight:'bold'}}>{i18n.t("w9")}</ListItem.Title>
+                <ListItem.Subtitle>{i18n.t("w10")}</ListItem.Subtitle>
+              </ListItem.Content>
+            </ListItem>
+           <View style={style.modalViewButton}>
           <TouchableOpacity
             style={{
               flexDirection: "row",
@@ -1028,7 +975,7 @@ const Home = (props) => {
               borderColor: "#e35504",
               marginBottom: 20,
             }}
-            onPress={() => {setModalVisible(!modalVisible); }}
+            onPress={() => { setModalVisibleAlert(!modalVisibleAlert); } }
           >
             <Text
               style={{
@@ -1041,12 +988,12 @@ const Home = (props) => {
               {i18n.t("Continue")}
             </Text>
           </TouchableOpacity>
-         
-          </View>
         </View>
-      </Modal>
 
-      <AnimatedFlatList
+        </View>
+      </View>
+    </Modal>
+    <AnimatedFlatList
         refreshing={refreshing} // Added pull to refesh state
         onRefresh={_refresh} // Added pull to refresh control
         showsHorizontalScrollIndicator={false}
@@ -1057,116 +1004,108 @@ const Home = (props) => {
         data={cameraData}
         extraData={cameraData}
         scrollEventThrottle={16}
-        ListEmptyComponent={
-          <View style={style.empty}>
-            <View style={style.fake}>
-              <View style={style.fakeSquare}>
-                <Image
-                  source={require("../../../assets/elementor-placeholder-image.png")}
-                  resizeMode={FastImage.resizeMode.cover}
-                  style={{
-                    position: "absolute",
-                    height: 175,
-                    width: SCREEN_WIDTH - 150,
-                    borderRadius: 10,
-                    overflow: "hidden",
-                  }}
-                />
-              </View>
-              <View
-                style={[
-                  style.fakeLine,
-                  {
-                    width: SCREEN_WIDTH - 150,
-                    height: 40,
-                    marginBottom: 0,
-                    position: "absolute",
-                    bottom: 0,
-                  },
-                ]}
-              />
-              <View
-                style={[
-                  style.fakeLine,
-                  {
-                    width: 30,
-                    height: 120,
-                    marginBottom: 0,
-                    position: "absolute",
-                    top: 8,
-                    right: 5,
-                  },
-                ]}
-              />
-              <View
-                style={[
-                  style.fakeLine,
-                  {
-                    width: 150,
-                    height: 20,
-                    marginBottom: 0,
-                    position: "absolute",
-                    bottom: 10,
-                    left: 5,
-                    backgroundColor: "#e8e9ed",
-                  },
-                ]}
-              />
+        ListEmptyComponent={<View style={style.empty}>
+          <View style={style.fake}>
+            <View style={style.fakeSquare}>
+              <Image
+                source={require("../../../assets/elementor-placeholder-image.png")}
+                resizeMode={FastImage.resizeMode.cover}
+                style={{
+                  position: "absolute",
+                  height: 175,
+                  width: SCREEN_WIDTH - 150,
+                  borderRadius: 10,
+                  overflow: "hidden",
+                }} />
             </View>
-            <EmptyStateView
-              headerText={i18n.t("Capturing Moments, Crafting Memories!")}
-              subHeaderText={i18n.t("Start")}
-              headerTextStyle={style.headerTextStyle}
-              subHeaderTextStyle={style.subHeaderTextStyle}
-            />
+            <View
+              style={[
+                style.fakeLine,
+                {
+                  width: SCREEN_WIDTH - 150,
+                  height: 40,
+                  marginBottom: 0,
+                  position: "absolute",
+                  bottom: 0,
+                },
+              ]} />
+            <View
+              style={[
+                style.fakeLine,
+                {
+                  width: 30,
+                  height: 120,
+                  marginBottom: 0,
+                  position: "absolute",
+                  top: 8,
+                  right: 5,
+                },
+              ]} />
+            <View
+              style={[
+                style.fakeLine,
+                {
+                  width: 150,
+                  height: 20,
+                  marginBottom: 0,
+                  position: "absolute",
+                  bottom: 10,
+                  left: 5,
+                  backgroundColor: "#e8e9ed",
+                },
+              ]} />
           </View>
+          <EmptyStateView
+            headerText={i18n.t("Capturing Moments, Crafting Memories!")}
+            subHeaderText={i18n.t("Start")}
+            headerTextStyle={style.headerTextStyle}
+            subHeaderTextStyle={style.subHeaderTextStyle} />
+        </View>
         }
         ListHeaderComponent={
-          <>
-            <FriendHeader
-              _createCamera={_createCamera}
-              _gotoAllFriends={_gotoAllFriends}
-              goToFriend={goToFriend}
-            />
+         <View>
+          <FriendHeader
+            _createCamera={_createCamera}
+            _gotoAllFriends={_gotoAllFriends}
+            goToFriend={goToFriend} />
+            
             <Loading
               message={uploading.message}
               flex={uploading.display}
-              image={uploading.image}
-            />
-          </>
+              image={uploading.image} />
+              </View>
         }
         keyExtractor={(item, index) => index}
         renderItem={(item, index) => (
-      { user.user_id == item.owner ? (
-          <ListItem
-            item={item}
-            index={index}
-            isPro={user == undefined ? "" : user.isPro}
-            _gotoStore={_gotoStore}
-            _deleteFeedItem={_deleteFeedItem}
-            _joinFeedItem={_joinFeedItem}
-            _deleteFeedItemIndex={_deleteFeedItemIndex}
-            _editEvent={_editEvent}
-            _gotoMedia={_gotoMedia}
-            _gotoCamera={_gotoCamera}
-            setQrCodeURL={setQrCodeURL}
-            _gotoQRCode={_gotoQRCode}
-            _gotoShare={_gotoShare}
-            _editItem={_editItem}
-            _addMax={_addMax}
-          />
-       ) : (
-          <FriendListItem
+           user.user_id == item.owner ? (
+              <ListItems
+                item={item}
+                index={index}
+                isPro={user == undefined ? "0" : user.isPro}
+                _gotoStore={_gotoStore}
+                _deleteFeedItem={_deleteFeedItem}
+                _joinFeedItem={_joinFeedItem}
+                _deleteFeedItemIndex={_deleteFeedItemIndex}
+                _editEvent={_editEvent}
+                _gotoMedia={_gotoMedia}
+                _gotoCamera={_gotoCamera}
+                setQrCodeURL={setQrCodeURL}
+                _gotoQRCode={_gotoQRCode}
+                _gotoShare={_gotoShare}
+                _editItem={_editItem}
+                _addMax={_addMax} />
+            ) : (
+              <FriendListItem
                 item={item}
                 index={index}
                 _gotoMedia={_gotoMedia}
                 _gotoCamera={_gotoCamera}
                 _gotoStore={_gotoStore}
                 _autoJoin={_autoJoin}
-                _repotPost={_repotPost}
-              />
-        )}
-      />
+                _repotPost={_repotPost} />
+            )
+        )} 
+        />
     </SafeAreaProvider>
   );
 };
@@ -1197,6 +1136,25 @@ const style = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 22,
     elevation: 7,
+  },
+   modalView2: {
+    width: "90%",
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 15,
+    alignItems: "left",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 7,
+  },
+  modalViewButton: {
+    alignItems: "center",
+    
   },
   modalView: {
     width: "80%",
@@ -1329,7 +1287,7 @@ const style = StyleSheet.create({
     justifyContent: "center",
     marginTop: 50,
   },
-      modalTitle: {
+  modalTitle: {
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
