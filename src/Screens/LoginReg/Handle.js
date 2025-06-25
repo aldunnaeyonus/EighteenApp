@@ -1,6 +1,6 @@
 import { View, Text, TextInput, Platform, Alert } from "react-native";
 import { TouchableOpacity } from "react-native";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import styles from "../../styles/index.style";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -35,7 +35,6 @@ useEffect(() => {
   GoogleSignin.configure({
       scopes: ['profile', 'email'],
       webClientId: '433573575993-b31pdthd0u5bv1mrc0qoftvqoj7bloal.apps.googleusercontent.com',
-      androidClientId:'433573575993-j34idj9ltmoa4hppl52bal8am65uhnor.apps.googleusercontent.com',
       });
   }, []);
 
@@ -195,7 +194,6 @@ useEffect(() => {
     }
       
     } catch (error) {
-      console.log(error);
       console.error("Google Sign-In Error", error);
     }
   };
