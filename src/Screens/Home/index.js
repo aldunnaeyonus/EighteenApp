@@ -28,6 +28,7 @@ import { axiosPull } from "../../utils/axiosPull";
 import * as i18n from "../../../i18n";
 import { useIsFocused } from "@react-navigation/native";
 import Loading from "../SubViews/home/Loading";
+import FriendListItem from "../SubViews/friends/friendsitem";
 import {
   Camera,
   useCameraDevice,
