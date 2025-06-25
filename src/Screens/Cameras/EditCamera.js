@@ -288,7 +288,6 @@ const EditCamera = (props) => {
       );
     } else {
       let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         exif: true,
         selectionLimit: 1,
