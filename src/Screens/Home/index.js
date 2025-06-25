@@ -271,6 +271,14 @@ const Home = (props) => {
     });
   };
 
+    const _gotoStore = (pin, owner, name) => {
+    props.navigation.navigate("Purchase", {
+      pin: pin,
+      owner: owner,
+      type: "user",
+      eventName: name,
+    });
+  };
   const _addMax = async (pin, owner, pro) => {
     const data = {
       owner: owner,
@@ -344,6 +352,62 @@ const Home = (props) => {
     );
   };
 
+  const _repotPost = async (pin, owner, title) => {
+    Alert.alert(
+      i18n.t("Report Event"),
+      i18n.t("Are you sure you event"),
+      [
+        {
+          text: i18n.t("Cancel"),
+          onPress: () => console.log("Cancel Pressed"),
+          style: "destructive",
+        },
+        {
+          text: i18n.t("Report Event"),
+          onPress: async () => {
+            const data = {
+              owner: owner,
+              user: user.user_id,
+              pin: pin,
+              title: title,
+              type: "event",
+              locale: getLocales()[0].languageCode,
+            };
+            await axiosPull.postData("/camera/report.php", data);
+            Alert.alert("", i18n.t("A report event"));
+          },
+          style: "default",
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+  
+    const _autoJoin = async (owner, pin, end, id) => {
+    const data = {
+      owner: owner,
+      user: user.user_id,
+      pin: pin,
+      end: end,
+      id: id,
+    };
+    await axiosPull.postData("/camera/autoJoin.php", data);
+    await axiosPull._pullFriendFeed(owner);
+    await axiosPull._pullFriendCameraFeed(owner, "user", user.user_id);
+  };
+  
+    const _autoJoin = async (owner, pin, end, id) => {
+    const data = {
+      owner: owner,
+      user: user.user_id,
+      pin: pin,
+      end: end,
+      id: id,
+    };
+    await axiosPull.postData("/camera/autoJoin.php", data);
+    await axiosPull._pullFriendFeed(owner);
+    await axiosPull._pullFriendCameraFeed(owner, "user", user.user_id);
+  };
   const _deleteFeedItemSource = async (UUID, owner, pin) => {
     _deleteFeedItemIndex(UUID);
     const data = {
