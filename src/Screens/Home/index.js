@@ -40,6 +40,8 @@ import RNImageToPdf from "react-native-image-to-pdf";
 import RNPrint from "react-native-print";
 import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ListItem } from "@rneui/themed";
+
 
 const Home = (props) => {
   const [cameraData, setcameraData] = useMMKVObject(
@@ -53,7 +55,7 @@ const Home = (props) => {
   const [refreshing, setRefreshing] = useState(false);
   const [qrCodeURL, setQrCodeURL] = useState("");
   const AnimatedFlatList = Animated.createAnimatedComponent(Animated.FlatList);
-
+  const [modalVisibleAlert, setModalVisibleAlert] = useState(false);
   const isFocused = useIsFocused();
   const [uploading] = useMMKVObject("uploadData", storage);
   var timeout;
@@ -923,6 +925,95 @@ const Home = (props) => {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
+      <Modal
+        animationType="fade" // or "fade", "none"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+        <Text style={styles.modalTitle}>{i18n.t("w1")}</Text>
+        <Text style={styles.modalText}>{i18n.t("w2")}</Text>
+
+           <ListItem key="1">
+                <Icon
+                  type="ionicon"
+                  name="film-outline"
+                  size={25}
+                  color="#3D4849"
+                />
+                <ListItem.Content>
+                  <ListItem.Title>{i18n.t("w3")}</ListItem.Title>
+                  <ListItem.Subtitle{i18n.t("w4")}</ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+            <ListItem key="2">
+                <Icon
+                  type="material-community"
+                  name="face-man-profile"
+                  size={25}
+                  color="#3D4849"
+                />
+                <ListItem.Content>
+                  <ListItem.Title>{i18n.t("w5")}</ListItem.Title>
+                  <ListItem.Subtitle>{i18n.t("w6")}</ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+                <ListItem key="5">
+                <Icon
+                type="ionicon"
+                name="notifications-circle-outline"
+                  size={25}
+                  color="#3D4849"
+                />
+                <ListItem.Content>
+                  <ListItem.Title>{i18n.t("w7")}</ListItem.Title>
+                  <ListItem.Subtitle>{i18n.t("w8")}</ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+             <ListItem key="3">
+                <Icon
+                type="material-community"
+                name="account-edit-outline"
+                  size={25}
+                  color="#3D4849"
+                />
+                <ListItem.Content>
+                  <ListItem.Title>{i18n.t("w9")}</ListItem.Title>
+                  <ListItem.Subtitle>{i18n.t("w10")}</ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+              <ListItem key="6">
+                <Icon
+                type="material-community"
+                name="chip"
+                  size={25}
+                  color="#3D4849"
+                />
+                <ListItem.Content>
+                  <ListItem.Title>{i18n.t("w11")}</ListItem.Title>
+                  <ListItem.Subtitle>{i18n.t("w12")}</ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+                <ListItem key="4">
+                <Icon
+                type="material"
+                name="family-restroom"
+                  size={25}
+                  color="#3D4849"
+                />
+                <ListItem.Content>
+                  <ListItem.Title>{i18n.t("w13")}</ListItem.Title>
+                  <ListItem.Subtitle{i18n.t("w14")}</ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+            <Button title={{i18n.t("continue")}} onPress={() => setModalVisible(!modalVisible)} />
+          </View>
+        </View>
+      </Modal>
 
       <AnimatedFlatList
         refreshing={refreshing} // Added pull to refesh state
@@ -1207,6 +1298,18 @@ const style = StyleSheet.create({
     justifyContent: "center",
     marginTop: 50,
   },
+      modalTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 15,
+  },
+   modalText: {
+    fontSize: 17,
+    fontWeight: '500',
+    textAlign: 'left',
+    marginBottom: 15,
+  }
 });
 
 export default Home;
