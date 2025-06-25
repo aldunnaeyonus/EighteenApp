@@ -277,6 +277,11 @@ const CreateCamera = (props) => {
     } else {
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        exif: true,
+        selectionLimit: 1,
+        allowsMultipleSelection: false,
+        quality: 1,
+        orderedSelection: true,
       });
       if (!result.canceled) {
         setImage(result.assets[0].uri);
