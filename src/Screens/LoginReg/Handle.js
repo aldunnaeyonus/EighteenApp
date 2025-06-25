@@ -32,6 +32,7 @@ const Handle = (props) => {
 
   useEffect(() => {
     //cd android && ./gradlew signingReport
+    if (Platform.OS == "android"){
     try {
       GoogleSignin.signOut();
     } catch (error) {
@@ -45,6 +46,7 @@ const Handle = (props) => {
       offlineAccess: false,
       profileImageSize: 120,
     });
+  }
   }, []);
 
   const validate = (text) => {
