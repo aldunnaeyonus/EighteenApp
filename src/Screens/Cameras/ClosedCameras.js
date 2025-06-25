@@ -213,9 +213,6 @@ const ClosedCameras = (props) => {
   };
 
   const Item = ({ item }) => {
-    if (moment().unix() - item.end >= 2592000) {
-      //_deleteFeedItemIndex(item.UUID);
-    }
     storage.delete(`user.Gallery.Friend.Feed.${item.pin}`);
     storage.delete(`user.Member.Join.Feed.${item.pin}`);
 
@@ -291,7 +288,7 @@ const ClosedCameras = (props) => {
               style={styles.whiteIcon2}
             />
             <Text style={{ marginTop: 5 }}>
-              Ended: {moment.unix(item.end).locale(localLang).format("LLL")}
+            {i18nt.t(Ended:)} {moment.unix(item.end).locale(localLang).format("LLL")}
             </Text>
           </View>
 
@@ -316,7 +313,7 @@ const ClosedCameras = (props) => {
               {moment
                 .unix(item.end)
                 .locale(localLang)
-                .add(1, "M")
+                .add((user.isPro ? 3 : 1), "M")
                 .format("LLL")}
             </Text>
           </View>
