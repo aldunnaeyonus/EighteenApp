@@ -473,7 +473,7 @@ const Home = (props) => {
         props.navigation.navigate("Begin");
       }
       const whatnew = await AsyncStorage.getItem(`whatnew.${user.user_id}`);
-      if (whatnew == undefined || whatnew == "1") {
+      if (whatnew == undefined || whatnew == "0") {
         setModalVisibleAlert(true);
         await AsyncStorage.setItem(`whatnew.${user.user_id}`, "1");
       }
