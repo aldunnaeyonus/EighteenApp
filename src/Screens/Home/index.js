@@ -1017,25 +1017,31 @@ const Home = (props) => {
               </ListItem>
           <TouchableOpacity
             style={{
-              width: "90%",
-              height: 40,
-              margin: 20,
+              flexDirection: "row",
+              marginTop: 50,
+              width: 200,
+              backgroundColor: "#e35504",
+              borderRadius: 8,
+              padding: 15,
+              alignItems: "center",
+              justifyContent: "center",
+              borderColor: "#e35504",
+              marginBottom: 20,
             }}
-            onPress={() => {
-             setModalVisible(!modalVisible);  
-            }}
+            onPress={() => {setModalVisible(!modalVisible); }}
           >
-            <View
+            <Text
               style={{
-                flexDirection: "row",
-                gap: 10,
-                alignItems: "center",
-                justifyContent: "center",
+                textTransform: "uppercase",
+                fontSize: 20,
+                fontWeight: 'bold',
+                color: "#fff",
               }}
             >
-              <Text> {i18n.t("continue")}</Text>
-            </View>
+              {i18n.t("continue")}
+            </Text>
           </TouchableOpacity>
+         
           </View>
         </View>
       </Modal>
