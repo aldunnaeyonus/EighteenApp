@@ -183,7 +183,9 @@ const PhotoGallery = (props) => {
         selectionLimit: parseInt(credits) >= 5 ? 5 : parseInt(credits),
         allowsEditing: false,
         videoMaxDuration: 30,
+        exif: true,
         quality: 1,
+        orderedSelection: true,
         mediaTypes: ImagePicker.MediaTypeOptions.All,
       });
       const mime = result.assets[0].uri.split(".").pop().toLowerCase();
