@@ -950,6 +950,7 @@ const Home = (props) => {
         }
         keyExtractor={(item, index) => index}
         renderItem={(item, index) => (
+      { user.user_id == item.owner ? (
           <ListItem
             item={item}
             index={index}
@@ -967,6 +968,8 @@ const Home = (props) => {
             _editItem={_editItem}
             _addMax={_addMax}
           />
+       ) : (
+         
         )}
       />
     </SafeAreaProvider>
