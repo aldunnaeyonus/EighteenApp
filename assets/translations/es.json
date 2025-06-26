@@ -335,5 +335,7 @@
   "w8": "Mantente al tanto con las notificaciones de eventos. Recibe alertas cuando comiencen o finalicen tus eventos, o cuando alguien agregue una foto o video. Puedes activar esta función en el menú Configuración, en Notificaciones dentro de Snap Eighteen.",
   "w9": "Detalles de la cuenta",
   "w10": "Personaliza tu experiencia en Snap Eighteen desde los detalles de la cuenta. Actualiza tu lema, nombre de usuario o identificador, y dirección de correo. También puedes gestionar la privacidad de tu ubicación (si está inactiva) y decidir si mostrar eventos de amigos en la pantalla principal.",
-  "Ended:": "Finalizado:"
+  "Ended:": "Finalizado: ",
+    "HideEvent": "El evento está oculto",
+  "HideEventDesc": "Cuando ocultas tu evento, no aparecerá para tus amigos. Sin embargo, cualquiera que tenga el enlace del evento aún puede verlo."
 }
