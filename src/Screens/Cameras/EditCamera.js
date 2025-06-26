@@ -50,7 +50,7 @@ const EditCamera = (props) => {
     (props.route.params.camera_add_social = "1" ? true : false)
   );
     const [switch5, setSwitch5] = useState(
-    (props.route.params.blocked = "1" ? true : false)
+    (props.route.params.isHidden = "1" ? true : false)
   );
   const [switch3, setSwitch3] = useState(
     (props.route.params.camera_purchase_more = "1" ? true : false)
@@ -426,7 +426,7 @@ const EditCamera = (props) => {
     formData.append("pin", props.route.params.pin);
     formData.append("id", props.route.params.UUID);
     formData.append("autoJoin", switch4 ? "1" : "0");
-    formData.append("blocked", switch5 ? "1" : "0");
+    formData.append("isHidden", switch5 ? "1" : "0");
     formData.append("device", Platform.OS);
     formData.append("camera", "0");
     formData.append("isAI", "0");
