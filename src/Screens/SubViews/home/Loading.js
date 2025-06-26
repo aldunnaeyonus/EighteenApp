@@ -17,7 +17,7 @@ const Loading = (props) => {
   const mime = String(props.image).split(".").pop().toLowerCase();
   const [displayText, setDisplayText] = useState("");
   const [displayTextLong] = useState(props.message);
-  const [displayTextSort] = useState(i18n.t(""));
+  const [displayTextSort] = useState(i18n.t("LongWaitTime"));
 
      useEffect(() => {
          setDisplayText(displayTextLong);
