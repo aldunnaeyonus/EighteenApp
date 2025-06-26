@@ -92,6 +92,7 @@ const GlobalFriends = (props) => {
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicatorr={false}
           nestedScrollEnabled={true}
+          keyboardShouldPersistTaps="always"
           bounces={true}
           style={{ flex: 1, height: SCREEN_HEIGHT, width: SCREEN_WIDTH}}
           data={friendData}
@@ -100,6 +101,7 @@ const GlobalFriends = (props) => {
           stickyHeaderIndices={[0]}
           ListHeaderComponent={
             <SearchBar
+              blurOnSubmit={false}
               inputContainerStyle={{ backgroundColor: "white" }}
               containerStyle={{ backgroundColor: "white" }}
               placeholder={i18n.t("SearchGlobalFriends")}
