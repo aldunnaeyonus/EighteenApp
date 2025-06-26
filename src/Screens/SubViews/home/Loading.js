@@ -10,6 +10,7 @@ const Image = createImageProgress(FastImage);
 import Progress from "react-native-progress";
 import Video from "react-native-video";
 import { SCREEN_WIDTH } from "../../../utils/constants";
+import * as i18n from "../../../i18n";
 
 const Loading = (props) => {
   const video = useRef();
@@ -20,13 +21,16 @@ const Loading = (props) => {
   const [displayTextSort] = useState(i18n.t("LongWaitTime"));
 
      useEffect(() => {
-         setDisplayText(displayTextLong);
+        setDisplayText(displayTextLong);
         const timer = setTimeout(() => {
           setDisplayText(displayTextSort);
         }, 15000);
-
-        return () => clearTimeout(timer); // Clear timeout on unmount
-      }, [displayText, displayTextLong, displayTextSort]); // Empty dependency array ensures it runs once on mount
+         if (props.message == ""){
+            setDisplayText("");
+            clearTimeout(timer);
+         }
+        return () => clearTimeout(timer);
+      }, [displayText, displayTextLong, displayTextSort, props.message, props.flex, props.image]);
     
   return (
     <View
