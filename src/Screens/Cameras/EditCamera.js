@@ -101,7 +101,7 @@ const EditCamera = (props) => {
   const [isEditing, setisEditing] = useState(false);
   let notification = new NotifService();
   const [seed, setSeed] = useState(72);
-  const [showClose, setShowClose] = useState(false);
+  const [showClose, setShowClose] = useState(true);
 
   const onChange = (event, selectDate) => {
     if (event.type === "set") {
@@ -213,6 +213,7 @@ const EditCamera = (props) => {
     );
     setImage(userImage);
     setisEditing(true);
+    setShowClose(false);
   };
 
   const onChangeAndroid = (event, selectDate) => {
@@ -290,6 +291,7 @@ const EditCamera = (props) => {
         { cancelable: false }
       );
     } else {
+      setShowClose(false);
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         exif: true,
@@ -299,6 +301,7 @@ const EditCamera = (props) => {
         orderedSelection: true,
       });
       if (!result.canceled) {
+              setShowClose(true);
         setImage(result.assets[0].uri);
         setisEditing(true);
       } else {
@@ -333,6 +336,7 @@ const EditCamera = (props) => {
       const pickImage = async () => {
         const value = await AsyncStorage.getItem("media.path");
         if (value != undefined) {
+          setShowClose(false);
           editImage(value);
         }
       };
