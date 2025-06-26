@@ -78,7 +78,7 @@ const AllFriendsListItem = (props) => {
               paddingLeft: 10,
             }}
           >
-            <Text style={style.titleText}>{props.item.item.friend_handle}</Text>
+            <Text style={style.titleText}>{props.item.item.friend_handle.toLowerCase()}</Text>
           </View>
           <ListItem.Chevron style={{ marginRight: 10 }} />
         </View>
