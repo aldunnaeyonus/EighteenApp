@@ -460,8 +460,79 @@ const FriendListItemHome = (props) => {
             {eventStart} - {eventEnd}
           </Text>
         </View>
-      </View>
-      </Pressable>
+      <View
+            style={{
+              backgroundColor: "transparent",
+              position: "absolute",
+              top: 10,
+              height: 60,
+              marginTop: 30,
+              width: SCREEN_WIDTH,
+              flexDirection: "row",
+            }}
+          >
+            <Image
+              indicator={Progress}
+              style={{
+                width: 30,
+                height: 30,
+                borderRadius: 25,
+                marginTop: 10,
+                marginLeft: 10,
+                borderWidth: 0.5,
+                alignSelf: "auto",
+                overflow: "hidden",
+                backgroundColor: "transparent",
+              }}
+              showSpinner={true}
+              spinnerColor={"rgba(0, 0, 0, 1.0)"}
+              source={{
+                priority: FastImage.priority.high,
+                cache: FastImage.cacheControl.immutable,
+                uri: props.item.item.icon,
+              }}
+            />
+            {props.item.item.isPro == "1" && (
+              <View style={{ position: "absolute" }}>
+                <View
+                  style={{
+                    marginTop: 42,
+                    marginLeft: 35,
+                    backgroundColor: "transparent",
+                    width: 20,
+                    height: 20,
+                    justifyContent: "center",
+                  }}
+                >
+                  <FastImage
+                    style={{
+                      marginLeft: -5,
+                      marginTop: -30,
+                      width: 10,
+                      height: 10,
+                    }}
+                    resizeMode={FastImage.resizeMode.contain}
+                    source={require("../../../../assets/verified.png")}
+                  />
+                </View>
+              </View>
+            )}
+            <Text
+              numberOfLines={1}
+              style={{
+                color: "white",
+                backgroundColor: "transparent",
+                fontSize: 15,
+                marginLeft: 10,
+                fontWeight: "bold",
+                marginTop: 15,
+              }}
+            >
+              {props.item.item.userName}
+            </Text>
+          </View>
+          </View>
+       </Pressable>
     </SafeAreaView>
   );
 };
