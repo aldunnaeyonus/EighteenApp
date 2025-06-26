@@ -336,5 +336,7 @@
     "w8": "Stay in the loop with Event Notifications. Get alerts when your events start or end, and when someone adds a photo or video to one of them. You can turn this feature on in the Settings menu under Notifications in Snap Eighteen.",
     "w9": "Account Details",
     "w10": "Customize your Snap Eighteen experience through Account Details. Update your motto, username or handle, and email address. You can also manage your location privacy (if currently inactive) and choose whether to display friend events on your main screen.",
-    "Ended:": "Ended: "
+    "Ended:": "Ended: ",
+    "HideEvent":"Event is Hidden",
+    "HideEventDesc":"When you hide your event, it won’t appear to your friends. However, anyone with the event link can still view it."
 }			
