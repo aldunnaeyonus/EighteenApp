@@ -474,9 +474,9 @@ const FriendListItemHome = (props) => {
             <Image
               indicator={Progress}
               style={{
-                width: 30,
-                height: 30,
-                borderRadius: 25,
+                width: 60,
+                height: 60,
+                borderRadius: 30,
                 marginTop: 10,
                 marginLeft: 10,
                 borderWidth: 0.5,
@@ -499,17 +499,17 @@ const FriendListItemHome = (props) => {
                     marginTop: 42,
                     marginLeft: 35,
                     backgroundColor: "transparent",
-                    width: 20,
-                    height: 20,
+                    width: 30,
+                    height: 30,
                     justifyContent: "center",
                   }}
                 >
                   <FastImage
                     style={{
-                      marginLeft: -5,
-                      marginTop: -30,
-                      width: 10,
-                      height: 10,
+                      marginLeft: -10,
+                      marginTop: -60,
+                      width: 20,
+                      height: 20,
                     }}
                     resizeMode={FastImage.resizeMode.contain}
                     source={require("../../../../assets/verified.png")}
@@ -522,9 +522,9 @@ const FriendListItemHome = (props) => {
               style={{
                 color: "white",
                 backgroundColor: "transparent",
-                fontSize: 15,
+                fontSize: 20,
                 marginLeft: 10,
-                fontWeight: "bold",
+                fontWeight: "700",
                 marginTop: 15,
               }}
             >
