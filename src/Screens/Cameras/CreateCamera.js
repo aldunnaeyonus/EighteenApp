@@ -414,7 +414,7 @@ const CreateCamera = (props) => {
     formData.append("autoJoin", switch4 ? "1" : "0");
     formData.append("device", Platform.OS);
     formData.append("camera", "0");
-    formData.append("blocked", switch5 ? "1" : "0");
+    formData.append("isHidden", switch5 ? "1" : "0");
     fileName =
       "SNAP18-cover-" +
       user.user_id +
