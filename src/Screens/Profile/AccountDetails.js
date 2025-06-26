@@ -16,7 +16,7 @@ const AccountDetails = (props) => {
   const [motto, setMootto] = useState(user.user_motto);
   const [handle, setHandle] = useState(user.user_handle);
   const [switch4, setSwitch4] = useState((user.privacy == "1" ? true : false));
-  const [switch5, setSwitch5] = useState((user.mevms == "1" ? true : false));
+  const [switch5, setSwitch5] = useState((user.showActive == "1" ? true : false));
   const isFocused = useIsFocused();
 
   useEffect(() => {
