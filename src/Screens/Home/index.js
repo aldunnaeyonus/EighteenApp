@@ -29,7 +29,7 @@ import { axiosPull } from "../../utils/axiosPull";
 import * as i18n from "../../../i18n";
 import { useIsFocused } from "@react-navigation/native";
 import Loading from "../SubViews/home/Loading";
-import FriendListItem from "../SubViews/friends/friendsitem";
+import FriendListItemHome from "../SubViews/friends/friendlistitemhome ";
 import {
   Camera,
   useCameraDevice,
@@ -1128,7 +1128,7 @@ const Home = (props) => {
               _addMax={_addMax}
             />
           ) : (
-            <FriendListItem
+            <FriendListItemHome
               item={item}
               index={index}
               _gotoMedia={_gotoMedia}
