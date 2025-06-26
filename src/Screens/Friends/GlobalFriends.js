@@ -23,6 +23,7 @@ const GlobalFriends = (props) => {
   const [refreshing, serRefreshing] = useState(false);
 
   const _searchDB = async (search) => {
+    //Keep Keyboard open after type.
     await axiosPull._pullFriendsAllFeedABC(user.user_id, search);
   };
 
