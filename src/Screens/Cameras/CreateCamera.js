@@ -1555,8 +1555,8 @@ const CreateCamera = (props) => {
               )}
  <ListItem key="17">
                     <Icon
-                      type="material-community"
-                      name="share"
+                      type="material"
+                      name="hide-source"
                       size={25}
                       color="#3D4849"
                       containerStyle={{
