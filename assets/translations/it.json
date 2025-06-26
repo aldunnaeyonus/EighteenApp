@@ -316,6 +316,24 @@
     "Flag&Redraw":"Segnala e ridisegna",
     "GlobalFriends":"Amici globali",
     "SearchGlobalFriends": "Cerca amici globali",
-        "EventEnded": "Evento terminato"
-
+        "EventEnded": "Evento terminato",
+"ActiveUpload": "Caricamento attivo",
+  "WhileActiveUpload": "Un file è attualmente in fase di caricamento. Se lasci ora, rischi di perdere il caricamento.",
+  "or": "-- OPPURE --",
+  "Show Active Member Events Description": "Mostra gli eventi che i tuoi membri attivi stanno organizzando direttamente nella schermata principale degli eventi.",
+  "Show Active Member Events": "Eventi dei membri attivi",
+  "LongWaitTime": "La risposta del server sta richiedendo più tempo del solito. Ti chiediamo un po' di pazienza: stiamo ancora tentando di connettere e sincronizzare i tuoi contenuti multimediali.",
+  "Hidden Email": "Opzione email nascosta",
+  "HIddenEmail": "Se hai scelto di nascondere la tua email, l’indirizzo nascosto verrà utilizzato come identificativo del tuo account.",
+  "w1": "Benvenuto su Snap Eighteen",
+  "w2": "Prima di iniziare, ecco alcuni consigli utili per ottenere il massimo dalla tua esperienza.",
+  "w3": "Eventi storici",
+  "w4": "Accedi agli eventi terminati e scarica i tuoi ricordi. Gli eventi scaduti vengono archiviati qui — fino a 90 giorni per gli utenti Pro e 30 giorni per quelli Standard. Una volta superato il limite, ti invieremo automaticamente un file .zip con tutti i tuoi contenuti.",
+  "w5": "Avatar del profilo",
+  "w6": "Rendi il tuo account più personale e riconoscibile aggiornando l’avatar del profilo. Trovi questa funzione nel menu Impostazioni sotto Immagine del profilo in Snap Eighteen.",
+  "w7": "Notifiche evento",
+  "w8": "Rimani aggiornato con le notifiche degli eventi. Ricevi avvisi quando i tuoi eventi iniziano o terminano, o quando qualcuno aggiunge una foto o un video. Puoi attivare questa funzione nel menu Impostazioni alla voce Notifiche in Snap Eighteen.",
+  "w9": "Dettagli account",
+  "w10": "Personalizza la tua esperienza su Snap Eighteen tramite i Dettagli dell'account. Aggiorna il tuo motto, nome utente o handle, e l’indirizzo email. Puoi anche gestire la privacy della tua posizione (se attualmente disattivata) e scegliere se mostrare gli eventi degli amici nella schermata principale.",
+  "Ended:": "Terminato:"
 }
