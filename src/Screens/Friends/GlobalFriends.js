@@ -21,27 +21,21 @@ const GlobalFriends = (props) => {
   const { toast } = useToast();
   const [user] = useMMKVObject("user.Data", storage);
   const [refreshing, serRefreshing] = useState(false);
-  const [search, setSearch] = useState("");
 
   const _searchDB = async (search) => {
-    serRefreshing(false);
-    const datas = await axiosPull._pullFriendsAllFeedABC(user.user_id, search);
-    console.log(datas)
+    await axiosPull._pullFriendsAllFeedABC(user.user_id, search);
   };
 
 
   const _refresh = async () => {
     serRefreshing(true);
-    setSearch("");
-    storage.set("user.All.Global.Friend.Feed", JSON.stringify([]));
-    await axiosPull._pullFriendsAllFeedABC(user.user_id, "");
+    _clear();
     setTimeout(() => {
       serRefreshing(false);
     }, 1500);
   };
 
   const _clear = async () => {
-    setSearch("");
     storage.set("user.All.Global.Friend.Feed", JSON.stringify([]));
     await axiosPull._pullFriendsAllFeedABC(user.user_id, "");
   };
@@ -69,7 +63,7 @@ const GlobalFriends = (props) => {
         });
       }
       const fetchData = async () => {
-    await axiosPull._pullFriendsAllFeedABC(user.user_id, search);
+    await axiosPull._pullFriendsAllFeedABC(user.user_id, "");
       };
       fetchData();
     }, [props, user, refreshing])
@@ -83,10 +77,8 @@ const GlobalFriends = (props) => {
 
   const searchFunction = (text) => {
     if (text.length <= 0) {
-            setSearch("");
       _clear();
     } else {
-            setSearch(text);
       _searchDB(text)
     }
   };
