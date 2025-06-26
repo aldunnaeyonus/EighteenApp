@@ -51,6 +51,7 @@ const CreateCamera = (props) => {
   const [switch2, setSwitch2] = useState(true);
   const [switch3, setSwitch3] = useState(false);
   const [switch4, setSwitch4] = useState(false);
+ const [switch5, setSwitch5] = useState(false);
   const [switch1, setSwitch1] = useState(false);
   const [interval] = useState(1);
   const [minimumDate] = useState(newDate);
@@ -250,6 +251,10 @@ const CreateCamera = (props) => {
     setSwitch3(!switch3);
   };
 
+    const toggleSwitch5 = () => {
+    setSwitch5(!switch5);
+  };
+  
   const pickImage = async () => {
     if (libraryStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
       await ImagePicker.requestCameraPermissionsAsync();
@@ -340,6 +345,7 @@ const CreateCamera = (props) => {
       end,
       cameras,
       switch4,
+        switch5,
       switch2,
       switch3,
       isAI,
@@ -408,6 +414,7 @@ const CreateCamera = (props) => {
     formData.append("autoJoin", switch4 ? "1" : "0");
     formData.append("device", Platform.OS);
     formData.append("camera", "0");
+    formData.append("blocked", switch5 ? "1" : "0");
     fileName =
       "SNAP18-cover-" +
       user.user_id +
@@ -1546,6 +1553,40 @@ const CreateCamera = (props) => {
                   <View style={[styles.dividerStyle]} />
                 </>
               )}
+ <ListItem key="17">
+                    <Icon
+                      type="material-community"
+                      name="share"
+                      size={25}
+                      color="#3D4849"
+                      containerStyle={{
+                        width: 28,
+                        height: 28,
+                        borderRadius: 6,
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    />
+                    <ListItem.Content>
+                      <ListItem.Title style={styles.imageUserNameTitleBlack}>
+                        {i18n.t("HideEvent")}
+                      </ListItem.Title>
+                      <ListItem.Subtitle>{i18n.t("HideEventDesc")}</ListItem.Subtitle>
+                    </ListItem.Content>
+                  </ListItem>
+                  <View style={[styles.dividerStyle]} />
+                  <ListItem
+                    containerStyle={{ height: 65, backgroundColor: "#fafbfc" }}
+                    key="18"
+                  >
+                    <ListItem.Content>
+                      <Switch
+                        style={{ alignSelf: "flex-end" }}
+                        value={switch5}
+                        onValueChange={(value) => toggleSwitch5(value)}
+                      />
+                    </ListItem.Content>
+                  </ListItem>
             </View>
           </ScrollView>
         </SafeAreaView>
