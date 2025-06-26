@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import {
     View,
     Text,
@@ -15,7 +15,19 @@ const Loading = (props) => {
   const video = useRef();
   const photo = useRef();
   const mime = String(props.image).split(".").pop().toLowerCase();
+  const [displayText, setDisplayText] = useState("");
+  const [displayTextLong] = useState(props.message);
+  const [displayTextSort] = useState(i18n.t(""));
 
+     useEffect(() => {
+         setDisplayText(displayTextLong);
+        const timer = setTimeout(() => {
+          setDisplayText(displayTextSort);
+        }, 15000);
+
+        return () => clearTimeout(timer); // Clear timeout on unmount
+      }, [displayText, displayTextLong, displayTextSort]); // Empty dependency array ensures it runs once on mount
+    
   return (
     <View
     style={{
@@ -88,7 +100,7 @@ const Loading = (props) => {
         width: SCREEN_WIDTH - 100,
         fontSize:15
       }}
-    >{props.message}</Text>
+    >{displayText}</Text>
 
     </View>
 )
