@@ -21,6 +21,7 @@ import {
   IOS_DISPLAY,
   constants,
   SCREEN_WIDTH,
+  getExtensionFromFilename
 } from "../../utils/constants";
 import * as ImagePicker from "expo-image-picker";
 import FormData from "form-data";
@@ -420,7 +421,7 @@ const CreateCamera = (props) => {
       user.user_id +
       "-" +
       Date.now() +
-      image.split("/").pop();
+      "." + getExtensionFromFilename(image).toLowerCase();
     formData.append("aiIMAGE", "");
     formData.append("file", {
       name: fileName,
