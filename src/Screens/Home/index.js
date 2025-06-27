@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Share,
   StyleSheet,
@@ -403,9 +403,10 @@ const Home = (props) => {
   const _refresh = async () => {
     setRefreshing(true);
     await axiosPull._pullCameraFeed(user.user_id, "owner");
+    await axiosPull._pullFriendsFeed(user.user_id);
     setTimeout(async () => {
       setRefreshing(false);
-    }, 1500);
+    }, 1000);
   };
 
   const _gotoQRCode = (link) => {
@@ -445,10 +446,10 @@ const Home = (props) => {
         />
       ),
     });
-    timeout = setInterval(async () => {
+    //timeout = setInterval(async () => {
       //await axiosPull._pullCameraFeed(user.user_id, "owner");
       //await axiosPull._pullFriendsFeed(user.user_id);
-    }, 35000);
+    //}, 5000);
 
     const fetchData = async () => {
       await axiosPull._pullUser(user.user_id, "Home");
@@ -1138,8 +1139,8 @@ const Home = (props) => {
               _repotPost={_repotPost}
             />
           )
-      }
-      />
+        }
+          />
     </SafeAreaProvider>
   );
 };

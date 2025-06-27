@@ -392,11 +392,11 @@ const Friends = (props) => {
     fetchData();
 
     timeout = setInterval(async () => {
-      await axiosPull._pullFriendCameraFeed(
-        props.route.params.userID,
-        "user",
-        user.user_id
-      );
+      // await axiosPull._pullFriendCameraFeed(
+      //   props.route.params.userID,
+      //   "user",
+      //   user.user_id
+      // );
     }, 60000);
 
     return () => {
