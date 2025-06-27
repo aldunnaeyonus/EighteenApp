@@ -353,8 +353,18 @@ export const durationAsString = (end: any, start: any, localLang: any) => {
             .humanize(true);
   };
 
+export const getExtensionFromFilename = (filename: any) => {
+  const lastDotIndex = filename.lastIndexOf('.');
+  if (lastDotIndex === -1) {
+    return 'jpg'; // No extension found
+  }
+  return filename.slice(lastDotIndex + 1);
+};
+
+
 export const constants = {
   durationAsString,
+  getExtensionFromFilename,
   productSkus,
   mask,
   stringToBoolean,
