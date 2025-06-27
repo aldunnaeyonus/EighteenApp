@@ -258,12 +258,12 @@ const EditCamera = (props) => {
   };
   const editImage = async (image) => {
     try {
-      const path = await PhotoEditor.open({
+      await PhotoEditor.open({
         path: image,
         stickers,
-      }).then(() => {
+      }).then((image) => {
       setShowClose(true);
-      setImage(path);
+      setImage(image);
       setisEditing(false);
       })
 

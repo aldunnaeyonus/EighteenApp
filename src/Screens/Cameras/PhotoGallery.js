@@ -196,7 +196,7 @@ const PhotoGallery = (props) => {
         orderedSelection: true,
         mediaTypes: ImagePicker.MediaTypeOptions.All,
       });
-      const mime = result.assets[0].uri.split(".").pop().toLowerCase();
+      const mime = getExtensionFromFilename(result.assets[0].uri).toLowerCase();
 
       if (!result.canceled) {
         setAnimating(true);
@@ -210,11 +210,11 @@ const PhotoGallery = (props) => {
           createEvent();
         } else {
           try {
-            const path = await PhotoEditor.open({
+            await PhotoEditor.open({
               path: result.assets[0].uri,
               stickers,
-            }).then(() => {
-            pickedImages.push(path);
+            }).then((image) => {
+            pickedImages.push(image);
             createEvent();
             });
           } catch (e) {

@@ -122,14 +122,12 @@ const CreateCamera = (props) => {
 
   const editImage = async (image) => {
     try {
-      const path = await PhotoEditor.open({
+      await PhotoEditor.open({
         path: image,
         stickers,
-      }).then(() => {
-        if (path) {
-          setImage(path);
+      }).then((image) => {
+          setImage(image);
           setisEditing(false);
-        }
         setShowClose(true);
       });
     } catch (e) {

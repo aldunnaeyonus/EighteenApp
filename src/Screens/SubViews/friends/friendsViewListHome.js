@@ -57,6 +57,23 @@ const FriendListItemHome = (props) => {
 
   return (
     <SafeAreaView key={props.item.item.UUID} style={style.listItem}>
+               <Pressable 
+               disabled={props.item.item.subscribed == "0" ? true : props.item.item.show_gallery == "1" ? false : false}
+                    onPress={()=> {
+                      if (props.item.item.start < moment().unix()){
+                      props._gotoMedia(
+                        props.item.item.pin,
+                        props.item.item.title,
+                        props.item.item.owner,
+                        props.item.item.UUID,
+                        props.item.item.end,
+                        props.item.item.start,
+                        props.item.item.credits,
+                        props.item.item.camera_add_social,
+                        props.item.item.illustration
+                      )
+                    }
+                  }}>
       <View
         key={props}
         style={{
@@ -339,7 +356,7 @@ const FriendListItemHome = (props) => {
                 gap: 10,
                 overflow: "hidden",
                 height: 30,
-                margin: 15,
+                margin: 10,
                 borderWidth: 1,
                 borderRadius: 5,
                 borderColor: "#fff",
@@ -448,8 +465,9 @@ const FriendListItemHome = (props) => {
             style={{
               backgroundColor: "transparent",
               position: "absolute",
-              height: 60,
-              marginTop: 5,
+              height: 50,
+              backgroundColor: "rgba(0, 0, 0, 0.20)",
+              marginTop: 0,
               width: SCREEN_WIDTH,
               flexDirection: "row",
             }}
@@ -479,8 +497,8 @@ const FriendListItemHome = (props) => {
               <View style={{ position: "absolute" }}>
                 <View
                   style={{
-                    marginTop: 42,
-                    marginLeft: 35,
+                    marginTop: 22,
+                    marginLeft: 40,
                     backgroundColor: "transparent",
                     width: 30,
                     height: 30,
@@ -489,10 +507,8 @@ const FriendListItemHome = (props) => {
                 >
                   <FastImage
                     style={{
-                      marginLeft: 10,
-                      marginTop: 60,
-                      width: 20,
-                      height: 20,
+                      width: 15,
+                      height: 15,
                     }}
                     resizeMode={FastImage.resizeMode.contain}
                     source={require("../../../../assets/verified.png")}
@@ -508,13 +524,14 @@ const FriendListItemHome = (props) => {
                 fontSize: 17,
                 marginLeft: 10,
                 fontWeight: "700",
-                marginTop: -15,
+                marginTop: 12,
               }}
             >
               {props.item.item.userName}
             </Text>
           </View>
           </View>
+          </Pressable>
     </SafeAreaView>
   );
 };

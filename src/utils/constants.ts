@@ -363,7 +363,7 @@ export const durationAsString = (end: any, start: any, localLang: any) => {
             .humanize(true);
   };
 
-export const getExtensionFromFilename = (filename: any) => {
+export const getExtensionFromFilename = (filename: string) => {
   const lastDotIndex = filename.lastIndexOf('.');
   if (lastDotIndex === -1) {
     return 'jpg'; // No extension found

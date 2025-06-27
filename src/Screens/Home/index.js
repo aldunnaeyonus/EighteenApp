@@ -1107,9 +1107,9 @@ const Home = (props) => {
             />
           </View>
         }
-        keyExtractor={(item, index) => index}
+        keyExtractor={(_, index) => index}
         renderItem={(item, index) =>
-          item.owner == user.user_id ? (
+          item.owner === item.user ? (
             <ListItems
               item={item}
               index={index}
