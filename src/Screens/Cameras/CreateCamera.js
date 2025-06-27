@@ -425,7 +425,7 @@ const CreateCamera = (props) => {
     formData.append("aiIMAGE", "");
     formData.append("file", {
       name: fileName,
-      type: constants.mimes(image.split(".").pop()), // set MIME type
+      type: constants.mimes(getExtensionFromFilename(image).toLowerCase()), // set MIME type
       uri: Platform.OS === "android" ? image : image.replace("file://", ""),
     });
     formData.append("photoName", fileName);
