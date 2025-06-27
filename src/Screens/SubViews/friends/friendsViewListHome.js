@@ -57,22 +57,6 @@ const FriendListItemHome = (props) => {
 
   return (
     <SafeAreaView key={props.item.item.UUID} style={style.listItem}>
-         <Pressable 
-                    onPress={()=> {
-                      if (props.item.item.start < moment().unix()){
-                      props._gotoMedia(
-                        props.item.item.pin,
-                        props.item.item.title,
-                        props.item.item.owner,
-                        props.item.item.UUID,
-                        props.item.item.end,
-                        props.item.item.start,
-                        props.item.item.credits,
-                        props.item.item.camera_add_social,
-                        props.item.item.illustration
-                      )
-                    }
-                  }}>
       <View
         key={props}
         style={{
@@ -532,7 +516,6 @@ const FriendListItemHome = (props) => {
             </Text>
           </View>
           </View>
-       </Pressable>
     </SafeAreaView>
   );
 };
