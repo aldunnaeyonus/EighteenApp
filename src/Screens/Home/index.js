@@ -1113,7 +1113,7 @@ const Home = (props) => {
             <ListItems
               item={item}
               index={index}
-              isPro={user == undefined ? "0" : user.isPro}
+              isPro={user.isPro == undefined ? "0" : user.isPro}
               _gotoStore={_gotoStore}
               _deleteFeedItem={_deleteFeedItem}
               _joinFeedItem={_joinFeedItem}
