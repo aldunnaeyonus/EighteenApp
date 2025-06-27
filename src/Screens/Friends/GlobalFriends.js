@@ -21,8 +21,10 @@ const GlobalFriends = (props) => {
   const { toast } = useToast();
   const [user] = useMMKVObject("user.Data", storage);
   const [refreshing, serRefreshing] = useState(false);
+  const [search, serSearch] = useState(false);
 
   const _searchDB = async (search) => {
+    serSearch(search)
     //Keep Keyboard open after type.
     await axiosPull._pullFriendsAllFeedABC(user.user_id, search);
   };
@@ -37,6 +39,7 @@ const GlobalFriends = (props) => {
   };
 
   const _clear = async () => {
+        serSearch("")
     storage.set("user.All.Global.Friend.Feed", JSON.stringify([]));
     await axiosPull._pullFriendsAllFeedABC(user.user_id, "");
   };

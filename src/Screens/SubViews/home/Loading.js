@@ -10,7 +10,7 @@ const Image = createImageProgress(FastImage);
 import Progress from "react-native-progress";
 import Video from "react-native-video";
 import { SCREEN_WIDTH } from "../../../utils/constants";
-import * as i18n from "../../../i18n";
+import * as i18n from "../../../../i18n";
 
 const Loading = (props) => {
   const video = useRef();
