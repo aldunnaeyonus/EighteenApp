@@ -448,9 +448,8 @@ const FriendListItemHome = (props) => {
             style={{
               backgroundColor: "transparent",
               position: "absolute",
-              top: 10,
               height: 60,
-              marginTop: 30,
+              marginTop: 5,
               width: SCREEN_WIDTH,
               flexDirection: "row",
             }}
@@ -458,10 +457,10 @@ const FriendListItemHome = (props) => {
             <Image
               indicator={Progress}
               style={{
-                width: 60,
-                height: 60,
+                width: 40,
+                height: 40,
                 borderRadius: 30,
-                marginTop: 10,
+                marginTop: 5,
                 marginLeft: 10,
                 borderWidth: 0.5,
                 alignSelf: "auto",
@@ -490,8 +489,8 @@ const FriendListItemHome = (props) => {
                 >
                   <FastImage
                     style={{
-                      marginLeft: -10,
-                      marginTop: -60,
+                      marginLeft: 10,
+                      marginTop: 60,
                       width: 20,
                       height: 20,
                     }}
@@ -506,10 +505,10 @@ const FriendListItemHome = (props) => {
               style={{
                 color: "white",
                 backgroundColor: "transparent",
-                fontSize: 20,
+                fontSize: 17,
                 marginLeft: 10,
                 fontWeight: "700",
-                marginTop: 15,
+                marginTop: -15,
               }}
             >
               {props.item.item.userName}
