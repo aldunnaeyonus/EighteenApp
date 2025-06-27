@@ -1554,7 +1554,7 @@ const CreateCamera = (props) => {
                   <View style={[styles.dividerStyle]} />
                 </>
               )}
- <ListItem key="17">
+ <ListItem key="26">
                     <Icon
                       type="material"
                       name="hide-source"
@@ -1578,7 +1578,7 @@ const CreateCamera = (props) => {
                   <View style={[styles.dividerStyle]} />
                   <ListItem
                     containerStyle={{ height: 65, backgroundColor: "#fafbfc" }}
-                    key="18"
+                    key="27"
                   >
                     <ListItem.Content>
                       <Switch
