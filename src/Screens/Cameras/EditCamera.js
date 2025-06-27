@@ -21,6 +21,7 @@ import {
   IOS_DISPLAY,
   constants,
   SCREEN_WIDTH,
+  getExtensionFromFilename
 } from "../../utils/constants";
 import * as ImagePicker from "expo-image-picker";
 import FormData from "form-data";
@@ -400,7 +401,7 @@ const EditCamera = (props) => {
       user.user_id +
       "-" +
       Date.now() +
-      image.split("/").pop();
+      "." + getExtensionFromFilename(image).toLowerCase();
     formData.append("user", props.route.params.user);
     formData.append("owner", props.route.params.owner);
     formData.append("eventName", name);
