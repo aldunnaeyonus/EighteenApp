@@ -19,15 +19,15 @@ const Loading = (props) => {
 
   useEffect(() => {
     setDisplayText(displayTextLong);
-    const timer = setTimeout(() => {
+    if (props.flex != "none") {
+    setTimeout(() => {
       setDisplayText(displayTextSort);
     }, 15000);
-    if (props.flex == "none") {
-      setDisplayText("");
-      clearTimeout(timer);
-    }
-    return () => clearTimeout(timer);
-  }, [displayText, props.flex]);
+    setTimeout(() => {
+      setDisplayText(displayTextLong);
+    }, 35000);
+  }
+  }, [props.flex]);
 
   return (
     <View
@@ -44,7 +44,7 @@ const Loading = (props) => {
         alignItems: "center",
       }}
     >
-      {mime == "mov" || mime == "mpeg" || mime == "mp4" ? (
+      {mime == "mov" || mime == "mpeg" || mime == "mp4" || mime == "m4v"? (
         <Video
           fullscreen={false}
           fullscreenAutorotate={false}
