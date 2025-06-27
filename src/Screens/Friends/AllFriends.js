@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect, memo } from "react";
 import { StyleSheet, View } from "react-native";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
 import "moment-duration-format";
@@ -100,18 +100,26 @@ const AllFriends = (props) => {
   };
 
   const searchFunction = (text) => {
-    if (text.length <= 0) {
-      _clear();
-      setSearch("");
-    } else {
       const updatedData = friendData.filter((item) => {
         const item_data = `${item.friend_handle.toLowerCase()}`;
         return item_data.indexOf(text.toLowerCase()) > -1;
       });
       setFriendDataTemp(updatedData);
       setSearch(text);
-    }
   };
+
+    const MemoizedListHeader = memo(({ search, setSearch }) => (
+            <SearchBar
+              inputContainerStyle={{ backgroundColor: "white" }}
+              containerStyle={{ backgroundColor: "white" }}
+              placeholder={i18n.t("Enter Member Username")}
+              lightTheme
+              value={search}
+              onClear={_clear}
+              onChangeText={(text) => {searchFunction(text)}}
+              autoCorrect={false}
+            />
+    ));
 
   return (
     <SafeAreaProvider style={{ backgroundColor: "#fff" }}>
@@ -121,6 +129,7 @@ const AllFriends = (props) => {
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicatorr={false}
           nestedScrollEnabled={true}
+          removeClippedSubviews={false}
           bounces={true}
           style={{ flex: 1, height: SCREEN_HEIGHT, width: SCREEN_WIDTH}}
           data={search.length > 0 ? friendDataTemp : friendData}
@@ -128,16 +137,10 @@ const AllFriends = (props) => {
           scrollEventThrottle={16}
           stickyHeaderIndices={[0]}
           ListHeaderComponent={
-            <SearchBar
-              inputContainerStyle={{ backgroundColor: "white" }}
-              containerStyle={{ backgroundColor: "white" }}
-              placeholder={i18n.t("Enter Member Username")}
-              lightTheme
-              value={search}
-              onClear={_clear}
-              onChangeText={(text) => searchFunction(text)}
-              autoCorrect={false}
-            />
+              <MemoizedListHeader
+                search={search}
+                setSearch={setSearch}
+              />
           }
           ListEmptyComponent={
             <View style={style.empty}>
