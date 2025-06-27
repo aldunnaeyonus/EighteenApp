@@ -75,14 +75,14 @@ const Verification = (props) => {
           >
             <Icon
               type="material"
-              size={30}
+              size={25}
               name="arrow-back-ios-new"
               color="#fff"
               containerStyle={{
                 padding: 7,
-                height: 44,
+                height: 40,
                 backgroundColor: "rgba(0, 0, 0, 0.60)",
-                borderRadius: 22,
+                borderRadius: 20,
               }}
               textStyle={{ color: "white" }}
             />
