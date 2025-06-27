@@ -1,8 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import {
-    View,
-    Text,
-  } from "react-native";
+import { View, Text } from "react-native";
 import { ActivityIndicator, MD2Colors } from "react-native-paper";
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
@@ -20,93 +17,93 @@ const Loading = (props) => {
   const [displayTextLong] = useState(props.message);
   const [displayTextSort] = useState(i18n.t("LongWaitTime"));
 
-     useEffect(() => {
-        setDisplayText(displayTextLong);
-        const timer = setTimeout(() => {
-          setDisplayText(displayTextSort);
-        }, 15000);
-         if (props.message == ""){
-            setDisplayText("");
-            clearTimeout(timer);
-         }
-        return () => clearTimeout(timer);
-      }, [displayText, displayTextLong, displayTextSort, props.message, props.flex, props.image]);
-    
+  useEffect(() => {
+    setDisplayText(displayTextLong);
+    const timer = setTimeout(() => {
+      setDisplayText(displayTextSort);
+    }, 15000);
+    if (props.flex == "none") {
+      setDisplayText("");
+      clearTimeout(timer);
+    }
+    return () => clearTimeout(timer);
+  }, [displayText, props.flex]);
+
   return (
     <View
-    style={{
-      display:props.flex == "flex" ? 'flex' : 'none',
-      margin:5,
-      flex:1,
-      height: 'auto',
-      borderRadius:6,
-      overflow:'hidden',
-      width: SCREEN_WIDTH - 10,
-      flexDirection:'row',
-      alignContent:'center',
-      alignItems:'center',
-    }}
-  >
-    {
-        (mime == "mov") || (mime == "mpeg") || (mime == "mp4") ?
-  		        <Video
-                    fullscreen={false}
-                    fullscreenAutorotate={false}
-                    ignoreSilentSwitch="obey"
-                    showNotificationControls={false}
-                    playWhenInactive={false}
-                    playInBackground={false}
-                    ref={video}
-                    controls={false}
-                    repeat={false}
-                    muted={true}
-                    resizeMode={"cover"}
-                    paused={true}
-                    style={{
-                      borderRadius:6,
-                      overflow:'hidden',
-                      height: 40, 
-                      width: 40,
-                    }}
-                    source={{ 
-                      cache: FastImage.cacheControl.immutable,
-                      priority: FastImage.priority.high,
-                      uri: props.image 
-                    }}
-                  />
-    :
-     <Image
-     ref={photo}
       style={{
-        width: 40,
-        height: 40,
-        borderRadius:6,
-        overflow:'hidden',
+        display: props.flex == "flex" ? "flex" : "none",
+        margin: 5,
+        flex: 1,
+        height: "auto",
+        borderRadius: 6,
+        overflow: "hidden",
+        width: SCREEN_WIDTH - 10,
+        flexDirection: "row",
+        alignContent: "center",
+        alignItems: "center",
       }}
-      indicator={Progress}
-      source={{
-        cache: FastImage.cacheControl.immutable,
-        priority: FastImage.priority.high,
-        uri: props.image
-      }}
-    />
-}
-     <ActivityIndicator
-            style={{marginLeft:15}}
-            size={15}
-            hidesWhenStopped={true}
-            color={MD2Colors.orange900}
-          />
-    <Text 
-     style={{
-        marginLeft:15,
-        fontWeight:'600',
-        width: SCREEN_WIDTH - 100,
-        fontSize:15
-      }}
-    >{displayText}</Text>
-
+    >
+      {mime == "mov" || mime == "mpeg" || mime == "mp4" ? (
+        <Video
+          fullscreen={false}
+          fullscreenAutorotate={false}
+          ignoreSilentSwitch="obey"
+          showNotificationControls={false}
+          playWhenInactive={false}
+          playInBackground={false}
+          ref={video}
+          controls={false}
+          repeat={false}
+          muted={true}
+          resizeMode={"cover"}
+          paused={true}
+          style={{
+            borderRadius: 6,
+            overflow: "hidden",
+            height: 40,
+            width: 40,
+          }}
+          source={{
+            cache: FastImage.cacheControl.immutable,
+            priority: FastImage.priority.high,
+            uri: props.image,
+          }}
+        />
+      ) : (
+        <Image
+          ref={photo}
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: 6,
+            overflow: "hidden",
+          }}
+          indicator={Progress}
+          source={{
+            cache: FastImage.cacheControl.immutable,
+            priority: FastImage.priority.high,
+            uri: props.image,
+          }}
+        />
+      )}
+      <ActivityIndicator
+        style={{ marginLeft: 15 }}
+        size={15}
+        hidesWhenStopped={true}
+        color={MD2Colors.orange900}
+      />
+      <Text
+        style={{
+          marginLeft: 15,
+          fontWeight: "600",
+          width: SCREEN_WIDTH - 100,
+          fontSize: 15,
+        }}
+      >
+        {displayText}
+      </Text>
     </View>
-)
-}
+  );
+};
 export default Loading;
