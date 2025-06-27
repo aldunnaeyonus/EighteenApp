@@ -149,18 +149,28 @@ export const mimes = (ext: any) => {
 switch (ext.toLowerCase()){
         case 'jpg':
     return 'image/jpeg'
+            break;
         case 'jpeg':
     return 'image/jpeg'
+            break;
         case 'png':
     return 'image/png'
+            break;
         case 'mp4':
     return 'video/mp4'
+            break;
         case 'mpeg':
-    return 'video/mpeg'   
+    return 'video/mpeg'  
+            break;
         case 'mov':
     return 'video/quicktime'
+            break;
         case 'avi':
-    return 'video/avi'   
+    return 'video/avi'  
+            break;
+        default:
+    return 'image/jpeg'
+            break;
 }
 }
 
