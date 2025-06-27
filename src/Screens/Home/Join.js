@@ -36,12 +36,9 @@ const Join = (props) => {
                          type="material"
                          size={25}
                          name="arrow-back-ios-new"
-                         color="#fff"
                          containerStyle={{
                            padding: 7,
                            height: 40,
-                           backgroundColor: "rgba(0, 0, 0, 0.60)",
-                           borderRadius: 20,
                          }}
                          textStyle={{ color: "white" }}
                        />
