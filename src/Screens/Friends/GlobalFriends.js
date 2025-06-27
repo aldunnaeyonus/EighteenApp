@@ -89,6 +89,17 @@ const GlobalFriends = (props) => {
 
   return (
     <SafeAreaProvider style={{ backgroundColor: "#fff" }}>
+                  <SearchBar
+              blurOnSubmit={false}
+              inputContainerStyle={{ backgroundColor: "white" }}
+              containerStyle={{ backgroundColor: "white" }}
+              placeholder={i18n.t("SearchGlobalFriends")}
+              lightTheme
+              value={search}
+              onClear={_clear}
+              onChangeText={(text) => searchFunction(text)}
+              autoCorrect={false}
+            />
         <AnimatedFlatList
           refreshing={refreshing} // Added pull to refesh state
           onRefresh={_refresh} // Added pull to refresh control
@@ -101,20 +112,6 @@ const GlobalFriends = (props) => {
           data={friendData}
           extraData={friendData}
           scrollEventThrottle={16}
-          stickyHeaderIndices={[0]}
-          ListHeaderComponent={
-            <SearchBar
-              blurOnSubmit={false}
-              inputContainerStyle={{ backgroundColor: "white" }}
-              containerStyle={{ backgroundColor: "white" }}
-              placeholder={i18n.t("SearchGlobalFriends")}
-              lightTheme
-              value={search}
-              onClear={_clear}
-              onChangeText={(text) => searchFunction(text)}
-              autoCorrect={false}
-            />
-          }
           ListEmptyComponent={
             <View style={style.empty}>
             <View style={style.fake}>

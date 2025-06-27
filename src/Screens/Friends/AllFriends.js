@@ -38,7 +38,7 @@ const AllFriends = (props) => {
   };
 
   const _clear = async () => {
-    await _pullFriendsFeedABC(user.user_id);
+    await axiosPull._pullFriendsFeedABC(user.user_id);
   };
 
 
@@ -108,21 +108,20 @@ const AllFriends = (props) => {
       setSearch(text);
   };
 
-    const MemoizedListHeader = memo(({ search, setSearch }) => (
-            <SearchBar
+  return (
+    <SafeAreaProvider style={{ backgroundColor: "#fff" }}>
+       <SearchBar
               inputContainerStyle={{ backgroundColor: "white" }}
               containerStyle={{ backgroundColor: "white" }}
               placeholder={i18n.t("Enter Member Username")}
               lightTheme
               value={search}
               onClear={_clear}
-              onChangeText={(text) => {searchFunction(text)}}
+              onChangeText={(text) => {
+              searchFunction(text);
+            }}
               autoCorrect={false}
             />
-    ));
-
-  return (
-    <SafeAreaProvider style={{ backgroundColor: "#fff" }}>
         <AnimatedFlatList
           refreshing={refreshing} // Added pull to refesh state
           onRefresh={_refresh} // Added pull to refresh control
@@ -135,13 +134,6 @@ const AllFriends = (props) => {
           data={search.length > 0 ? friendDataTemp : friendData}
           extraData={search.length > 0 ? friendDataTemp : friendData}
           scrollEventThrottle={16}
-          stickyHeaderIndices={[0]}
-          ListHeaderComponent={
-              <MemoizedListHeader
-                search={search}
-                setSearch={setSearch}
-              />
-          }
           ListEmptyComponent={
             <View style={style.empty}>
             <View style={style.fake}>

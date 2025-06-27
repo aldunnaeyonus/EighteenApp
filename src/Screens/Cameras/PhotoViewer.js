@@ -272,6 +272,7 @@ const PhotoViewer = (props) => {
             right: 10,
             zIndex: 2,
             top: 40,
+            height:'auto',
             borderRadius: 5,
             flexDirection: "column",
             justifyContent: "flex-end",
@@ -286,12 +287,12 @@ const PhotoViewer = (props) => {
               <Icon
                 type={"material"}
                 name={"hide-image"}
-                size={25}
+                size={30}
                 color="white"
                 containerStyle={{
                   alignSelf: "flex-end",
                   width: 40,
-                  paddingTop: 5,
+                  padding: 5,
                   height: 40,
                   marginRight: 5,
                   borderTopRightRadius: 5,
@@ -308,12 +309,12 @@ const PhotoViewer = (props) => {
               <Icon
                 type={"material"}
                 name={"report-problem"}
-                size={25}
+                size={30}
                 color="white"
                 containerStyle={{
                   alignSelf: "flex-end",
                   width: 40,
-                  paddingTop: 5,
+                  padding: 5,
                   height: 40,
                   marginRight: 5,
                   backgroundColor: "rgba(0, 0, 0, 0.60)",
@@ -329,7 +330,7 @@ const PhotoViewer = (props) => {
             >
               <Icon
                 type="material-community"
-                size={25}
+                size={30}
                 name="share"
                 color="#fff"
                 containerStyle={{
@@ -352,7 +353,7 @@ const PhotoViewer = (props) => {
           >
             <Icon 
             name={"close"} 
-            size={25} 
+            size={30} 
             color="white" 
             containerStyle={{
                   alignSelf: "flex-end",
