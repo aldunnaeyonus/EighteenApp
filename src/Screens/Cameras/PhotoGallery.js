@@ -97,14 +97,13 @@ const PhotoGallery = (props) => {
     formData.append("camera", "0");
     pickedImages.map((image) => {
       formData.append("file[]", {
-        type: constants.mimes(image.split(".").pop()), // set MIME type
+        type: constants.mimes(getExtensionFromFilename(image).toLowerCase()), // set MIME type
         name:
           "SNAP18-gallary-" +
           props.route.params.pin +
           "-" +
           Date.now() +
-          "-" +
-          image.split("/").pop(),
+          "." + getExtensionFromFilename(image).toLowerCase(),
         uri: Platform.OS === "android" ? image : image.replace("file://", ""),
       });
     });
