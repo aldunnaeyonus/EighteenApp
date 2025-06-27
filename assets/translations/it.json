@@ -320,7 +320,7 @@
 "ActiveUpload": "Caricamento attivo",
   "WhileActiveUpload": "Un file è attualmente in fase di caricamento. Se lasci ora, rischi di perdere il caricamento.",
   "or": "-- OPPURE --",
-  "Show Active Member Events Description": "Mostra gli eventi che i tuoi membri attivi stanno organizzando direttamente nella schermata principale degli eventi.",
+    "Show Active Member Events Description":"Visualizza gli eventi ospitati dai tuoi membri e a cui hai partecipato direttamente nella schermata principale degli eventi.",
   "Show Active Member Events": "Eventi dei membri attivi",
   "LongWaitTime": "La risposta del server sta richiedendo più tempo del solito. Ti chiediamo un po' di pazienza: stiamo ancora tentando di connettere e sincronizzare i tuoi contenuti multimediali.",
   "Hidden Email": "Opzione email nascosta",

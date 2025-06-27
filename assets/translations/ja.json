@@ -320,7 +320,7 @@
   "ActiveUpload": "アップロード中",
   "WhileActiveUpload": "ファイルをアップロード中です。今ページを離れると、アップロードが失われる可能性があります。",
   "or": "-- または --",
-  "Show Active Member Events Description": "アクティブなメンバーが主催しているイベントを、メインのイベント画面に直接表示します。",
+    "Show Active Member Events Description":"メンバーが開催していて、あなたが参加しているイベントをメインイベント画面に直接表示します。",
   "Show Active Member Events": "アクティブメンバーのイベント",
   "LongWaitTime": "サーバーの応答に通常より時間がかかっています。接続とメディアの同期を継続していますので、少々お待ちください。",
   "Hidden Email": "非表示のメールオプション",

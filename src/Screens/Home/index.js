@@ -446,9 +446,9 @@ const Home = (props) => {
       ),
     });
     timeout = setInterval(async () => {
-      await axiosPull._pullCameraFeed(user.user_id, "owner");
-      await axiosPull._pullFriendsFeed(user.user_id);
-    }, 15000);
+      //await axiosPull._pullCameraFeed(user.user_id, "owner");
+      //await axiosPull._pullFriendsFeed(user.user_id);
+    }, 35000);
 
     const fetchData = async () => {
       await axiosPull._pullUser(user.user_id, "Home");
@@ -1108,8 +1108,8 @@ const Home = (props) => {
           </View>
         }
         keyExtractor={(_, index) => index}
-        renderItem={(item, index) =>
-          item.owner === item.user ? (
+        renderItem={(item, index) => 
+          item.item.owner == user.user_id ? (
             <ListItems
               item={item}
               index={index}
@@ -1138,7 +1138,7 @@ const Home = (props) => {
               _repotPost={_repotPost}
             />
           )
-        }
+      }
       />
     </SafeAreaProvider>
   );

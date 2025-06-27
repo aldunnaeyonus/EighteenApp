@@ -320,7 +320,7 @@
   "ActiveUpload": "Carga activa",
   "WhileActiveUpload": "Un archivo se está cargando. Si sales ahora, podrías perder la carga.",
   "or": "-- O --",
-  "Show Active Member Events Description": "Muestra eventos que tus miembros activos están organizando directamente en la pantalla principal de eventos.",
+    "Show Active Member Events Description":"Muestra los eventos que tus miembros están organizando y a los que te has unido directamente en tu pantalla principal de eventos.",
   "Show Active Member Events": "Eventos de miembros activos",
   "LongWaitTime": "La respuesta del servidor está tardando más de lo habitual. Por favor, ten paciencia—todavía estamos intentando conectar y sincronizar tus archivos multimedia.",
   "Hidden Email": "Opción de correo oculto",

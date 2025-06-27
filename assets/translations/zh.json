@@ -320,7 +320,7 @@
    "ActiveUpload": "正在上传",
   "WhileActiveUpload": "当前正在上传文件。如果现在离开，可能会导致上传失败。",
   "or": "-- 或 --",
-  "Show Active Member Events Description": "在主事件页面上直接显示活跃成员正在举办的活动。",
+    "Show Active Member Events Description":"在您的主活动屏幕上直接显示您的成员正在举办且您已加入的活动。",
   "Show Active Member Events": "活跃成员活动",
   "LongWaitTime": "服务器响应时间较长。请耐心等待——我们仍在尝试连接并同步您的媒体文件。",
   "Hidden Email": "隐藏邮箱选项",

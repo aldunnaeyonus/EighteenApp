@@ -320,7 +320,7 @@
    "ActiveUpload": "Aktiver Upload",
   "WhileActiveUpload": "Eine Datei wird gerade hochgeladen. Wenn Sie jetzt die Seite verlassen, riskieren Sie, den Upload zu verlieren.",
   "or": "-- ODER --",
-  "Show Active Member Events Description": "Zeigen Sie die Veranstaltungen aktiver Mitglieder direkt auf Ihrem Hauptveranstaltungsbildschirm an.",
+    "Show Active Member Events Description":"Zeigen Sie Ereignisse, die Ihre Mitglieder veranstalten und denen Sie beigetreten sind, direkt auf Ihrem Hauptbildschirm für Ereignisse an.",
   "Show Active Member Events": "Veranstaltungen aktiver Mitglieder",
   "LongWaitTime": "Die Serverantwort dauert länger als gewöhnlich. Bitte haben Sie einen Moment Geduld – wir versuchen weiterhin, Ihre Medien zu verbinden und zu synchronisieren.",
   "Hidden Email": "Versteckte E-Mail-Option",

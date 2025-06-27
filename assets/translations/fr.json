@@ -320,7 +320,7 @@
   "ActiveUpload": "Téléversement actif",
   "WhileActiveUpload": "Un fichier est en cours de téléversement. Si vous quittez maintenant, vous risquez de perdre le téléversement.",
   "or": "-- OU --",
-  "Show Active Member Events Description": "Affichez les événements que vos membres actifs organisent directement sur votre écran principal d'événements.",
+    "Show Active Member Events Description":"Affichez directement sur votre écran d'événements principal les événements organisés par vos membres et auxquels vous avez participé.",
   "Show Active Member Events": "Événements des membres actifs",
   "LongWaitTime": "La réponse du serveur prend plus de temps que d'habitude. Veuillez patienter — nous essayons toujours de connecter et de synchroniser vos médias.",
   "Hidden Email": "Option de courriel masqué",
