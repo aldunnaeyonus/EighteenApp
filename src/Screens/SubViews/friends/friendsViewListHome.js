@@ -56,7 +56,10 @@ const FriendListItemHome = (props) => {
   }, 45000);
 
   return (
-    <SafeAreaView key={props.item.item.UUID} style={style.listItem}>
+    <SafeAreaView 
+    edges={["bottom", "left", "right"]}
+    key={props.item.item.UUID} 
+    style={style.listItem}>
                <Pressable 
                disabled={props.item.item.subscribed == "0" ? true : props.item.item.show_gallery == "1" ? false : false}
                     onPress={()=> {
