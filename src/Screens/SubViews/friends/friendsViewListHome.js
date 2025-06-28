@@ -132,6 +132,76 @@ const FriendListItemHome = (props) => {
             {endEventTime}
           </Text>
         </View>
+        <View
+            style={{
+              backgroundColor: "transparent",
+              position: "absolute",
+              height: 50,
+              zIndex:0,
+              backgroundColor: "rgba(0, 0, 0, 0.20)",
+              marginTop: 0,
+              width: SCREEN_WIDTH,
+              flexDirection: "row",
+            }}
+          >
+            <Image
+              indicator={Progress}
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: 30,
+                marginTop: 5,
+                marginLeft: 10,
+                borderWidth: 0.5,
+                alignSelf: "auto",
+                overflow: "hidden",
+                backgroundColor: "transparent",
+              }}
+              showSpinner={true}
+              spinnerColor={"rgba(0, 0, 0, 1.0)"}
+              source={{
+                priority: FastImage.priority.high,
+                cache: FastImage.cacheControl.immutable,
+                uri: props.item.item.icon,
+              }}
+            />
+            {props.item.item.isPro == "1" && (
+              <View style={{ position: "absolute" }}>
+                <View
+                  style={{
+                    marginTop: 22,
+                    marginLeft: 40,
+                    backgroundColor: "transparent",
+                    width: 30,
+                    height: 30,
+                    justifyContent: "center",
+                  }}
+                >
+                  <FastImage
+                    style={{
+                      width: 15,
+                      height: 15,
+                    }}
+                    resizeMode={FastImage.resizeMode.contain}
+                    source={require("../../../../assets/verified.png")}
+                  />
+                </View>
+              </View>
+            )}
+            <Text
+              numberOfLines={1}
+              style={{
+                color: "white",
+                backgroundColor: "transparent",
+                fontSize: 17,
+                marginLeft: 10,
+                fontWeight: "700",
+                marginTop: 12,
+              }}
+            >
+              {props.item.item.userName}
+            </Text>
+          </View>
         {props.item.item.subscribed == "1" ? (
           <View
             style={styles.imageUserNameContainers}
@@ -461,75 +531,7 @@ const FriendListItemHome = (props) => {
             {eventStart} - {eventEnd}
           </Text>
         </View>
-      <View
-            style={{
-              backgroundColor: "transparent",
-              position: "absolute",
-              height: 50,
-              backgroundColor: "rgba(0, 0, 0, 0.20)",
-              marginTop: 0,
-              width: SCREEN_WIDTH,
-              flexDirection: "row",
-            }}
-          >
-            <Image
-              indicator={Progress}
-              style={{
-                width: 40,
-                height: 40,
-                borderRadius: 30,
-                marginTop: 5,
-                marginLeft: 10,
-                borderWidth: 0.5,
-                alignSelf: "auto",
-                overflow: "hidden",
-                backgroundColor: "transparent",
-              }}
-              showSpinner={true}
-              spinnerColor={"rgba(0, 0, 0, 1.0)"}
-              source={{
-                priority: FastImage.priority.high,
-                cache: FastImage.cacheControl.immutable,
-                uri: props.item.item.icon,
-              }}
-            />
-            {props.item.item.isPro == "1" && (
-              <View style={{ position: "absolute" }}>
-                <View
-                  style={{
-                    marginTop: 22,
-                    marginLeft: 40,
-                    backgroundColor: "transparent",
-                    width: 30,
-                    height: 30,
-                    justifyContent: "center",
-                  }}
-                >
-                  <FastImage
-                    style={{
-                      width: 15,
-                      height: 15,
-                    }}
-                    resizeMode={FastImage.resizeMode.contain}
-                    source={require("../../../../assets/verified.png")}
-                  />
-                </View>
-              </View>
-            )}
-            <Text
-              numberOfLines={1}
-              style={{
-                color: "white",
-                backgroundColor: "transparent",
-                fontSize: 17,
-                marginLeft: 10,
-                fontWeight: "700",
-                marginTop: 12,
-              }}
-            >
-              {props.item.item.userName}
-            </Text>
-          </View>
+      
           </View>
           </Pressable>
     </SafeAreaView>

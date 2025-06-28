@@ -453,7 +453,7 @@ const Friends = (props) => {
           showsVerticalScrollIndicatorr={false}
           nestedScrollEnabled={true}
           bounces={true}
-          style={{ flex: 1, height: SCREEN_HEIGHT, width: SCREEN_WIDTH }}
+          style={{ flex: 1, height: SCREEN_HEIGHT, width: SCREEN_WIDTH, marginBottom:15 }}
           data={cameraData}
           extraData={cameraData}
           scrollEventThrottle={16}

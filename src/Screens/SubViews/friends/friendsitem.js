@@ -58,6 +58,7 @@ const FriendListItem = (props) => {
   return (
     <SafeAreaView key={props.item.item.UUID} style={style.listItem}>
          <Pressable 
+               disabled={props.item.item.subscribed == "0" ? true : props.item.item.show_gallery == "1" ? false : false}
                     onPress={()=> {
                       if (props.item.item.start < moment().unix()){
                       props._gotoMedia(
