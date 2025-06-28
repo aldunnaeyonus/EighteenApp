@@ -21,7 +21,7 @@ import {
   IOS_DISPLAY,
   constants,
   SCREEN_WIDTH,
-  getExtensionFromFilename
+  getExtensionFromFilename,
 } from "../../utils/constants";
 import * as ImagePicker from "expo-image-picker";
 import FormData from "form-data";
@@ -50,7 +50,7 @@ const EditCamera = (props) => {
   const [switch1, setSwitch1] = useState(
     (props.route.params.camera_add_social = "1" ? true : false)
   );
-    const [switch5, setSwitch5] = useState(
+  const [switch5, setSwitch5] = useState(
     (props.route.params.isHidden = "1" ? true : false)
   );
   const [switch3, setSwitch3] = useState(
@@ -253,7 +253,7 @@ const EditCamera = (props) => {
     setSwitch4(!switch4);
   };
 
-    const toggleSwitch5 = () => {
+  const toggleSwitch5 = () => {
     setSwitch5(!switch5);
   };
   const editImage = async (image) => {
@@ -262,11 +262,10 @@ const EditCamera = (props) => {
         path: image,
         stickers,
       }).then((image) => {
-      setShowClose(true);
-      setImage(image);
-      setisEditing(false);
-      })
-
+        setShowClose(true);
+        setImage(image);
+        setisEditing(false);
+      });
     } catch (e) {
       console.log("e", e);
       setisEditing(false);
@@ -308,7 +307,7 @@ const EditCamera = (props) => {
         orderedSelection: true,
       });
       if (!result.canceled) {
-              setShowClose(true);
+        setShowClose(true);
         setImage(result.assets[0].uri);
         setisEditing(true);
       } else {
@@ -379,12 +378,17 @@ const EditCamera = (props) => {
       end,
       cameras,
       switch4,
-        switch5,
+      switch5,
+      media,
       switch2,
+      switch3,
+      switch1,
+      dname,
       isAI,
       props,
       user,
       show,
+      isPro,
     ])
   );
 
@@ -401,7 +405,8 @@ const EditCamera = (props) => {
       user.user_id +
       "-" +
       Date.now() +
-      "." + getExtensionFromFilename(image).toLowerCase();
+      "." +
+      getExtensionFromFilename(image).toLowerCase();
     formData.append("user", props.route.params.user);
     formData.append("owner", props.route.params.owner);
     formData.append("eventName", name);
@@ -451,51 +456,51 @@ const EditCamera = (props) => {
         method: "POST",
         url: constants.url + "/camera/save.php",
         data: formData,
-        onUploadProgress: progressEvent => {
-        let {loaded, total} = progressEvent;
-        console.log((loaded / total) * 100)
-    },
+        onUploadProgress: (progressEvent) => {
+          let { loaded, total } = progressEvent;
+          console.log((loaded / total) * 100);
+        },
         headers: {
           Accept: "application/json",
           "content-Type": "multipart/form-data",
         },
       })
-        .then(async (res) => {
-            await AsyncStorage.setItem("uploadEnabled", "1");
+        .then(async () => {
+          await AsyncStorage.setItem("uploadEnabled", "1");
           const postLoading = async () => {
             setIsAI(false);
             await axiosPull._pullCameraFeed(props.route.params.user, "owner");
 
             if (start != props.route.params.start) {
-              notification.cancelNotif(pin + "-start");
+              notification.cancelNotif(props.route.params.pin + "-start");
               if (parseInt(start) >= moment().unix()) {
                 notification.scheduleNotif(
                   String(name),
                   i18n.t("EvnetStart"),
                   parseInt(start),
-                  pin + "-start",
+                  props.route.params.pin + "-start",
                   constants.urldata +
                     "/" +
                     user.user_id +
                     "/events/" +
-                    pin +
+                    props.route.params.pin +
                     "/" +
                     fileName
                 );
               }
             }
             if (end != props.route.params.end) {
-              notification.cancelNotif(pin + "-end");
+              notification.cancelNotif(props.route.params.pin + "-end");
               notification.scheduleNotif(
                 String(name),
                 i18n.t("EvnetEnd"),
                 parseInt(end),
-                pin + "-end",
+                props.route.params.pin + "-end",
                 constants.urldata +
                   "/" +
                   user.user_id +
                   "/events/" +
-                  pin +
+                  props.route.params.pin +
                   "/" +
                   fileName
               );
@@ -600,19 +605,18 @@ const EditCamera = (props) => {
                       if (name.length < 1) {
                         setisEditing(false);
                         setVerified(false);
-                         Alert.alert(
-                                                  i18n.t("e4"),
-                                                  i18n.t("EventName"),
-                                                  [
-                                                    {
-                                                      text: i18n.t("Close"),
-                                                      onPress: () =>
-                                                        console.log("Cancel Pressed"),
-                                                      style: "destructive",
-                                                    },
-                                                  ],
-                                                  { cancelable: false }
-                                                );
+                        Alert.alert(
+                          i18n.t("e4"),
+                          i18n.t("EventName"),
+                          [
+                            {
+                              text: i18n.t("Close"),
+                              onPress: () => console.log("Cancel Pressed"),
+                              style: "destructive",
+                            },
+                          ],
+                          { cancelable: false }
+                        );
                       } else {
                         setVerified(true);
                         Alert.alert(
@@ -826,10 +830,10 @@ const EditCamera = (props) => {
           edges={["bottom", "left", "right"]}
         >
           <ScrollView
-            style={{ backgroundColor: "#fff", flex: 1}}
+            style={{ backgroundColor: "#fff", flex: 1 }}
             keyboardShouldPersistTaps={"never"}
             keyboardDismissMode="on-drag"
-                    nestedScrollEnabled={true}
+            nestedScrollEnabled={true}
             showsVerticalScrollIndicator={false}
           >
             <View style={styles.container}>
@@ -1070,55 +1074,57 @@ const EditCamera = (props) => {
                           <Text>{i18n.t("Edit Image")}</Text>
                         </View>
                       </TouchableOpacity>
-                     {isAI ?
-                    <TouchableOpacity
-                        style={{
-                          width: "50%",
-                          height: 40,
-                          marginTop: 20,
-                        }}
-                        onPress={() => {
-                           Alert.alert(
-                          i18n.t("ReportAI"),
-                          i18n.t("RReportAIImage"),
-                          [
-                            {
-                              text: i18n.t("Cancel"),
-                              onPress: () => console.log("Cancel Pressed"),
-                              style: "destructive",
-                            },
-                            {
-                              text: i18n.t("Flag & Redraw"),
-                              onPress: () => {
-                         setSeed(seed - 1);
-                          AITexttoImage();
-                              },
-                              style: "default",
-                            },
-                          ],
-                          { cancelable: false }
-                        );
-                        }}
-                      >
-                        <View
+                      {isAI ? (
+                        <TouchableOpacity
                           style={{
-                            flexDirection: "row",
-                            gap: 10,
-                            alignItems: "center",
-                            justifyContent: "center",
+                            width: "50%",
+                            height: 40,
+                            marginTop: 20,
+                          }}
+                          onPress={() => {
+                            Alert.alert(
+                              i18n.t("ReportAI"),
+                              i18n.t("RReportAIImage"),
+                              [
+                                {
+                                  text: i18n.t("Cancel"),
+                                  onPress: () => console.log("Cancel Pressed"),
+                                  style: "destructive",
+                                },
+                                {
+                                  text: i18n.t("Flag & Redraw"),
+                                  onPress: () => {
+                                    setSeed(seed - 1);
+                                    AITexttoImage();
+                                  },
+                                  style: "default",
+                                },
+                              ],
+                              { cancelable: false }
+                            );
                           }}
                         >
-                          <Icon
-                            type="material"
-                            name="report-gmailerrorred"
-                            size={20}
-                            color="#3D4849"
-                          />
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              gap: 10,
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <Icon
+                              type="material"
+                              name="report-gmailerrorred"
+                              size={20}
+                              color="#3D4849"
+                            />
 
-                          <Text>{i18n.t("Flag")}</Text>
-                        </View>
-                      </TouchableOpacity> : <></>
-                    }
+                            <Text>{i18n.t("Flag")}</Text>
+                          </View>
+                        </TouchableOpacity>
+                      ) : (
+                        <></>
+                      )}
                       <TouchableOpacity
                         style={{
                           width: "50%",
@@ -1552,40 +1558,42 @@ const EditCamera = (props) => {
                   <View style={[styles.dividerStyle]} />
                 </>
               )}
-                      <ListItem key="26">
-                    <Icon
-                      type="material"
-                      name="hide-source"
-                      size={25}
-                      color="#3D4849"
-                      containerStyle={{
-                        width: 28,
-                        height: 28,
-                        borderRadius: 6,
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    />
-                    <ListItem.Content>
-                      <ListItem.Title style={styles.imageUserNameTitleBlack}>
-                        {i18n.t("HideEvent")}
-                      </ListItem.Title>
-                      <ListItem.Subtitle>{i18n.t("HideEventDesc")}</ListItem.Subtitle>
-                    </ListItem.Content>
-                  </ListItem>
-                  <View style={[styles.dividerStyle]} />
-                  <ListItem
-                    containerStyle={{ height: 65, backgroundColor: "#fafbfc" }}
-                    key="27"
-                  >
-                    <ListItem.Content>
-                      <Switch
-                        style={{ alignSelf: "flex-end" }}
-                        value={switch5}
-                        onValueChange={(value) => toggleSwitch5(value)}
-                      />
-                    </ListItem.Content>
-                  </ListItem>
+              <ListItem key="26">
+                <Icon
+                  type="material"
+                  name="hide-source"
+                  size={25}
+                  color="#3D4849"
+                  containerStyle={{
+                    width: 28,
+                    height: 28,
+                    borderRadius: 6,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                />
+                <ListItem.Content>
+                  <ListItem.Title style={styles.imageUserNameTitleBlack}>
+                    {i18n.t("HideEvent")}
+                  </ListItem.Title>
+                  <ListItem.Subtitle>
+                    {i18n.t("HideEventDesc")}
+                  </ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+              <View style={[styles.dividerStyle]} />
+              <ListItem
+                containerStyle={{ height: 65, backgroundColor: "#fafbfc" }}
+                key="27"
+              >
+                <ListItem.Content>
+                  <Switch
+                    style={{ alignSelf: "flex-end" }}
+                    value={switch5}
+                    onValueChange={(value) => toggleSwitch5(value)}
+                  />
+                </ListItem.Content>
+              </ListItem>
             </View>
           </ScrollView>
         </SafeAreaView>
