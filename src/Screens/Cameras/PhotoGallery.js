@@ -230,14 +230,7 @@ const PhotoGallery = (props) => {
     setModalUpload(true);
   }, [modalUpload]);
 
-  const preLoadImages = () => {
-    let presloadImages = [];
-    filteredDataSource.map((image) => {
-      presloadImages.push({ uri: image.uri });
-    });
-    FastImage.preload(presloadImages);
-  };
-
+  
   useFocusEffect(
     useCallback(() => {
       if (!props.unsubscribe) {
@@ -365,7 +358,6 @@ const PhotoGallery = (props) => {
           props.route.params.pin,
           props.route.params.user
         );
-        preLoadImages();
       };
       fetchData();
       return async () => {

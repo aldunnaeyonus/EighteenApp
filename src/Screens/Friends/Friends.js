@@ -53,8 +53,7 @@ const Friends = (props) => {
   const [modalVisable, setmodalVisable] = useState(false);
   const [modalActionVisable, setmodalActionVisable] = useState(false);
   const [qrCodeURL] = useState(
-    constants.url + "/friendQRCode.php?owner=" + props.route.params.userID
-  );
+    constants.url + "/friendQRCode.php?owner=" + props.route.params.userID);
   var timeout;
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
@@ -222,18 +221,18 @@ const Friends = (props) => {
       );
     } else {
       if ((await AsyncStorage.getItem("uploadEnabled")) == "1") {
-         props.navigation.navigate("CameraPage", {
-                  owner: owner,
-                  pin: pin,
-                  title: title,
-                  credits: credits,
-                  tCredits: tCredits,
-                  UUID: UUID,
-                  end: end,
-                  camera_add_social: camera_add_social,
-                  start: start,
-                  user: user.user_id,
-                });
+        props.navigation.navigate("CameraPage", {
+          owner: owner,
+          pin: pin,
+          title: title,
+          credits: credits,
+          tCredits: tCredits,
+          UUID: UUID,
+          end: end,
+          camera_add_social: camera_add_social,
+          start: start,
+          user: user.user_id,
+        });
       } else {
         Alert.alert(
           i18n.t("ActiveUpload"),
