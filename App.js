@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
-import { Text, LogBox, Platform, useColorScheme, TextInput} from "react-native";
+import { Text, LogBox, Platform, useColorScheme} from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer, DefaultTheme,  } from "@react-navigation/native";
@@ -48,6 +48,9 @@ import { ToastProvider } from 'react-native-styled-toast'
 import { storage } from "./src/context/components/Storage";
 import { COLORS, stringToBoolean } from "./src/utils/constants";
 import Blocked from "./src/Screens/Profile/Blocked"; 
+import {
+  GoogleSignin,
+} from "@react-native-google-signin/google-signin";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -146,6 +149,21 @@ const onCheckVersion = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      //Debug 5E:8F:16:06:2E:A3:CD:2C:4A:0D:54:78:76:BA:A6:F3:8C:AB:F6:25
+      //Production 47:8A:0D:AC:7D:4C:98:69:7A:65:D4:97:49:C2:CA:B9:E0:A6:69:A4
+  if (Platform.OS == "android"){
+     GoogleSignin.configure({
+      scopes: ["profile", "email"],
+      webClientId:"433573575993-b31pdthd0u5bv1mrc0qoftvqoj7bloal.apps.googleusercontent.com",
+      offlineAccess: false,
+      profileImageSize: 120,
+    });
+      try {
+        GoogleSignin.signOut();
+      } catch (error) {
+    }
+   
+  }
       onCheckVersion();
       const owner = await AsyncStorage.getItem("user_id");
       await AsyncStorage.setItem("uploadEnabled", "1");

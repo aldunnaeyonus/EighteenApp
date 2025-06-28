@@ -51,7 +51,7 @@ const IOSPermissions = () => {
           photo == "granted" &&
           accuracy == "granted"
         ) {
-          this.permModal.openModal();
+          this.permModal.closeModal();
           //this.permModal.openModal();
 
         } else {

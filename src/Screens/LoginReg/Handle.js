@@ -1,6 +1,6 @@
 import { View, Text, TextInput, Platform, Alert } from "react-native";
 import { TouchableOpacity } from "react-native";
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import styles from "../../styles/index.style";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -29,25 +29,6 @@ const Handle = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [disable, setDisable] = useState(true);
   let deviceLanguage = getLocales()[0].languageCode;
-
-  useEffect(() => {
-    //cd android && ./gradlew signingReport
-    if (Platform.OS == "android"){
-    try {
-      GoogleSignin.signOut();
-    } catch (error) {
-      setIsLoading(false);
-      console.log("Error decoding JWT:", error);
-    }
-    GoogleSignin.configure({
-      scopes: ["profile", "email"],
-      webClientId:
-        "433573575993-b31pdthd0u5bv1mrc0qoftvqoj7bloal.apps.googleusercontent.com",
-      offlineAccess: false,
-      profileImageSize: 120,
-    });
-  }
-  }, []);
 
   const validate = (text) => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
