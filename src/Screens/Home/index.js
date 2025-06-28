@@ -189,7 +189,6 @@ const Home = (props) => {
     shots,
     description
   ) => {
-  if (owner == user.user_id){
     props.navigation.navigate("EditCamera", {
       UUID: UUID,
       pin: pin,
@@ -207,7 +206,6 @@ const Home = (props) => {
       shots: shots,
       description: description,
     });
-  }
   };
 
   const _gotoMedia = async (
