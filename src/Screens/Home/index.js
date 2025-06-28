@@ -276,11 +276,12 @@ const Home = (props) => {
   };
 
   const _addMax = async (pin, owner, pro) => {
-        if (owner == user.user_id){
+   if (owner == user.user_id){
     const data = {
       owner: owner,
       pin: pin,
       isPro: pro,
+      user: user.user_id
     };
     await axiosPull.postData("/camera/maxCamera.php", data);
     await axiosPull._pullCameraFeed(owner, "owner");
@@ -322,6 +323,7 @@ const Home = (props) => {
       owner: owner,
       pin: pin,
       id: UUID,
+      user: user.user_id
     };
     await axiosPull.postData("/camera/close.php", data);
     await axiosPull._pullCameraFeed(owner, "owner");
