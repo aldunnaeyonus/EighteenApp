@@ -189,6 +189,7 @@ const Home = (props) => {
     shots,
     description
   ) => {
+  if (owner == user.user_id){
     props.navigation.navigate("EditCamera", {
       UUID: UUID,
       pin: pin,
@@ -206,6 +207,7 @@ const Home = (props) => {
       shots: shots,
       description: description,
     });
+  }
   };
 
   const _gotoMedia = async (
@@ -274,6 +276,7 @@ const Home = (props) => {
   };
 
   const _addMax = async (pin, owner, pro) => {
+        if (owner == user.user_id){
     const data = {
       owner: owner,
       pin: pin,
@@ -281,6 +284,7 @@ const Home = (props) => {
     };
     await axiosPull.postData("/camera/maxCamera.php", data);
     await axiosPull._pullCameraFeed(owner, "owner");
+  }
   };
 
   const _joinFeedItem = async (UUID, owner, pin, title) => {
@@ -313,6 +317,7 @@ const Home = (props) => {
   };
 
   const _editItemFeed = async (UUID, owner, pin) => {
+        if (owner == user.user_id){
     const data = {
       owner: owner,
       pin: pin,
@@ -320,6 +325,7 @@ const Home = (props) => {
     };
     await axiosPull.postData("/camera/close.php", data);
     await axiosPull._pullCameraFeed(owner, "owner");
+  }
   };
 
   const _deleteFeedItem = (UUID, owner, pin) => {
@@ -390,14 +396,17 @@ const Home = (props) => {
     await axiosPull._pullFriendCameraFeed(owner, "user", user.user_id);
   };
   const _deleteFeedItemSource = async (UUID, owner, pin) => {
+    if (owner == user.user_id){
     _deleteFeedItemIndex(UUID);
     const data = {
       owner: owner,
       pin: pin,
       id: UUID,
+      user: user.user_id
     };
     await axiosPull.postData("/camera/delete.php", data);
     storage.delete("user.Gallery.Friend.Feed." + pin);
+  }
   };
 
   const _refresh = async () => {
