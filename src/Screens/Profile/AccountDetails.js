@@ -270,8 +270,8 @@ const AccountDetails = (props) => {
         <View style={[styles.dividerStyle]} />
         <ListItem key="14">
           <Icon
-            type="material"
-            name="privacy-tip"
+            type="material-community"
+            name="view-gallery-outline"
             size={25}
             color="#3D4849"
             containerStyle={{

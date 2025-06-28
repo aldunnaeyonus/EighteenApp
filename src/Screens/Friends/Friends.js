@@ -352,7 +352,7 @@ const Friends = (props) => {
         user.user_id
       );
       props.navigation.setOptions({
-        title: friendData.friend_handle.toUpperCase(),
+        title: friendData != undefined ? friendData.friend_handle.toUpperCase() : "Loading...",
         headerRight: () => (
           <View style={{ flexDirection: "row" }}>
             {isFriend == "0" ? (
