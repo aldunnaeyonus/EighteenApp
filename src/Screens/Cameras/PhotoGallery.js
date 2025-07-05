@@ -98,7 +98,7 @@ const PhotoGallery = (props) => {
         JSON.stringify({
           message: i18n.t("Uploading") + " " + i18n.t("PleaseWait"),
           display: "flex",
-          image: image,
+          image: pickedImages[0],
           progress: 0
         }))
       await axios({

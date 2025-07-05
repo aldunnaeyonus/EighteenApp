@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef } from "react";
 import { View, Text } from "react-native";
 import { ActivityIndicator, MD2Colors } from "react-native-paper";
 import FastImage from "react-native-fast-image";
@@ -7,27 +7,12 @@ const Image = createImageProgress(FastImage);
 import Progress from "react-native-progress";
 import Video from "react-native-video";
 import { SCREEN_WIDTH } from "../../../utils/constants";
-import * as i18n from "../../../../i18n";
 
 const Loading = (props) => {
   const video = useRef();
   const photo = useRef();
   const mime = String(props.image).split(".").pop().toLowerCase();
-  const [displayText, setDisplayText] = useState("");
-  const [displayTextLong] = useState(props.message);
-  const [displayTextSort] = useState(i18n.t("LongWaitTime"));
 
-  useEffect(() => {
-    setDisplayText(displayTextLong);
-    if (props.flex != "none") {
-    setTimeout(() => {
-      setDisplayText(displayTextSort);
-    }, 15000);
-    setTimeout(() => {
-      setDisplayText(displayTextLong);
-    }, 35000);
-  }
-  }, [props.flex]);
 
   return (
     <View
@@ -101,7 +86,7 @@ const Loading = (props) => {
           fontSize: 15,
         }}
       >
-        {displayText}
+        {props.message}
       </Text>
     </View>
   );
