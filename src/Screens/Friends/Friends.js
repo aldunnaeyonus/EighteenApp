@@ -539,7 +539,7 @@ const Friends = (props) => {
               <Loading
                 message={uploading.message}
                 flex={uploading.display}
-                image={uploading.image}
+                progress={uploading.progress}
               />
             </>
           }

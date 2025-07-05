@@ -318,7 +318,7 @@ Language Code: ${getLocales()[0].languageCode}`,
         <Loading
           message={upload.message}
           flex={upload.display}
-          image={upload.image}
+          progress={upload.progress}
         />
 
         <ProfileHeader

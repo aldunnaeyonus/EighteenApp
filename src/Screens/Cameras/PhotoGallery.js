@@ -50,7 +50,6 @@ const PhotoGallery = (props) => {
   const [animating, setAnimating] = useState(false);
   const photo = useRef();
   const [pickedImages, setPickedImages] = useState([]);
-  const [progress, setProgress] = useState([]);
   const [credits, setCredits] = useState(
     props.route.params.owner == props.route.params.user
       ? "∞"
@@ -69,7 +68,7 @@ const PhotoGallery = (props) => {
 
   const [uploading] = useMMKVObject("uploadData", storage);
   //user.Gallery.Friend.Feed.${pin}
-  
+
   const createEvent = async () => {
     setAnimating(false);
     var formData = new FormData();
@@ -89,7 +88,7 @@ const PhotoGallery = (props) => {
           "-" +
           moment().unix() +
           "-" +
-          image.replace(getExtensionFromFilename(image),'') +
+          image.replace(getExtensionFromFilename(image), "") +
           "." +
           getExtensionFromFilename(image).toLowerCase(),
         uri: Platform.OS === "android" ? image : image.replace("file://", ""),
@@ -101,19 +100,23 @@ const PhotoGallery = (props) => {
       storage.set(
         "uploadData",
         JSON.stringify({
-          message: i18n.t("Uploading") + " " + i18n.t("PleaseWait"),
-          display: "flex",
-          image: pickedImages[0],
-          progress: progress,
+          progress: 0,
         })
       );
       await axios({
         method: "POST",
         url: constants.url + "/camera/upload.php",
         data: formData,
-        onUploadProgress: (progressEvent) => {
-          const {progress} = progressEvent;
-          setProgress(progress)
+        onUploadProgress: async (progressEvent) => {
+          const { progress } = progressEvent;
+          storage.set(
+            "uploadData",
+            JSON.stringify({
+              message: i18n.t("Uploading") + " " + i18n.t("PleaseWait"),
+              display: "flex",
+              progress: progress,
+            })
+          );
         },
         headers: {
           Accept: "application/json",
@@ -122,14 +125,12 @@ const PhotoGallery = (props) => {
       }).then(async () => {
         await AsyncStorage.setItem("uploadEnabled", "1");
         const postLoading = async () => {
-          setProgress(0)
           storage.set(
             "uploadData",
             JSON.stringify({
               message: "",
               display: "none",
-              image: "",
-              progress: "0",
+              progress: 0,
             })
           );
           await axiosPull._pullGalleryFeed(
@@ -357,14 +358,16 @@ const PhotoGallery = (props) => {
         );
       }, 15000);
       const fetchData = async () => {
-      filteredDataSource.map((image) => {
-        FastImage.preload([{
-            cache: FastImage.cacheControl.immutable,
-            priority: FastImage.priority.high,
-            uri: image.uri
-        }]);
-    });
-   
+        filteredDataSource.map((image) => {
+          FastImage.preload([
+            {
+              cache: FastImage.cacheControl.immutable,
+              priority: FastImage.priority.high,
+              uri: image.uri,
+            },
+          ]);
+        });
+
         await axiosPull._pullGalleryFeed(
           props.route.params.pin,
           props.route.params.user
@@ -439,8 +442,7 @@ const PhotoGallery = (props) => {
               <Loading
                 message={uploading.message}
                 flex={uploading.display}
-                image={uploading.image}
-                progress={progress}
+                progress={uploading.progress}
               />
             </>
           }
@@ -530,12 +532,12 @@ const PhotoGallery = (props) => {
                   >
                     <Icon
                       type="material-community"
-                      size={30}
+                      size={50}
                       name="image-outline"
                       color={"#fff"}
                       containerStyle={{
-                        height: 55,
-                        width: 55,
+                        height: 75,
+                        width: 75,
                         alignContent: "center",
                         justifyContent: "center",
                         backgroundColor: "rgba(116, 198, 190, 1)",
@@ -564,12 +566,12 @@ const PhotoGallery = (props) => {
                   >
                     <Icon
                       type="material-community"
-                      size={30}
+                      size={50}
                       name="camera-outline"
                       color={"#fff"}
                       containerStyle={{
-                        height: 55,
-                        width: 55,
+                        height: 75,
+                        width: 75,
                         alignContent: "center",
                         justifyContent: "center",
                         backgroundColor: "rgba(250, 190, 0, 1)",

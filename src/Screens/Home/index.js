@@ -1109,7 +1109,7 @@ const Home = (props) => {
             <Loading
               message={uploading.message}
               flex={uploading.display}
-              image={uploading.image}
+                progress={uploading.progress}
             />
           </View>
         }
