@@ -102,16 +102,12 @@ const onCheckVersion = () => {
   };
 
   useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener((state) => {
-      if (state.isInternetReachable && state.isConnected) {
-        setIsConnected(true);
-      } else {
-        setIsConnected(false);
-      }
-    });
-    if (isConnected) {
-      unsubscribe();
-    }
+      const unsubscribe = NetInfo.addEventListener((state) => {
+            setIsConnected(state.isInternetReachable);
+        });
+        return () => {
+            unsubscribe();
+        };
   }, [isConnected]);
 
   const config = {
