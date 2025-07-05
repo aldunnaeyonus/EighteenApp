@@ -89,7 +89,6 @@ const PhotoGallery = (props) => {
           moment().unix() +
           "-" +
           image.replace(getExtensionFromFilename(image), "") +
-          "." +
           getExtensionFromFilename(image).toLowerCase(),
         uri: Platform.OS === "android" ? image : image.replace("file://", ""),
       });
@@ -98,11 +97,13 @@ const PhotoGallery = (props) => {
     const postConclusion = async () => {
       await AsyncStorage.setItem("uploadEnabled", "0");
       storage.set(
-        "uploadData",
-        JSON.stringify({
-          progress: 0,
-        })
-      );
+            "uploadData",
+            JSON.stringify({
+              message: i18n.t("Uploading") + " " + i18n.t("PleaseWait"),
+              display: "flex",
+              progress: 0,
+            })
+          );
       await axios({
         method: "POST",
         url: constants.url + "/camera/upload.php",
@@ -112,8 +113,6 @@ const PhotoGallery = (props) => {
           storage.set(
             "uploadData",
             JSON.stringify({
-              message: i18n.t("Uploading") + " " + i18n.t("PleaseWait"),
-              display: "flex",
               progress: progress,
             })
           );

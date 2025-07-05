@@ -24,7 +24,7 @@ import { getLocales } from "expo-localization";
 const ListItem = (props) => {
   let [localLang] = useState(getLocales()[0].languageCode);
   let FACES = JSON.parse(JSON.stringify(props.item.item.joinedAvatars));
-
+console.log(props.item.item.illustration)
   useFocusEffect(
     useCallback(() => {
       if (props.item.item.end - moment().unix() <= 0) {

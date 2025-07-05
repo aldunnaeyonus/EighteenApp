@@ -425,7 +425,6 @@ const CreateCamera = (props) => {
         JSON.stringify({
           message: i18n.t("CreatingEvent") + " " + i18n.t("PleaseWait"),
           display: "flex",
-          image: image,
           progress: 0,
         })
       );
@@ -434,7 +433,13 @@ const CreateCamera = (props) => {
         url: constants.url + "/camera/create.php",
         data: formData,
         onUploadProgress: (progressEvent) => {
-          //handleProgressUpdate(progressEvent);
+         const { progress } = progressEvent;
+                   storage.set(
+                     "uploadData",
+                     JSON.stringify({
+                       progress: progress,
+                     })
+                   );
         },
         headers: {
           Accept: "application/json",
@@ -448,7 +453,6 @@ const CreateCamera = (props) => {
             JSON.stringify({
               message: "",
               display: "none",
-              image: "",
               progress: "",
             })
           );
@@ -568,12 +572,12 @@ const CreateCamera = (props) => {
                 >
                   <Icon
                     type="material-community"
-                    size={30}
+                    size={50}
                     name="chip"
                     color={"#fff"}
                     containerStyle={{
-                      height: 55,
-                      width: 55,
+                      height: 75,
+                      width: 75,
                       alignContent: "center",
                       justifyContent: "center",
                       backgroundColor: "rgba(116, 198, 190, 1)",
@@ -672,12 +676,12 @@ const CreateCamera = (props) => {
                 >
                   <Icon
                     type="material-community"
-                    size={30}
+                    size={50}
                     name="image-outline"
                     color={"#fff"}
                     containerStyle={{
-                      height: 55,
-                      width: 55,
+                      height: 75,
+                      width: 75,
                       alignContent: "center",
                       justifyContent: "center",
                       backgroundColor: "rgba(250, 190, 0, 1)",
@@ -712,12 +716,12 @@ const CreateCamera = (props) => {
                 >
                   <Icon
                     type="material-community"
-                    size={30}
+                    size={50}
                     name="camera-outline"
                     color={"#fff"}
                     containerStyle={{
-                      height: 55,
-                      width: 55,
+                      height: 75,
+                      width: 75,
                       alignContent: "center",
                       justifyContent: "center",
                       backgroundColor: "#3D4849",
