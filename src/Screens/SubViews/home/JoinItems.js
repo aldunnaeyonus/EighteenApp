@@ -1,10 +1,6 @@
-import React, { useCallback,useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-} from "react-native";
-import moment from "moment/min/moment-with-locales"
+import React, { useCallback, useState } from "react";
+import { View, Text, StyleSheet } from "react-native";
+import moment from "moment/min/moment-with-locales";
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
 const Image = createImageProgress(FastImage);
@@ -13,11 +9,15 @@ import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../../i18n";
 import FacePile from "react-native-face-pile";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { getLocales } from 'expo-localization';
-import { SCREEN_WIDTH, SCREEN_HEIGHT, durationAsString } from "../../../utils/constants";
+import { getLocales } from "expo-localization";
+import {
+  SCREEN_WIDTH,
+  SCREEN_HEIGHT,
+  durationAsString,
+} from "../../../utils/constants";
 
 const JoinItems = (props) => {
-    let [localLang] = useState(getLocales()[0].languageCode)
+  let [localLang] = useState(getLocales()[0].languageCode);
 
   let FACES = JSON.parse(JSON.stringify(props.item.item.joinedAvatars));
   useFocusEffect(
@@ -118,7 +118,6 @@ const JoinItems = (props) => {
             {endEventTime}
           </Text>
         </View>
-       
 
         <View
           style={{
@@ -151,7 +150,6 @@ const JoinItems = (props) => {
             {props.item.item.camera_count} of{" "}
             {parseInt(props.item.item.cameras) +
               parseInt(props.item.item.camera_cameras_extra)}{" "}
-           
             |{" "}
             <Text
               style={{
@@ -182,31 +180,41 @@ const JoinItems = (props) => {
         </View>
         <Image
           style={{
-            opacity:0.9,
-            position:'absolute',
+            opacity: 0.9,
+            position: "absolute",
             width: 250,
             height: 250,
           }}
-          source={require('../../../../assets/sticky.png')}
+          source={require("../../../../assets/sticky.png")}
         />
-        <View style={{flex:1, width:153, height:150, position:'absolute', justifyContent: 'center', alignItems: 'center', alignContent:'center'}}>
-         <Text
-              style={{
-                textAlign:'center',
-                alignSelf:'center',
-                position:'absolute',
-                transform: [{ rotate: '-7.5deg'}],
-                top:60,
-                left:51,
-                color: "black",
-                fontSize: 16,
-                fontWeight: "600",
-              }}
-            >
-              {i18n.t(`${props.item.item.errResponse}`)}
-            </Text></View>
+        <View
+          style={{
+            flex: 1,
+            width: 153,
+            height: 150,
+            position: "absolute",
+            justifyContent: "center",
+            alignItems: "center",
+            alignContent: "center",
+          }}
+        >
+          <Text
+            style={{
+              textAlign: "center",
+              alignSelf: "center",
+              position: "absolute",
+              transform: [{ rotate: "-7.5deg" }],
+              top: 60,
+              left: 51,
+              color: "black",
+              fontSize: 16,
+              fontWeight: "600",
+            }}
+          >
+            {i18n.t(`${props.item.item.errResponse}`)}
+          </Text>
+        </View>
       </View>
-
     </SafeAreaProvider>
   );
 };

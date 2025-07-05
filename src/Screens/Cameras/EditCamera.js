@@ -404,7 +404,7 @@ const EditCamera = (props) => {
       "SNAP18-cover-" +
       user.user_id +
       "-" +
-     moment().unix() +
+      moment().unix() +
       "." +
       getExtensionFromFilename(image).toLowerCase();
     formData.append("user", props.route.params.user);

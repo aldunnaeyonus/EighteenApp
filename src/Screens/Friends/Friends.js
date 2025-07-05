@@ -53,7 +53,8 @@ const Friends = (props) => {
   const [modalVisable, setmodalVisable] = useState(false);
   const [modalActionVisable, setmodalActionVisable] = useState(false);
   const [qrCodeURL] = useState(
-    constants.url + "/friendQRCode.php?owner=" + props.route.params.userID);
+    constants.url + "/friendQRCode.php?owner=" + props.route.params.userID
+  );
   var timeout;
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
@@ -352,7 +353,10 @@ const Friends = (props) => {
         user.user_id
       );
       props.navigation.setOptions({
-        title: friendData != undefined ? friendData.friend_handle.toUpperCase() : "Loading...",
+        title:
+          friendData != undefined
+            ? friendData.friend_handle.toUpperCase()
+            : "Loading...",
         headerRight: () => (
           <View style={{ flexDirection: "row" }}>
             {isFriend == "0" ? (
@@ -453,7 +457,12 @@ const Friends = (props) => {
           showsVerticalScrollIndicatorr={false}
           nestedScrollEnabled={true}
           bounces={true}
-          style={{ flex: 1, height: SCREEN_HEIGHT, width: SCREEN_WIDTH, marginBottom:15 }}
+          style={{
+            flex: 1,
+            height: SCREEN_HEIGHT,
+            width: SCREEN_WIDTH,
+            marginBottom: 15,
+          }}
           data={cameraData}
           extraData={cameraData}
           scrollEventThrottle={16}

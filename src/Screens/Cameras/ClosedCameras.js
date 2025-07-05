@@ -288,7 +288,8 @@ const ClosedCameras = (props) => {
               style={styles.whiteIcon2}
             />
             <Text style={{ marginTop: 5 }}>
-            { i18n.t("Ended:")} {moment.unix(item.end).locale(localLang).format("LLL")}
+              {i18n.t("Ended:")}{" "}
+              {moment.unix(item.end).locale(localLang).format("LLL")}
             </Text>
           </View>
 
@@ -313,7 +314,7 @@ const ClosedCameras = (props) => {
               {moment
                 .unix(item.end)
                 .locale(localLang)
-                .add((user.isPro ? 3 : 1), "M")
+                .add(user.isPro ? 3 : 1, "M")
                 .format("LLL")}
             </Text>
           </View>
@@ -381,59 +382,59 @@ const ClosedCameras = (props) => {
   };
   return (
     <View style={styles.container}>
-        <AnimatedFlatList
-          refreshing={refreshing} // Added pull to refesh state
-          onRefresh={_refresh} // Added pull to refresh control
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicatorr={false}
-          nestedScrollEnabled={true}
-          bounces={true}
-          style={{ flex: 1, height: SCREEN_HEIGHT, width: SCREEN_WIDTH}}
-          extraData={filteredDataSource}
-          ListEmptyComponent={
-            <View style={styles.empty}>
-              <View style={styles.fake}>
-                <View style={styles.fakeSquare} />
-                <View>
-                  <View style={styles.fakeLine} />
-                  <View style={styles.fakeLine} />
-                </View>
+      <AnimatedFlatList
+        refreshing={refreshing} // Added pull to refesh state
+        onRefresh={_refresh} // Added pull to refresh control
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicatorr={false}
+        nestedScrollEnabled={true}
+        bounces={true}
+        style={{ flex: 1, height: SCREEN_HEIGHT, width: SCREEN_WIDTH }}
+        extraData={filteredDataSource}
+        ListEmptyComponent={
+          <View style={styles.empty}>
+            <View style={styles.fake}>
+              <View style={styles.fakeSquare} />
+              <View>
+                <View style={styles.fakeLine} />
+                <View style={styles.fakeLine} />
               </View>
-              <EmptyStateView
-                headerText={i18n.t("Download Media")}
-                subHeaderText={i18n.t("Ended")}
-                headerTextStyle={styles.headerTextStyle}
-                subHeaderTextStyle={styles.subHeaderTextStyle}
-              />
             </View>
-          }
-          data={filteredDataSource}
-          keyExtractor={(item) => item.UUID}
-          renderItem={Item}
-          ListFooterComponent={
-            <View
+            <EmptyStateView
+              headerText={i18n.t("Download Media")}
+              subHeaderText={i18n.t("Ended")}
+              headerTextStyle={styles.headerTextStyle}
+              subHeaderTextStyle={styles.subHeaderTextStyle}
+            />
+          </View>
+        }
+        data={filteredDataSource}
+        keyExtractor={(item) => item.UUID}
+        renderItem={Item}
+        ListFooterComponent={
+          <View
+            style={{
+              flex: 1,
+              marginTop: 0,
+              width: SCREEN_WIDTH,
+              alignItems: "center",
+            }}
+          >
+            <Text
               style={{
-                flex: 1,
-                marginTop: 0,
-                width: SCREEN_WIDTH,
-                alignItems: "center",
+                padding: 20,
+                fontSize: 15,
+                textAlign: "center",
+                color: "grey",
               }}
             >
-              <Text
-                style={{
-                  padding: 20,
-                  fontSize: 15,
-                  textAlign: "center",
-                  color: "grey",
-                }}
-              >
-                {user.isPro == "1"
-                  ? i18n.t("After 90 days")
-                  : i18n.t("After 30 days")}
-              </Text>
-            </View>
-          }
-        />
+              {user.isPro == "1"
+                ? i18n.t("After 90 days")
+                : i18n.t("After 30 days")}
+            </Text>
+          </View>
+        }
+      />
     </View>
   );
 };

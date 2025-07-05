@@ -36,8 +36,8 @@ const AllFriendsListItem = (props) => {
                 height: 45,
                 width: 45,
                 borderRadius: 24,
-                borderWidth:1,
-                borderColor:'black',
+                borderWidth: 1,
+                borderColor: "black",
                 overflow: "hidden",
                 backgroundColor: "#f2f2f2",
               }}
@@ -78,7 +78,9 @@ const AllFriendsListItem = (props) => {
               paddingLeft: 10,
             }}
           >
-            <Text style={style.titleText}>{props.item.item.friend_handle.toLowerCase()}</Text>
+            <Text style={style.titleText}>
+              {props.item.item.friend_handle.toLowerCase()}
+            </Text>
           </View>
           <ListItem.Chevron style={{ marginRight: 10 }} />
         </View>

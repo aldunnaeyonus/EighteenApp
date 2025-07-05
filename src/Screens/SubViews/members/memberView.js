@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import moment from "moment/min/moment-with-locales"
+import moment from "moment/min/moment-with-locales";
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
 const Image = createImageProgress(FastImage);
@@ -10,12 +10,12 @@ import CameraLens from "../camera/cameraView";
 import * as i18n from "../../../../i18n";
 import { useMMKVObject } from "react-native-mmkv";
 import { storage } from "../../../context/components/Storage";
-import { getLocales } from 'expo-localization';
+import { getLocales } from "expo-localization";
 import { SCREEN_WIDTH } from "../../../utils/constants";
 
 const MemberListItem = (props) => {
-    let [localLang] = useState(getLocales()[0].languageCode)
-  
+  let [localLang] = useState(getLocales()[0].languageCode);
+
   const [user] = useMMKVObject("user.Data", storage);
 
   return (
@@ -41,7 +41,7 @@ const MemberListItem = (props) => {
             }}
             resizeMode={FastImage.resizeMode.contain}
             style={{
-              overflow:'hidden',
+              overflow: "hidden",
               height: 60,
               width: 60,
               borderRadius: 40,
@@ -51,7 +51,7 @@ const MemberListItem = (props) => {
               backgroundColor: "#f2f2f2",
             }}
           />
-          
+
           {props.item.item.isPro == "1" && (
             <View style={{ position: "absolute" }}>
               <View
@@ -83,13 +83,13 @@ const MemberListItem = (props) => {
             style={{
               flexDirection: "column",
               marginBottom: 0,
-              width: SCREEN_WIDTH - 200
+              width: SCREEN_WIDTH - 200,
             }}
           >
             <Text
               style={{
                 fontFamily: "HelveticaNeue",
-                fontWeight:'bold',
+                fontWeight: "bold",
                 fontSize: 20,
                 color: "#3D4849",
                 textAlign: "left",
@@ -109,29 +109,32 @@ const MemberListItem = (props) => {
               numberOfLines={2}
             >
               {i18n.t("Joined")}:{" "}
-              {moment.unix(parseInt(props.item.item.user_joined)).locale(localLang).format("LLL")}
+              {moment
+                .unix(parseInt(props.item.item.user_joined))
+                .locale(localLang)
+                .format("LLL")}
             </Text>
-            
           </View>
           <TouchableOpacity
-             onPress={async () => {
-              ((user.isPro == "1" && props.item.item.credits == 0) ? props.moreCredits(props.item.item.user_id, props.pin, props.UUID) : null)
-              }}
-              >
-          <CameraLens
-            credits={props.item.item.credits}
-            tCredits={props.item.item.tCredits}
-          />
-                  </TouchableOpacity>
-
+            onPress={async () => {
+              user.isPro == "1" && props.item.item.credits == 0
+                ? props.moreCredits(
+                    props.item.item.user_id,
+                    props.pin,
+                    props.UUID
+                  )
+                : null;
+            }}
+          >
+            <CameraLens
+              credits={props.item.item.credits}
+              tCredits={props.item.item.tCredits}
+            />
+          </TouchableOpacity>
         </View>
-        
-        </TouchableOpacity>
-
-
+      </TouchableOpacity>
     </View>
   );
 };
 
 export default MemberListItem;
-         

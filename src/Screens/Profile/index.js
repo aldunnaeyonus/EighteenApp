@@ -31,8 +31,8 @@ import hotUpdate from "react-native-ota-hot-update";
 import email from "react-native-email";
 import DeviceInfo from "react-native-device-info";
 import { getLocales } from "expo-localization";
-import moment from "moment/min/moment-with-locales"
-import RNFS from 'react-native-fs';
+import moment from "moment/min/moment-with-locales";
+import RNFS from "react-native-fs";
 
 const Profile = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
@@ -44,8 +44,8 @@ const Profile = (props) => {
   const [upload] = useMMKVObject("uploadData", storage);
   const [version, setVersion] = useState("0");
 
-  const clearCache = (async () => {
-    Alert.alert(i18n.t("CacheCleared"))
+  const clearCache = async () => {
+    Alert.alert(i18n.t("CacheCleared"));
 
     try {
       RNFS.clearCache();
@@ -53,18 +53,25 @@ const Profile = (props) => {
     } catch (error) {
       console.error("Error clearing cache:", error);
     }
-
-  });
+  };
 
   const logout = useCallback(() => {
     const execute = async () => {
-                storage.set("uploadData", JSON.stringify({"message": "", "display":"none", "image":"", progress: ""}));
-                storage.set("user.Join.Feed", JSON.stringify([]));
-                storage.set("user.Friend.Feed", JSON.stringify([]));
-                storage.set("user.Camera.Feed", JSON.stringify([]));
-                storage.set("user.Camera.Friend.Feed", JSON.stringify([]));
-                storage.set("user.Member.Join.Feed", JSON.stringify([]));
-                storage.set("user.AllFriend.Feed", JSON.stringify([]));
+      storage.set(
+        "uploadData",
+        JSON.stringify({
+          message: "",
+          display: "none",
+          image: "",
+          progress: "",
+        })
+      );
+      storage.set("user.Join.Feed", JSON.stringify([]));
+      storage.set("user.Friend.Feed", JSON.stringify([]));
+      storage.set("user.Camera.Feed", JSON.stringify([]));
+      storage.set("user.Camera.Friend.Feed", JSON.stringify([]));
+      storage.set("user.Member.Join.Feed", JSON.stringify([]));
+      storage.set("user.AllFriend.Feed", JSON.stringify([]));
       await AsyncStorage.removeItem("UUID");
       await AsyncStorage.removeItem("logedIn");
       await AsyncStorage.removeItem("user_id");
@@ -216,7 +223,7 @@ Language Code: ${getLocales()[0].languageCode}`,
       style={{ width: SCREEN_WIDTH, backgroundColor: "#fff", flex: 1 }}
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
-              nestedScrollEnabled={true}
+      nestedScrollEnabled={true}
     >
       <Modal
         visible={modalVisable}
@@ -244,73 +251,78 @@ Language Code: ${getLocales()[0].languageCode}`,
               />
             </View>
             <View
-                          style={{
-                            flexDirection: "row",
-                            width: SCREEN_WIDTH,
-                            margin: 20,
-                            justifyContent: "center",
-                          }}
-                        >
-                          <TouchableOpacity
-                            style={{
-                              width: "40%",
-                              marginRight: 10,
-                              backgroundColor: "rgba(234, 85, 4, 1))",
-                              borderRadius: 8,
-                              padding: 15,
-                              alignItems: "center",
-                              justifyContent: "center",
-                            }}
-                            onPress={() => {
-                              setmodalVisable(false);
-                            }}
-                          >
-                            <Text
-                              style={{
-                                textTransform: "uppercase",
-                                fontSize: 20,
-                                fontWeight: 600,
-                                color: "#fff",
-                              }}
-                            >
-                              {i18n.t("Close")}
-                            </Text>
-                          </TouchableOpacity>
-                          <TouchableOpacity
-                            style={{
-                              width: "40%",
-                              marginLeft: 10,
-                              backgroundColor: "rgba(116, 198, 190, 1)",
-                              borderRadius: 8,
-                              padding: 15,
-                              alignItems: "center",
-                              justifyContent: "center",
-                            }}
-                            onPress={async () => {
-                               try {
-                                     const ShareResponse = await Share.share({
-                                           title: i18n.t("FriendCode"),
-                                           url: constants.url + "/friend.php?user=" + user.user_id+"."+moment().unix(),
-                                           message: i18n.t("FriendCodeMessage"),
-                                         });
-                                     console.log("Result =>", ShareResponse);
-                                   } catch (error) {
-                                     console.log("Error =>", error);
-                                   }
-                            }}
-                          >
-                            <Text
-                              style={{
-                                textTransform: "uppercase",
-                                fontSize: 20,
-                                fontWeight: 600,
-                                color: "#fff",
-                              }}
-                            >
-                              {i18n.t("Share")}
-                            </Text>
-                          </TouchableOpacity>
-                        </View>
+              style={{
+                flexDirection: "row",
+                width: SCREEN_WIDTH,
+                margin: 20,
+                justifyContent: "center",
+              }}
+            >
+              <TouchableOpacity
+                style={{
+                  width: "40%",
+                  marginRight: 10,
+                  backgroundColor: "rgba(234, 85, 4, 1))",
+                  borderRadius: 8,
+                  padding: 15,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                onPress={() => {
+                  setmodalVisable(false);
+                }}
+              >
+                <Text
+                  style={{
+                    textTransform: "uppercase",
+                    fontSize: 20,
+                    fontWeight: 600,
+                    color: "#fff",
+                  }}
+                >
+                  {i18n.t("Close")}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  width: "40%",
+                  marginLeft: 10,
+                  backgroundColor: "rgba(116, 198, 190, 1)",
+                  borderRadius: 8,
+                  padding: 15,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                onPress={async () => {
+                  try {
+                    const ShareResponse = await Share.share({
+                      title: i18n.t("FriendCode"),
+                      url:
+                        constants.url +
+                        "/friend.php?user=" +
+                        user.user_id +
+                        "." +
+                        moment().unix(),
+                      message: i18n.t("FriendCodeMessage"),
+                    });
+                    console.log("Result =>", ShareResponse);
+                  } catch (error) {
+                    console.log("Error =>", error);
+                  }
+                }}
+              >
+                <Text
+                  style={{
+                    textTransform: "uppercase",
+                    fontSize: 20,
+                    fontWeight: 600,
+                    color: "#fff",
+                  }}
+                >
+                  {i18n.t("Share")}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </TouchableWithoutFeedback>
       </Modal>
@@ -389,7 +401,7 @@ Language Code: ${getLocales()[0].languageCode}`,
             containerStyle={{ paddingVertical: 5 }}
             key="29"
             onPress={() => {
-              blocked()
+              blocked();
             }}
           >
             <Icon
@@ -655,7 +667,7 @@ Language Code: ${getLocales()[0].languageCode}`,
               </ListItem.Content>
               <ListItem.Chevron />
             </ListItem>
-            
+
             <View style={[styles.dividerTableStyle]} />
           </View>
           <InfoText text={i18n.t("Policies")} />

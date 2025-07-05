@@ -4,7 +4,7 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Pressable
+  Pressable,
 } from "react-native";
 import moment from "moment/min/moment-with-locales";
 import { MenuView } from "@react-native-menu/menu";
@@ -13,7 +13,12 @@ import { createImageProgress } from "react-native-image-progress";
 const Image = createImageProgress(FastImage);
 import Progress from "react-native-progress";
 import { Icon } from "react-native-elements";
-import { constants, SCREEN_WIDTH, SCREEN_HEIGHT, durationAsString } from "../../../utils/constants";
+import {
+  constants,
+  SCREEN_WIDTH,
+  SCREEN_HEIGHT,
+  durationAsString,
+} from "../../../utils/constants";
 import styles from "../../../styles/SliderEntry.style";
 import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../../i18n";
@@ -24,7 +29,7 @@ import { getLocales } from "expo-localization";
 const ListItem = (props) => {
   let [localLang] = useState(getLocales()[0].languageCode);
   let FACES = JSON.parse(JSON.stringify(props.item.item.joinedAvatars));
-console.log(props.item.item.illustration)
+  console.log(props.item.item.illustration);
   useFocusEffect(
     useCallback(() => {
       if (props.item.item.end - moment().unix() <= 0) {
@@ -64,7 +69,6 @@ console.log(props.item.item.illustration)
       style={style.listItem}
       edges={["right", "bottom", "left"]}
     >
-     
       <View
         key={props}
         style={{
@@ -72,34 +76,35 @@ console.log(props.item.item.illustration)
           width: SCREEN_WIDTH,
         }}
       >
-          <Pressable 
-            onPress={()=> {
-           props._gotoMedia(
-                props.item.item.pin,
-                props.item.item.title,
-                props.item.item.owner,
-                props.item.item.UUID,
-                props.item.item.end,
-                props.item.item.start,
-                props.item.item.credits,
-                props.item.item.camera_add_social,
-                props.item.item.illustration
-              )
-          }}>
-        <Image
-          indicator={Progress}
-          style={{
-            width: SCREEN_WIDTH,
-            height: 350,
+        <Pressable
+          onPress={() => {
+            props._gotoMedia(
+              props.item.item.pin,
+              props.item.item.title,
+              props.item.item.owner,
+              props.item.item.UUID,
+              props.item.item.end,
+              props.item.item.start,
+              props.item.item.credits,
+              props.item.item.camera_add_social,
+              props.item.item.illustration
+            );
           }}
-          resizeMode={FastImage.resizeMode.cover}
-          source={{
-            priority: FastImage.priority.high,
-            cache: FastImage.cacheControl.immutable,
-            uri: props.item.item.illustration,
-          }}
-        />
-       </Pressable>
+        >
+          <Image
+            indicator={Progress}
+            style={{
+              width: SCREEN_WIDTH,
+              height: 350,
+            }}
+            resizeMode={FastImage.resizeMode.cover}
+            source={{
+              priority: FastImage.priority.high,
+              cache: FastImage.cacheControl.immutable,
+              uri: props.item.item.illustration,
+            }}
+          />
+        </Pressable>
         <View
           style={{
             position: "absolute",
@@ -139,10 +144,10 @@ console.log(props.item.item.illustration)
             {endEventTime}
           </Text>
         </View>
-         <View style={{ position: "absolute", bottom:-3, right:0 }}>
-            <Pressable 
-            onPress={()=> {
-           props._gotoMedia(
+        <View style={{ position: "absolute", bottom: -3, right: 0 }}>
+          <Pressable
+            onPress={() => {
+              props._gotoMedia(
                 props.item.item.pin,
                 props.item.item.title,
                 props.item.item.owner,
@@ -152,32 +157,40 @@ console.log(props.item.item.illustration)
                 props.item.item.credits,
                 props.item.item.camera_add_social,
                 props.item.item.illustration
-              )
-          }}>
-                          <View
-                            style={{
-                              margin: 15,
-                              backgroundColor: props.item.item.badge == "0" ? "rgba(116, 198, 190, 0.0)" : "rgba(116, 198, 190, 0.8)",
-                              width: 40,
-                              height: 40,
-                              borderRadius: 20,
-                              justifyContent: "center",
-                            }}
-                          >
-                            <Text
-                              style={{
-                                color: "#fff",
-                                textAlignVertical: "center",
-                                textAlign: "center",
-                                fontSize: 17,
-                                fontWeight: "bold",
-                              }}
-                            >
-                              {props.item.item.badge > 99 ? "+99" : props.item.item.badge == "0" ? "" : props.item.item.badge}
-                            </Text>
-                          </View>
-                              </Pressable>
-                        </View>
+              );
+            }}
+          >
+            <View
+              style={{
+                margin: 15,
+                backgroundColor:
+                  props.item.item.badge == "0"
+                    ? "rgba(116, 198, 190, 0.0)"
+                    : "rgba(116, 198, 190, 0.8)",
+                width: 40,
+                height: 40,
+                borderRadius: 20,
+                justifyContent: "center",
+              }}
+            >
+              <Text
+                style={{
+                  color: "#fff",
+                  textAlignVertical: "center",
+                  textAlign: "center",
+                  fontSize: 17,
+                  fontWeight: "bold",
+                }}
+              >
+                {props.item.item.badge > 99
+                  ? "+99"
+                  : props.item.item.badge == "0"
+                    ? ""
+                    : props.item.item.badge}
+              </Text>
+            </View>
+          </Pressable>
+        </View>
         <View style={styles.imageUserNameContainers}>
           <MenuView
             key={props.item.item.UUID}
@@ -236,7 +249,7 @@ console.log(props.item.item.illustration)
                 height: 40,
                 marginRight: 5,
                 marginTop: 5,
-                paddingTop:5,
+                paddingTop: 5,
                 borderTopRightRadius: 5,
                 borderTopLeftRadius: 5,
                 backgroundColor: "rgba(0, 0, 0, 0.60)",
@@ -266,7 +279,7 @@ console.log(props.item.item.illustration)
               width: 40,
               height: 40,
               marginRight: 5,
-              paddingTop:5,
+              paddingTop: 5,
               backgroundColor: "rgba(0, 0, 0, 0.60)",
             }}
             type="entypo"
@@ -293,7 +306,7 @@ console.log(props.item.item.illustration)
               width: 40,
               height: 40,
               marginRight: 5,
-              paddingTop:5,
+              paddingTop: 5,
               backgroundColor: "rgba(0, 0, 0, 0.60)",
             }}
             type="font-awesome"
@@ -320,7 +333,7 @@ console.log(props.item.item.illustration)
               width: 40,
               height: 40,
               marginRight: 5,
-              paddingTop:5,
+              paddingTop: 5,
               backgroundColor: "rgba(0, 0, 0, 0.60)",
             }}
             type="material-community"

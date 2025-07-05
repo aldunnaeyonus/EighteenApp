@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -6,7 +6,7 @@ import {
   Platform,
   View,
   Alert,
-  Linking
+  Linking,
 } from "react-native";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
 import { constants, SCREEN_WIDTH } from "../../utils/constants";
@@ -26,26 +26,25 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ChangeData = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
-  const [cameraStatus] = ImagePicker.useMediaLibraryPermissions()
+  const [cameraStatus] = ImagePicker.useMediaLibraryPermissions();
   const [avatars, setAvatars] = useState([]);
 
-  const pullData=async ()=> {
+  const pullData = async () => {
     await axiosPull._pullUser(user.user_id, "Profile");
-
-  }
+  };
 
   useEffect(() => {
     pullData();
-      const fetchData = async () => {
-        fetch(constants.url + "/avatars/avatars.json")
-          .then((response) => response.json())
-          .then((jsonData) => {
-            setAvatars(jsonData);
-          })
-          .catch((error) => {});
-      };
-      fetchData();
-    }, [avatars]);
+    const fetchData = async () => {
+      fetch(constants.url + "/avatars/avatars.json")
+        .then((response) => response.json())
+        .then((jsonData) => {
+          setAvatars(jsonData);
+        })
+        .catch((error) => {});
+    };
+    fetchData();
+  }, [avatars]);
 
   const fetchCode = async (icon, types) => {
     props.navigation.setOptions({
@@ -67,36 +66,43 @@ const ChangeData = (props) => {
         type: constants.mimes(icon.split(".").pop()), // set MIME type
         uri: Platform.OS === "android" ? icon : icon.replace("file://", ""),
       });
-    } else{
+    } else {
       formData.append("avatar", String(icon));
     }
     await AsyncStorage.setItem("uploadEnabled", "0");
-  const postConclusion = async () => {
-    await axios({
-      method: "POST",
-      url: constants.url + "/avatars/fetch.php",
-      data: formData,
-       onUploadProgress: progressEvent => {
-        let {loaded, total} = progressEvent;
-        console.log((loaded / total) * 100)
-    },
-      headers: {
-        Accept: "application/json",
-        "content-Type": "multipart/form-data",
-      },
-    }).then(async (res) => {
-      await AsyncStorage.setItem("uploadEnabled", "1");
-      updateStorage(user, 'user_avatar', (types == "1") ? String("SNAP18-avatar-" + user.user_id + "-" + icon.split("/").pop()) : icon, 'user.Data')
-      props.navigation.setOptions({
-        headerRight: () => (
-         <></>
-        ),
+    const postConclusion = async () => {
+      await axios({
+        method: "POST",
+        url: constants.url + "/avatars/fetch.php",
+        data: formData,
+        onUploadProgress: (progressEvent) => {
+          let { loaded, total } = progressEvent;
+          console.log((loaded / total) * 100);
+        },
+        headers: {
+          Accept: "application/json",
+          "content-Type": "multipart/form-data",
+        },
+      }).then(async (res) => {
+        await AsyncStorage.setItem("uploadEnabled", "1");
+        updateStorage(
+          user,
+          "user_avatar",
+          types == "1"
+            ? String(
+                "SNAP18-avatar-" + user.user_id + "-" + icon.split("/").pop()
+              )
+            : icon,
+          "user.Data"
+        );
+        props.navigation.setOptions({
+          headerRight: () => <></>,
+        });
+        await axiosPull._pullUser(user.user_id, "Upload");
       });
-      await axiosPull._pullUser(user.user_id, "Upload");
-    });
-  }
-  postConclusion();
-/*
+    };
+    postConclusion();
+    /*
 
       handleUpload(
         constants.url + "/avatars/fetch.php",
@@ -113,45 +119,45 @@ const ChangeData = (props) => {
   };
 
   const pickImage = async () => {
-      if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
-          await ImagePicker.getMediaLibraryPermissionsAsync();
-        }else if (cameraStatus.status == ImagePicker.PermissionStatus.DENIED) {
+    if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
+      await ImagePicker.getMediaLibraryPermissionsAsync();
+    } else if (cameraStatus.status == ImagePicker.PermissionStatus.DENIED) {
       Alert.alert(
-      i18n.t("Permissions"),
-      i18n.t("UseLibrary"),
-      [
-        {
-          text: i18n.t("Cancel"),
-          onPress: () => console.log("Cancel Pressed"),
-          style: "destructive",
-        },
-        {
-          text: i18n.t("Settings"),
-          onPress: () => {
-            Linking.openSettings();
+        i18n.t("Permissions"),
+        i18n.t("UseLibrary"),
+        [
+          {
+            text: i18n.t("Cancel"),
+            onPress: () => console.log("Cancel Pressed"),
+            style: "destructive",
           },
-          style: "default",
-        },
-      ],
-      { cancelable: false }
-    )
-        }else{
-    let result = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    });
-    if (!result.canceled) {
-      fetchCode(result.assets[0].uri, "1");
+          {
+            text: i18n.t("Settings"),
+            onPress: () => {
+              Linking.openSettings();
+            },
+            style: "default",
+          },
+        ],
+        { cancelable: false }
+      );
+    } else {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      });
+      if (!result.canceled) {
+        fetchCode(result.assets[0].uri, "1");
+      }
     }
-  }
   };
   return (
     <>
-      <ScrollView 
-      style={{ backgroundColor: "white", flex: 1 }}
-              nestedScrollEnabled={true}
+      <ScrollView
+        style={{ backgroundColor: "white", flex: 1 }}
+        nestedScrollEnabled={true}
       >
         <TouchableOpacity
           onPress={() => {
@@ -181,7 +187,7 @@ const ChangeData = (props) => {
             >
               <View style={[styles.gridButton]}>
                 <Image
-                  key={"AA"+grids.key}
+                  key={"AA" + grids.key}
                   indicator={Progress}
                   resizeMode={FastImage.resizeMode.contain}
                   style={{
@@ -191,7 +197,7 @@ const ChangeData = (props) => {
                     borderRadius: 40,
                     borderColor: "#e35504",
                     borderWidth:
-                    grids.icon + ".png" == user.user_avatar ? 3 : 0,
+                      grids.icon + ".png" == user.user_avatar ? 3 : 0,
                     margin: 7,
                     justifyContent: "center",
                     alignItems: "center",
@@ -281,7 +287,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f2f2f2",
     borderRadius: 40,
     margin: 2,
-    marginBottom:25,
+    marginBottom: 25,
     justifyContent: "center",
     alignItems: "center",
   },

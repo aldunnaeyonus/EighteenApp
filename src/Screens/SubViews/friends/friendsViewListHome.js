@@ -1,14 +1,14 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
   Alert,
   StyleSheet,
   TouchableOpacity,
-  Pressable
+  Pressable,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import moment from "moment/min/moment-with-locales"
+import moment from "moment/min/moment-with-locales";
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
 const Image = createImageProgress(FastImage);
@@ -19,13 +19,17 @@ import { useIsFocused } from "@react-navigation/native";
 import * as i18n from "../../../../i18n";
 import CreditsFont from "../camera/credits";
 import FacePile from "react-native-face-pile";
-import { getLocales } from 'expo-localization';
-import { SCREEN_WIDTH, SCREEN_HEIGHT, durationAsString } from "../../../utils/constants";
+import { getLocales } from "expo-localization";
+import {
+  SCREEN_WIDTH,
+  SCREEN_HEIGHT,
+  durationAsString,
+} from "../../../utils/constants";
 
 const FriendListItemHome = (props) => {
   const isFocused = useIsFocused();
   let FACES = JSON.parse(JSON.stringify(props.item.item.joinedAvatars));
-  let [localLang] = useState(getLocales()[0].languageCode)
+  let [localLang] = useState(getLocales()[0].languageCode);
   useEffect(() => {
     if (props.item.item.end - moment().unix() <= 0) {
       clearInterval(timeout);
@@ -56,91 +60,98 @@ const FriendListItemHome = (props) => {
   }, 45000);
 
   return (
-    <SafeAreaView 
-    edges={["bottom", "left", "right"]}
-    key={props.item.item.UUID} 
-    style={style.listItem}>
-               <Pressable 
-               disabled={props.item.item.subscribed == "0" ? true : props.item.item.show_gallery == "1" ? false : false}
-                    onPress={()=> {
-                      if (props.item.item.start < moment().unix()){
-                      props._gotoMedia(
-                        props.item.item.pin,
-                        props.item.item.title,
-                        props.item.item.owner,
-                        props.item.item.UUID,
-                        props.item.item.end,
-                        props.item.item.start,
-                        props.item.item.credits,
-                        props.item.item.camera_add_social,
-                        props.item.item.illustration
-                      )
-                    }
-                  }}>
-      <View
-        key={props}
-        style={{
-          height: 350,
-          width: SCREEN_WIDTH,
+    <SafeAreaView
+      edges={["bottom", "left", "right"]}
+      key={props.item.item.UUID}
+      style={style.listItem}
+    >
+      <Pressable
+        disabled={
+          props.item.item.subscribed == "0"
+            ? true
+            : props.item.item.show_gallery == "1"
+              ? false
+              : false
+        }
+        onPress={() => {
+          if (props.item.item.start < moment().unix()) {
+            props._gotoMedia(
+              props.item.item.pin,
+              props.item.item.title,
+              props.item.item.owner,
+              props.item.item.UUID,
+              props.item.item.end,
+              props.item.item.start,
+              props.item.item.credits,
+              props.item.item.camera_add_social,
+              props.item.item.illustration
+            );
+          }
         }}
       >
-      
-        <Image
-          indicator={Progress}
-          style={{
-            width: SCREEN_WIDTH,
-            height: 350,
-          }}
-          resizeMode={FastImage.resizeMode.cover}
-          source={{
-            priority: FastImage.priority.high,
-            cache: FastImage.cacheControl.immutable,
-            uri: props.item.item.illustration,
-          }}
-        />
         <View
+          key={props}
           style={{
-            position: "absolute",
-            height: 60,
-            backgroundColor: "rgba(0, 0, 0, 0.30)",
+            height: 350,
             width: SCREEN_WIDTH,
-            bottom: 0,
           }}
         >
-          <Text
-            numberOfLines={2}
+          <Image
+            indicator={Progress}
+            style={{
+              width: SCREEN_WIDTH,
+              height: 350,
+            }}
+            resizeMode={FastImage.resizeMode.cover}
+            source={{
+              priority: FastImage.priority.high,
+              cache: FastImage.cacheControl.immutable,
+              uri: props.item.item.illustration,
+            }}
+          />
+          <View
             style={{
               position: "absolute",
-              color: "#fff",
-              fontSize: 20,
-              left: 20,
-              bottom: 30,
-              fontWeight: "bold",
+              height: 60,
+              backgroundColor: "rgba(0, 0, 0, 0.30)",
               width: SCREEN_WIDTH,
+              bottom: 0,
             }}
           >
-            {props.item.item.title.toUpperCase()}
-          </Text>
-          <Text
-            numberOfLines={2}
-            style={{
-              position: "absolute",
-              color: "#fff",
-              fontSize: 15,
-              bottom: 7,
-              left: 20,
-              width: SCREEN_WIDTH,
-            }}
-          >
-            {endEventTime}
-          </Text>
-        </View>
-        <View
+            <Text
+              numberOfLines={2}
+              style={{
+                position: "absolute",
+                color: "#fff",
+                fontSize: 20,
+                left: 20,
+                bottom: 30,
+                fontWeight: "bold",
+                width: SCREEN_WIDTH,
+              }}
+            >
+              {props.item.item.title.toUpperCase()}
+            </Text>
+            <Text
+              numberOfLines={2}
+              style={{
+                position: "absolute",
+                color: "#fff",
+                fontSize: 15,
+                bottom: 7,
+                left: 20,
+                width: SCREEN_WIDTH,
+              }}
+            >
+              {endEventTime}
+            </Text>
+          </View>
+          <View
             style={{
               backgroundColor: "transparent",
               position: "absolute",
               height: 50,
-              zIndex:0,
+              zIndex: 0,
               backgroundColor: "rgba(0, 0, 0, 0.20)",
               marginTop: 0,
               width: SCREEN_WIDTH,
@@ -205,167 +216,222 @@ const FriendListItemHome = (props) => {
               {props.item.item.userName}
             </Text>
           </View>
-        {props.item.item.subscribed == "1" ? (
-          <View
-            style={styles.imageUserNameContainers}
-            pointerEvents={
-              props.item.item.end >= moment().unix() ? "auto" : "none"
-            }
-          >
-            <Icon
-              onPress={() => {
-                if (props.item.item.start > moment().unix()){
-                  Alert.alert("", i18n.t("Notstared"));
-                }else{
-                props.item.item.show_gallery == "1"
-                  ? props._gotoMedia(
-                      props.item.item.pin,
-                      props.item.item.title,
-                      props.item.item.owner,
-                      props.item.item.UUID,
-                      props.item.item.end,
-                      props.item.item.start,
-                      props.item.item.credits,
-                      props.item.item.camera_add_social,
-                      props.item.item.illustration
-                    )
-                  : Alert.alert("", i18n.t("BlockedGallery"));
-                }
-              }}
-              containerStyle={{
-                alignSelf: "flex-end",
-                width: 40,
-                height: 40,
-                marginRight: 5,
-                marginTop: 5,
-                paddingTop:10,
-                borderTopRightRadius: 5,
-                borderTopLeftRadius: 5,
-                backgroundColor: "rgba(0, 0, 0, 0.60)",
-              }}
-              type="entypo"
-              size={25}
-              name="images"
-              color="#fff"
-            />
-            <Icon
-              onPress={() => {
-                if (props.item.item.start > moment().unix()){
-                  Alert.alert("", i18n.t("Notstared"));
-                }else{
-                if (parseInt(props.item.item.credits) <= 0) {
+          {props.item.item.subscribed == "1" ? (
+            <View
+              style={styles.imageUserNameContainers}
+              pointerEvents={
+                props.item.item.end >= moment().unix() ? "auto" : "none"
+              }
+            >
+              <Icon
+                onPress={() => {
+                  if (props.item.item.start > moment().unix()) {
+                    Alert.alert("", i18n.t("Notstared"));
+                  } else {
+                    props.item.item.show_gallery == "1"
+                      ? props._gotoMedia(
+                          props.item.item.pin,
+                          props.item.item.title,
+                          props.item.item.owner,
+                          props.item.item.UUID,
+                          props.item.item.end,
+                          props.item.item.start,
+                          props.item.item.credits,
+                          props.item.item.camera_add_social,
+                          props.item.item.illustration
+                        )
+                      : Alert.alert("", i18n.t("BlockedGallery"));
+                  }
+                }}
+                containerStyle={{
+                  alignSelf: "flex-end",
+                  width: 40,
+                  height: 40,
+                  marginRight: 5,
+                  marginTop: 5,
+                  paddingTop: 10,
+                  borderTopRightRadius: 5,
+                  borderTopLeftRadius: 5,
+                  backgroundColor: "rgba(0, 0, 0, 0.60)",
+                }}
+                type="entypo"
+                size={25}
+                name="images"
+                color="#fff"
+              />
+              <Icon
+                onPress={() => {
+                  if (props.item.item.start > moment().unix()) {
+                    Alert.alert("", i18n.t("Notstared"));
+                  } else {
+                    if (parseInt(props.item.item.credits) <= 0) {
+                      props._gotoStore(
+                        props.item.item.pin,
+                        props.item.item.owner,
+                        props.item.item.title
+                      );
+                    } else {
+                      props._gotoCamera(
+                        props.item.item.pin,
+                        props.item.item.title,
+                        props.item.item.owner,
+                        props.item.item.UUID,
+                        props.item.item.end,
+                        props.item.item.start,
+                        props.item.item.credits,
+                        props.item.item.tCredits,
+                        props.item.item.camera_add_social
+                      );
+                    }
+                  }
+                }}
+                containerStyle={{
+                  alignSelf: "flex-end",
+                  width: 40,
+                  height: 40,
+                  marginRight: 5,
+                  paddingTop: 15,
+                  backgroundColor: "rgba(0, 0, 0, 0.60)",
+                }}
+                type="font-awesome"
+                size={25}
+                name="camera-retro"
+                color="#fff"
+              />
+              <CreditsFont credits={props.item.item.credits} />
+              <Text
+                style={{
+                  color: "white",
+                  alignSelf: "flex-end",
+                  width: 40,
+                  height: 40,
+                  marginRight: 5,
+                  paddingTop: 10,
+                  fontSize: 9,
+                  textAlign: "center",
+                  backgroundColor: "rgba(0, 0, 0, 0.60)",
+                }}
+              >
+                Credits
+              </Text>
+              <Icon
+                onPress={() => {
                   props._gotoStore(
                     props.item.item.pin,
                     props.item.item.owner,
                     props.item.item.title
                   );
-                } else {
-                  props._gotoCamera(
-                    props.item.item.pin,
-                    props.item.item.title,
-                    props.item.item.owner,
-                    props.item.item.UUID,
-                    props.item.item.end,
-                    props.item.item.start,
-                    props.item.item.credits,
-                    props.item.item.tCredits,
-                    props.item.item.camera_add_social
-                  );
-                }
-              }
-              }}
-              containerStyle={{
-                alignSelf: "flex-end",
-                width: 40,
-                height: 40,
-                marginRight: 5,
-                paddingTop: 15,
-                backgroundColor: "rgba(0, 0, 0, 0.60)",
-              }}
-              type="font-awesome"
-              size={25}
-              name="camera-retro"
-              color="#fff"
-            />
-            <CreditsFont credits={props.item.item.credits} />
-            <Text
-              style={{
-                color: "white",
-                alignSelf: "flex-end",
-                width: 40,
-                height: 40,
-                marginRight: 5,
-                paddingTop:10,
-                fontSize: 9,
-                textAlign: "center",
-                backgroundColor: "rgba(0, 0, 0, 0.60)",
-              }}
-            >
-              Credits
-            </Text>
-            <Icon
-              onPress={() => {
-                props._gotoStore(
-                  props.item.item.pin,
-                  props.item.item.owner,
-                  props.item.item.title
-                );
-              }}
-              containerStyle={{
-                alignSelf: "flex-end",
-                width: 40,
-                height: 40,
-                marginRight: 5,
-                backgroundColor: "rgba(0, 0, 0, 0.60)",
-              }}
-              type="ionicon"
-              size={25}
-              name="storefront-outline"
-              color="#fff"
-            />
+                }}
+                containerStyle={{
+                  alignSelf: "flex-end",
+                  width: 40,
+                  height: 40,
+                  marginRight: 5,
+                  backgroundColor: "rgba(0, 0, 0, 0.60)",
+                }}
+                type="ionicon"
+                size={25}
+                name="storefront-outline"
+                color="#fff"
+              />
 
-            <Icon
-              onPress={() => {
-                props._repotPost(
-                  props.item.item.pin,
-                  props.item.item.owner,
-                  props.item.item.title
-                );
-              }}
-              containerStyle={{
-                alignSelf: "flex-end",
-                width: 40,
-                paddingTop: 5,
-                height: 40,
-                marginRight: 5,
-                marginTop: 0,
-                borderBottomRightRadius: 5,
-                borderBottomLeftRadius: 5,
-                backgroundColor: "rgba(0, 0, 0, 0.60)",
-              }}
-              type="material"
-              size={25}
-              name="report-problem"
-              color="#fff"
-            />
-          </View>
-        ) : props.item.item.autoJoin == "1" &&
-          props.item.item.camera_count <
-            parseInt(props.item.item.cameras) +
-              parseInt(props.item.item.camera_cameras_extra) &&
-          props.item.item.subscribed == "0" &&
-          props.item.item.end >= moment().unix() ? (
-          <View style={styles.imageUserNameContainer}>
-            <TouchableOpacity
-              onPress={() =>
-                props._autoJoin(
-                  props.item.item.owner,
-                  props.item.item.pin,
-                  props.item.item.end,
-                  props.item.item.UUID
-                )
-              }
-            >
+              <Icon
+                onPress={() => {
+                  props._repotPost(
+                    props.item.item.pin,
+                    props.item.item.owner,
+                    props.item.item.title
+                  );
+                }}
+                containerStyle={{
+                  alignSelf: "flex-end",
+                  width: 40,
+                  paddingTop: 5,
+                  height: 40,
+                  marginRight: 5,
+                  marginTop: 0,
+                  borderBottomRightRadius: 5,
+                  borderBottomLeftRadius: 5,
+                  backgroundColor: "rgba(0, 0, 0, 0.60)",
+                }}
+                type="material"
+                size={25}
+                name="report-problem"
+                color="#fff"
+              />
+            </View>
+          ) : props.item.item.autoJoin == "1" &&
+            props.item.item.camera_count <
+              parseInt(props.item.item.cameras) +
+                parseInt(props.item.item.camera_cameras_extra) &&
+            props.item.item.subscribed == "0" &&
+            props.item.item.end >= moment().unix() ? (
+            <View style={styles.imageUserNameContainer}>
+              <TouchableOpacity
+                onPress={() =>
+                  props._autoJoin(
+                    props.item.item.owner,
+                    props.item.item.pin,
+                    props.item.item.end,
+                    props.item.item.UUID
+                  )
+                }
+              >
+                <View
+                  style={{
+                    alignSelf: "flex-end",
+                    backgroundColor: "rgba(0, 0, 0, 0.60)",
+                    flexDirection: "row",
+                    gap: 10,
+                    overflow: "hidden",
+                    height: 30,
+                    margin: 15,
+                    borderWidth: 1,
+                    borderRadius: 5,
+                    borderColor: "#fff",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: "#fff",
+                      fontWeight: "700",
+                      fontSize: 15,
+                      marginLeft: 10,
+                      marginRight: 10,
+                    }}
+                  >
+                    {i18n.t("e7")}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              <Icon
+                onPress={() => {
+                  props._repotPost(
+                    props.item.item.pin,
+                    props.item.item.owner,
+                    props.item.item.title
+                  );
+                }}
+                containerStyle={{
+                  alignSelf: "flex-end",
+                  width: 40,
+                  paddingTop: 5,
+                  height: 40,
+                  marginRight: 15,
+                  marginTop: 0,
+                  borderRadius: 5,
+                  backgroundColor: "rgba(0, 0, 0, 0.60)",
+                }}
+                type="material"
+                size={25}
+                name="report-problem"
+                color="#fff"
+              />
+            </View>
+          ) : (
+            <View style={styles.imageUserNameContainer}>
               <View
                 style={{
                   alignSelf: "flex-end",
@@ -374,7 +440,7 @@ const FriendListItemHome = (props) => {
                   gap: 10,
                   overflow: "hidden",
                   height: 30,
-                  margin: 15,
+                  margin: 10,
                   borderWidth: 1,
                   borderRadius: 5,
                   borderColor: "#fff",
@@ -386,157 +452,101 @@ const FriendListItemHome = (props) => {
                   style={{
                     color: "#fff",
                     fontWeight: "700",
-                    fontSize: 15,
                     marginLeft: 10,
                     marginRight: 10,
+                    fontSize: 15,
                   }}
                 >
-                  {i18n.t("e7")}
+                  {i18n.t("Not Joined")}
                 </Text>
               </View>
-            </TouchableOpacity>
-            <Icon
-              onPress={() => {
-                props._repotPost(
-                  props.item.item.pin,
-                  props.item.item.owner,
-                  props.item.item.title
-                );
-              }}
-              containerStyle={{
-                alignSelf: "flex-end",
-                width: 40,
-                paddingTop: 5,
-                height: 40,
-                marginRight: 15,
-                marginTop: 0,
-                borderRadius: 5,
-                backgroundColor: "rgba(0, 0, 0, 0.60)",
-              }}
-              type="material"
-              size={25}
-              name="report-problem"
-              color="#fff"
-            />
-          </View>
-        ) : (
-          <View style={styles.imageUserNameContainer}>
-            <View
+              <Icon
+                onPress={() => {
+                  props._repotPost(
+                    props.item.item.pin,
+                    props.item.item.owner,
+                    props.item.item.title
+                  );
+                }}
+                containerStyle={{
+                  alignSelf: "flex-end",
+                  width: 40,
+                  paddingTop: 5,
+                  height: 40,
+                  marginRight: 15,
+                  marginTop: 0,
+                  borderRadius: 5,
+                  backgroundColor: "rgba(0, 0, 0, 0.60)",
+                }}
+                type="material"
+                size={25}
+                name="report-problem"
+                color="#fff"
+              />
+            </View>
+          )}
+          <View
+            style={{
+              marginTop: 10,
+              marginRight: 10,
+              marginLeft: 10,
+              height: 27,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <FacePile numFaces={3} faces={FACES} circleSize={20} />
+
+            <Text
               style={{
-                alignSelf: "flex-end",
-                backgroundColor: "rgba(0, 0, 0, 0.60)",
-                flexDirection: "row",
-                gap: 10,
-                overflow: "hidden",
-                height: 30,
-                margin: 10,
-                borderWidth: 1,
-                borderRadius: 5,
-                borderColor: "#fff",
-                alignItems: "center",
-                justifyContent: "center",
+                color: "grey",
+                fontSize: 14,
               }}
             >
               <Text
                 style={{
-                  color: "#fff",
-                  fontWeight: "700",
-                  marginLeft: 10,
-                  marginRight: 10,
+                  color: "grey",
                   fontSize: 15,
+                  fontWeight: "600",
                 }}
               >
-                {i18n.t("Not Joined")}
-              </Text>
-            </View>
-            <Icon
-              onPress={() => {
-                props._repotPost(
-                  props.item.item.pin,
-                  props.item.item.owner,
-                  props.item.item.title
-                );
-              }}
-              containerStyle={{
-                alignSelf: "flex-end",
-                width: 40,
-                paddingTop: 5,
-                height: 40,
-                marginRight: 15,
-                marginTop: 0,
-                borderRadius: 5,
-                backgroundColor: "rgba(0, 0, 0, 0.60)",
-              }}
-              type="material"
-              size={25}
-              name="report-problem"
-              color="#fff"
-            />
+                {i18n.t("Cameras:")}
+              </Text>{" "}
+              {props.item.item.camera_count} of{" "}
+              {parseInt(props.item.item.cameras) +
+                parseInt(props.item.item.camera_cameras_extra)}{" "}
+              |{" "}
+              <Text
+                style={{
+                  color: "grey",
+                  fontSize: 15,
+                  fontWeight: "600",
+                }}
+              >
+                {i18n.t("Media:")}
+              </Text>{" "}
+              {props.item.item.media_count - 1}
+            </Text>
           </View>
-        )}
-        <View
-          style={{
-            marginTop: 10,
-            marginRight: 10,
-            marginLeft: 10,
-            height: 27,
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <FacePile numFaces={3} faces={FACES} circleSize={20} />
-
-          <Text
+          <View
             style={{
-              color: "grey",
-              fontSize: 14,
+              marginBottom: 10,
+              marginTop: 10,
+              marginRight: 10,
+              marginLeft: 10,
+              height: 27,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
             }}
           >
-            <Text
-              style={{
-                color: "grey",
-                fontSize: 15,
-                fontWeight: "600",
-              }}
-            >
-              {i18n.t("Cameras:")}
-            </Text>{" "}
-            {props.item.item.camera_count} of{" "}
-            {parseInt(props.item.item.cameras) +
-              parseInt(props.item.item.camera_cameras_extra)}{" "}
-            |{" "}
-            <Text
-              style={{
-                color: "grey",
-                fontSize: 15,
-                fontWeight: "600",
-              }}
-            >
-              {i18n.t("Media:")}
-            </Text>{" "}
-            {props.item.item.media_count - 1}
-          </Text>
-        </View>
-        <View
-          style={{
-            marginBottom: 10,
-            marginTop: 10,
-            marginRight: 10,
-            marginLeft: 10,
-            height: 27,
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Text style={{ color: "grey", fontSize: 13 }}>
-            {eventStart} - {eventEnd}
-          </Text>
-        </View>
-      
+            <Text style={{ color: "grey", fontSize: 13 }}>
+              {eventStart} - {eventEnd}
+            </Text>
           </View>
-          </Pressable>
+        </View>
+      </Pressable>
     </SafeAreaView>
   );
 };

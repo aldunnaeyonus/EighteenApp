@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Share,
   StyleSheet,
@@ -274,16 +274,16 @@ const Home = (props) => {
   };
 
   const _addMax = async (pin, owner, pro) => {
-   if (owner == user.user_id){
-    const data = {
-      owner: owner,
-      pin: pin,
-      isPro: pro,
-      user: user.user_id
-    };
-    await axiosPull.postData("/camera/maxCamera.php", data);
-    await axiosPull._pullCameraFeed(owner, "owner");
-  }
+    if (owner == user.user_id) {
+      const data = {
+        owner: owner,
+        pin: pin,
+        isPro: pro,
+        user: user.user_id,
+      };
+      await axiosPull.postData("/camera/maxCamera.php", data);
+      await axiosPull._pullCameraFeed(owner, "owner");
+    }
   };
 
   const _joinFeedItem = async (UUID, owner, pin, title) => {
@@ -320,7 +320,7 @@ const Home = (props) => {
       owner: owner,
       pin: pin,
       id: UUID,
-      user: user.user_id
+      user: user.user_id,
     };
     await axiosPull.postData("/camera/close.php", data);
     await axiosPull._pullCameraFeed(owner, "owner");
@@ -399,7 +399,7 @@ const Home = (props) => {
       owner: owner,
       pin: pin,
       id: UUID,
-      user: user.user_id
+      user: user.user_id,
     };
     await axiosPull.postData("/camera/delete.php", data);
     storage.delete("user.Gallery.Friend.Feed." + pin);
@@ -452,8 +452,8 @@ const Home = (props) => {
       ),
     });
     //timeout = setInterval(async () => {
-      //await axiosPull._pullCameraFeed(user.user_id, "owner");
-      //await axiosPull._pullFriendsFeed(user.user_id);
+    //await axiosPull._pullCameraFeed(user.user_id, "owner");
+    //await axiosPull._pullFriendsFeed(user.user_id);
     //}, 5000);
 
     const fetchData = async () => {
@@ -923,104 +923,104 @@ const Home = (props) => {
           setModalVisibleAlert(!modalVisibleAlert);
         }}
       >
-                  <ScrollView
-                    style={{ backgroundColor: "#fff", marginBottom: 0, width:'100%' }}
-                    keyboardShouldPersistTaps={"never"}
-                    keyboardDismissMode="on-drag"
-                    nestedScrollEnabled={true}
-                    showsVerticalScrollIndicator={false}
-                  >
-        <View style={style.centeredView}>
-          <View style={style.modalView2}>
-            <Text style={style.modalTitle}>{i18n.t("w1")}</Text>
-            <Text style={style.modalText}>{i18n.t("w2")}</Text>
+        <ScrollView
+          style={{ backgroundColor: "#fff", marginBottom: 0, width: "100%" }}
+          keyboardShouldPersistTaps={"never"}
+          keyboardDismissMode="on-drag"
+          nestedScrollEnabled={true}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={style.centeredView}>
+            <View style={style.modalView2}>
+              <Text style={style.modalTitle}>{i18n.t("w1")}</Text>
+              <Text style={style.modalText}>{i18n.t("w2")}</Text>
 
-            <ListItem key="1">
-              <Icon
-                type="ionicon"
-                name="film-outline"
-                size={25}
-                color="#3D4849"
-              />
-              <ListItem.Content>
-                <ListItem.Title style={{ fontWeight: "bold" }}>
-                  {i18n.t("w3")}
-                </ListItem.Title>
-                <ListItem.Subtitle>{i18n.t("w4")}</ListItem.Subtitle>
-              </ListItem.Content>
-            </ListItem>
-            <ListItem key="2">
-              <Icon
-                type="material-community"
-                name="face-man-profile"
-                size={25}
-                color="#3D4849"
-              />
-              <ListItem.Content>
-                <ListItem.Title style={{ fontWeight: "bold" }}>
-                  {i18n.t("w5")}
-                </ListItem.Title>
-                <ListItem.Subtitle>{i18n.t("w6")}</ListItem.Subtitle>
-              </ListItem.Content>
-            </ListItem>
-            <ListItem key="3">
-              <Icon
-                type="ionicon"
-                name="notifications-circle-outline"
-                size={25}
-                color="#3D4849"
-              />
-              <ListItem.Content>
-                <ListItem.Title style={{ fontWeight: "bold" }}>
-                  {i18n.t("w7")}
-                </ListItem.Title>
-                <ListItem.Subtitle>{i18n.t("w8")}</ListItem.Subtitle>
-              </ListItem.Content>
-            </ListItem>
-            <ListItem key="4">
-              <Icon
-                type="material-community"
-                name="account-edit-outline"
-                size={25}
-                color="#3D4849"
-              />
-              <ListItem.Content>
-                <ListItem.Title style={{ fontWeight: "bold" }}>
-                  {i18n.t("w9")}
-                </ListItem.Title>
-                <ListItem.Subtitle>{i18n.t("w10")}</ListItem.Subtitle>
-              </ListItem.Content>
-            </ListItem>
-            <View style={style.modalViewButton}>
-              <TouchableOpacity
-                style={{
-                  marginTop: 50,
-                  width: 250,
-                  backgroundColor: "#e35504",
-                  borderRadius: 8,
-                  padding: 15,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderColor: "#e35504",
-                }}
-                onPress={() => {
-                  setModalVisibleAlert(!modalVisibleAlert);
-                }}
-              >
-                <Text
+              <ListItem key="1">
+                <Icon
+                  type="ionicon"
+                  name="film-outline"
+                  size={25}
+                  color="#3D4849"
+                />
+                <ListItem.Content>
+                  <ListItem.Title style={{ fontWeight: "bold" }}>
+                    {i18n.t("w3")}
+                  </ListItem.Title>
+                  <ListItem.Subtitle>{i18n.t("w4")}</ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+              <ListItem key="2">
+                <Icon
+                  type="material-community"
+                  name="face-man-profile"
+                  size={25}
+                  color="#3D4849"
+                />
+                <ListItem.Content>
+                  <ListItem.Title style={{ fontWeight: "bold" }}>
+                    {i18n.t("w5")}
+                  </ListItem.Title>
+                  <ListItem.Subtitle>{i18n.t("w6")}</ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+              <ListItem key="3">
+                <Icon
+                  type="ionicon"
+                  name="notifications-circle-outline"
+                  size={25}
+                  color="#3D4849"
+                />
+                <ListItem.Content>
+                  <ListItem.Title style={{ fontWeight: "bold" }}>
+                    {i18n.t("w7")}
+                  </ListItem.Title>
+                  <ListItem.Subtitle>{i18n.t("w8")}</ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+              <ListItem key="4">
+                <Icon
+                  type="material-community"
+                  name="account-edit-outline"
+                  size={25}
+                  color="#3D4849"
+                />
+                <ListItem.Content>
+                  <ListItem.Title style={{ fontWeight: "bold" }}>
+                    {i18n.t("w9")}
+                  </ListItem.Title>
+                  <ListItem.Subtitle>{i18n.t("w10")}</ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+              <View style={style.modalViewButton}>
+                <TouchableOpacity
                   style={{
-                    textTransform: "uppercase",
-                    fontSize: 20,
-                    fontWeight: "bold",
-                    color: "#fff",
+                    marginTop: 50,
+                    width: 250,
+                    backgroundColor: "#e35504",
+                    borderRadius: 8,
+                    padding: 15,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderColor: "#e35504",
+                  }}
+                  onPress={() => {
+                    setModalVisibleAlert(!modalVisibleAlert);
                   }}
                 >
-                  {i18n.t("Continue")}
-                </Text>
-              </TouchableOpacity>
+                  <Text
+                    style={{
+                      textTransform: "uppercase",
+                      fontSize: 20,
+                      fontWeight: "bold",
+                      color: "#fff",
+                    }}
+                  >
+                    {i18n.t("Continue")}
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
         </ScrollView>
       </Modal>
       <AnimatedFlatList
@@ -1109,12 +1109,12 @@ const Home = (props) => {
             <Loading
               message={uploading.message}
               flex={uploading.display}
-                progress={uploading.progress}
+              progress={uploading.progress}
             />
           </View>
         }
         keyExtractor={(_, index) => index}
-        renderItem={(item, index) => 
+        renderItem={(item, index) =>
           item.item.owner == user.user_id ? (
             <ListItems
               item={item}
@@ -1145,7 +1145,7 @@ const Home = (props) => {
             />
           )
         }
-          />
+      />
     </SafeAreaProvider>
   );
 };
@@ -1183,7 +1183,7 @@ const style = StyleSheet.create({
     marginTop: 180,
     backgroundColor: "white",
     margin: 35,
-    padding:10,
+    padding: 10,
   },
   modalViewButton: {
     width: "100%",
