@@ -16,7 +16,7 @@ import {
   SCREEN_WIDTH,
   SCREEN_HEIGHT,
   durationAsString,
-  getExtensionFromFilename
+  getExtensionFromFilename,
 } from "../../utils/constants";
 import { Icon } from "react-native-elements";
 import * as ImagePicker from "expo-image-picker";
@@ -39,6 +39,7 @@ const stickers = [];
 import Loading from "../SubViews/home/Loading";
 import { getLocales } from "expo-localization";
 import axios from "axios";
+import FastImage from "react-native-fast-image";
 
 const PhotoGallery = (props) => {
   const [filteredDataSource] = useMMKVObject(
@@ -49,6 +50,7 @@ const PhotoGallery = (props) => {
   const [animating, setAnimating] = useState(false);
   const photo = useRef();
   const [pickedImages, setPickedImages] = useState([]);
+  const [progress, setProgress] = useState([]);
   const [credits, setCredits] = useState(
     props.route.params.owner == props.route.params.user
       ? "∞"
@@ -66,8 +68,8 @@ const PhotoGallery = (props) => {
   let [localLang] = useState(getLocales()[0].languageCode);
 
   const [uploading] = useMMKVObject("uploadData", storage);
-
-
+  //user.Gallery.Friend.Feed.${pin}
+  
   const createEvent = async () => {
     setAnimating(false);
     var formData = new FormData();
@@ -85,8 +87,11 @@ const PhotoGallery = (props) => {
           "SNAP18-gallary-" +
           props.route.params.pin +
           "-" +
-          Date.now() +
-          "." + getExtensionFromFilename(image).toLowerCase(),
+          moment().unix() +
+          "-" +
+          image.replace(getExtensionFromFilename(image),'') +
+          "." +
+          getExtensionFromFilename(image).toLowerCase(),
         uri: Platform.OS === "android" ? image : image.replace("file://", ""),
       });
     });
@@ -99,15 +104,16 @@ const PhotoGallery = (props) => {
           message: i18n.t("Uploading") + " " + i18n.t("PleaseWait"),
           display: "flex",
           image: pickedImages[0],
-          progress: 0
-        }))
+          progress: progress,
+        })
+      );
       await axios({
         method: "POST",
         url: constants.url + "/camera/upload.php",
         data: formData,
         onUploadProgress: (progressEvent) => {
-          console.log(progressEvent)
-          //handleProgressUpdate(progressEvent);
+          const {progress} = progressEvent;
+          setProgress(progress)
         },
         headers: {
           Accept: "application/json",
@@ -116,13 +122,14 @@ const PhotoGallery = (props) => {
       }).then(async () => {
         await AsyncStorage.setItem("uploadEnabled", "1");
         const postLoading = async () => {
+          setProgress(0)
           storage.set(
             "uploadData",
             JSON.stringify({
               message: "",
               display: "none",
               image: "",
-              progress: "",
+              progress: "0",
             })
           );
           await axiosPull._pullGalleryFeed(
@@ -197,7 +204,12 @@ const PhotoGallery = (props) => {
             pickedImages.push(file.uri);
           });
           createEvent();
-        } else if (mime == "mov" || mime == "mpeg" || mime == "mp4" || mime == "m4v") {
+        } else if (
+          mime == "mov" ||
+          mime == "mpeg" ||
+          mime == "mp4" ||
+          mime == "m4v"
+        ) {
           pickedImages.push(result.assets[0].uri);
           createEvent();
         } else {
@@ -206,8 +218,8 @@ const PhotoGallery = (props) => {
               path: result.assets[0].uri,
               stickers,
             }).then((image) => {
-            pickedImages.push(image);
-            createEvent();
+              pickedImages.push(image);
+              createEvent();
             });
           } catch (e) {
             console.log("e", e.message);
@@ -222,7 +234,6 @@ const PhotoGallery = (props) => {
     setModalUpload(true);
   }, [modalUpload]);
 
-  
   useFocusEffect(
     useCallback(() => {
       if (!props.unsubscribe) {
@@ -346,6 +357,14 @@ const PhotoGallery = (props) => {
         );
       }, 15000);
       const fetchData = async () => {
+      filteredDataSource.map((image) => {
+        FastImage.preload([{
+            cache: FastImage.cacheControl.immutable,
+            priority: FastImage.priority.high,
+            uri: image.uri
+        }]);
+    });
+   
         await axiosPull._pullGalleryFeed(
           props.route.params.pin,
           props.route.params.user
@@ -421,6 +440,7 @@ const PhotoGallery = (props) => {
                 message={uploading.message}
                 flex={uploading.display}
                 image={uploading.image}
+                progress={progress}
               />
             </>
           }

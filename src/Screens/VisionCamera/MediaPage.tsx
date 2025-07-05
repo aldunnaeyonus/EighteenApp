@@ -124,7 +124,7 @@ const MediaPage = (props: {
         "SNAP18-camera-" +
         props.route.params.pin +
         "-" +
-        Date.now() +
+        moment().unix() +
         "-" +
         source.uri.split("/").pop(),
       type: constants.mimes(source.uri.split(".").pop()), // set MIME type

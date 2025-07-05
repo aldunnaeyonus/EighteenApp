@@ -293,8 +293,10 @@ const PhotoViewer = (props) => {
                   alignSelf: "flex-end",
                   width: 40,
                   padding: 5,
-                  height: 40,
+                  paddingTop: 15,
+                  height: 50,
                   marginRight: 5,
+                  marginBottom:15,
                   borderTopRightRadius: 5,
                   borderTopLeftRadius: 5,
                   backgroundColor: "rgba(0, 0, 0, 0.60)",
@@ -315,7 +317,9 @@ const PhotoViewer = (props) => {
                   alignSelf: "flex-end",
                   width: 40,
                   padding: 5,
-                  height: 40,
+                  paddingTop: 15,
+                  marginTop:-15,
+                  height: 50,
                   marginRight: 5,
                   backgroundColor: "rgba(0, 0, 0, 0.60)",
                 }}
@@ -336,9 +340,10 @@ const PhotoViewer = (props) => {
                 containerStyle={{
                   alignSelf: "flex-end",
                   width: 40,
-                  paddingTop: 5,
-                  height: 40,
+                  paddingTop: 10,
+                  height: 50,
                   marginRight: 5,
+                  marginBottom:10,
                   backgroundColor: "rgba(0, 0, 0, 0.60)",
                 }}
               />
@@ -358,8 +363,9 @@ const PhotoViewer = (props) => {
             containerStyle={{
                   alignSelf: "flex-end",
                   width: 40,
-                  paddingTop: 5,
-                  height: 40,
+                  paddingTop: 10,
+                  marginTop:props.route.params.share == "1" || props.route.params.owner == props.route.params.user ? -10 : 0,
+                  height: 50,
                   marginRight: 5,
                   borderBottomRightRadius: 5,
                   borderBottomLeftRadius: 5,

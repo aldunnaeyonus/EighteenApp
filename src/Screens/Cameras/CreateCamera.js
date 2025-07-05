@@ -21,6 +21,7 @@ import {
   IOS_DISPLAY,
   constants,
   SCREEN_WIDTH,
+  makeid,
   getExtensionFromFilename
 } from "../../utils/constants";
 import * as ImagePicker from "expo-image-picker";
@@ -352,18 +353,6 @@ const CreateCamera = (props) => {
       show,
     ])
   );
-
-  const makeid = (length) => {
-    let result = "";
-    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    const charactersLength = characters.length;
-    let counter = 0;
-    while (counter < length) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-      counter += 1;
-    }
-    return result;
-  };
   const handleProgressUpdate = (progressEvent) => {
     let { loaded, total } = progressEvent;
     setPrecent(total ? Math.max(Math.round((loaded * 100) / total) - 5, 0) : 0);
@@ -418,7 +407,7 @@ const CreateCamera = (props) => {
       "SNAP18-cover-" +
       user.user_id +
       "-" +
-      Date.now() +
+      moment().unix() +
       "." + getExtensionFromFilename(image).toLowerCase();
     formData.append("aiIMAGE", "");
     formData.append("file", {

@@ -4,7 +4,7 @@ import { ActivityIndicator, MD2Colors } from "react-native-paper";
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
 const Image = createImageProgress(FastImage);
-import Progress from "react-native-progress";
+import * as Progress from 'react-native-progress';
 import Video from "react-native-video";
 import { SCREEN_WIDTH } from "../../../utils/constants";
 
@@ -15,6 +15,7 @@ const Loading = (props) => {
 
 
   return (
+
     <View
       style={{
         display: props.flex == "flex" ? "flex" : "none",
@@ -29,6 +30,8 @@ const Loading = (props) => {
         alignItems: "center",
       }}
     >
+        <Progress.Bar progress={props.progress} width={SCREEN_WIDTH - 10} height={5}  style={{position:'absolute', bottom: 2}} color={MD2Colors.orange900}/>
+
       {mime == "mov" || mime == "mpeg" || mime == "mp4" || mime == "m4v"? (
         <Video
           fullscreen={false}
@@ -61,8 +64,9 @@ const Loading = (props) => {
           style={{
             width: 40,
             height: 40,
-            borderRadius: 6,
+            borderRadius: 2,
             overflow: "hidden",
+            marginBottom:9
           }}
           indicator={Progress}
           source={{
@@ -73,20 +77,21 @@ const Loading = (props) => {
         />
       )}
       <ActivityIndicator
-        style={{ marginLeft: 15 }}
-        size={15}
+        style={{ marginLeft: 15, position:'absolute', left:-7, top:15 }}
+        size={25}
         hidesWhenStopped={true}
-        color={MD2Colors.orange900}
+        color={MD2Colors.grey700}
       />
       <Text
         style={{
+          marginBottom:15,
           marginLeft: 15,
           fontWeight: "600",
           width: SCREEN_WIDTH - 100,
           fontSize: 15,
         }}
       >
-        {props.message}
+        The media is being processed to the event gallery. Navigating around the app will not stop the upload. 
       </Text>
     </View>
   );

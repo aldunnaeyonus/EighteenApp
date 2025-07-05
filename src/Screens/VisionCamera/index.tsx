@@ -204,7 +204,7 @@ const VisionCamera = (props: {
       "SNAP18-camera-" +
       props.route.params.pin +
       "-" +
-      Date.now() +
+      moment().unix() +
       +"-" +
       path.split("/").pop();
     formData.append("file[]", {
