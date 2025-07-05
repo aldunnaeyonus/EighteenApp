@@ -589,12 +589,12 @@ const EditCamera = (props) => {
                 >
                   <Icon
                     type="material-community"
-                    size={30}
+                    size={50}
                     name="chip"
                     color={"#fff"}
                     containerStyle={{
-                      height: 55,
-                      width: 55,
+                      height: 75,
+                      width: 75,
                       alignContent: "center",
                       justifyContent: "center",
                       backgroundColor: "rgba(116, 198, 190, 1)",
@@ -690,12 +690,12 @@ const EditCamera = (props) => {
                 >
                   <Icon
                     type="material-community"
-                    size={30}
+                    size={50}
                     name="image-outline"
                     color={"#fff"}
                     containerStyle={{
-                      height: 55,
-                      width: 55,
+                      height: 75,
+                      width: 75,
                       alignContent: "center",
                       justifyContent: "center",
                       backgroundColor: "rgba(250, 190, 0, 1)",
@@ -728,12 +728,12 @@ const EditCamera = (props) => {
                 >
                   <Icon
                     type="material-community"
-                    size={30}
+                    size={50}
                     name="camera-outline"
                     color={"#fff"}
                     containerStyle={{
-                      height: 55,
-                      width: 55,
+                      height: 75,
+                      width: 75,
                       alignContent: "center",
                       justifyContent: "center",
                       backgroundColor: "#3D4849",

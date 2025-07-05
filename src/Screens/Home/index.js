@@ -643,12 +643,12 @@ const Home = (props) => {
                 >
                   <Icon
                     type="material-community"
-                    size={30}
+                    size={50}
                     name="view-gallery-outline"
                     color={"#fff"}
                     containerStyle={{
-                      height: 55,
-                      width: 55,
+                      height: 75,
+                      width: 75,
                       alignContent: "center",
                       justifyContent: "center",
                       backgroundColor: "rgba(250, 190, 0, 1)",
@@ -685,12 +685,12 @@ const Home = (props) => {
                 >
                   <Icon
                     type="material"
-                    size={30}
+                    size={50}
                     name="photo-camera-back"
                     color={"#fff"}
                     containerStyle={{
-                      height: 55,
-                      width: 55,
+                      height: 75,
+                      width: 75,
                       alignContent: "center",
                       justifyContent: "center",
                       backgroundColor: "#ea5504",

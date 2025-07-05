@@ -618,12 +618,12 @@ const Friends = (props) => {
                   >
                     <Icon
                       type="material"
-                      size={30}
+                      size={50}
                       name="report-gmailerrorred"
                       color={"#fff"}
                       containerStyle={{
-                        height: 55,
-                        width: 55,
+                        height: 75,
+                        width: 75,
                         alignContent: "center",
                         justifyContent: "center",
                         backgroundColor: "rgba(116, 198, 190, 1)",
@@ -654,12 +654,12 @@ const Friends = (props) => {
                   >
                     <Icon
                       type="antdesign"
-                      size={30}
+                      size={50}
                       name="deleteuser"
                       color={"#fff"}
                       containerStyle={{
-                        height: 55,
-                        width: 55,
+                        height: 75,
+                        width: 75,
                         alignContent: "center",
                         justifyContent: "center",
                         backgroundColor: "rgba(250, 190, 0, 1)",
@@ -707,12 +707,12 @@ const Friends = (props) => {
                   >
                     <Icon
                       type="material-community"
-                      size={30}
+                      size={50}
                       name="qrcode"
                       color={"#fff"}
                       containerStyle={{
-                        height: 55,
-                        width: 55,
+                        height: 75,
+                        width: 75,
                         alignContent: "center",
                         justifyContent: "center",
                         backgroundColor: "#3D4849",
@@ -745,12 +745,12 @@ const Friends = (props) => {
                   >
                     <Icon
                       type="material-community"
-                      size={30}
+                      size={50}
                       name="shield-account-variant-outline"
                       color={"#fff"}
                       containerStyle={{
-                        height: 55,
-                        width: 55,
+                        height: 75,
+                        width: 75,
                         alignContent: "center",
                         justifyContent: "center",
                         backgroundColor: "#ea5504",
