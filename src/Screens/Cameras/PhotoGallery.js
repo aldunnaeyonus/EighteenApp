@@ -16,6 +16,7 @@ import {
   SCREEN_WIDTH,
   SCREEN_HEIGHT,
   durationAsString,
+  getExtensionFromFilename
 } from "../../utils/constants";
 import { Icon } from "react-native-elements";
 import * as ImagePicker from "expo-image-picker";
@@ -38,7 +39,6 @@ const stickers = [];
 import Loading from "../SubViews/home/Loading";
 import { getLocales } from "expo-localization";
 import axios from "axios";
-import FastImage from "react-native-fast-image";
 
 const PhotoGallery = (props) => {
   const [filteredDataSource] = useMMKVObject(
@@ -51,7 +51,7 @@ const PhotoGallery = (props) => {
   const [pickedImages, setPickedImages] = useState([]);
   const [credits, setCredits] = useState(
     props.route.params.owner == props.route.params.user
-      ? "99"
+      ? "∞"
       : props.route.params.credits
   );
   const [cameraStatus] = ImagePicker.useCameraPermissions();
@@ -67,23 +67,6 @@ const PhotoGallery = (props) => {
 
   const [uploading] = useMMKVObject("uploadData", storage);
 
-  const handleProgressUpdate =
-    ((progressEvent) => {
-      let { loaded, total } = progressEvent;
-      const percentCompleted = progressEvent.total
-        ? Math.max(Math.round((loaded * 100) / total) - 5, 0)
-        : 0;
-      storage.set(
-        "uploadData",
-        JSON.stringify({
-          message: i18n.t("CreatingEvent") + " " + i18n.t("PleaseWait"),
-          display: "flex",
-          image: image,
-          progress: percentCompleted,
-        })
-      );
-    },
-    100); // Wait 100ms before calling the update function
 
   const createEvent = async () => {
     setAnimating(false);
@@ -110,18 +93,27 @@ const PhotoGallery = (props) => {
 
     const postConclusion = async () => {
       await AsyncStorage.setItem("uploadEnabled", "0");
+      storage.set(
+        "uploadData",
+        JSON.stringify({
+          message: i18n.t("Uploading") + " " + i18n.t("PleaseWait"),
+          display: "flex",
+          image: image,
+          progress: 0
+        }))
       await axios({
         method: "POST",
         url: constants.url + "/camera/upload.php",
         data: formData,
         onUploadProgress: (progressEvent) => {
-          handleProgressUpdate(progressEvent);
+          console.log(progressEvent)
+          //handleProgressUpdate(progressEvent);
         },
         headers: {
           Accept: "application/json",
           "content-Type": "multipart/form-data",
         },
-      }).then(async (res) => {
+      }).then(async () => {
         await AsyncStorage.setItem("uploadEnabled", "1");
         const postLoading = async () => {
           storage.set(
@@ -205,7 +197,7 @@ const PhotoGallery = (props) => {
             pickedImages.push(file.uri);
           });
           createEvent();
-        } else if (mime == "mov" || mime == "mpeg" || mime == "mp4") {
+        } else if (mime == "mov" || mime == "mpeg" || mime == "mp4" || mime == "m4v") {
           pickedImages.push(result.assets[0].uri);
           createEvent();
         } else {
