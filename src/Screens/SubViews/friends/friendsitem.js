@@ -222,21 +222,6 @@ const FriendListItem = (props) => {
                 color="#fff"
               />
               <CreditsFont credits={props.item.item.credits} />
-              <Text
-                style={{
-                  color: "white",
-                  alignSelf: "flex-end",
-                  width: 40,
-                  height: 40,
-                  marginRight: 5,
-                  paddingTop: 10,
-                  fontSize: 9,
-                  textAlign: "center",
-                  backgroundColor: "rgba(0, 0, 0, 0.60)",
-                }}
-              >
-                Credits
-              </Text>
               <Icon
                 onPress={() => {
                   props._gotoStore(

@@ -27,11 +27,12 @@ const CreditsFont = (props) => {
       style={{
         alignSelf: "flex-end",
         width: 40,
-        paddingTop: 10,
+        paddingTop: 5,
         alignItems: "center",
         justifyContent: "center",
-        height: 40,
+        height: 60,
         marginRight: 5,
+        paddingBottom:10,
         backgroundColor: "rgba(0, 0, 0, 0.60)",
         flexDirection: "row",
       }}
