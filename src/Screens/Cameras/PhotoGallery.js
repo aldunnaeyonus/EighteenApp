@@ -229,9 +229,9 @@ const PhotoGallery = (props) => {
   useFocusEffect(
     useCallback(() => {
       props.navigation.setOptions({
-        headerTitle: props.route.params.title,
+        headerTitle: props.route.params.title.toUpperCase(),
         headerTitleStyle: {
-          fontSize: 17,
+          fontSize: 15,
           fontWeight: "bold",
           color: filteredDataSource.length <= 0 ? "#3D4849" : "#fff",
           textAlign: "center",
