@@ -503,6 +503,7 @@ const onCheckVersion = () => {
                   gestureEnabled: false,
                   headerTransparent: true,
                   headerBackTitleVisible: false,
+
                 }}
               >
                 {(props) => (

@@ -9,7 +9,6 @@ import {
 import React, { useState, useRef, useCallback } from "react";
 import { Icon } from "react-native-elements";
 import Animated from "react-native-reanimated";
-import { useToast } from "react-native-styled-toast";
 import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../i18n";
 import ImageGalleryView from "../SubViews/gallery/imageGalleryView";
@@ -18,13 +17,13 @@ import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
 import { axiosPull } from "../../utils/axiosPull";
 import { getLocales } from "expo-localization";
+import styles from "../../styles/SliderEntry.style";
 
 const PhotoViewer = (props) => {
   const canMomentum = useRef(false);
   const AnimatedFlatlist = Animated.FlatList;
   const bottomPhoto = useRef();
   const newphoto = useRef();
-  const { toast } = useToast();
   const [activeIndex, setActiveIndex] = useState(props.route.params.pagerIndex);
   const [galleryData, setDalleryData] = useState(props.route.params.data);
 
@@ -241,26 +240,12 @@ const PhotoViewer = (props) => {
             );
           }}
         />
+          <View style={props.lefthanded == "1" ? styles.imageUserNameContainersGalleryLeft : styles.imageUserNameContainersGallery}>
 
-        <View
-          style={{
-            position: "absolute",
-            right: 10,
-            zIndex: 2,
-            top: 40,
-            height:'auto',
-            borderRadius: 5,
-            flexDirection: "column",
-            justifyContent: "flex-end",
-            backgroundColor: "transparent",
-          }}
-        >
-            <TouchableOpacity
-              onPress={() => {
+              <Icon
+               onPress={() => {
                 _hideContent();
               }}
-            >
-              <Icon
                 type={"material"}
                 name={"hide-image"}
                 size={30}
@@ -278,15 +263,12 @@ const PhotoViewer = (props) => {
                   backgroundColor: "rgba(0, 0, 0, 0.60)",
                 }}
               />
-            </TouchableOpacity>
-            <TouchableOpacity
+              <Icon
               onPress={() => {
                 _reportContent();
               }}
-            >
-              <Icon
-                type={"material"}
-                name={"report-problem"}
+                type={"octicons"}
+                name={"report"}
                 size={30}
                 color="white"
                 containerStyle={{
@@ -300,15 +282,12 @@ const PhotoViewer = (props) => {
                   backgroundColor: "rgba(0, 0, 0, 0.60)",
                 }}
               />
-            </TouchableOpacity>
           {props.route.params.share == "1" ||
           props.route.params.owner == props.route.params.user ? (
-            <TouchableOpacity
+              <Icon
               onPress={async () => {
                 _gotoShare(galleryData[activeIndex].uri);
               }}
-            >
-              <Icon
                 type="material-community"
                 size={30}
                 name="share"
@@ -323,16 +302,13 @@ const PhotoViewer = (props) => {
                   backgroundColor: "rgba(0, 0, 0, 0.60)",
                 }}
               />
-            </TouchableOpacity>
           ) : (
             <></>
           )}
-          <TouchableOpacity
-            onPress={() => {
+            <Icon 
+             onPress={() => {
               props.navigation.goBack();
             }}
-          >
-            <Icon 
             name={"close"} 
             size={30} 
             color="white" 
@@ -348,7 +324,6 @@ const PhotoViewer = (props) => {
                   backgroundColor: "rgba(0, 0, 0, 0.60)",
                 }}
             />
-          </TouchableOpacity>
         </View>
       </SafeAreaView>
     </SafeAreaProvider>

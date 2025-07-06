@@ -30,6 +30,7 @@ const FriendListItem = (props) => {
   const isFocused = useIsFocused();
   let FACES = JSON.parse(JSON.stringify(props.item.item.joinedAvatars));
   let [localLang] = useState(getLocales()[0].languageCode);
+
   useEffect(() => {
     if (props.item.item.end - moment().unix() <= 0) {
       clearInterval(timeout);
@@ -45,6 +46,7 @@ const FriendListItem = (props) => {
 
   let eventStart = startDate(props.item.item.start);
   let eventEnd = startDate(props.item.item.end);
+  
   let endEventTime = durationAsString(
     parseInt(props.item.item.end),
     parseInt(props.item.item.start),
@@ -58,6 +60,15 @@ const FriendListItem = (props) => {
       localLang
     );
   }, 45000);
+
+  useEffect(() => {
+  const fetchData = async () => {
+    if (eventEnd - moment().unix() <= 0) {
+    await axiosPull._pullFriendFeed(owner);
+    }
+  };
+  fetchData();
+  }, [isFocused, props, timeout, endEventTime]);
 
   return (
     <SafeAreaView key={props.item.item.UUID} style={style.listItem}>

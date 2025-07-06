@@ -37,6 +37,7 @@ const ListItem = (props) => {
       clearInterval(timeout);
     };
   }, [isFocused, props]);
+  let eventEnd = props.item.item.end;
 
   let endEventTime = durationAsString(
     parseInt(props.item.item.end),
@@ -51,6 +52,16 @@ const ListItem = (props) => {
       localLang
     );
   }, 45000);
+
+
+    useEffect(() => {
+    const fetchData = async () => {
+      if (eventEnd - moment().unix() <= 0) {
+    await axiosPull._pullCameraFeed(user.user_id, "owner");
+      }
+    };
+    fetchData();
+    }, [isFocused, props, timeout, endEventTime, eventEnd]);
 
   return (
     <SafeAreaView

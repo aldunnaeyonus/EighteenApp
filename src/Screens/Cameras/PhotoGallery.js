@@ -6,7 +6,6 @@ import {
   Text,
   Alert,
   Modal,
-  StatusBar,
   TouchableWithoutFeedback,
   Linking,
 } from "react-native";
@@ -15,7 +14,6 @@ import {
   constants,
   SCREEN_WIDTH,
   SCREEN_HEIGHT,
-  durationAsString,
   getExtensionFromFilename,
 } from "../../utils/constants";
 import { Icon } from "react-native-elements";
@@ -25,10 +23,8 @@ import EmptyStateView from "@tttstudios/react-native-empty-state";
 import { storage, updateItemFeed } from "../../context/components/Storage";
 import Animated from "react-native-reanimated";
 import moment from "moment/min/moment-with-locales";
-import GalleryHeader from "../SubViews/gallery/listHeader";
 import ImageGallery from "../SubViews/gallery/imageGallery";
 import { axiosPull } from "../../utils/axiosPull";
-import { useToast } from "react-native-styled-toast";
 import { useMMKVObject } from "react-native-mmkv";
 import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../i18n";
@@ -37,7 +33,6 @@ import PhotoEditor from "@baronha/react-native-photo-editor";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 const stickers = [];
 import Loading from "../SubViews/home/Loading";
-import { getLocales } from "expo-localization";
 import axios from "axios";
 import FastImage from "react-native-fast-image";
 
@@ -59,13 +54,10 @@ const PhotoGallery = (props) => {
   const [libraryStatus] = ImagePicker.useMediaLibraryPermissions();
 
   const [modalUpload, setModalUpload] = useState(false);
-  const { toast } = useToast();
   const [cameraData] = useMMKVObject(
     `user.Camera.Friend.Feed.${props.route.params.owner}`,
     storage
   );
-  let [localLang] = useState(getLocales()[0].languageCode);
-
   const [uploading] = useMMKVObject("uploadData", storage);
   //user.Gallery.Friend.Feed.${pin}
 
@@ -236,12 +228,18 @@ const PhotoGallery = (props) => {
 
   useFocusEffect(
     useCallback(() => {
-
       props.navigation.setOptions({
+        headerTitle: props.route.params.title,
+        headerTitleStyle: {
+          fontSize: 17,
+          fontWeight: "bold",
+          color: filteredDataSource.length <= 0 ? "#3D4849" : "#fff",
+          textAlign: "center",
+          flex: 1,
+        },
         headerLeft: () => (
           <TouchableOpacity
             onPress={() => {
-              StatusBar.setHidden(false, "none");
               props.navigation.goBack();
             }}
           >
@@ -249,13 +247,8 @@ const PhotoGallery = (props) => {
               type="material"
               size={25}
               name="arrow-back-ios-new"
-              color="#fff"
-              containerStyle={{
-                padding: 7,
-                height: 40,
-                backgroundColor: "rgba(0, 0, 0, 0.60)",
-                borderRadius: 20,
-              }}
+              color={filteredDataSource.length <= 0 ? "#3D4849" : "#fff"}
+            
             />
           </TouchableOpacity>
         ),
@@ -293,14 +286,15 @@ const PhotoGallery = (props) => {
             >
               <Icon
                 type="material-community"
-                size={30}
+                size={19}
                 name="account-box-multiple-outline"
                 color="#fff"
                 containerStyle={{
-                  padding: 7,
-                  height: 44,
-                  backgroundColor: "rgba(0, 0, 0, 0.60)",
-                  borderRadius: 22,
+                  padding: 5,
+                  height: 30,
+                  width:40,
+                  backgroundColor: "blue",
+                  borderRadius: 15,
                 }}
               />
             </TouchableOpacity>
@@ -372,12 +366,6 @@ const PhotoGallery = (props) => {
     ])
   );
 
-  let endEventTime = durationAsString(
-    parseInt(props.route.params.end),
-    parseInt(props.route.params.start),
-    localLang
-  );
-
   const showModalFunction = (index) => {
     props.navigation.navigate("MediaViewer", {
       index: index,
@@ -409,20 +397,11 @@ const PhotoGallery = (props) => {
           nestedScrollEnabled={true}
           scrollEventThrottle={16}
           ListHeaderComponent={
-            <>
-              <GalleryHeader
-                UUID={props.route.params.UUID}
-                image={props.route.params.illustration}
-                title={props.route.params.title}
-                endEventTime={endEventTime}
-              />
-
               <Loading
                 message={uploading.message}
                 flex={uploading.display}
                 progress={uploading.progress}
               />
-            </>
           }
           ListEmptyComponent={
             <View style={style.empty}>
@@ -431,9 +410,13 @@ const PhotoGallery = (props) => {
                 <View style={[style.fakeSquare, { opacity: 0.5 }]} />
                 <View style={[style.fakeSquare, { opacity: 0.4 }]} />
               </View>
-
+              <View style={style.fake}>
+                <View style={style.fakeSquare} />
+                <View style={[style.fakeSquare, { opacity: 0.5 }]} />
+                <View style={[style.fakeSquare, { opacity: 0.4 }]} />
+              </View>
               <EmptyStateView
-                headerText={props.route.params.title.toUpperCase()}
+                headerText={""}
                 subHeaderText={i18n.t("A gallery")}
                 headerTextStyle={style.headerTextStyle}
                 subHeaderTextStyle={style.subHeaderTextStyle}
@@ -731,7 +714,7 @@ const style = StyleSheet.create({
     flexBasis: 0,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 50,
+    marginTop: 150,
   },
 });
 export default PhotoGallery;
