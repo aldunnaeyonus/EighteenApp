@@ -1029,8 +1029,7 @@ const Home = (props) => {
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicatorr={false}
         nestedScrollEnabled={true}
-        bounces={true}
-        style={{ flex: 1, height: SCREEN_HEIGHT, width: SCREEN_WIDTH }}
+        style={{ flex: 1 }}
         data={cameraData}
         extraData={cameraData}
         scrollEventThrottle={16}
@@ -1119,6 +1118,7 @@ const Home = (props) => {
             <ListItems
               item={item}
               index={index}
+              lefthanded={user.lefthanded}
               isPro={user.isPro == undefined ? "0" : user.isPro}
               _gotoStore={_gotoStore}
               _deleteFeedItem={_deleteFeedItem}
@@ -1137,6 +1137,7 @@ const Home = (props) => {
             <FriendListItemHome
               item={item}
               index={index}
+              lefthanded={user.lefthanded}
               _gotoMedia={_gotoMedia}
               _gotoCamera={_gotoCamera}
               _gotoStore={_gotoStore}

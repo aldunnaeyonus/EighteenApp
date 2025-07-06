@@ -338,5 +338,7 @@
     "w10": "Customize your Snap Eighteen experience through Account Details. Update your motto, username or handle, and email address. You can also manage your location privacy (if currently inactive) and choose whether to display friend events on your main screen.",
     "Ended:": "Ended: ",
     "HideEvent":"Event is Hidden",
-    "HideEventDesc":"When you hide your event, it won’t appear to your friends. However, anyone with the event link can still view it."
+    "HideEventDesc":"When you hide your event, it won’t appear to your friends. However, anyone with the event link can still view it.",
+    "LeftHanded":"Left Handed Mode",
+    "LeftHandedDesc":"Enable left-handed mode to switch the camera button to the left side of the screen. This is useful for left-handed users who find it more comfortable to use the event controls on the left side."
 }			

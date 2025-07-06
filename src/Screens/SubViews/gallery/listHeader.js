@@ -12,7 +12,7 @@ const GalleryHeader = (props) => {
     <View
       key={props}
       style={{
-        height: 350,
+        height: 250,
         width: SCREEN_WIDTH,
       }}
     >
@@ -20,7 +20,7 @@ const GalleryHeader = (props) => {
         indicator={Progress}
         style={{
           width: SCREEN_WIDTH,
-          height: 350,
+          height: 400,
         }}
         resizeMode={FastImage.resizeMode.cover}
         source={{
@@ -29,6 +29,7 @@ const GalleryHeader = (props) => {
           uri: props.image,
         }}
       />
+
       <View
         style={{
           position: "absolute",

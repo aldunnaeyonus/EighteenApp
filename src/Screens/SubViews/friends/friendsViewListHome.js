@@ -30,6 +30,7 @@ const FriendListItemHome = (props) => {
   const isFocused = useIsFocused();
   let FACES = JSON.parse(JSON.stringify(props.item.item.joinedAvatars));
   let [localLang] = useState(getLocales()[0].languageCode);
+
   useEffect(() => {
     if (props.item.item.end - moment().unix() <= 0) {
       clearInterval(timeout);
@@ -39,12 +40,6 @@ const FriendListItemHome = (props) => {
     };
   }, [isFocused, props]);
 
-  const startDate = (date) => {
-    return moment.unix(parseInt(date)).locale(localLang).format("LLL");
-  };
-
-  let eventStart = startDate(props.item.item.start);
-  let eventEnd = startDate(props.item.item.end);
   let endEventTime = durationAsString(
     parseInt(props.item.item.end),
     parseInt(props.item.item.start),
@@ -92,7 +87,7 @@ const FriendListItemHome = (props) => {
         <View
           key={props}
           style={{
-            height: 350,
+            height: 'auto',
             width: SCREEN_WIDTH,
           }}
         >
@@ -100,7 +95,8 @@ const FriendListItemHome = (props) => {
             indicator={Progress}
             style={{
               width: SCREEN_WIDTH,
-              height: 350,
+              height: 500,
+              marginTop: 50,
             }}
             resizeMode={FastImage.resizeMode.cover}
             source={{
@@ -111,48 +107,11 @@ const FriendListItemHome = (props) => {
           />
           <View
             style={{
-              position: "absolute",
-              height: 60,
-              backgroundColor: "rgba(0, 0, 0, 0.30)",
-              width: SCREEN_WIDTH,
-              bottom: 0,
-            }}
-          >
-            <Text
-              numberOfLines={2}
-              style={{
-                position: "absolute",
-                color: "#fff",
-                fontSize: 20,
-                left: 20,
-                bottom: 30,
-                fontWeight: "bold",
-                width: SCREEN_WIDTH,
-              }}
-            >
-              {props.item.item.title.toUpperCase()}
-            </Text>
-            <Text
-              numberOfLines={2}
-              style={{
-                position: "absolute",
-                color: "#fff",
-                fontSize: 15,
-                bottom: 7,
-                left: 20,
-                width: SCREEN_WIDTH,
-              }}
-            >
-              {endEventTime}
-            </Text>
-          </View>
-          <View
-            style={{
               backgroundColor: "transparent",
               position: "absolute",
-              height: 50,
+              height: "100%",
               zIndex: 0,
-              backgroundColor: "rgba(0, 0, 0, 0.20)",
+              backgroundColor: "rgba(0, 0, 0, 0.0)",
               marginTop: 0,
               width: SCREEN_WIDTH,
               flexDirection: "row",
@@ -161,11 +120,13 @@ const FriendListItemHome = (props) => {
             <Image
               indicator={Progress}
               style={{
-                width: 40,
-                height: 40,
-                borderRadius: 30,
-                marginTop: 5,
-                marginLeft: 10,
+                width: 30,
+                height: 30,
+                zIndex: 0,
+                borderRadius: 20,
+                borderColor: "rgba(0,0,0,1)",
+                marginTop: 10,
+                marginLeft: 5,
                 borderWidth: 0.5,
                 alignSelf: "auto",
                 overflow: "hidden",
@@ -183,8 +144,9 @@ const FriendListItemHome = (props) => {
               <View style={{ position: "absolute" }}>
                 <View
                   style={{
-                    marginTop: 22,
-                    marginLeft: 40,
+                    marginTop: 20,
+                    marginLeft: 25,
+                    zIndex: 1,
                     backgroundColor: "transparent",
                     width: 30,
                     height: 30,
@@ -202,23 +164,66 @@ const FriendListItemHome = (props) => {
                 </View>
               </View>
             )}
-            <Text
-              numberOfLines={1}
+            <View
               style={{
-                color: "white",
+                marginTop: 5,
+                marginLeft: 0,
                 backgroundColor: "transparent",
-                fontSize: 17,
-                marginLeft: 10,
-                fontWeight: "700",
-                marginTop: 12,
+                width: "auto",
+                height: "auto",
+                flexDirection: "column",
               }}
             >
-              {props.item.item.userName}
-            </Text>
+              <Text
+                numberOfLines={1}
+                style={{
+                  color: "#3D4849",
+                  backgroundColor: "transparent",
+                  numberOfLines: 3,
+                  height: "auto",
+                  fontSize: 14,
+                  marginLeft: 10,
+                  fontWeight: "700",
+                  marginTop: 2,
+                }}
+              >
+                {props.item.item.userName}
+              </Text>
+              <Text
+                numberOfLines={1}
+                style={{
+                  color: "#3D4849",
+                  backgroundColor: "transparent",
+                  numberOfLines: 3,
+                  height: "auto",
+                  fontSize: 12,
+                  marginLeft: 10,
+                  fontWeight: "500",
+                  marginTop: 2,
+                }}
+              >
+                {props.item.item.title.toUpperCase()}
+              </Text>
+            </View>
+            <View
+              style={{
+                top: 10,
+                right: 45,
+                height: 27,
+                position: "absolute",
+              }}
+            >
+              <FacePile
+                numFaces={3}
+                faces={FACES}
+                circleSize={15}
+                containerStyle={{ position: "absolute" }}
+              />
+            </View>
           </View>
           {props.item.item.subscribed == "1" ? (
             <View
-              style={styles.imageUserNameContainers}
+              style={[props.lefthanded == "1" ? styles.imageUserNameContainersLeft : styles.imageUserNameContainers]}
               pointerEvents={
                 props.item.item.end >= moment().unix() ? "auto" : "none"
               }
@@ -254,9 +259,9 @@ const FriendListItemHome = (props) => {
                   borderTopLeftRadius: 5,
                   backgroundColor: "rgba(0, 0, 0, 0.60)",
                 }}
-                type="entypo"
+                type="material-community"
                 size={25}
-                name="images"
+                name="view-gallery-outline"
                 color="#fff"
               />
               <Icon
@@ -293,9 +298,9 @@ const FriendListItemHome = (props) => {
                   paddingTop: 15,
                   backgroundColor: "rgba(0, 0, 0, 0.60)",
                 }}
-                type="font-awesome"
+                type="material-community"
                 size={25}
-                name="camera-retro"
+                name="camera-outline"
                 color="#fff"
               />
               <CreditsFont credits={props.item.item.credits} />
@@ -329,9 +334,9 @@ const FriendListItemHome = (props) => {
                   marginRight: 5,
                   backgroundColor: "rgba(0, 0, 0, 0.60)",
                 }}
-                type="ionicon"
+                type="material-community"
                 size={25}
-                name="storefront-outline"
+                name="cart-plus"
                 color="#fff"
               />
 
@@ -354,9 +359,9 @@ const FriendListItemHome = (props) => {
                   borderBottomLeftRadius: 5,
                   backgroundColor: "rgba(0, 0, 0, 0.60)",
                 }}
-                type="material"
+                type="octicons"
                 size={25}
-                name="report-problem"
+                name="report"
                 color="#fff"
               />
             </View>
@@ -478,9 +483,9 @@ const FriendListItemHome = (props) => {
                   borderRadius: 5,
                   backgroundColor: "rgba(0, 0, 0, 0.60)",
                 }}
-                type="material"
+                type="octicons"
                 size={25}
-                name="report-problem"
+                name="report"
                 color="#fff"
               />
             </View>
@@ -493,57 +498,45 @@ const FriendListItemHome = (props) => {
               height: 27,
               flexDirection: "row",
               alignItems: "center",
-              justifyContent: "space-between",
             }}
           >
-            <FacePile numFaces={3} faces={FACES} circleSize={20} />
+            <Icon type="material" size={17} name="camera" color="#3D4849" />
+            <Text
+              style={{
+                color: "grey",
+                fontSize: 15,
+                marginRight:20,
+              }}
+            >
+              {" "}{" "}
+              {props.item.item.camera_count} /{" "}
+              {parseInt(props.item.item.cameras) +
+                parseInt(props.item.item.camera_cameras_extra)}{" "}
+            </Text>
+            <Icon type="material" size={17} name="perm-media" color="#3D4849" />
 
             <Text
               style={{
                 color: "grey",
-                fontSize: 14,
+                fontSize: 15,
+                                marginRight:20,
+
               }}
             >
-              <Text
-                style={{
-                  color: "grey",
-                  fontSize: 15,
-                  fontWeight: "600",
-                }}
-              >
-                {i18n.t("Cameras:")}
-              </Text>{" "}
-              {props.item.item.camera_count} of{" "}
-              {parseInt(props.item.item.cameras) +
-                parseInt(props.item.item.camera_cameras_extra)}{" "}
-              |{" "}
-              <Text
-                style={{
-                  color: "grey",
-                  fontSize: 15,
-                  fontWeight: "600",
-                }}
-              >
-                {i18n.t("Media:")}
-              </Text>{" "}
-              {props.item.item.media_count - 1}
+              {" "}{" "}{props.item.item.media_count - 1}
             </Text>
-          </View>
-          <View
-            style={{
-              marginBottom: 10,
-              marginTop: 10,
-              marginRight: 10,
-              marginLeft: 10,
-              height: 27,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text style={{ color: "grey", fontSize: 13 }}>
-              {eventStart} - {eventEnd}
-            </Text>
+            <Icon type="material-community" size={17} name="calendar" color="#3D4849" />
+              <Text
+              numberOfLines={2}
+              style={{
+                color: "grey",
+                fontSize: 15,
+                width: 'auto',
+                textAlign:'left',
+              }}
+            >
+             {" "}{" "}{endEventTime}
+            </Text> 
           </View>
         </View>
       </Pressable>
@@ -626,10 +619,10 @@ const style = StyleSheet.create({
   },
   listItem: {
     padding: 0,
-    backgroundColor: "#FFF",
+    backgroundColor: "#fff",
     width: SCREEN_WIDTH,
-    height: 425,
-    marginBottom: 20,
+    height: 'auto',
+    marginBottom: 0,
     flex: 1,
     marginTop: 0,
     alignSelf: "center",

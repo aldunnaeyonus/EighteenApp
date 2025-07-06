@@ -15,18 +15,19 @@ const AccountDetails = (props) => {
   const [email, setEmail] = useState(user.user_email);
   const [motto, setMootto] = useState(user.user_motto);
   const [handle, setHandle] = useState(user.user_handle);
-  const [switch4, setSwitch4] = useState((user.privacy == "1" ? true : false));
-  const [switch5, setSwitch5] = useState((user.showActive == "1" ? true : false));
+  const [switch4, setSwitch4] = useState(user.privacy == "1" ? true : false);
+  const [switch5, setSwitch5] = useState(user.showActive == "1" ? true : false);
+  const [switch6, setSwitch6] = useState(user.lefthanded == "1" ? true : false);
   const isFocused = useIsFocused();
 
   useEffect(() => {
-      props.navigation.setOptions({
-        headerRight: () => (
-                      <TouchableOpacity
-                        onPress={() => {
-                          _saveUserData();
-                        }}
-                      >
+    props.navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() => {
+            _saveUserData();
+          }}
+        >
           <Text
             style={{
               color: "#3D4849",
@@ -36,23 +37,20 @@ const AccountDetails = (props) => {
             }}
           >
             {i18n.t("Save")}
-          </Text></TouchableOpacity>
-        ),
-      });
-    }, [
-      isFocused,
-      email,
-      motto,
-      handle,
-      switch4,
-      switch5,
-    ]);
+          </Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, [isFocused, email, motto, handle, switch4, switch5, switch6]);
 
   const toggleSwitch4 = () => {
     setSwitch4(!switch4);
   };
   const toggleSwitch5 = () => {
     setSwitch5(!switch5);
+  };
+  const toggleSwitch6 = () => {
+    setSwitch6(!switch6);
   };
   const _saveUserData = async () => {
     props.navigation.setOptions({
@@ -67,6 +65,7 @@ const AccountDetails = (props) => {
       motto: motto,
       privacy: switch4 ? "1" : "0",
       showActive: switch5 ? "1" : "0",
+      lefthanded: switch6 ? "1" : "0",
     };
     const response = await axiosPull.postData("/users/save.php", data);
     if (response[0].errorMessage == "logout") {
@@ -80,9 +79,9 @@ const AccountDetails = (props) => {
   };
 
   return (
-    <ScrollView 
-    style={{ backgroundColor: "white", flex: 1 }}
-            nestedScrollEnabled={true}
+    <ScrollView
+      style={{ backgroundColor: "white", flex: 1 }}
+      nestedScrollEnabled={true}
     >
       <ListItem key="0">
         <Icon
@@ -205,7 +204,7 @@ const AccountDetails = (props) => {
         </ListItem>
         <View style={[styles.dividerStyle]} />
         <ListItem
-          borderColor='transparent'
+          borderColor="transparent"
           containerStyle={{ height: 65, backgroundColor: "#fafbfc" }}
           key="5"
         >
@@ -286,7 +285,9 @@ const AccountDetails = (props) => {
             <ListItem.Title style={styles.imageUserNameTitleBlack}>
               {i18n.t("Show Active Member Events")}
             </ListItem.Title>
-            <ListItem.Subtitle>{i18n.t("Show Active Member Events Description")}</ListItem.Subtitle>
+            <ListItem.Subtitle>
+              {i18n.t("Show Active Member Events Description")}
+            </ListItem.Subtitle>
           </ListItem.Content>
         </ListItem>
         <View style={[styles.dividerStyle]} />
@@ -303,6 +304,41 @@ const AccountDetails = (props) => {
           </ListItem.Content>
         </ListItem>
         <View style={[styles.dividerStyle]} />
+        <ListItem key="15">
+          <Icon
+            type="material-community"
+            name="hand-back-left-outline"
+            size={25}
+            color="#3D4849"
+            containerStyle={{
+              width: 28,
+              height: 28,
+              borderRadius: 6,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          />
+          <ListItem.Content>
+            <ListItem.Title style={styles.imageUserNameTitleBlack}>
+              {i18n.t("LeftHanded")}
+            </ListItem.Title>
+            <ListItem.Subtitle>{i18n.t("LeftHandedDesc")}</ListItem.Subtitle>
+          </ListItem.Content>
+        </ListItem>
+        <View style={[styles.dividerStyle]} />
+        <ListItem
+          containerStyle={{ height: 65, backgroundColor: "#fafbfc" }}
+          key="19"
+        >
+          <ListItem.Content>
+            <Switch
+              style={{ alignSelf: "flex-end" }}
+              value={switch6}
+              onValueChange={(value) => toggleSwitch6(value)}
+            />
+          </ListItem.Content>
+        </ListItem>
+        <View style={[styles.dividerStyle]} />
 
         <View
           style={{
@@ -312,7 +348,7 @@ const AccountDetails = (props) => {
             alignItems: "center",
           }}
         >
-          <Text style={{ textAlign: "center", color: "gray", fontSize:15 }}>
+          <Text style={{ textAlign: "center", color: "gray", fontSize: 15 }}>
             {i18n.t("Email address changes")}
           </Text>
         </View>
