@@ -60,7 +60,7 @@ const FriendHeader = (props) => {
           scrollEnabled={true}
           nestedScrollEnabled={true}
           showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicatorr={false}
+          showsVerticalScrollIndicator={false}
         >
           <View
             key={user.user_id}
@@ -106,33 +106,7 @@ const FriendHeader = (props) => {
                   }}
                 />
               </View>
-              {user.isPro == "1" && (
-                <View style={{ position: "absolute" }} key={"A" + user.user_id}>
-                  <View
-                    style={{
-                      marginTop: 63,
-                      marginLeft: 50,
-                      backgroundColor: "transparent",
-                      width: 22,
-                      height: 22,
-                      justifyContent: "center",
-                    }}
-                  >
-                    <FastImage
-                      style={{
-                        marginLeft: 5,
-                        marginTop: -17,
-                        width: 22,
-                        height: 22,
-                        textAlignVertical: "center",
-                        textAlignVertical: "center",
-                      }}
-                      resizeMode={FastImage.resizeMode.contain}
-                      source={require("../../../../assets/verified.png")}
-                    />
-                  </View>
-                </View>
-              )}
+
             </TouchableOpacity>
 
             <Text

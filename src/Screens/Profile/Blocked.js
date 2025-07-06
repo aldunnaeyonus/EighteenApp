@@ -42,26 +42,7 @@ const Blocked = (props) => {
 
   useFocusEffect(
     useCallback(() => {
-      if (!props.unsubscribe) {
-        toast({
-          message: i18n.t("No internet connection"),
-          toastStyles: {
-            bg: "#3D4849",
-            borderRadius: 5,
-          },
-          duration: 5000,
-          color: "white",
-          iconColor: "white",
-          iconFamily: "Entypo",
-          iconName: "info-with-circle",
-          closeButtonStyles: {
-            px: 4,
-            bg: "translucent",
-          },
-          closeIconColor: "white",
-          hideAccent: true,
-        });
-      }
+
       const fetchData = async () => {
         await axiosPull._pullBlockedFriendsFeedABC(user.user_id);
         storage.delete("user.Friend.Blocked_Temp");
@@ -110,7 +91,7 @@ const Blocked = (props) => {
           refreshing={refreshing} // Added pull to refesh state
           onRefresh={_refresh} // Added pull to refresh control
           showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicatorr={false}
+          showsVerticalScrollIndicator={false}
           nestedScrollEnabled={true}
           bounces={true}
           style={{ flex: 1, height: SCREEN_HEIGHT, width: SCREEN_WIDTH}}

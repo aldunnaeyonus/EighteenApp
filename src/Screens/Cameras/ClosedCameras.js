@@ -386,7 +386,7 @@ const ClosedCameras = (props) => {
         refreshing={refreshing} // Added pull to refesh state
         onRefresh={_refresh} // Added pull to refresh control
         showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicatorr={false}
+        showsVerticalScrollIndicator={false}
         nestedScrollEnabled={true}
         bounces={true}
         style={{ flex: 1, height: SCREEN_HEIGHT, width: SCREEN_WIDTH }}

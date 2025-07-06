@@ -42,26 +42,7 @@ const GetPro = (props) => {
 
   useFocusEffect(
     useCallback(() => {      
-      if (!props.unsubscribe) {
-        toast({
-          message: i18n.t("No internet connection"),
-          toastStyles: {
-            bg: "#3D4849",
-            borderRadius: 5,
-          },
-          duration: 5000,
-          color: "white",
-          iconColor: "white",
-          iconFamily: "Entypo",
-          iconName: "info-with-circle",
-          closeButtonStyles: {
-            px: 4,
-            bg: "translucent",
-          },
-          closeIconColor: "white",
-          hideAccent: true,
-        });
-      }
+
       props.navigation.setOptions({
         headerLeft: () => (
           <TouchableOpacity
@@ -85,7 +66,7 @@ const GetPro = (props) => {
           </TouchableOpacity>
         ),
       });
-    }, [props.unsubscribe])
+    }, [])
   );
 
   const eula = useCallback(() => {
@@ -193,7 +174,7 @@ const GetPro = (props) => {
         <AnimatedFlatlist
           extraData={products}
           showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicatorr={false}
+          showsVerticalScrollIndicator={false}
                   nestedScrollEnabled={true}
           scrollEventThrottle={16}
           ListHeaderComponent={<ProHeader />}

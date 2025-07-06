@@ -58,23 +58,7 @@ const ListItem = (props) => {
       key={props.item.item.UUID}
       style={style.listItem}
     >
-      <Pressable
-        onPress={() => {
-          if (props.item.item.start < moment().unix()) {
-            props._gotoMedia(
-              props.item.item.pin,
-              props.item.item.title,
-              props.item.item.owner,
-              props.item.item.UUID,
-              props.item.item.end,
-              props.item.item.start,
-              props.item.item.credits,
-              props.item.item.camera_add_social,
-              props.item.item.illustration
-            );
-          }
-        }}
-      >
+      
         <View
           key={props}
           style={{
@@ -82,21 +66,7 @@ const ListItem = (props) => {
             width: SCREEN_WIDTH,
           }}
         >
-          <Image
-            indicator={Progress}
-            style={{
-              width: SCREEN_WIDTH,
-              height: 500,
-              marginTop: 50,
-            }}
-            resizeMode={FastImage.resizeMode.cover}
-            source={{
-              priority: FastImage.priority.high,
-              cache: FastImage.cacheControl.immutable,
-              uri: props.item.item.illustration,
-            }}
-          />
-          <View
+           <View
             style={{
               backgroundColor: "transparent",
               position: "absolute",
@@ -211,6 +181,38 @@ const ListItem = (props) => {
               />
             </View>
           </View>
+          <Pressable
+        onPress={() => {
+          if (props.item.item.start < moment().unix()) {
+            props._gotoMedia(
+              props.item.item.pin,
+              props.item.item.title,
+              props.item.item.owner,
+              props.item.item.UUID,
+              props.item.item.end,
+              props.item.item.start,
+              props.item.item.credits,
+              props.item.item.camera_add_social,
+              props.item.item.illustration
+            );
+          }
+        }}
+      >
+          <Image
+            indicator={Progress}
+            style={{
+              width: SCREEN_WIDTH,
+              height: 500,
+              marginTop: 50,
+            }}
+            resizeMode={FastImage.resizeMode.cover}
+            source={{
+              priority: FastImage.priority.high,
+              cache: FastImage.cacheControl.immutable,
+              uri: props.item.item.illustration,
+            }}
+          />
+         </Pressable>
           <View style={props.lefthanded == "1" ? styles.imageUserNameContainersLeft : styles.imageUserNameContainers}>
         <MenuView
           key={props.item.item.UUID}
@@ -276,7 +278,7 @@ const ListItem = (props) => {
             }}
             type="material-community"
             size={30}
-            name="delete-sweep-outline"
+            name="menu-open"
             color="#fff"
           />
         </MenuView>
@@ -302,9 +304,9 @@ const ListItem = (props) => {
             paddingTop: 5,
             backgroundColor: "rgba(0, 0, 0, 0.60)",
           }}
-          type="entypo"
+                type="material-community"
           size={25}
-          name="images"
+                name="view-gallery-outline"
           color="#fff"
         />
         <Icon
@@ -329,9 +331,9 @@ const ListItem = (props) => {
             paddingTop: 5,
             backgroundColor: "rgba(0, 0, 0, 0.60)",
           }}
-          type="font-awesome"
+                type="material-community"
           size={25}
-          name="camera-retro"
+                name="camera-outline"
           color="#fff"
         />
         <Icon
@@ -484,7 +486,6 @@ const ListItem = (props) => {
             </Text> 
           </View>
         </View>
-      </Pressable>
     </SafeAreaView>
   );
 };

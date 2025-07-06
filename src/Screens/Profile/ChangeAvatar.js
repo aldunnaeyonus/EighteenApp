@@ -187,7 +187,7 @@ const ChangeData = (props) => {
             >
               <View style={[styles.gridButton]}>
                 <Image
-                  key={"AA" + grids.key}
+                  key={grids.key}
                   indicator={Progress}
                   resizeMode={FastImage.resizeMode.contain}
                   style={{

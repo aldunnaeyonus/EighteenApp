@@ -429,7 +429,7 @@ const FriendListItemHome = (props) => {
                   borderRadius: 5,
                   backgroundColor: "rgba(0, 0, 0, 0.60)",
                 }}
-                type="material"
+                type="octicons"
                 size={25}
                 name="report-problem"
                 color="#fff"

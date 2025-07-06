@@ -319,26 +319,7 @@ const Friends = (props) => {
   };
 
   useEffect(() => {
-    if (!props.unsubscribe) {
-      toast({
-        message: i18n.t("No internet connection"),
-        toastStyles: {
-          bg: "#3D4849",
-          borderRadius: 5,
-        },
-        duration: 5000,
-        color: "white",
-        iconColor: "white",
-        iconFamily: "Entypo",
-        iconName: "info-with-circle",
-        closeButtonStyles: {
-          px: 4,
-          bg: "translucent",
-        },
-        closeIconColor: "white",
-        hideAccent: true,
-      });
-    }
+
     const fetchData = async () => {
       await axiosPull._pullFriendFeed(props.route.params.userID);
       const data = {
@@ -410,7 +391,6 @@ const Friends = (props) => {
     isFriend,
     friendData,
     props.route.params.userID,
-    props.unsubscribe,
     user.user_id,
     isLoading,
   ]);
@@ -454,7 +434,7 @@ const Friends = (props) => {
           refreshing={refreshing} // Added pull to refesh state
           onRefresh={_refresh} // Added pull to refresh control
           showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicatorr={false}
+          showsVerticalScrollIndicator={false}
           nestedScrollEnabled={true}
           bounces={true}
           style={{
@@ -558,6 +538,7 @@ const Friends = (props) => {
               <FriendListItem
                 item={item}
                 index={index}
+                lefthanded={user.lefthanded}
                 _gotoMedia={_gotoMedia}
                 _gotoCamera={_gotoCamera}
                 _gotoStore={_gotoStore}

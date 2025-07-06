@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Share,
   StyleSheet,
@@ -48,6 +48,7 @@ const Home = (props) => {
     "user.Camera.Feed",
     storage
   );
+  const flatListViewer = useRef(null);
   const [modalQRCodeVisable, setmodalQRCodeVisable] = useState(false);
   const [modalShareVisable, setModalShareVisable] = useState(false);
   const [modalVisable, setmodalVisable] = useState(false);
@@ -546,6 +547,12 @@ const Home = (props) => {
     }
   };
 
+    const getItemLayout = (_, index) => ({
+      length: SCREEN_HEIGHT,
+      offset: SCREEN_HEIGHT * index,
+      index,
+    });
+
   const myAsyncPDFFunction = async (url) => {
     const path = `${RNFS.CachesDirectoryPath}/qrcodeEvent.pdf`;
     const fileExists = await RNFS.exists(path);
@@ -1023,11 +1030,13 @@ const Home = (props) => {
           </View>
         </ScrollView>
       </Modal>
+
       <AnimatedFlatList
+        ref={flatListViewer}
         refreshing={refreshing} // Added pull to refesh state
         onRefresh={_refresh} // Added pull to refresh control
         showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicatorr={false}
+        showsVerticalScrollIndicator={false}
         nestedScrollEnabled={true}
         style={{ flex: 1 }}
         data={cameraData}
@@ -1112,6 +1121,7 @@ const Home = (props) => {
             />
           </View>
         }
+                  getItemLayout={getItemLayout}
         keyExtractor={(_, index) => index}
         renderItem={(item, index) =>
           item.item.owner == user.user_id ? (

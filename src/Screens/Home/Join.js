@@ -57,31 +57,6 @@ const Join = (props) => {
 
 
 
-  useFocusEffect(
-    useCallback(() => {
-      if (!props.unsubscribe) {
-        toast({
-          message: i18n.t("No internet connection"),
-          toastStyles: {
-            bg: "#3D4849",
-            borderRadius: 5,
-          },
-          duration: 5000,
-          color: "white",
-          iconColor: "white",
-          iconFamily: "Entypo",
-          iconName: "info-with-circle",
-          closeButtonStyles: {
-            px: 4,
-            bg: "translucent",
-          },
-          closeIconColor: "white",
-          hideAccent: true,
-        });
-      }
-
-    }, [props.unsubscribe])
-  );
 
   const checkHandle = async () => {
     setRefreshing(true);
@@ -113,7 +88,7 @@ const Join = (props) => {
     >
         <AnimatedFlatList
           showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicatorr={false}
+          showsVerticalScrollIndicator={false}
           nestedScrollEnabled={true}
           bounces={true}
           style={{ flex: 1, height: SCREEN_HEIGHT, width: SCREEN_WIDTH}}

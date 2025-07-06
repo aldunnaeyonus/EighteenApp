@@ -145,9 +145,6 @@ const FriendListItem = (props) => {
           {props.item.item.subscribed == "1" ? (
             <View
               style={props.lefthanded == "1" ? styles.imageUserNameSmallContainersLeft : styles.imageUserNameSmallContainers}
-              pointerEvents={
-                props.item.item.end >= moment().unix() ? "auto" : "none"
-              }
             >
               <Icon
                 onPress={() => {
@@ -180,9 +177,9 @@ const FriendListItem = (props) => {
                   borderTopLeftRadius: 5,
                   backgroundColor: "rgba(0, 0, 0, 0.60)",
                 }}
-                type="entypo"
+                type="material-community"
                 size={25}
-                name="images"
+                name="view-gallery-outline"
                 color="#fff"
               />
               <Icon
@@ -219,9 +216,9 @@ const FriendListItem = (props) => {
                   paddingTop: 15,
                   backgroundColor: "rgba(0, 0, 0, 0.60)",
                 }}
-                type="font-awesome"
+                type="material-community"
                 size={25}
-                name="camera-retro"
+                name="camera-outline"
                 color="#fff"
               />
               <CreditsFont credits={props.item.item.credits} />
@@ -255,9 +252,9 @@ const FriendListItem = (props) => {
                   marginRight: 5,
                   backgroundColor: "rgba(0, 0, 0, 0.60)",
                 }}
-                type="ionicon"
+                type="material-community"
                 size={25}
-                name="storefront-outline"
+                name="cart-plus"
                 color="#fff"
               />
 
@@ -280,9 +277,9 @@ const FriendListItem = (props) => {
                   borderBottomLeftRadius: 5,
                   backgroundColor: "rgba(0, 0, 0, 0.60)",
                 }}
-                type="material"
+                type="octicons"
                 size={25}
-                name="report-problem"
+                name="report"
                 color="#fff"
               />
             </View>

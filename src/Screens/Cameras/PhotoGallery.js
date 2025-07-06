@@ -236,26 +236,6 @@ const PhotoGallery = (props) => {
 
   useFocusEffect(
     useCallback(() => {
-      if (!props.unsubscribe) {
-        toast({
-          message: i18n.t("No internet connection"),
-          toastStyles: {
-            bg: "#3D4849",
-            borderRadius: 5,
-          },
-          duration: 5000,
-          color: "white",
-          iconColor: "white",
-          iconFamily: "Entypo",
-          iconName: "info-with-circle",
-          closeButtonStyles: {
-            px: 4,
-            bg: "translucent",
-          },
-          closeIconColor: "white",
-          hideAccent: true,
-        });
-      }
 
       props.navigation.setOptions({
         headerLeft: () => (
@@ -385,7 +365,6 @@ const PhotoGallery = (props) => {
       props.route.params.owner,
       props.route.params.type,
       props.route.params.user,
-      props.unsubscribe,
       credits,
       animating,
       pickedImages,
