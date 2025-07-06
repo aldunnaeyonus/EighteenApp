@@ -20,7 +20,7 @@ const GalleryHeader = (props) => {
         indicator={Progress}
         style={{
           width: SCREEN_WIDTH,
-          height: 400,
+          height: 250,
         }}
         resizeMode={FastImage.resizeMode.cover}
         source={{
@@ -34,7 +34,7 @@ const GalleryHeader = (props) => {
         style={{
           position: "absolute",
           height: 60,
-          backgroundColor: "rgba(0, 0, 0, 0.60)",
+          backgroundColor: "rgba(0, 0, 0, 0.30)",
           width: SCREEN_WIDTH,
           bottom: 0,
         }}
@@ -45,7 +45,7 @@ const GalleryHeader = (props) => {
             position: "absolute",
             color: "#fff",
             fontSize: 20,
-            left: 20,
+            left: 10,
             bottom: 30,
             fontWeight: "bold",
             width: SCREEN_WIDTH,
@@ -60,7 +60,7 @@ const GalleryHeader = (props) => {
             color: "#fff",
             fontSize: 15,
             bottom: 7,
-            left: 20,
+            left: 10,
             width: SCREEN_WIDTH,
           }}
         >
