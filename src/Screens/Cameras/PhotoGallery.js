@@ -233,7 +233,7 @@ const PhotoGallery = (props) => {
         headerTitleStyle: {
           fontSize: 15,
           fontWeight: "bold",
-          color: filteredDataSource.length <= 0 ? "#3D4849" : "#fff",
+          color: filteredDataSource == undefined || filteredDataSource.length == 0 ? "#3D4849" : "#fff",
           textAlign: "center",
           flex: 1,
         },
@@ -247,7 +247,7 @@ const PhotoGallery = (props) => {
               type="material"
               size={25}
               name="arrow-back-ios-new"
-              color={filteredDataSource.length <= 0 ? "#3D4849" : "#fff"}
+              color={filteredDataSource == undefined || filteredDataSource.length == 0 ? "#3D4849" : "#fff"}
             
             />
           </TouchableOpacity>
@@ -331,15 +331,17 @@ const PhotoGallery = (props) => {
         );
       }, 15000);
       const fetchData = async () => {
-        filteredDataSource.map((image) => {
-          FastImage.preload([
-            {
-              cache: FastImage.cacheControl.immutable,
-              priority: FastImage.priority.high,
-              uri: image.uri,
-            },
-          ]);
-        });
+        if (filteredDataSource != undefined && filteredDataSource.length > 0) {
+          filteredDataSource.map((image) => {
+            FastImage.preload([
+              {
+                cache: FastImage.cacheControl.immutable,
+                priority: FastImage.priority.high,
+                uri: image.uri,
+              },
+            ]);
+          });
+        }
 
         await axiosPull._pullGalleryFeed(
           props.route.params.pin,

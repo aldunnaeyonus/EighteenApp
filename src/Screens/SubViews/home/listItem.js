@@ -194,7 +194,6 @@ const ListItem = (props) => {
           </View>
           <Pressable
         onPress={() => {
-          if (props.item.item.start < moment().unix()) {
             props._gotoMedia(
               props.item.item.pin,
               props.item.item.title,
@@ -206,7 +205,6 @@ const ListItem = (props) => {
               props.item.item.camera_add_social,
               props.item.item.illustration
             );
-          }
         }}
       >
           <Image
