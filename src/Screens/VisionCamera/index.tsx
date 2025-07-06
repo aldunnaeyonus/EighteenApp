@@ -36,7 +36,6 @@ import {
 } from "react-native-gesture-handler";
 import momentDurationFormatSetup from "moment-duration-format";
 import moment from "moment/min/moment-with-locales";
-import CreditsFont from "../SubViews/camera/camerCredits";
 import * as i18n from "../../../i18n";
 import { storage } from "../../context/components/Storage";
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
@@ -54,6 +53,8 @@ import { ViewStyle } from "react-native";
 import { getLocales } from "expo-localization";
 import { axiosPull } from "../../utils/axiosPull";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useMMKVObject } from "react-native-mmkv";
+import styles from "../../styles/SliderEntry.style";
 
 const VisionCamera = (props: {
   route: {
@@ -81,6 +82,8 @@ const VisionCamera = (props: {
       ? "∞"
       : props.route.params.credits
   );
+ const [users] = useMMKVObject("user.Data", storage);
+  
   const location = useLocationPermission();
   let [localLang] = useState(getLocales()[0].languageCode);
 
@@ -404,17 +407,8 @@ const VisionCamera = (props: {
           {endEventTime}
         </Text>
       </View>
-      <View
-        style={{
-          position: "absolute",
-          right: 10,
-          top: 50,
-          padding: 10,
-          borderRadius: 5,
-          backgroundColor: "rgba(0, 0, 0, 0.60)",
-          gap: 30,
-        }}
-      >
+          <View style={users.lefthanded == "1" ? styles.imageUserCameraContainersLeft : styles.imageUserCameraContainers}>
+
         <Ionicons
           name={"close"}
           onPress={() => {
@@ -459,7 +453,6 @@ const VisionCamera = (props: {
             disabledOpacity={0.4}
           />
         )}
-        <CreditsFont credits={credits} newStyle={uiStyle} />
       </View>
       <CaptureButton
         style={{
