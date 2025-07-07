@@ -353,10 +353,6 @@ const CreateCamera = (props) => {
       show,
     ])
   );
-  const handleProgressUpdate = (progressEvent) => {
-    let { loaded, total } = progressEvent;
-    setPrecent(total ? Math.max(Math.round((loaded * 100) / total) - 5, 0) : 0);
-  };
 
   const createEvent = async () => {
     props.navigation.setOptions({
@@ -438,6 +434,7 @@ const CreateCamera = (props) => {
           storage.set(
             "uploadData",
             JSON.stringify({
+              display: "flex",
               progress: progress,
             })
           );

@@ -105,6 +105,7 @@ const PhotoGallery = (props) => {
           storage.set(
             "uploadData",
             JSON.stringify({
+                            display: "flex",
               progress: progress,
             })
           );
