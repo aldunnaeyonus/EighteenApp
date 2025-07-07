@@ -364,7 +364,14 @@ const CreateCamera = (props) => {
         <ActivityIndicator color="black" size={"small"} animating={true} />
       ),
     });
-
+      storage.set(
+        "uploadData",
+        JSON.stringify({
+          message: i18n.t("CreatingEvent") + " " + i18n.t("PleaseWait"),
+          display: "flex",
+          progress: 0,
+        })
+      );
     const pin =
       "SNAP-" +
       makeid(4) +
@@ -421,14 +428,7 @@ const CreateCamera = (props) => {
     await AsyncStorage.setItem("uploadEnabled", "0");
 
     const preLoading = async () => {
-      storage.set(
-        "uploadData",
-        JSON.stringify({
-          message: i18n.t("CreatingEvent") + " " + i18n.t("PleaseWait"),
-          display: "flex",
-          progress: 0,
-        })
-      );
+
       await axios({
         method: "POST",
         url: constants.url + "/camera/create.php",
@@ -454,7 +454,7 @@ const CreateCamera = (props) => {
             JSON.stringify({
               message: "",
               display: "none",
-              progress: "",
+              progress: 0,
             })
           );
           await CameraRoll.saveAsset(image);

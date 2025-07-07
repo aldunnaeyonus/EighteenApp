@@ -31,7 +31,6 @@ const FriendListItemHome = (props) => {
   let FACES = JSON.parse(JSON.stringify(props.item.item.joinedAvatars));
   let [localLang] = useState(getLocales()[0].languageCode);
 
-
   useEffect(() => {
     if (props.item.item.end - moment().unix() <= 0) {
       clearInterval(timeout);
@@ -56,15 +55,15 @@ const FriendListItemHome = (props) => {
     );
   }, 45000);
 
-    useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
       if (eventEnd - moment().unix() <= 0) {
-    await axiosPull._pullCameraFeed(user.user_id, "owner");
+        await axiosPull._pullCameraFeed(user.user_id, "owner");
       }
     };
     fetchData();
-    }, [isFocused, props, endEventTime, timeout, eventEnd]);
-    
+  }, [isFocused, props, endEventTime, timeout, eventEnd]);
+
   return (
     <SafeAreaView
       edges={["bottom", "left", "right"]}
@@ -98,7 +97,7 @@ const FriendListItemHome = (props) => {
         <View
           key={props}
           style={{
-            height: 'auto',
+            height: "auto",
             width: SCREEN_WIDTH,
           }}
         >
@@ -234,7 +233,11 @@ const FriendListItemHome = (props) => {
           </View>
           {props.item.item.subscribed == "1" ? (
             <View
-              style={[props.lefthanded == "1" ? styles.imageUserNameContainersLeft : styles.imageUserNameContainers]}
+              style={[
+                props.lefthanded == "1"
+                  ? styles.imageUserNameContainersLeft
+                  : styles.imageUserNameContainers,
+              ]}
               pointerEvents={
                 props.item.item.end >= moment().unix() ? "auto" : "none"
               }
@@ -315,7 +318,7 @@ const FriendListItemHome = (props) => {
                 color="#fff"
               />
               <CreditsFont credits={props.item.item.credits} />
-             
+
               <Icon
                 onPress={() => {
                   props._gotoStore(
@@ -502,10 +505,10 @@ const FriendListItemHome = (props) => {
               style={{
                 color: "grey",
                 fontSize: 15,
-                marginRight:20,
+                marginRight: 20,
               }}
             >
-              {" "}{" "}
+              {" "}
               {props.item.item.camera_count} /{" "}
               {parseInt(props.item.item.cameras) +
                 parseInt(props.item.item.camera_cameras_extra)}{" "}
@@ -516,25 +519,44 @@ const FriendListItemHome = (props) => {
               style={{
                 color: "grey",
                 fontSize: 15,
-                                marginRight:20,
-
+                marginRight: 20,
               }}
             >
-              {" "}{" "}{props.item.item.media_count - 1}
+              {" "}
+              {props.item.item.media_count - 1}
             </Text>
-            <Icon type="material-community" size={17} name="calendar" color="#3D4849" />
-              <Text
+            <Icon
+              type="material-community"
+              size={17}
+              name="calendar"
+              color="#3D4849"
+            />
+            <Text
               numberOfLines={2}
               style={{
                 color: "grey",
                 fontSize: 15,
-                width: 'auto',
-                textAlign:'left',
+                width: "auto",
+                textAlign: "left",
               }}
             >
-             {" "}{" "}{endEventTime}
-            </Text> 
+              {" "}
+              {endEventTime}
+            </Text>
           </View>
+          <Text
+            numberOfLines={3}
+            style={{
+              color: "black",
+              marginTop: 10,
+              marginLeft: 10,
+              fontSize: 13,
+              height: "auto",
+              textAlign: "left",
+            }}
+          >
+            {props.item.item.lastComment}
+          </Text>
         </View>
       </Pressable>
     </SafeAreaView>
@@ -618,7 +640,7 @@ const style = StyleSheet.create({
     padding: 0,
     backgroundColor: "#fff",
     width: SCREEN_WIDTH,
-    height: 'auto',
+    height: "auto",
     marginBottom: 0,
     flex: 1,
     marginTop: 0,

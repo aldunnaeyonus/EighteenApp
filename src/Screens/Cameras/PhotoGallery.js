@@ -63,6 +63,14 @@ const PhotoGallery = (props) => {
 
   const createEvent = async () => {
     setAnimating(false);
+    storage.set(
+            "uploadData",
+            JSON.stringify({
+              message: i18n.t("Uploading") + " " + i18n.t("PleaseWait"),
+              display: "flex",
+              progress: 0,
+            })
+          );
     var formData = new FormData();
     formData.append("pin", props.route.params.pin);
     formData.append("owner", props.route.params.owner);
@@ -88,14 +96,6 @@ const PhotoGallery = (props) => {
 
     const postConclusion = async () => {
       await AsyncStorage.setItem("uploadEnabled", "0");
-      storage.set(
-            "uploadData",
-            JSON.stringify({
-              message: i18n.t("Uploading") + " " + i18n.t("PleaseWait"),
-              display: "flex",
-              progress: 0,
-            })
-          );
       await axios({
         method: "POST",
         url: constants.url + "/camera/upload.php",
