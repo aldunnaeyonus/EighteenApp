@@ -79,7 +79,7 @@ const VisionCamera = (props: {
   };
   const [credits] = useState(
     props.route.params.user == props.route.params.owner
-      ? "∞"
+      ? "99"
       : props.route.params.credits
   );
  const [users] = useMMKVObject("user.Data", storage);

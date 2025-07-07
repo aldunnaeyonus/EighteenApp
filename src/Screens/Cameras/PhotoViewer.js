@@ -76,7 +76,6 @@ const PhotoViewer = (props) => {
     }, [])
   );
 
-
   const _deleteFeedItemIndex = (image_id) => {
     galleryData.forEach((res, index) => {
       if (res.image_id == image_id) {
@@ -240,90 +239,117 @@ const PhotoViewer = (props) => {
             );
           }}
         />
-          <View style={props.lefthanded == "1" ? styles.imageUserNameContainersGalleryLeft : styles.imageUserNameContainersGallery}>
-
-              <Icon
-               onPress={() => {
-                _hideContent();
-              }}
-                type={"material"}
-                name={"hide-image"}
-                size={30}
-                color="white"
-                containerStyle={{
-                  alignSelf: "flex-end",
-                  width: 40,
-                  padding: 5,
-                  paddingTop: 15,
-                  height: 50,
-                  marginRight: 5,
-                  marginBottom:15,
-                  borderTopRightRadius: 5,
-                  borderTopLeftRadius: 5,
-                  backgroundColor: "rgba(0, 0, 0, 0.60)",
-                }}
-              />
-              <Icon
-              onPress={() => {
-                _reportContent();
-              }}
-                type={"octicons"}
-                name={"report"}
-                size={30}
-                color="white"
-                containerStyle={{
-                  alignSelf: "flex-end",
-                  width: 40,
-                  padding: 5,
-                  paddingTop: 15,
-                  marginTop:-15,
-                  height: 50,
-                  marginRight: 5,
-                  backgroundColor: "rgba(0, 0, 0, 0.60)",
-                }}
-              />
+        <View
+          style={
+            props.lefthanded == "1"
+              ? styles.imageUserNameContainersGalleryLeft
+              : styles.imageUserNameContainersGallery
+          }
+        >
+          <Icon
+            onPress={() => {
+              _hideContent();
+            }}
+            type={"material"}
+            name={"hide-image"}
+            size={30}
+            color="white"
+            containerStyle={{
+              alignSelf: "flex-end",
+              width: 40,
+              padding: 5,
+              paddingTop: 15,
+              height: 50,
+              marginRight: 5,
+              marginBottom: 15,
+              borderTopRightRadius: 5,
+              borderTopLeftRadius: 5,
+              backgroundColor: "rgba(0, 0, 0, 0.60)",
+            }}
+          />
+          <Icon
+            onPress={() => {
+              _reportContent();
+            }}
+            type={"octicons"}
+            name={"report"}
+            size={30}
+            color="white"
+            containerStyle={{
+              alignSelf: "flex-end",
+              width: 40,
+              padding: 5,
+              paddingTop: 15,
+              marginTop: -15,
+              height: 50,
+              marginRight: 5,
+              backgroundColor: "rgba(0, 0, 0, 0.60)",
+            }}
+          />
           {props.route.params.share == "1" ||
           props.route.params.owner == props.route.params.user ? (
-              <Icon
+            <Icon
               onPress={async () => {
                 _gotoShare(galleryData[activeIndex].uri);
               }}
-                type="material-community"
-                size={30}
-                name="share"
-                color="#fff"
-                containerStyle={{
-                  alignSelf: "flex-end",
-                  width: 40,
-                  paddingTop: 10,
-                  height: 50,
-                  marginRight: 5,
-                  marginBottom:10,
-                  backgroundColor: "rgba(0, 0, 0, 0.60)",
-                }}
-              />
+              type="material-community"
+              size={30}
+              name="share"
+              color="#fff"
+              containerStyle={{
+                alignSelf: "flex-end",
+                width: 40,
+                paddingTop: 10,
+                height: 50,
+                marginRight: 5,
+                marginBottom: 10,
+                backgroundColor: "rgba(0, 0, 0, 0.60)",
+              }}
+            />
           ) : (
             <></>
           )}
-            <Icon 
-             onPress={() => {
+          <Icon
+            onPress={() => {
+              
+            }}
+            name={"comment-plus-outline"}
+            type="material-community"
+            size={30}
+            color="white"
+            containerStyle={{
+                alignSelf: "flex-end",
+                width: 40,
+                paddingTop: 10,
+                height: 50,
+                marginRight: 5,
+                marginBottom: 10,
+                backgroundColor: "rgba(0, 0, 0, 0.60)",
+            }}
+          />
+          <Icon
+            onPress={() => {
               props.navigation.goBack();
             }}
-            name={"close"} 
-            size={30} 
-            color="white" 
+            name={"close"}
+            size={30}
+            color="white"
             containerStyle={{
-                  alignSelf: "flex-end",
-                  width: 40,
-                  paddingTop: 10,
-                  marginTop:props.route.params.share == "1" || props.route.params.owner == props.route.params.user ? -10 : 0,
-                  height: 50,
-                  marginRight: 5,
-                  borderBottomRightRadius: 5,
-                  borderBottomLeftRadius: 5,
-                  backgroundColor: "rgba(0, 0, 0, 0.60)",
-                }}
-            />
+              alignSelf: "flex-end",
+              width: 40,
+              paddingTop: 10,
+              marginTop:
+                props.route.params.share == "1" ||
+                props.route.params.owner == props.route.params.user
+                  ? -10
+                  : 0,
+              height: 50,
+              marginRight: 5,
+              borderBottomRightRadius: 5,
+              borderBottomLeftRadius: 5,
+              backgroundColor: "rgba(0, 0, 0, 0.60)",
+            }}
+          />
         </View>
       </SafeAreaView>
     </SafeAreaProvider>

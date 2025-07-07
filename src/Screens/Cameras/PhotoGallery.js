@@ -47,7 +47,7 @@ const PhotoGallery = (props) => {
   const [pickedImages, setPickedImages] = useState([]);
   const [credits, setCredits] = useState(
     props.route.params.owner == props.route.params.user
-      ? "∞"
+      ? "99"
       : props.route.params.credits
   );
   const [cameraStatus] = ImagePicker.useCameraPermissions();
@@ -187,9 +187,9 @@ const PhotoGallery = (props) => {
         orderedSelection: true,
         mediaTypes: ImagePicker.MediaTypeOptions.All,
       });
-      const mime = getExtensionFromFilename(result.assets[0].uri).toLowerCase();
 
       if (!result.canceled) {
+      const mime = getExtensionFromFilename(result.assets[0].uri).toLowerCase();
         setAnimating(true);
         if (result.assets.length > 1) {
           result.assets.forEach((file) => {
@@ -233,7 +233,6 @@ const PhotoGallery = (props) => {
         headerTitleStyle: {
           fontSize: 15,
           fontWeight: "bold",
-          color: filteredDataSource == undefined || filteredDataSource.length == 0 ? "#3D4849" : "#fff",
           textAlign: "center",
           flex: 1,
         },
@@ -246,9 +245,7 @@ const PhotoGallery = (props) => {
             <Icon
               type="material"
               size={25}
-              name="arrow-back-ios-new"
-              color={filteredDataSource == undefined || filteredDataSource.length == 0 ? "#3D4849" : "#fff"}
-            
+              name="arrow-back-ios-new"            
             />
           </TouchableOpacity>
         ),
@@ -285,15 +282,13 @@ const PhotoGallery = (props) => {
               }}
             >
               <Icon
-                type="material-community"
-                size={19}
-                name="account-box-multiple-outline"
-                color="#fff"
+                type="material"
+                size={25}
+                name="library-add"
                 containerStyle={{
                   padding: 5,
-                  height: 30,
+                  height: 40,
                   width:40,
-                  backgroundColor: "blue",
                   borderRadius: 15,
                 }}
               />
@@ -383,14 +378,13 @@ const PhotoGallery = (props) => {
   };
 
   return (
-    <SafeAreaProvider>
       <SafeAreaView
         style={{
           backgroundColor: "transparent",
-          height: SCREEN_HEIGHT,
+          height: SCREEN_HEIGHT - 100,
           width: SCREEN_WIDTH,
         }}
-        edges={["left", "right"]}
+        edges={["left", "right, top, bottom"]}
       >
         <AnimatedFlatlist
           extraData={filteredDataSource}
@@ -426,7 +420,7 @@ const PhotoGallery = (props) => {
             </View>
           }
           ref={photo}
-          style={{ backgroundColor: "white", marginTop: 0, flex: 1 }}
+          style={{ backgroundColor: "white", marginTop: 0, flex: 1,  }}
           numColumns={4}
           data={filteredDataSource}
           keyExtractor={(item) => item.image_id}
@@ -629,7 +623,6 @@ const PhotoGallery = (props) => {
           </TouchableWithoutFeedback>
         </Modal>
       </SafeAreaView>
-    </SafeAreaProvider>
   );
 };
 

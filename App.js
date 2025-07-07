@@ -501,7 +501,7 @@ const onCheckVersion = () => {
                   title: "",
                   headerShown: true,
                   gestureEnabled: false,
-                  headerTransparent: true,
+                  headerTransparent: false,
                   headerBackTitleVisible: false,
 
                 }}
