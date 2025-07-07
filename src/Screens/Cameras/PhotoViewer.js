@@ -302,7 +302,7 @@ const PhotoViewer = (props) => {
                 paddingTop: 10,
                 height: 50,
                 marginRight: 5,
-                marginBottom: 10,
+                marginBottom: 0,
                 backgroundColor: "rgba(0, 0, 0, 0.60)",
               }}
             />
@@ -310,21 +310,19 @@ const PhotoViewer = (props) => {
             <></>
           )}
           <Icon
-            onPress={() => {
-              
-            }}
+            onPress={() => {}}
             name={"comment-plus-outline"}
             type="material-community"
             size={30}
             color="white"
             containerStyle={{
-                alignSelf: "flex-end",
-                width: 40,
-                paddingTop: 10,
-                height: 50,
-                marginRight: 5,
-                marginBottom: 10,
-                backgroundColor: "rgba(0, 0, 0, 0.60)",
+              alignSelf: "flex-end",
+              width: 40,
+              paddingTop: 10,
+              height: 50,
+              marginRight: 5,
+              marginBottom: 10,
+              backgroundColor: "rgba(0, 0, 0, 0.60)",
             }}
           />
           <Icon

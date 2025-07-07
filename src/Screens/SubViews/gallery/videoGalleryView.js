@@ -1,4 +1,4 @@
-import React  from "react";
+import React from "react";
 import { TouchableOpacity, View } from "react-native";
 import { createImageProgress } from "react-native-image-progress";
 import FastImage from "react-native-fast-image";
@@ -7,54 +7,81 @@ import Progress from "react-native-progress";
 import { Icon } from "react-native-elements";
 
 const VideoGalleryView = (props) => {
-
-    return (
-   <View
-          style={{
-            height: 80,
-            width: 80,
-            marginRight:5,
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "transparent",
-          }}
-        >
-        <TouchableOpacity
-         style={{
+  return (
+    <View
+      style={{
+        height: 80,
+        width: 80,
+        marginRight: 5,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "transparent",
+      }}
+    >
+      <TouchableOpacity
+        style={{
           height: 80,
           width: 80,
         }}
-          onPress={()=> {props.scrollToActiveIndex(props.index) }}
-          >
-        <Image 
-        progress={Progress}
-        resizeMode={FastImage.resizeMode.cover}
-        source={{
-          cache: FastImage.cacheControl.immutable,
-          priority: FastImage.priority.high,
-          uri:props.item.type == "video"
-              ? props.item.videoThumbnail
-              : props.item.thumbnail,
+        onPress={() => {
+          props.scrollToActiveIndex(props.index);
         }}
-        style={{overflow:'hidden', width: 80, height: 80, borderRadius:12, marginRight:10, borderWidth:2, borderColor: props.activeIndex ===  props.index ? 'white' : 'transparent'}}
-        >
-           { props.item.type === "video" && (
-                    <Icon
-                      type="material-community"
-                      name="play-box-outline"
-                      size={20}
-                      containerStyle={{
-                        width: 50,
-                        height: 50,
-                        top: 30,
-                        left: 12.5,
-                      }}
-                      color="white"
-                    />
-                  )}
-                  </Image> 
-        </TouchableOpacity>
-        </View>
-    )
+      >
+        <Image
+          progress={Progress}
+          resizeMode={FastImage.resizeMode.cover}
+          source={{
+            cache: FastImage.cacheControl.immutable,
+            priority: FastImage.priority.high,
+            uri:
+              props.item.type == "video"
+                ? props.item.videoThumbnail
+                : props.item.thumbnail,
+          }}
+          style={{
+            overflow: "hidden",
+            width: 80,
+            height: 80,
+            borderRadius: 12,
+            marginRight: 10,
+            borderWidth: 2,
+            borderColor:
+              props.activeIndex === props.index ? "white" : "transparent",
+          }}
+        />
+
+        {props.item.type === "video" && (
+          <Icon
+            type="material-community"
+            name="play-box-outline"
+            size={20}
+            containerStyle={{
+              position: "absolute",
+              width: 50,
+              height: 50,
+              bottom: -25,
+              left: -10,
+            }}
+            color="white"
+          />
+        )}
+        {props.item.comments > 0 && (
+          <Icon
+            name="comment-outline"
+            type="material-community"
+            size={20}
+            containerStyle={{
+              position: "absolute",
+              width: 50,
+              height: 50,
+              bottom: -25,
+              right: -10,
+            }}
+            color="white"
+          />
+        )}
+      </TouchableOpacity>
+    </View>
+  );
 };
 export default VideoGalleryView;
