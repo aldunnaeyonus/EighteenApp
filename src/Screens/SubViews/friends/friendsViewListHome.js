@@ -231,7 +231,6 @@ const FriendListItemHome = (props) => {
               />
             </View>
           </View>
-          {props.item.item.subscribed == "1" ? (
             <View
               style={[
                 props.lefthanded == "1"
@@ -365,131 +364,7 @@ const FriendListItemHome = (props) => {
                 color="#fff"
               />
             </View>
-          ) : props.item.item.autoJoin == "1" &&
-            props.item.item.camera_count <
-              parseInt(props.item.item.cameras) +
-                parseInt(props.item.item.camera_cameras_extra) &&
-            props.item.item.subscribed == "0" &&
-            props.item.item.end >= moment().unix() ? (
-            <View style={styles.imageUserNameContainer}>
-              <TouchableOpacity
-                onPress={() =>
-                  props._autoJoin(
-                    props.item.item.owner,
-                    props.item.item.pin,
-                    props.item.item.end,
-                    props.item.item.UUID
-                  )
-                }
-              >
-                <View
-                  style={{
-                    alignSelf: "flex-end",
-                    backgroundColor: "rgba(0, 0, 0, 0.60)",
-                    flexDirection: "row",
-                    gap: 10,
-                    overflow: "hidden",
-                    height: 30,
-                    margin: 15,
-                    borderWidth: 1,
-                    borderRadius: 5,
-                    borderColor: "#fff",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: "#fff",
-                      fontWeight: "700",
-                      fontSize: 15,
-                      marginLeft: 10,
-                      marginRight: 10,
-                    }}
-                  >
-                    {i18n.t("e7")}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-              <Icon
-                onPress={() => {
-                  props._repotPost(
-                    props.item.item.pin,
-                    props.item.item.owner,
-                    props.item.item.title
-                  );
-                }}
-                containerStyle={{
-                  alignSelf: "flex-end",
-                  width: 40,
-                  paddingTop: 5,
-                  height: 40,
-                  marginRight: 15,
-                  marginTop: 0,
-                  borderRadius: 5,
-                  backgroundColor: "rgba(0, 0, 0, 0.60)",
-                }}
-                type="octicons"
-                size={25}
-                name="report-problem"
-                color="#fff"
-              />
-            </View>
-          ) : (
-            <View style={styles.imageUserNameContainer}>
-              <View
-                style={{
-                  alignSelf: "flex-end",
-                  backgroundColor: "rgba(0, 0, 0, 0.60)",
-                  flexDirection: "row",
-                  gap: 10,
-                  overflow: "hidden",
-                  height: 30,
-                  margin: 10,
-                  borderWidth: 1,
-                  borderRadius: 5,
-                  borderColor: "#fff",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Text
-                  style={{
-                    color: "#fff",
-                    fontWeight: "700",
-                    marginLeft: 10,
-                    marginRight: 10,
-                    fontSize: 15,
-                  }}
-                >
-                  {i18n.t("Not Joined")}
-                </Text>
-              </View>
-              <Icon
-                onPress={() => {
-                  props._repotPost(
-                    props.item.item.pin,
-                    props.item.item.owner,
-                    props.item.item.title
-                  );
-                }}
-                containerStyle={{
-                  alignSelf: "flex-end",
-                  width: 40,
-                  paddingTop: 5,
-                  height: 40,
-                  marginRight: 15,
-                  marginTop: 0,
-                  borderRadius: 5,
-                  backgroundColor: "rgba(0, 0, 0, 0.60)",
-                }}
-                type="octicons"
-                size={25}
-                name="report"
-                color="#fff"
-              />
-            </View>
-          )}
+
           <View
             style={{
               marginTop: 10,
@@ -544,20 +419,38 @@ const FriendListItemHome = (props) => {
               {endEventTime}
             </Text>
           </View>
-          <Text
-            numberOfLines={3}
-            style={{
-              color: "black",
-              marginTop: 10,
-              marginLeft: 10,
-              fontSize: 13,
-              height: "auto",
-              textAlign: "left",
-            }}
-          >
-            {props.item.item.lastComment}
-          </Text>
         </View>
+                <View
+                  style={{
+                    marginTop: 10,
+                    marginRight: 10,
+                    marginLeft: 10,
+                    height: 27,
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                 <Icon
+                            onPress={() => {}}
+                            name={"comment-outline"}
+                            type="material-community"
+                            size={17}
+                            color="#3D4849"
+        
+                          />
+                <Text
+                  numberOfLines={3}
+                  style={{
+                    color: "#3D4849",
+                    marginLeft: 10,
+                    fontSize: 13,
+                    height: "auto",
+                    textAlign: "left",
+                  }}
+                >
+                  {props.item.item.lastComment}
+                </Text>
+                </View>
       </Pressable>
     </SafeAreaView>
   );
