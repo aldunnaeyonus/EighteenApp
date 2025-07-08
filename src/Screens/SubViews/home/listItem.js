@@ -18,6 +18,7 @@ import {
   constants,
 } from "../../../utils/constants";
 import { MenuView } from "@react-native-menu/menu";
+import { axiosPull } from "../../../utils/axiosPull";
 
 const ListItem = (props) => {
   const isFocused = useIsFocused();
