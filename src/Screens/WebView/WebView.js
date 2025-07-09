@@ -3,7 +3,6 @@ import { WebView } from "react-native-webview";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useToast } from "react-native-styled-toast";
 import { useFocusEffect } from '@react-navigation/native';
-import * as i18n from '../../../i18n';
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
 import { ActivityIndicator } from "react-native-paper";
 

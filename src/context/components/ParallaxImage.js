@@ -1,27 +1,13 @@
 import React, { Component } from 'react';
 import {
   View,
-  ViewPropTypes,
   Image,
   Animated,
-  Easing,
-  ActivityIndicator,
-  findNodeHandle,
   StyleSheet,
-  Dimensions,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-const WINDOW_HEIGHT = Dimensions.get('window').height;
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-  },
-});
 
 export default class ParallaxImage extends Component {
   static propTypes = {

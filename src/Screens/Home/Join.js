@@ -1,12 +1,9 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Animated from "react-native-reanimated";
-import { useToast } from "react-native-styled-toast";
 import { storage } from "../../context/components/Storage";
 import { useMMKVObject } from "react-native-mmkv";
-import { useFocusEffect } from "@react-navigation/native";
 import { axiosPull } from "../../utils/axiosPull";
-import * as i18n from "../../../i18n";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ListItem from "../SubViews/home/JoinItems";
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
@@ -18,7 +15,6 @@ const Join = (props) => {
   const AnimatedFlatList = Animated.createAnimatedComponent(Animated.FlatList);
   const [title, setTitle] = useState("Join Event");
   const [refreshing, setRefreshing] = useState(true);
-  const { toast } = useToast();
   const [user] = useMMKVObject("user.Data", storage);
   const [data, setData] = useState([]);
 
