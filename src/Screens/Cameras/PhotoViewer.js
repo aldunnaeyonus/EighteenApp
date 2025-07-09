@@ -1,12 +1,5 @@
-import {
-  View,
-  TouchableOpacity,
-  Share,
-  FlatList,
-  StatusBar,
-  Alert,
-} from "react-native";
-import React, { useState, useRef, useCallback } from "react";
+import { View, Share, FlatList, StatusBar, Alert, Text } from "react-native";
+import React, { useState, useRef, useCallback, useMemo } from "react";
 import { Icon } from "react-native-elements";
 import Animated from "react-native-reanimated";
 import { useFocusEffect } from "@react-navigation/native";
@@ -18,6 +11,11 @@ import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
 import { axiosPull } from "../../utils/axiosPull";
 import { getLocales } from "expo-localization";
 import styles from "../../styles/SliderEntry.style";
+import {
+  BottomSheetModal,
+  BottomSheetView,
+  BottomSheetBackdrop,
+} from "@gorhom/bottom-sheet";
 
 const PhotoViewer = (props) => {
   const canMomentum = useRef(false);
@@ -26,6 +24,8 @@ const PhotoViewer = (props) => {
   const newphoto = useRef();
   const [activeIndex, setActiveIndex] = useState(props.route.params.pagerIndex);
   const [galleryData, setDalleryData] = useState(props.route.params.data);
+  const bottomSheetRef = useRef(null);
+  const snapPoints = useMemo(() => ["25%", "50%", "75%"], []);
 
   const scrollToActiveIndex = (index) => {
     setActiveIndex(index);
@@ -124,6 +124,13 @@ const PhotoViewer = (props) => {
       { cancelable: false }
     );
   };
+  // callbacks
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetRef.current?.present();
+  }, []);
+  const handleSheetChanges = useCallback((index) => {
+    console.log("handleSheetChanges", index);
+  }, []);
 
   const _reportContent = async () => {
     Alert.alert(
@@ -184,6 +191,10 @@ const PhotoViewer = (props) => {
       index,
     };
   };
+  const handleDismissPress = useCallback(() => {
+    bottomSheetRef.current?.close();
+  }, []);
+
 
   return (
     <SafeAreaProvider>
@@ -203,6 +214,9 @@ const PhotoViewer = (props) => {
           onMomentumScrollBegin={onMomentumScrollBegin}
           onMomentumScrollEnd={onMomentumScrollEnd}
           pagingEnabled
+                    onScroll={() => {
+                    bottomSheetRef.current?.close();
+          }}
           horizontal
           getItemLayout={getItemLayout}
           style={{ backgroundColor: "black", flex: 1 }}
@@ -228,6 +242,9 @@ const PhotoViewer = (props) => {
           extraData={galleryData}
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ paddingHorizontal: 10 }}
+          onScroll={() => {
+                    bottomSheetRef.current?.close();
+          }}
           renderItem={({ item, index }) => {
             return (
               <VideoGalleryView
@@ -239,7 +256,7 @@ const PhotoViewer = (props) => {
             );
           }}
         />
-        <View
+        <Animated.View
           style={
             props.lefthanded == "1"
               ? styles.imageUserNameContainersGalleryLeft
@@ -310,8 +327,10 @@ const PhotoViewer = (props) => {
             <></>
           )}
           <Icon
-            onPress={() => {}}
-            name={"comment-plus-outline"}
+            onPress={() => {
+              handlePresentModalPress();
+            }}
+            name={"comment-outline"}
             type="material-community"
             size={30}
             color="white"
@@ -348,7 +367,27 @@ const PhotoViewer = (props) => {
               backgroundColor: "rgba(0, 0, 0, 0.60)",
             }}
           />
-        </View>
+          <BottomSheetModal
+            ref={bottomSheetRef}
+            snapPoints={snapPoints}
+            enablePanDownToClose
+            enableDismissOnClose
+            enableDynamicSizing
+            onDismiss={handleDismissPress}
+            onChange={handleSheetChanges}
+            backdropComponent={(props) => (
+              <BottomSheetBackdrop  {...props} onPress={() => bottomSheetRef.current?.close()}
+      />
+  )}
+          >
+            <BottomSheetView style={{ flex: 1, alignItems: "center" }}>
+
+              <Text>Comments</Text>
+
+              
+            </BottomSheetView>
+          </BottomSheetModal>
+        </Animated.View>
       </SafeAreaView>
     </SafeAreaProvider>
   );

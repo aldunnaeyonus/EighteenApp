@@ -51,6 +51,7 @@ import Blocked from "./src/Screens/Profile/Blocked";
 import {
   GoogleSignin,
 } from "@react-native-google-signin/google-signin";
+import { BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -200,6 +201,7 @@ const onCheckVersion = () => {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
+                <BottomSheetModalProvider>
       <ToastProvider maxToasts={1} offset={65} position="TOP">
           <MenuProvider>
         <NavigationContainer
@@ -735,6 +737,7 @@ const onCheckVersion = () => {
         </NavigationContainer>
         </MenuProvider>
               </ToastProvider>
+                      </BottomSheetModalProvider>
     </GestureHandlerRootView>
   );
 }
