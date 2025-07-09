@@ -1,4 +1,14 @@
-import { View, Share, FlatList, StatusBar, Alert, Text } from "react-native";
+import {
+  Pressable,
+  Share,
+  FlatList,
+  StatusBar,
+  Alert,
+  Text,
+  View,
+  TouchableOpacity,
+  StyleSheet
+} from "react-native";
 import React, { useState, useRef, useCallback, useMemo } from "react";
 import { Icon } from "react-native-elements";
 import Animated from "react-native-reanimated";
@@ -11,11 +21,13 @@ import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
 import { axiosPull } from "../../utils/axiosPull";
 import { getLocales } from "expo-localization";
 import styles from "../../styles/SliderEntry.style";
-import {
-  BottomSheetModal,
-  BottomSheetView,
-  BottomSheetBackdrop,
-} from "@gorhom/bottom-sheet";
+import { BottomSheetModal, BottomSheetView, BottomSheetTextInput, BottomSheetFlatList } from "@gorhom/bottom-sheet";
+import { useMMKVObject } from "react-native-mmkv";
+import { storage } from "../../context/components/Storage";
+import FastImage from "react-native-fast-image";
+import { createImageProgress } from "react-native-image-progress";
+const Image = createImageProgress(FastImage);
+import Progress from "react-native-progress";
 
 const PhotoViewer = (props) => {
   const canMomentum = useRef(false);
@@ -25,7 +37,9 @@ const PhotoViewer = (props) => {
   const [activeIndex, setActiveIndex] = useState(props.route.params.pagerIndex);
   const [galleryData, setDalleryData] = useState(props.route.params.data);
   const bottomSheetRef = useRef(null);
-  const snapPoints = useMemo(() => ["25%", "50%", "75%"], []);
+  const snapPoints = useMemo(() => ["50%"], []);
+  const [comment, setComment] = useState("");
+  const [user] = useMMKVObject("user.Data", storage);
 
   const scrollToActiveIndex = (index) => {
     setActiveIndex(index);
@@ -195,7 +209,6 @@ const PhotoViewer = (props) => {
     bottomSheetRef.current?.close();
   }, []);
 
-
   return (
     <SafeAreaProvider>
       <SafeAreaView
@@ -214,8 +227,8 @@ const PhotoViewer = (props) => {
           onMomentumScrollBegin={onMomentumScrollBegin}
           onMomentumScrollEnd={onMomentumScrollEnd}
           pagingEnabled
-                    onScroll={() => {
-                    bottomSheetRef.current?.close();
+          onScroll={() => {
+            bottomSheetRef.current?.close();
           }}
           horizontal
           getItemLayout={getItemLayout}
@@ -243,7 +256,7 @@ const PhotoViewer = (props) => {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ paddingHorizontal: 10 }}
           onScroll={() => {
-                    bottomSheetRef.current?.close();
+            bottomSheetRef.current?.close();
           }}
           renderItem={({ item, index }) => {
             return (
@@ -376,15 +389,112 @@ const PhotoViewer = (props) => {
             onDismiss={handleDismissPress}
             onChange={handleSheetChanges}
             backdropComponent={(props) => (
-              <BottomSheetBackdrop  {...props} onPress={() => bottomSheetRef.current?.close()}
-      />
-  )}
+              <Pressable
+              				{...props}
+                style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+                onPress={() => {
+                  bottomSheetRef.current?.close();
+                }}
+              />
+            )}
           >
-            <BottomSheetView style={{ flex: 1, alignItems: "center" }}>
-
+            <BottomSheetView style={[StyleSheet.absoluteFill, { alignItems: "center" }]}>
               <Text>Comments</Text>
+              <View
+                style={{
+                  justifyContent: "flex-end",
+                  flex: 1,
+                }}
+              >
+                <BottomSheetFlatList
+                  data={[]}
+                  style={{flex:1}}
+                  renderItem={(item, index) => {
+                    <View
+                      style={{ padding: 20, flexDirection: "row", flex: 1 }}
+                    >
+                      <Image
+                        indicator={Progress}
+                        resizeMode={FastImage.resizeMode.contain}
+                        style={{
+                          height: 32,
+                          width: 32,
+                          marginRight: 10,
+                          marginLeft: 10,
+                          borderRadius: 16,
+                          borderColor: "#e35504",
+                          borderWidth: 1,
+                          overflow: "hidden",
+                          borderRadius: 16,
+                        }}
+                        source={{
+                          priority: FastImage.priority.high,
+                          cache: FastImage.cacheControl.immutable,
+                          uri: item.photoURL,
+                        }}
+                      />
 
-              
+                      <View style={{ marginHorizontal: 14 }}>
+                        <Text style={{ color: "gray", fontSize: 13 }}>
+                          {item.displayName}
+                        </Text>
+                        <Text>{item.comment}</Text>
+                      </View>
+                    </View>;
+                  }}
+                  keyExtractor={(item) => item.id}
+                />
+                <View
+                  style={{
+                    padding: 10,
+                    flexDirection: "row",
+                    margin: 20,
+                  }}
+                >
+                  <Image
+                    indicator={Progress}
+                    resizeMode={FastImage.resizeMode.contain}
+                    style={{
+                      height: 32,
+                      width: 32,
+                      marginRight: 10,
+                      marginLeft: 10,
+                      borderRadius: 16,
+                      borderColor: "#e35504",
+                      borderWidth: 1,
+                      overflow: "hidden",
+                      borderRadius: 16,
+                    }}
+                    source={{
+                      priority: FastImage.priority.high,
+                      cache: FastImage.cacheControl.immutable,
+                      uri: user.user_avatar,
+                    }}
+                  />
+                  <BottomSheetTextInput
+                    multiline
+                    maxLength={180}
+                    onChangeText={setComment}
+                    style={{
+                      borderColor: "lightgray",
+                      borderBottomWidth: 1,
+                      borderStyle: "solid",
+                      paddingVertical: 5,
+                      width: SCREEN_WIDTH - 100,
+                    }}
+                  />
+                  <TouchableOpacity onPress={() => {
+
+                  }}>
+                    <Icon
+                      type={"ionicon"}
+                      name="arrow-up-circle"
+                      size={34}
+                      color={"#e35504"}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
             </BottomSheetView>
           </BottomSheetModal>
         </Animated.View>

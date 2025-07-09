@@ -199,6 +199,7 @@ const ChangeData = (props) => {
                     borderWidth:
                       grids.icon + ".png" == user.user_avatar ? 3 : 0,
                     margin: 7,
+                    overflow:'hidden',
                     justifyContent: "center",
                     alignItems: "center",
                   }}
