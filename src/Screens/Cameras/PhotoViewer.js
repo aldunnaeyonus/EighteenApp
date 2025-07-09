@@ -1,5 +1,4 @@
 import {
-  Pressable,
   Share,
   FlatList,
   StatusBar,
@@ -40,7 +39,10 @@ const PhotoViewer = (props) => {
   const snapPoints = useMemo(() => ["50%"], []);
   const [comment, setComment] = useState("");
   const [user] = useMMKVObject("user.Data", storage);
-
+  const [filteredDataSource] = useMMKVObject(
+    `user.Gallery.Comment.Feed.${props.route.params.pin}`,
+    storage
+  );
   const scrollToActiveIndex = (index) => {
     setActiveIndex(index);
     newphoto?.current?.scrollToOffset({
@@ -279,6 +281,7 @@ const PhotoViewer = (props) => {
           <Icon
             onPress={() => {
               _hideContent();
+              handleDismissPress();
             }}
             type={"material"}
             name={"hide-image"}
@@ -300,6 +303,7 @@ const PhotoViewer = (props) => {
           <Icon
             onPress={() => {
               _reportContent();
+                            handleDismissPress();
             }}
             type={"octicons"}
             name={"report"}
@@ -388,18 +392,9 @@ const PhotoViewer = (props) => {
             enableDynamicSizing
             onDismiss={handleDismissPress}
             onChange={handleSheetChanges}
-            backdropComponent={(props) => (
-              <Pressable
-              				{...props}
-                style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
-                onPress={() => {
-                  bottomSheetRef.current?.close();
-                }}
-              />
-            )}
           >
             <BottomSheetView style={[StyleSheet.absoluteFill, { alignItems: "center" }]}>
-              <Text>Comments</Text>
+              <Text>{i18n.t("Comments")}</Text>
               <View
                 style={{
                   justifyContent: "flex-end",
@@ -407,9 +402,10 @@ const PhotoViewer = (props) => {
                 }}
               >
                 <BottomSheetFlatList
-                  data={[]}
+                  data={filteredDataSource}
+                  extraData={filteredDataSource}
                   style={{flex:1}}
-                  renderItem={(item, index) => {
+                  renderItem={(item, _) => {
                     <View
                       style={{ padding: 20, flexDirection: "row", flex: 1 }}
                     >
@@ -473,6 +469,10 @@ const PhotoViewer = (props) => {
                   />
                   <BottomSheetTextInput
                     multiline
+                    allowFontScaling
+                    placeholder={i18n.t("CommentPlaceholder")}
+                    placeholderTextColor='grey'
+                    enablesReturnKeyAutomatically
                     maxLength={180}
                     onChangeText={setComment}
                     style={{

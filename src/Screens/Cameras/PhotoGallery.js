@@ -30,7 +30,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../i18n";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PhotoEditor from "@baronha/react-native-photo-editor";
-import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 const stickers = [];
 import Loading from "../SubViews/home/Loading";
 import axios from "axios";

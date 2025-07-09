@@ -340,5 +340,7 @@
     "HideEvent":"Event is Hidden",
     "HideEventDesc":"When you hide your event, it won’t appear to your friends. However, anyone with the event link can still view it.",
     "LeftHanded":"Left Handed Mode",
-    "LeftHandedDesc":"Enable left-handed mode to switch the camera button to the left side of the screen. This is useful for left-handed users who find it more comfortable to use the event controls on the left side."
+    "LeftHandedDesc":"Enable left-handed mode to switch the camera button to the left side of the screen. This is useful for left-handed users who find it more comfortable to use the event controls on the left side.",
+    "Comments":"Comments",
+    "CommentPlaceholder":"Type a comment!"
 }			
