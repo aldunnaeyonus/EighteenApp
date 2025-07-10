@@ -6,6 +6,7 @@ import {
   Text,
   Platform,
   StatusBar,
+  PressableOpacity
 } from "react-native";
 import {
   useCameraPermission,
@@ -104,7 +105,8 @@ const VisionCamera = (props: {
     device = preferredDevice;
   }
   const [isCameraInitialized, setIsCameraInitialized] = useState(false);
- 
+   const [targetFps, setTargetFps] = useState(60)
+
   let endEventTime = durationAsString(
     parseInt(props.route.params.end),
     parseInt(props.route.params.start),
@@ -169,6 +171,7 @@ const VisionCamera = (props: {
     },
   });
   const screenAspectRatio = constants.SCREEN_HEIGHT / constants.SCREEN_WIDTH;
+   const supports60Fps = useMemo(() => device?.formats.some((f) => f.maxFps >= 60), [device?.formats])
 
   const format = useCameraFormat(device, [
     { videoAspectRatio: screenAspectRatio },
@@ -452,6 +455,23 @@ const VisionCamera = (props: {
             onPress={() => setEnableNightMode(!enableNightMode)}
             disabledOpacity={0.4}
           />
+        )}
+         {supports60Fps && (
+          <PressableOpacity style={{
+           marginBottom: CONTENT_SPACING,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+          }} onPress={() => setTargetFps((t: number) => (t === 30 ? 60 : 30))}>
+            <Text style={{
+               color: 'white',
+    fontSize: 11,
+    fontWeight: 'bold',
+    textAlign: 'center', 
+          }}>{`${targetFps}\nFPS`}</Text>
+          </PressableOpacity>
         )}
       </View>
       <CaptureButton
