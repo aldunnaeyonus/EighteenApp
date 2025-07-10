@@ -43,8 +43,16 @@ const PhotoViewer = (props) => {
     `user.Gallery.Comment.Feed.${props.route.params.pin}`,
     storage
   );
+  const [filteredComments] = useState(filteredDataSource);
+
+  const handleSearch = (index) => {
+  const filtered = filteredDataSource.filter(media =>
+    media.media_id.includes(galleryData[index].image_id)
+  );
+  filteredComments(filtered);
+};
+  
   const scrollToActiveIndex = (index) => {
-    setActiveIndex(index);
     newphoto?.current?.scrollToOffset({
       offset: index * SCREEN_WIDTH,
       animated: true,
@@ -190,6 +198,7 @@ const PhotoViewer = (props) => {
       );
       scrollToActiveIndex(index);
       setActiveIndex(index);
+      handleSearch(index);
     }
     canMomentum.current = false;
   }, []);
@@ -402,8 +411,8 @@ const PhotoViewer = (props) => {
                 }}
               >
                 <BottomSheetFlatList
-                  data={filteredDataSource}
-                  extraData={filteredDataSource}
+                  data={filteredComments}
+                  extraData={filteredComments}
                   style={{flex:1}}
                   renderItem={(item, _) => {
                     <View
