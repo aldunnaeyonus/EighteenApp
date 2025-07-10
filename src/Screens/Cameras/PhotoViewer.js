@@ -195,8 +195,8 @@ const PhotoViewer = (props) => {
       const index = Math.floor(
         Math.floor(ev.nativeEvent.contentOffset.x) / SCREEN_WIDTH
       );
-      scrollToActiveIndex(index);
       setActiveIndex(index);
+      scrollToActiveIndex(index);
       handleSearch(index);
     }
     canMomentum.current = false;
