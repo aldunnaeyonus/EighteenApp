@@ -80,7 +80,10 @@ export const _requestComments = async (pin) => {
     pin: pin,
   };
   const response = await postData("/camera/comments.php", data);
-  return JSON.stringify(response);
+  const myData = []
+    .concat(response)
+    .sort((a, b) => String(a.time_date).localeCompare(String(b.time_date)));
+  storage.set(`user.Gallery.Comment.Feed.${pin}`, JSON.stringify(myData));
 };
 
 export const _resetBadge = async (owner, pin) => {
