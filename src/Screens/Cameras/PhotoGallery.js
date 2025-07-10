@@ -325,6 +325,7 @@ const PhotoGallery = (props) => {
           props.route.params.pin,
           props.route.params.user
         );
+        await axiosPull._requestComments(props.route.params.pin);
       }, 15000);
       const fetchData = async () => {
         if (filteredDataSource != undefined && filteredDataSource.length > 0) {
@@ -338,7 +339,7 @@ const PhotoGallery = (props) => {
             ]);
           });
         }
-
+        await axiosPull._requestComments(props.route.params.pin);
         await axiosPull._pullGalleryFeed(
           props.route.params.pin,
           props.route.params.user
