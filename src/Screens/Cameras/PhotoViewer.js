@@ -1,13 +1,4 @@
-import {
-  Share,
-  FlatList,
-  StatusBar,
-  Alert,
-  Text,
-  View,
-  TouchableOpacity,
-  StyleSheet
-} from "react-native";
+import { Share, Alert, Text, View, StyleSheet } from "react-native";
 import React, { useState, useRef, useCallback, useMemo } from "react";
 import { Icon } from "react-native-elements";
 import Animated from "react-native-reanimated";
@@ -16,25 +7,30 @@ import * as i18n from "../../../i18n";
 import ImageGalleryView from "../SubViews/gallery/imageGalleryView";
 import VideoGalleryView from "../SubViews/gallery/videoGalleryView";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
-import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
+import { SCREEN_WIDTH, SCREEN_HEIGHT, url } from "../../utils/constants";
 import { axiosPull } from "../../utils/axiosPull";
 import { getLocales } from "expo-localization";
 import styles from "../../styles/SliderEntry.style";
-import { BottomSheetModal, BottomSheetView, BottomSheetTextInput, BottomSheetFlatList } from "@gorhom/bottom-sheet";
+import {
+  BottomSheetModal,
+  BottomSheetView,
+  BottomSheetTextInput,
+} from "@gorhom/bottom-sheet";
 import { useMMKVObject } from "react-native-mmkv";
 import { storage } from "../../context/components/Storage";
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
 const Image = createImageProgress(FastImage);
 import Progress from "react-native-progress";
+import FormData from "form-data";
+import axios from "axios";
+import moment from "moment/min/moment-with-locales";
 
 const PhotoViewer = (props) => {
   const canMomentum = useRef(false);
-  const AnimatedFlatlist = Animated.FlatList;
   const bottomPhoto = useRef();
   const newphoto = useRef();
   const [activeIndex, setActiveIndex] = useState(props.route.params.pagerIndex);
-  const [galleryData, setDalleryData] = useState(props.route.params.data);
   const bottomSheetRef = useRef(null);
   const snapPoints = useMemo(() => ["50%"], []);
   const [comment, setComment] = useState("");
@@ -43,16 +39,61 @@ const PhotoViewer = (props) => {
     `user.Gallery.Comment.Feed.${props.route.params.pin}`,
     storage
   );
-  const [filteredComments] = useState(filteredDataSource);
+  const [filteredComments, setFilteredComments] = useState(filteredDataSource);
+  const [filteredDataSourceGallery, setDalleryData] = useMMKVObject(
+    `user.Gallery.Friend.Feed.${props.route.params.pin}`,
+    storage
+  );
+  let [localLang] = useState(getLocales()[0].languageCode);
 
   const handleSearch = (index) => {
-  const filtered = filteredDataSource.filter(media =>
-    media.media_id.includes(galleryData[index].image_id)
-  );
-  filteredComments(filtered);
-};
-  
+    const filtered = filteredDataSource.filter((media) => {
+      return media.media_id.includes(filteredDataSourceGallery[index].image_id);
+    });
+    const myData = []
+      .concat(filtered)
+      .sort((a, b) => String(b.time_date).localeCompare(String(a.time_date)));
+    setFilteredComments(myData);
+  };
+
+  const createEvent = async () => {
+    var formData = new FormData();
+    formData.append(
+      "media_id",
+      filteredDataSourceGallery[activeIndex].image_id
+    );
+    formData.append("comment", comment);
+    formData.append("time_date", moment().unix());
+    formData.append("comment_owner", user.user_id);
+    formData.append("media_pin", props.route.params.pin);
+
+    const preLoading = async () => {
+      await axios({
+        method: "POST",
+        url: url + "/camera/addComment.php",
+        data: formData,
+        headers: {
+          Accept: "application/json",
+          "content-Type": "multipart/form-data",
+        },
+      }).then(async (res) => {
+        setComment("");
+
+        console.log(res);
+        await axiosPull._requestComments(props.route.params.pin);
+        handleSearch(activeIndex);
+        await axiosPull._pullGalleryFeed(
+          props.route.params.pin,
+          props.route.params.user
+        );
+      });
+    };
+    preLoading();
+  };
+
   const scrollToActiveIndex = (index) => {
+    setActiveIndex(index);
+    handleSearch(index);
     newphoto?.current?.scrollToOffset({
       offset: index * SCREEN_WIDTH,
       animated: true,
@@ -93,14 +134,12 @@ const PhotoViewer = (props) => {
         animate: true,
         index: props.route.params.pagerIndex,
       });
-      return () => {
-        StatusBar.setHidden(false, "none");
-      };
+      handleSearch(activeIndex);
     }, [])
   );
 
   const _deleteFeedItemIndex = (image_id) => {
-    galleryData.forEach((res, index) => {
+    filteredDataSourceGallery.forEach((res, index) => {
       if (res.image_id == image_id) {
         setDalleryData((prevState) => {
           prevState.splice(index, 1);
@@ -126,14 +165,16 @@ const PhotoViewer = (props) => {
             props.route.params.data;
 
             const data = {
-              user: galleryData[activeIndex].user_id,
-              pin: galleryData[activeIndex].image_id,
+              user: filteredDataSourceGallery[activeIndex].user_id,
+              pin: filteredDataSourceGallery[activeIndex].image_id,
               type: "hide",
               title: "",
               owner: props.route.params.user,
               locale: getLocales()[0].languageCode,
             };
-            _deleteFeedItemIndex(galleryData[activeIndex].image_id);
+            _deleteFeedItemIndex(
+              filteredDataSourceGallery[activeIndex].image_id
+            );
             await axiosPull.postData("/camera/report.php", data);
             await axiosPull._pullGalleryFeed(
               props.route.params.pin,
@@ -151,9 +192,6 @@ const PhotoViewer = (props) => {
   const handlePresentModalPress = useCallback(() => {
     bottomSheetRef.current?.present();
   }, []);
-  const handleSheetChanges = useCallback((index) => {
-    console.log("handleSheetChanges", index);
-  }, []);
 
   const _reportContent = async () => {
     Alert.alert(
@@ -169,9 +207,9 @@ const PhotoViewer = (props) => {
           text: i18n.t("ReportContent"),
           onPress: async () => {
             const data = {
-              user: galleryData[activeIndex].user_id,
-              pin: galleryData[activeIndex].image_id,
-              title: galleryData[activeIndex].uri,
+              user: filteredDataSourceGallery[activeIndex].user_id,
+              pin: filteredDataSourceGallery[activeIndex].image_id,
+              title: filteredDataSourceGallery[activeIndex].uri,
               type: "content",
               owner: props.route.params.user,
               locale: getLocales()[0].languageCode,
@@ -229,9 +267,9 @@ const PhotoViewer = (props) => {
         }}
         edges={["left", "right"]}
       >
-        <FlatList
+        <Animated.FlatList
           ref={newphoto}
-          extraData={galleryData}
+          extraData={filteredDataSourceGallery}
           nestedScrollEnabled={true}
           showsHorizontalScrollIndicator={false}
           onMomentumScrollBegin={onMomentumScrollBegin}
@@ -243,16 +281,20 @@ const PhotoViewer = (props) => {
           horizontal
           getItemLayout={getItemLayout}
           style={{ backgroundColor: "black", flex: 1 }}
-          data={galleryData}
+          data={filteredDataSourceGallery}
           keyExtractor={(item) => item.image_id}
           renderItem={({ item, index }) => (
-            <ImageGalleryView item={item} index={index} />
+            <ImageGalleryView
+              item={item}
+              index={index}
+              handleDismissPress={handleDismissPress}
+            />
           )}
         />
 
-        <AnimatedFlatlist
+        <Animated.FlatList
           ref={bottomPhoto}
-          data={galleryData}
+          data={filteredDataSourceGallery}
           horizontal
           getItemLayout={getItemLayoutBottom}
           keyExtractor={(item) => item.image_id}
@@ -262,7 +304,7 @@ const PhotoViewer = (props) => {
             width: SCREEN_WIDTH,
             flex: 1,
           }}
-          extraData={galleryData}
+          extraData={filteredDataSourceGallery}
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ paddingHorizontal: 10 }}
           onScroll={() => {
@@ -311,7 +353,7 @@ const PhotoViewer = (props) => {
           <Icon
             onPress={() => {
               _reportContent();
-                            handleDismissPress();
+              handleDismissPress();
             }}
             type={"octicons"}
             name={"report"}
@@ -332,7 +374,7 @@ const PhotoViewer = (props) => {
           props.route.params.owner == props.route.params.user ? (
             <Icon
               onPress={async () => {
-                _gotoShare(galleryData[activeIndex].uri);
+                _gotoShare(filteredDataSourceGallery[activeIndex].uri);
               }}
               type="material-community"
               size={30}
@@ -396,24 +438,30 @@ const PhotoViewer = (props) => {
             ref={bottomSheetRef}
             snapPoints={snapPoints}
             enablePanDownToClose
+            keyboardBlurBehavior={"restore"}
+            android_keyboardInputMode={"adjustPan"}
+            keyboardBehavior={"fillParent"}
             enableDismissOnClose
             enableDynamicSizing
-            onDismiss={handleDismissPress}
-            onChange={handleSheetChanges}
+            nestedScrollEnabled={true}
           >
-            <BottomSheetView style={[StyleSheet.absoluteFill, { alignItems: "center" }]}>
-              <Text>{i18n.t("Comments")}</Text>
+            <BottomSheetView
+              style={[StyleSheet.absoluteFill, { alignItems: "center" }]}
+            >
+              <Text>
+                {filteredComments.length} {i18n.t("Comments")}
+              </Text>
               <View
                 style={{
                   justifyContent: "flex-end",
                   flex: 1,
                 }}
               >
-                <BottomSheetFlatList
+                <Animated.FlatList
                   data={filteredComments}
-                  extraData={filteredComments}
-                  style={{flex:1}}
-                  renderItem={(item, _) => {
+                  extraData={filteredDataSourceGallery}
+                  style={{ flex: 1 }}
+                  renderItem={(item) => (
                     <View
                       style={{ padding: 20, flexDirection: "row", flex: 1 }}
                     >
@@ -434,18 +482,24 @@ const PhotoViewer = (props) => {
                         source={{
                           priority: FastImage.priority.high,
                           cache: FastImage.cacheControl.immutable,
-                          uri: item.photoURL,
+                          uri: item.item.photoURL,
                         }}
                       />
 
-                      <View style={{ marginHorizontal: 14 }}>
-                        <Text style={{ color: "gray", fontSize: 13 }}>
-                          {item.displayName}
+                      <View style={{ marginHorizontal: 5 }}>
+                        <Text style={{ color: "#3D4849", fontSize: 13 }}>
+                          {item.item.displayName} -{" "}
+                          <Text style={{ color: "grey", fontSize: 10}}>
+                            {moment
+                              .unix(item.item.time_date)
+                              .locale(localLang)
+                              .format("LLL")}
+                          </Text>
                         </Text>
-                        <Text>{item.comment}</Text>
+                        <Text>{item.item.comment}</Text>
                       </View>
-                    </View>;
-                  }}
+                    </View>
+                  )}
                   keyExtractor={(item) => item.id}
                 />
                 <View
@@ -477,12 +531,19 @@ const PhotoViewer = (props) => {
                   />
                   <BottomSheetTextInput
                     multiline
+                    inputContainerStyle={{ borderBottomWidth: 0 }}
+                    autoCapitalize="sentences"
+                    underlineColorAndroid="transparent"
+                    value={comment}
+                    keyboardType="default"
                     allowFontScaling
                     placeholder={i18n.t("CommentPlaceholder")}
-                    placeholderTextColor='grey'
+                    placeholderTextColor="grey"
                     enablesReturnKeyAutomatically
                     maxLength={180}
-                    onChangeText={setComment}
+                    onChangeText={(text) => {
+                      setComment(text);
+                    }}
                     style={{
                       borderColor: "lightgray",
                       borderBottomWidth: 1,
@@ -491,16 +552,15 @@ const PhotoViewer = (props) => {
                       width: SCREEN_WIDTH - 100,
                     }}
                   />
-                  <TouchableOpacity onPress={() => {
-
-                  }}>
-                    <Icon
-                      type={"ionicon"}
-                      name="arrow-up-circle"
-                      size={34}
-                      color={"#e35504"}
-                    />
-                  </TouchableOpacity>
+                  <Icon
+                    onPress={() => {
+                      createEvent();
+                    }}
+                    type={"ionicon"}
+                    name="arrow-up-circle"
+                    size={34}
+                    color={"#e35504"}
+                  />
                 </View>
               </View>
             </BottomSheetView>

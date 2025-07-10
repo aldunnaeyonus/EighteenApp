@@ -82,7 +82,7 @@ export const _requestComments = async (pin) => {
   const response = await postData("/camera/comments.php", data);
   const myData = []
     .concat(response)
-    .sort((a, b) => String(a.time_date).localeCompare(String(b.time_date)));
+    .sort((a, b) => String(b.time_date).localeCompare(String(a.time_date)));
   storage.set(`user.Gallery.Comment.Feed.${pin}`, JSON.stringify(myData));
 };
 

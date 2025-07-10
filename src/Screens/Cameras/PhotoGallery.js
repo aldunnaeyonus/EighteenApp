@@ -368,7 +368,6 @@ const PhotoGallery = (props) => {
   const showModalFunction = (index) => {
     props.navigation.navigate("MediaViewer", {
       index: index,
-      data: filteredDataSource,
       pin: props.route.params.pin,
       title: props.route.params.title,
       owner: props.route.params.owner,

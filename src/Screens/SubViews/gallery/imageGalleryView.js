@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import { createImageProgress } from "react-native-image-progress";
 import FastImage from "react-native-fast-image";
 const Image = createImageProgress(FastImage);
@@ -13,6 +13,11 @@ const ImageGalleryView = (props) => {
   const [videoPlayMute] = useState(true);
 
   return props.item.type == "video" ? (
+    <Pressable
+    onPress={()=>{
+      props.handleDismissPress();
+    }}>
+
     <View
       style={{
         flex: 1,
@@ -101,7 +106,12 @@ const ImageGalleryView = (props) => {
         </Text>
       </View>
     </View>
+    </Pressable>
   ) : (
+        <Pressable
+    onPress={()=>{
+      props.handleDismissPress();
+    }}>
     <View
       style={{
         flex: 1,
@@ -204,6 +214,8 @@ const ImageGalleryView = (props) => {
         ></Image>
       </Zoom>
     </View>
+    </Pressable>
   );
+
 };
 export default ImageGalleryView;
