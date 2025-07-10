@@ -85,7 +85,6 @@ const PhotoViewer = (props) => {
 
   useFocusEffect(
     useCallback(() => {
-      StatusBar.setHidden(true, "none");
       newphoto?.current.scrollToIndex({
         animate: true,
         index: props.route.params.pagerIndex,
