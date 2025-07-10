@@ -75,6 +75,14 @@ export const _pullUser = async (id, screen) => {
   storage.set("user.Data", JSON.stringify(response[0]));
 };
 
+export const _requestComments = async (pin) => {
+  const data = {
+    pin: pin,
+  };
+  const response = await postData("/camera/comments.php", data);
+  return JSON.stringify(response);
+};
+
 export const _resetBadge = async (owner, pin) => {
   const data = {
     owner: owner,
@@ -83,6 +91,7 @@ export const _resetBadge = async (owner, pin) => {
   const response = await postData("/camera/resetBadge.php", data);
   return JSON.stringify(response);
 };
+
 export const _pullGalleryArray = async (pin) => {
   const data = {
     pin: pin,
@@ -134,7 +143,9 @@ export const _pullFriendsAllFeedABC = async (id, query) => {
     owner: id,
     query: query,
   };
+  
   const response = await postData("/users/friendsAll.php", data);
+  
   const myData = []
     .concat(response)
     .sort((a, b) =>
@@ -201,6 +212,7 @@ export const _pullMembersFeed = async (pin, owner, UUID) => {
 
 export const axiosPull = {
   AITexttoImage,
+  _requestComments,
   postData,
   _resetBadge,
   _pullHistoryFeed,
