@@ -10,7 +10,8 @@
     "moduleResolution": "node",
     "noEmit": true,
     "strict": true,
-    "target": "es2017"
+    "target": "es2017",
+    "useUnknownInCatchVariables": false,
   },
   "exclude": ["node_modules"],
   "extends": "expo/tsconfig.base"

@@ -374,6 +374,7 @@ const PhotoGallery = (props) => {
       user: props.route.params.user,
       type: props.route.params.type,
       share: props.route.params.camera_add_social,
+      end: props.route.params.end,
       pagerIndex: index,
     });
   };
@@ -577,6 +578,7 @@ const PhotoGallery = (props) => {
                               props.route.params.camera_add_social,
                             start: props.route.params.start,
                             user: props.route.params.user,
+                                  lefthanded: user.lefthanded
                           });
                           setModalUpload(false);
                         }

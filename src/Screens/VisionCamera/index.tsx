@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useMemo } from "react";
 import {
   View,
   StyleSheet,
@@ -6,7 +6,6 @@ import {
   Text,
   Platform,
   StatusBar,
-  PressableOpacity
 } from "react-native";
 import {
   useCameraPermission,
@@ -54,10 +53,10 @@ import { ViewStyle } from "react-native";
 import { getLocales } from "expo-localization";
 import { axiosPull } from "../../utils/axiosPull";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useMMKVObject } from "react-native-mmkv";
 import styles from "../../styles/SliderEntry.style";
 
 const VisionCamera = (props: {
+  lefthanded: string;
   route: {
     params: {
       title: any;
@@ -69,6 +68,7 @@ const VisionCamera = (props: {
       pin: any;
       UUID: any;
       action: any;
+      lefthanded: any
     };
   };
   navigation: any;
@@ -83,7 +83,6 @@ const VisionCamera = (props: {
       ? "99"
       : props.route.params.credits
   );
- const [users] = useMMKVObject("user.Data", storage);
   
   const location = useLocationPermission();
   let [localLang] = useState(getLocales()[0].languageCode);
@@ -410,7 +409,8 @@ const VisionCamera = (props: {
           {endEventTime}
         </Text>
       </View>
-          <View style={users.lefthanded == "1" ? styles.imageUserCameraContainersLeft : styles.imageUserCameraContainers}>
+      
+          <View style={props.lefthanded == "1" ? styles.imageUserCameraContainersLeft : styles.imageUserCameraContainers}>
 
         <Ionicons
           name={"close"}
@@ -455,23 +455,6 @@ const VisionCamera = (props: {
             onPress={() => setEnableNightMode(!enableNightMode)}
             disabledOpacity={0.4}
           />
-        )}
-         {supports60Fps && (
-          <PressableOpacity style={{
-           marginBottom: CONTENT_SPACING,
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-          }} onPress={() => setTargetFps((t: number) => (t === 30 ? 60 : 30))}>
-            <Text style={{
-               color: 'white',
-    fontSize: 11,
-    fontWeight: 'bold',
-    textAlign: 'center', 
-          }}>{`${targetFps}\nFPS`}</Text>
-          </PressableOpacity>
         )}
       </View>
       <CaptureButton

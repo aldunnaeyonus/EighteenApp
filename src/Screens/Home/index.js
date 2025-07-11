@@ -155,6 +155,8 @@ const Home = (props) => {
         camera_add_social: camera_add_social,
         start: start,
         user: user.user_id,
+              lefthanded: user.lefthanded
+
       });
     }
   };

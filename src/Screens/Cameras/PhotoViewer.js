@@ -25,26 +25,28 @@ import Progress from "react-native-progress";
 import FormData from "form-data";
 import axios from "axios";
 import moment from "moment/min/moment-with-locales";
+import CommentsView from "../SubViews/camera/commentsView";
 
 const PhotoViewer = (props) => {
   const canMomentum = useRef(false);
   const bottomPhoto = useRef();
+  const input = useRef();
   const newphoto = useRef();
   const [activeIndex, setActiveIndex] = useState(props.route.params.pagerIndex);
   const bottomSheetRef = useRef(null);
   const snapPoints = useMemo(() => ["50%"], []);
   const [comment, setComment] = useState("");
+  const [refreshing, setRefreshing] = useState(false);
   const [user] = useMMKVObject("user.Data", storage);
   const [filteredDataSource] = useMMKVObject(
     `user.Gallery.Comment.Feed.${props.route.params.pin}`,
     storage
   );
-  const [filteredComments, setFilteredComments] = useState(filteredDataSource);
+  const [filteredComments, setFilteredComments] = useState([]);
   const [filteredDataSourceGallery, setDalleryData] = useMMKVObject(
     `user.Gallery.Friend.Feed.${props.route.params.pin}`,
     storage
   );
-  let [localLang] = useState(getLocales()[0].languageCode);
 
   const handleSearch = (index) => {
     const filtered = filteredDataSource.filter((media) => {
@@ -76,20 +78,36 @@ const PhotoViewer = (props) => {
           Accept: "application/json",
           "content-Type": "multipart/form-data",
         },
-      }).then(async (res) => {
+      }).then(async () => {
         setComment("");
-
-        console.log(res);
+        input.current.clear();
         await axiosPull._requestComments(props.route.params.pin);
-        handleSearch(activeIndex);
-        await axiosPull._pullGalleryFeed(
-          props.route.params.pin,
-          props.route.params.user
-        );
+        await axiosPull._pullGalleryFeed(props.route.params.pin, user.user_id);
+        setTimeout(() => {
+          handleSearch(activeIndex);
+        }, 500);
       });
     };
     preLoading();
   };
+
+  const _refresh = async () => {
+    setRefreshing(true);
+    await axiosPull._requestComments(props.route.params.pin);
+    await axiosPull._pullGalleryFeed(props.route.params.pin, user.user_id);
+    handleSearch(activeIndex);
+
+    setTimeout(async () => {
+      setRefreshing(false);
+    }, 1000);
+  };
+
+  const addComment = useCallback(
+    (value) => {
+      setComment(value);
+    },
+    [comment]
+  );
 
   const scrollToActiveIndex = (index) => {
     setActiveIndex(index);
@@ -440,7 +458,6 @@ const PhotoViewer = (props) => {
             enablePanDownToClose
             keyboardBlurBehavior={"restore"}
             android_keyboardInputMode={"adjustPan"}
-            keyboardBehavior={"fillParent"}
             enableDismissOnClose
             enableDynamicSizing
             nestedScrollEnabled={true}
@@ -451,7 +468,7 @@ const PhotoViewer = (props) => {
               <Text>
                 {filteredComments.length} {i18n.t("Comments")}
               </Text>
-              <View
+              <Animated.View
                 style={{
                   justifyContent: "flex-end",
                   flex: 1,
@@ -459,47 +476,12 @@ const PhotoViewer = (props) => {
               >
                 <Animated.FlatList
                   data={filteredComments}
+                  refreshing={refreshing} // Added pull to refesh state
+                  onRefresh={_refresh} // Added pull to refresh control
                   extraData={filteredDataSourceGallery}
                   style={{ flex: 1 }}
-                  renderItem={(item) => (
-                    <View
-                      style={{ padding: 20, flexDirection: "row", flex: 1 }}
-                    >
-                      <Image
-                        indicator={Progress}
-                        resizeMode={FastImage.resizeMode.contain}
-                        style={{
-                          height: 32,
-                          width: 32,
-                          marginRight: 10,
-                          marginLeft: 10,
-                          borderRadius: 16,
-                          borderColor: "#e35504",
-                          borderWidth: 1,
-                          overflow: "hidden",
-                          borderRadius: 16,
-                        }}
-                        source={{
-                          priority: FastImage.priority.high,
-                          cache: FastImage.cacheControl.immutable,
-                          uri: item.item.photoURL,
-                        }}
-                      />
-
-                      <View style={{ marginHorizontal: 5 }}>
-                        <Text style={{ color: "#3D4849", fontSize: 13 }}>
-                          {item.item.displayName} -{" "}
-                          <Text style={{ color: "grey", fontSize: 10}}>
-                            {moment
-                              .unix(item.item.time_date)
-                              .locale(localLang)
-                              .format("LLL")}
-                          </Text>
-                        </Text>
-                        <Text>{item.item.comment}</Text>
-                      </View>
-                    </View>
-                  )}
+                  scrollEventThrottle={16}
+                  renderItem={(item) => <CommentsView item={item} />}
                   keyExtractor={(item) => item.id}
                 />
                 <View
@@ -507,6 +489,7 @@ const PhotoViewer = (props) => {
                     padding: 10,
                     flexDirection: "row",
                     margin: 20,
+
                   }}
                 >
                   <Image
@@ -531,19 +514,18 @@ const PhotoViewer = (props) => {
                   />
                   <BottomSheetTextInput
                     multiline
+                    editable={props.route.params.end >= moment().unix()}
+                    ref={input}
                     inputContainerStyle={{ borderBottomWidth: 0 }}
                     autoCapitalize="sentences"
                     underlineColorAndroid="transparent"
-                    value={comment}
                     keyboardType="default"
                     allowFontScaling
                     placeholder={i18n.t("CommentPlaceholder")}
                     placeholderTextColor="grey"
                     enablesReturnKeyAutomatically
                     maxLength={180}
-                    onChangeText={(text) => {
-                      setComment(text);
-                    }}
+                    onChangeText={addComment}
                     style={{
                       borderColor: "lightgray",
                       borderBottomWidth: 1,
@@ -554,15 +536,20 @@ const PhotoViewer = (props) => {
                   />
                   <Icon
                     onPress={() => {
-                      createEvent();
+                      if (comment.length > 0) {
+                        createEvent();
+                        input.current.clear();
+                      }
                     }}
+                    disabledStyle={{backgroundColor:'white'}}
+                    disabled={props.route.params.end >= moment().unix()}
                     type={"ionicon"}
                     name="arrow-up-circle"
                     size={34}
-                    color={"#e35504"}
+                    color={props.route.params.end <= moment().unix() ? 'lightgrey' : "#e35504"}
                   />
                 </View>
-              </View>
+              </Animated.View>
             </BottomSheetView>
           </BottomSheetModal>
         </Animated.View>

@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  Alert,
-  StyleSheet,
-  Pressable,
-} from "react-native";
+import { View, Text, Alert, StyleSheet, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import moment from "moment/min/moment-with-locales";
 import FastImage from "react-native-fast-image";
@@ -222,73 +216,26 @@ const FriendListItemHome = (props) => {
                 position: "absolute",
               }}
             >
-              <FacePile
-                numFaces={3}
-                faces={FACES}
-                circleSize={15}
-                containerStyle={{ position: "absolute" }}
-              />
+              <FacePile numFaces={3} faces={FACES} circleSize={15} />
             </View>
           </View>
-            <View
-              style={[
-                props.lefthanded == "1"
-                  ? styles.imageUserNameContainersLeft
-                  : styles.imageUserNameContainers,
-              ]}
-              pointerEvents={
-                props.item.item.end >= moment().unix() ? "auto" : "none"
-              }
-            >
-              <Icon
-                onPress={() => {
-                  if (props.item.item.start > moment().unix()) {
-                    Alert.alert("", i18n.t("Notstared"));
-                  } else {
-                    props.item.item.show_gallery == "1"
-                      ? props._gotoMedia(
-                          props.item.item.pin,
-                          props.item.item.title,
-                          props.item.item.owner,
-                          props.item.item.UUID,
-                          props.item.item.end,
-                          props.item.item.start,
-                          props.item.item.credits,
-                          props.item.item.camera_add_social,
-                          props.item.item.illustration
-                        )
-                      : Alert.alert("", i18n.t("BlockedGallery"));
-                  }
-                }}
-                containerStyle={{
-                  alignSelf: "flex-end",
-                  width: 40,
-                  height: 40,
-                  marginRight: 5,
-                  marginTop: 5,
-                  paddingTop: 10,
-                  borderTopRightRadius: 5,
-                  borderTopLeftRadius: 5,
-                  backgroundColor: "rgba(0, 0, 0, 0.60)",
-                }}
-                type="material-community"
-                size={25}
-                name="view-gallery-outline"
-                color="#fff"
-              />
-              <Icon
-                onPress={() => {
-                  if (props.item.item.start > moment().unix()) {
-                    Alert.alert("", i18n.t("Notstared"));
-                  } else {
-                    if (parseInt(props.item.item.credits) <= 0) {
-                      props._gotoStore(
-                        props.item.item.pin,
-                        props.item.item.owner,
-                        props.item.item.title
-                      );
-                    } else {
-                      props._gotoCamera(
+          <View
+            style={[
+              props.lefthanded == "1"
+                ? styles.imageUserNameContainersLeft
+                : styles.imageUserNameContainers,
+            ]}
+            pointerEvents={
+              props.item.item.end >= moment().unix() ? "auto" : "none"
+            }
+          >
+            <Icon
+              onPress={() => {
+                if (props.item.item.start > moment().unix()) {
+                  Alert.alert("", i18n.t("Notstared"));
+                } else {
+                  props.item.item.show_gallery == "1"
+                    ? props._gotoMedia(
                         props.item.item.pin,
                         props.item.item.title,
                         props.item.item.owner,
@@ -296,73 +243,115 @@ const FriendListItemHome = (props) => {
                         props.item.item.end,
                         props.item.item.start,
                         props.item.item.credits,
-                        props.item.item.tCredits,
-                        props.item.item.camera_add_social
-                      );
-                    }
+                        props.item.item.camera_add_social,
+                        props.item.item.illustration
+                      )
+                    : Alert.alert("", i18n.t("BlockedGallery"));
+                }
+              }}
+              containerStyle={{
+                alignSelf: "flex-end",
+                width: 40,
+                height: 40,
+                marginRight: 5,
+                marginTop: 5,
+                paddingTop: 10,
+                borderTopRightRadius: 5,
+                borderTopLeftRadius: 5,
+                backgroundColor: "rgba(0, 0, 0, 0.60)",
+              }}
+              type="material-community"
+              size={25}
+              name="view-gallery-outline"
+              color="#fff"
+            />
+            <Icon
+              onPress={() => {
+                if (props.item.item.start > moment().unix()) {
+                  Alert.alert("", i18n.t("Notstared"));
+                } else {
+                  if (parseInt(props.item.item.credits) <= 0) {
+                    props._gotoStore(
+                      props.item.item.pin,
+                      props.item.item.owner,
+                      props.item.item.title
+                    );
+                  } else {
+                    props._gotoCamera(
+                      props.item.item.pin,
+                      props.item.item.title,
+                      props.item.item.owner,
+                      props.item.item.UUID,
+                      props.item.item.end,
+                      props.item.item.start,
+                      props.item.item.credits,
+                      props.item.item.tCredits,
+                      props.item.item.camera_add_social
+                    );
                   }
-                }}
-                containerStyle={{
-                  alignSelf: "flex-end",
-                  width: 40,
-                  height: 40,
-                  marginRight: 5,
-                  paddingTop: 15,
-                  backgroundColor: "rgba(0, 0, 0, 0.60)",
-                }}
-                type="material-community"
-                size={25}
-                name="camera-outline"
-                color="#fff"
-              />
-              <CreditsFont credits={props.item.item.credits} />
+                }
+              }}
+              containerStyle={{
+                alignSelf: "flex-end",
+                width: 40,
+                height: 40,
+                marginRight: 5,
+                paddingTop: 15,
+                backgroundColor: "rgba(0, 0, 0, 0.60)",
+              }}
+              type="material-community"
+              size={25}
+              name="camera-outline"
+              color="#fff"
+            />
+            <CreditsFont credits={props.item.item.credits} />
 
-              <Icon
-                onPress={() => {
-                  props._gotoStore(
-                    props.item.item.pin,
-                    props.item.item.owner,
-                    props.item.item.title
-                  );
-                }}
-                containerStyle={{
-                  alignSelf: "flex-end",
-                  width: 40,
-                  height: 40,
-                  marginRight: 5,
-                  backgroundColor: "rgba(0, 0, 0, 0.60)",
-                }}
-                type="material-community"
-                size={25}
-                name="cart-plus"
-                color="#fff"
-              />
+            <Icon
+              onPress={() => {
+                props._gotoStore(
+                  props.item.item.pin,
+                  props.item.item.owner,
+                  props.item.item.title
+                );
+              }}
+              containerStyle={{
+                alignSelf: "flex-end",
+                width: 40,
+                height: 40,
+                marginRight: 5,
+                backgroundColor: "rgba(0, 0, 0, 0.60)",
+              }}
+              type="material-community"
+              size={25}
+              name="cart-plus"
+              color="#fff"
+            />
 
-              <Icon
-                onPress={() => {
-                  props._repotPost(
-                    props.item.item.pin,
-                    props.item.item.owner,
-                    props.item.item.title
-                  );
-                }}
-                containerStyle={{
-                  alignSelf: "flex-end",
-                  width: 40,
-                  paddingTop: 5,
-                  height: 40,
-                  marginRight: 5,
-                  marginTop: 0,
-                  borderBottomRightRadius: 5,
-                  borderBottomLeftRadius: 5,
-                  backgroundColor: "rgba(0, 0, 0, 0.60)",
-                }}
-                type="octicons"
-                size={25}
-                name="report"
-                color="#fff"
-              />
-            </View>
+            <Icon
+              onPress={() => {
+                props._repotPost(
+                  props.item.item.pin,
+                  props.item.item.owner,
+                  props.item.item.title
+                );
+              }}
+              containerStyle={{
+                alignSelf: "flex-end",
+                width: 40,
+                paddingTop: 5,
+                height: 40,
+                marginRight: 5,
+                marginTop: 0,
+                borderBottomRightRadius: 5,
+                borderBottomLeftRadius: 5,
+                backgroundColor: "rgba(0, 0, 0, 0.60)",
+              }}
+              type="octicons"
+              size={25}
+              name="report"
+              color="#fff"
+            />
+          </View>
 
           <View
             style={{
@@ -419,37 +408,37 @@ const FriendListItemHome = (props) => {
             </Text>
           </View>
         </View>
-                <View
-                  style={{
-                    marginTop: 10,
-                    marginRight: 10,
-                    marginLeft: 10,
-                    height: 27,
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}
-                >
-                 <Icon
-                            onPress={() => {}}
-                            name={"comment-outline"}
-                            type="material-community"
-                            size={17}
-                            color="#3D4849"
-        
-                          />
-                <Text
-                  numberOfLines={3}
-                  style={{
-                    color: "#3D4849",
-                    marginLeft: 10,
-                    fontSize: 13,
-                    height: "auto",
-                    textAlign: "left",
-                  }}
-                >
-                  {props.item.item.lastComment}
-                </Text>
-                </View>
+        <View
+          style={{
+            marginTop: 10,
+            marginRight: 10,
+            marginLeft: 10,
+            height: 27,
+            flexDirection: "row",
+            alignItems: "center",
+            display: props.item.item.lastComment == "" ? "none" : "flex",
+          }}
+        >
+          <Icon
+            onPress={() => {}}
+            name={"comment-outline"}
+            type="material-community"
+            size={17}
+            color="#3D4849"
+          />
+          <Text
+            numberOfLines={3}
+            style={{
+              color: "#3D4849",
+              marginLeft: 10,
+              fontSize: 13,
+              height: "auto",
+              textAlign: "left",
+            }}
+          >
+            {props.item.item.lastComment}
+          </Text>
+        </View>
       </Pressable>
     </SafeAreaView>
   );
