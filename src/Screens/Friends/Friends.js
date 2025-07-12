@@ -641,7 +641,7 @@ const Friends = (props) => {
             },
             shadowOpacity: 0.43,
             shadowRadius: 9.51,
-
+            backgroundColor: "transparent",
             elevation: 15,
           }}
         >
@@ -660,7 +660,7 @@ const Friends = (props) => {
                   justifyContent: "center",
                   alignItems: "center",
                   alignContent: "space-between",
-                  marginTop:15,
+                  marginTop: 15,
                   gap: 50,
                 }}
               >
@@ -733,7 +733,6 @@ const Friends = (props) => {
                   </Text>
                 </View>
 
-                
                 <View
                   style={{
                     flexDirection: "column",

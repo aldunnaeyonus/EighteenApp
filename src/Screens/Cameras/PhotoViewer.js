@@ -469,7 +469,7 @@ const PhotoViewer = (props) => {
               },
               shadowOpacity: 0.43,
               shadowRadius: 9.51,
-
+            backgroundColor: "transparent",
               elevation: 15,
             }}
           >
