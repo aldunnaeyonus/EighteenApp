@@ -630,7 +630,6 @@ const Friends = (props) => {
           keyboardBlurBehavior={"restore"}
           android_keyboardInputMode={"adjustPan"}
           enableDismissOnClose
-          enableDynamicSizing
           style={{
             shadowColor: "#000",
             shadowOffset: {
