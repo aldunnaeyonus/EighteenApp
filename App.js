@@ -151,32 +151,37 @@ export default function App() {
   };
 
   const openAppStore = async () => {
-  try {
-    await AppLink.openInStore({
-          appName,
-          appStoreId,
-          appStoreLocale,
-          playStoreId,
-    });
-  } catch (error) {
-    // Handle the error, e.g., show an error message to the user
-    console.error("Error opening in store:", error);
-  }
-};
+    try {
+      await AppLink.openInStore({
+        appName,
+        appStoreId,
+        appStoreLocale,
+        playStoreId,
+      });
+    } catch (error) {
+      // Handle the error, e.g., show an error message to the user
+      console.error("Error opening in store:", error);
+    }
+  };
 
-useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
       const version = await checkVersion();
       if (version.needsUpdate && !__DEV__) {
         Alert.alert(
-        i18n.t('Update Available'),
-        i18n.t('A new version'),
-        [
-            { text: i18n.t('Cancel'), style: 'cancel' },
-            { text: i18n.t('Update Now'), onPress: () => { openAppStore();}},
-        ],
-        { cancelable: false }
-    );
+          i18n.t("Update Available"),
+          i18n.t("A new version"),
+          [
+            { text: i18n.t("Cancel"), style: "cancel" },
+            {
+              text: i18n.t("Update Now"),
+              onPress: () => {
+                openAppStore();
+              },
+            },
+          ],
+          { cancelable: false }
+        );
       }
       //Debug 5E:8F:16:06:2E:A3:CD:2C:4A:0D:54:78:76:BA:A6:F3:8C:AB:F6:25
       //Production 47:8A:0D:AC:7D:4C:98:69:7A:65:D4:97:49:C2:CA:B9:E0:A6:69:A4
@@ -193,7 +198,6 @@ useEffect(() => {
         } catch (error) {}
       }
       onCheckVersion();
-
     };
     fetchData();
   }, []);
@@ -278,6 +282,7 @@ useEffect(() => {
                     gestureEnabled: false,
                     title: "",
                     headerShown: false,
+                    headerTitleAlign: "center",
                   }}
                 >
                   {(props) => (
@@ -296,6 +301,8 @@ useEffect(() => {
                     gestureEnabled: false,
                     title: "",
                     headerShown: false,
+                                        headerTitleAlign: "center",
+
                   }}
                 >
                   {(props) => (
@@ -315,6 +322,8 @@ useEffect(() => {
                     gestureEnabled: false,
                     headerTintColor: COLORS[colorScheme ?? "light"],
                     headerBackTitleVisible: false,
+                                        headerTitleAlign: "center",
+
                   }}
                 >
                   {(props) => <Friends {...props} unsubscribe={isConnected} />}
@@ -325,6 +334,8 @@ useEffect(() => {
                     gestureEnabled: false,
                     title: "",
                     headerShown: false,
+                                        headerTitleAlign: "center",
+
                   }}
                 >
                   {(props) => <Handle {...props} unsubscribe={isConnected} />}
@@ -339,6 +350,8 @@ useEffect(() => {
                     headerBackTitleStyle: COLORS[colorScheme ?? "light"],
                     headerTitleStyle: COLORS[colorScheme ?? "light"],
                     headerBackTitleVisible: false,
+                                        headerTitleAlign: "center",
+
                   }}
                 >
                   {(props) => (
@@ -359,6 +372,8 @@ useEffect(() => {
                     gestureEnabled: false,
                     headerTintColor: "#000",
                     headerBackTitleVisible: false,
+                                        headerTitleAlign: "center",
+
                   }}
                 >
                   {(props) => (
@@ -379,6 +394,8 @@ useEffect(() => {
                     gestureEnabled: false,
                     headerTransparent: true,
                     headerBackTitleVisible: false,
+                                        headerTitleAlign: "center",
+
                   }}
                 >
                   {(props) => (
@@ -398,6 +415,8 @@ useEffect(() => {
                     gestureEnabled: false,
                     headerTintColor: "#000",
                     headerBackTitleVisible: false,
+                                        headerTitleAlign: "center",
+
                   }}
                 >
                   {(props) => (
@@ -417,6 +436,8 @@ useEffect(() => {
                     gestureEnabled: false,
                     headerTransparent: true,
                     headerBackTitleVisible: false,
+                                        headerTitleAlign: "center",
+
                   }}
                 >
                   {(props) => (
@@ -436,6 +457,8 @@ useEffect(() => {
                     gestureEnabled: false,
                     headerTintColor: "#000",
                     headerBackTitleVisible: false,
+                                        headerTitleAlign: "center",
+
                   }}
                 >
                   {(props) => (
@@ -454,6 +477,8 @@ useEffect(() => {
                     gestureEnabled: false,
                     headerTintColor: "#000",
                     headerBackTitleVisible: false,
+                                        headerTitleAlign: "center",
+
                   }}
                 >
                   {(props) => <WebView {...props} unsubscribe={isConnected} />}
@@ -466,6 +491,8 @@ useEffect(() => {
                     title: i18n.t("JoinEvent"),
                     headerTintColor: "#000",
                     headerBackTitleVisible: false,
+                                        headerTitleAlign: "center",
+
                   }}
                 >
                   {(props) => <Join {...props} unsubscribe={isConnected} />}
@@ -479,6 +506,8 @@ useEffect(() => {
                     gestureEnabled: false,
                     headerTransparent: true,
                     headerBackTitleVisible: false,
+                                        headerTitleAlign: "center",
+
                   }}
                 >
                   {(props) => (
@@ -497,6 +526,8 @@ useEffect(() => {
                     headerTitleStyle: COLORS[colorScheme ?? "light"],
                     headerBackTitleVisible: false,
                     headerBackVisible: false,
+                                        headerTitleAlign: "center",
+
                   }}
                 >
                   {(props) => (
@@ -517,6 +548,8 @@ useEffect(() => {
                     gestureEnabled: false,
                     headerTintColor: "#000",
                     headerBackTitleVisible: false,
+                                        headerTitleAlign: "center",
+
                   }}
                 >
                   {(props) => (
@@ -537,6 +570,8 @@ useEffect(() => {
                     gestureEnabled: false,
                     headerTintColor: "#000",
                     headerBackTitleVisible: false,
+                                        headerTitleAlign: "center",
+
                   }}
                 >
                   {(props) => (
@@ -557,6 +592,8 @@ useEffect(() => {
                     gestureEnabled: false,
                     headerTransparent: false,
                     headerBackTitleVisible: false,
+                                        headerTitleAlign: "center",
+
                   }}
                 >
                   {(props) => (
@@ -577,6 +614,8 @@ useEffect(() => {
                     gestureEnabled: false,
                     headerTransparent: true,
                     headerBackTitleVisible: false,
+                                        headerTitleAlign: "center",
+
                     headerShown: false,
                     animation: "fade",
                     animationDuration: 500,
@@ -600,6 +639,8 @@ useEffect(() => {
                     headerTintColor: "#000",
                     gestureEnabled: false,
                     headerBackTitleVisible: false,
+                                        headerTitleAlign: "center",
+
                   }}
                 >
                   {(props) => (
@@ -618,6 +659,8 @@ useEffect(() => {
                     gestureEnabled: false,
                     title: i18n.t(""),
                     headerShown: false,
+                                        headerTitleAlign: "center",
+
                   }}
                 >
                   {(props) => (
@@ -638,6 +681,8 @@ useEffect(() => {
                     headerTintColor: "#000",
                     gestureEnabled: false,
                     headerBackTitleVisible: false,
+                                        headerTitleAlign: "center",
+
                   }}
                 >
                   {(props) => (
@@ -658,6 +703,8 @@ useEffect(() => {
                     headerTintColor: "#000",
                     gestureEnabled: false,
                     headerBackTitleVisible: false,
+                                        headerTitleAlign: "center",
+
                   }}
                 >
                   {(props) => (
@@ -676,6 +723,8 @@ useEffect(() => {
                     gestureEnabled: false,
                     title: "",
                     headerShown: false,
+                                        headerTitleAlign: "center",
+
                   }}
                 >
                   {(props) => (
@@ -696,6 +745,8 @@ useEffect(() => {
                     headerTintColor: "#000",
                     gestureEnabled: false,
                     headerBackTitleVisible: false,
+                                        headerTitleAlign: "center",
+
                   }}
                 >
                   {(props) => (
@@ -716,6 +767,8 @@ useEffect(() => {
                     headerTintColor: "#000",
                     gestureEnabled: false,
                     headerBackTitleVisible: false,
+                                        headerTitleAlign: "center",
+
                   }}
                 >
                   {(props) => (
@@ -735,6 +788,8 @@ useEffect(() => {
                     headerTintColor: "#000",
                     gestureEnabled: false,
                     headerBackTitleVisible: false,
+                                        headerTitleAlign: "center",
+
                   }}
                 >
                   {(props) => (
@@ -754,6 +809,8 @@ useEffect(() => {
                     headerTintColor: "#000",
                     gestureEnabled: false,
                     headerBackTitleVisible: false,
+                                        headerTitleAlign: "center",
+
                   }}
                 >
                   {(props) => (
@@ -773,6 +830,8 @@ useEffect(() => {
                     headerTintColor: "#000",
                     gestureEnabled: false,
                     headerBackTitleVisible: false,
+                                        headerTitleAlign: "center",
+
                   }}
                 >
                   {(props) => (
