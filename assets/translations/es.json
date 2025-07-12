@@ -337,5 +337,13 @@
   "w10": "Personaliza tu experiencia en Snap Eighteen desde los detalles de la cuenta. Actualiza tu lema, nombre de usuario o identificador, y dirección de correo. También puedes gestionar la privacidad de tu ubicación (si está inactiva) y decidir si mostrar eventos de amigos en la pantalla principal.",
   "Ended:": "Finalizado: ",
     "HideEvent": "El evento está oculto",
-  "HideEventDesc": "Cuando ocultas tu evento, no aparecerá para tus amigos. Sin embargo, cualquiera que tenga el enlace del evento aún puede verlo."
+  "HideEventDesc": "Cuando ocultas tu evento, no aparecerá para tus amigos. Sin embargo, cualquiera que tenga el enlace del evento aún puede verlo.",
+  "LeftHanded":"Modo para zurdos",
+    "LeftHandedDesc":"Habilita el modo para zurdos para cambiar el botón de la cámara al lado izquierdo de la pantalla. Esto es útil para usuarios zurdos que encuentran más cómodo usar los controles de eventos en el lado izquierdo.",
+    "Comments":"Comentarios",
+    "CommentPlaceholder":"¡Escribe un comentario!",
+    "Update Available":"Actualización disponible", 
+    "Update Now":"Actualizar ahora",
+    "A new version":"Hay una nueva versión de la aplicación disponible. Por favor, actualiza a la última versión."
+
 }

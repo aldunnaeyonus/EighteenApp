@@ -337,5 +337,13 @@
   "w10": "Personalizza la tua esperienza su Snap Eighteen tramite i Dettagli dell'account. Aggiorna il tuo motto, nome utente o handle, e l’indirizzo email. Puoi anche gestire la privacy della tua posizione (se attualmente disattivata) e scegliere se mostrare gli eventi degli amici nella schermata principale.",
   "Ended:": "Terminato: ",
     "HideEvent": "L'evento è nascosto",
-  "HideEventDesc": "Quando nascondi il tuo evento, non verrà mostrato ai tuoi amici. Tuttavia, chiunque abbia il link dell'evento potrà ancora visualizzarlo."
+  "HideEventDesc": "Quando nascondi il tuo evento, non verrà mostrato ai tuoi amici. Tuttavia, chiunque abbia il link dell'evento potrà ancora visualizzarlo.",
+   "LeftHanded":"Modalità mancino",
+    "LeftHandedDesc":"Abilita la modalità mancino per spostare il pulsante della fotocamera sul lato sinistro dello schermo. Questo è utile per gli utenti mancini che trovano più comodo usare i controlli dell'evento sul lato sinistro.",
+    "Comments":"Commenti",
+    "CommentPlaceholder":"Digita un commento!",
+    "Update Available":"Aggiornamento disponibile", 
+    "Update Now":"Aggiorna ora",
+    "A new version":"È disponibile una nuova versione dell'app. Aggiorna all'ultima versione."
+
 }

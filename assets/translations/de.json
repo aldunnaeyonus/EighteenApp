@@ -337,5 +337,12 @@
   "w10": "Passen Sie Ihre Snap Eighteen-Erfahrung über die Kontodetails an. Aktualisieren Sie Ihr Motto, Ihren Benutzernamen oder Handle sowie Ihre E-Mail-Adresse. Sie können auch Ihre Standortfreigabe verwalten (falls derzeit deaktiviert) und festlegen, ob Veranstaltungen von Freunden auf dem Hauptbildschirm angezeigt werden sollen.",
   "Ended:": "Beendet: ",
   "HideEvent": "Ereignis ist ausgeblendet",
-  "HideEventDesc": "Wenn du dein Ereignis ausblendest, wird es deinen Freunden nicht angezeigt. Allerdings kann jeder, der den Ereignislink hat, es weiterhin sehen."
+  "HideEventDesc": "Wenn du dein Ereignis ausblendest, wird es deinen Freunden nicht angezeigt. Allerdings kann jeder, der den Ereignislink hat, es weiterhin sehen.",
+  "LeftHanded":"Linkshändermodus",
+    "LeftHandedDesc":"Aktivieren Sie den Linkshändermodus, um die Kamerataste auf die linke Seite des Bildschirms zu verschieben. Dies ist nützlich für linkshändige Benutzer, die es bequemer finden, die Ereignissteuerelemente auf der linken Seite zu verwenden.",
+    "Comments":"Kommentare",
+    "CommentPlaceholder":"Kommentar eingeben!",
+    "Update Available":"Update verfügbar", 
+    "Update Now":"Jetzt aktualisieren",
+    "A new version":"Eine neue Version der App ist verfügbar. Bitte aktualisieren Sie auf die neueste Version."
 }

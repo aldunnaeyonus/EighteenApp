@@ -337,5 +337,12 @@
   "w10": "Personalize sua experiência no Snap Eighteen por meio dos Detalhes da Conta. Atualize seu lema, nome de usuário ou identificador e e-mail. Também é possível gerenciar a privacidade de localização (se estiver desativada) e decidir se quer exibir eventos de amigos na tela principal.",
   "Ended:": "Encerrado: ",
    "HideEvent": "O evento está oculto",
-  "HideEventDesc": "Quando você oculta seu evento, ele não aparecerá para seus amigos. No entanto, qualquer pessoa com o link do evento ainda poderá visualizá-lo." 
+  "HideEventDesc": "Quando você oculta seu evento, ele não aparecerá para seus amigos. No entanto, qualquer pessoa com o link do evento ainda poderá visualizá-lo.",
+      "LeftHanded":"Modo para canhotos",
+    "LeftHandedDesc":"Habilite o modo para canhotos para mudar o botão da câmera para o lado esquerdo da tela. Isso é útil para usuários canhotos que acham mais confortável usar os controles do evento no lado esquerdo.",
+    "Comments":"Comentários",
+    "CommentPlaceholder":"Digite um comentário!",
+    "Update Available":"Atualização disponível", 
+    "Update Now":"Atualizar agora",
+    "A new version":"Uma nova versão do aplicativo está disponível. Por favor, atualize para a versão mais recente."
 }
