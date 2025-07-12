@@ -22,7 +22,7 @@ const Loading = (props) => {
         alignItems: "center",
       }}
     >
-        <Progress.Bar progress={Number(props.progress)} width={SCREEN_WIDTH - 10} height={5}  style={{position:'absolute', bottom: 2}} color={MD2Colors.orange900}/>
+        <Progress.Bar progress={Number(props.progress)} width={SCREEN_WIDTH - 10} height={5}  style={{position:'absolute', bottom: 2}} color={MD2Colors.orange500}/>
 
      
       <ActivityIndicator
