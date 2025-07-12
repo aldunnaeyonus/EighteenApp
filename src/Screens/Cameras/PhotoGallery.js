@@ -5,8 +5,6 @@ import {
   TouchableOpacity,
   Text,
   Alert,
-  Modal,
-  TouchableWithoutFeedback,
   Linking,
 } from "react-native";
 import React, { useState, useRef, useCallback, useMemo } from "react";
@@ -475,8 +473,9 @@ const PhotoGallery = (props) => {
                 flexDirection: "row",
                 justifyContent: "center",
                 alignItems: "center",
-                gap: 70,
                 alignContent: "space-between",
+                                  gap: 50,
+
               }}
             >
               <View
@@ -489,7 +488,7 @@ const PhotoGallery = (props) => {
               >
                 <Icon
                   type="material-community"
-                  size={50}
+                  size={40}
                   name="image-outline"
                   color={"#000"}
                   containerStyle={{
@@ -522,7 +521,7 @@ const PhotoGallery = (props) => {
               >
                 <Icon
                   type="material-community"
-                  size={50}
+                  size={40}
                   name="camera-outline"
                   color={"#000"}
                   containerStyle={{

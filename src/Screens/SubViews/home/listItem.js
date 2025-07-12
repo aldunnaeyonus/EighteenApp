@@ -499,7 +499,7 @@ const ListItem = (props) => {
             {" "}
             {endEventTime}
           </Text>
-                  </View>
+        </View>
         <View
           style={{
             marginTop: 10,
@@ -508,28 +508,41 @@ const ListItem = (props) => {
             height: 27,
             flexDirection: "row",
             alignItems: "center",
+            display: props.item.item.lastComment == "" ? "none" : "flex",
           }}
         >
-         <Icon
-                    onPress={() => {}}
-                    name={"comment-outline"}
-                    type="material-community"
-                    size={17}
-                    color="#3D4849"
-
-                  />
-        <Text
-          numberOfLines={3}
-          style={{
-            color: "#3D4849",
-            marginLeft: 10,
-            fontSize: 13,
-            height: "auto",
-            textAlign: "left",
-          }}
-        >
-          {props.item.item.lastComment}
-        </Text>
+          <Icon
+            onPress={() => {}}
+            name={"comment-outline"}
+            type="material-community"
+            size={17}
+            color="#3D4849"
+          />
+          <Text
+                      numberOfLines={3}
+                      style={{
+                        color: "#3D4849",
+                        marginLeft: 10,
+                        fontSize: 13,
+                        height: "auto",
+                        textAlign: "left",
+                        fontWeight:'700'
+                      }}
+                    >
+                      {props.item.item.lastCommentUser}
+                    </Text>
+          <Text
+            numberOfLines={3}
+            style={{
+              color: "#3D4849",
+              marginLeft: 10,
+              fontSize: 13,
+              height: "auto",
+              textAlign: "left",
+            }}
+          >
+            {props.item.item.lastComment}
+          </Text>
         </View>
       </View>
     </SafeAreaView>

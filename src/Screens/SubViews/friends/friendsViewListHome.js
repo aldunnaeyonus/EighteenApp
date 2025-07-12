@@ -434,6 +434,19 @@ const FriendListItemHome = (props) => {
               fontSize: 13,
               height: "auto",
               textAlign: "left",
+              fontWeight:'700'
+            }}
+          >
+            {props.item.item.lastCommentUser}
+          </Text>
+          <Text
+            numberOfLines={3}
+            style={{
+              color: "#3D4849",
+              marginLeft: 10,
+              fontSize: 13,
+              height: "auto",
+              textAlign: "left",
             }}
           >
             {props.item.item.lastComment}

@@ -167,7 +167,7 @@ export default function App() {
 useEffect(() => {
     const fetchData = async () => {
       const version = await checkVersion();
-      if (version.needsUpdate) {
+      if (version.needsUpdate && !__DEV__) {
         Alert.alert(
         i18n.t('Update Available'),
         i18n.t('A new version'),
