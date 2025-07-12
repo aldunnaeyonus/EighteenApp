@@ -155,8 +155,7 @@ const Home = (props) => {
         camera_add_social: camera_add_social,
         start: start,
         user: user.user_id,
-              lefthanded: user.lefthanded
-
+        lefthanded: user.lefthanded,
       });
     }
   };
@@ -549,11 +548,11 @@ const Home = (props) => {
     }
   };
 
-    const getItemLayout = (_, index) => ({
-      length: SCREEN_HEIGHT,
-      offset: SCREEN_HEIGHT * index,
-      index,
-    });
+  const getItemLayout = (_, index) => ({
+    length: SCREEN_HEIGHT,
+    offset: SCREEN_HEIGHT * index,
+    index,
+  });
 
   const myAsyncPDFFunction = async (url) => {
     const path = `${RNFS.CachesDirectoryPath}/qrcodeEvent.pdf`;
@@ -1123,7 +1122,7 @@ const Home = (props) => {
             />
           </View>
         }
-                  getItemLayout={getItemLayout}
+        getItemLayout={getItemLayout}
         keyExtractor={(_, index) => index}
         renderItem={(item, index) =>
           item.item.owner == user.user_id ? (
@@ -1141,6 +1140,7 @@ const Home = (props) => {
               _gotoCamera={_gotoCamera}
               setQrCodeURL={setQrCodeURL}
               _gotoQRCode={_gotoQRCode}
+              _gotoFriend={goToFriend}
               _gotoShare={_gotoShare}
               _editItem={_editItem}
               _addMax={_addMax}
@@ -1151,6 +1151,7 @@ const Home = (props) => {
               index={index}
               lefthanded={user.lefthanded}
               _gotoMedia={_gotoMedia}
+              _gotoFriend={goToFriend}
               _gotoCamera={_gotoCamera}
               _gotoStore={_gotoStore}
               _autoJoin={_autoJoin}

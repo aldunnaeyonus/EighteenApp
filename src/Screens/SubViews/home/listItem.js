@@ -519,18 +519,21 @@ const ListItem = (props) => {
             color="#3D4849"
           />
           <Text
-                      numberOfLines={3}
-                      style={{
-                        color: "#3D4849",
-                        marginLeft: 10,
-                        fontSize: 13,
-                        height: "auto",
-                        textAlign: "left",
-                        fontWeight:'700'
-                      }}
-                    >
-                      {props.item.item.lastCommentUser}
-                    </Text>
+            onPress={() => {
+              props._gotoFriend(props.item.item.lastCommentID);
+            }}
+            numberOfLines={3}
+            style={{
+              color: "#3D4849",
+              marginLeft: 10,
+              fontSize: 13,
+              height: "auto",
+              textAlign: "left",
+              fontWeight: "700",
+            }}
+          >
+            {props.item.item.lastCommentUser}
+          </Text>
           <Text
             numberOfLines={3}
             style={{

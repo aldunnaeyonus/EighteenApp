@@ -1,4 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useRef,
+  useCallback,
+} from "react";
 import {
   StyleSheet,
   View,
@@ -8,6 +14,7 @@ import {
   TouchableWithoutFeedback,
   Linking,
   Text,
+  Pressable,
 } from "react-native";
 import "moment-duration-format";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
@@ -17,7 +24,6 @@ import { useMMKVObject } from "react-native-mmkv";
 import FriendHeader from "../SubViews/friends/friendHeader";
 import { Icon } from "react-native-elements";
 import { axiosPull } from "../../utils/axiosPull";
-import { useToast } from "react-native-styled-toast";
 import * as i18n from "../../../i18n";
 import FriendListItem from "../SubViews/friends/friendsitem";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
@@ -32,6 +38,7 @@ import Loading from "../SubViews/home/Loading";
 import { getLocales } from "expo-localization";
 import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 
 const Friends = (props) => {
   const [cameraData] = useMMKVObject(
@@ -49,15 +56,18 @@ const Friends = (props) => {
   const [isFriend, setisFriend] = useState("2");
   const AnimatedFlatList = Animated.createAnimatedComponent(Animated.FlatList);
   const [user] = useMMKVObject("user.Data", storage);
-  const { toast } = useToast();
   const [modalVisable, setmodalVisable] = useState(false);
-  const [modalActionVisable, setmodalActionVisable] = useState(false);
   const [qrCodeURL] = useState(
     constants.url + "/friendQRCode.php?owner=" + props.route.params.userID
   );
   var timeout;
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
+  const bottomSheetRef = useRef(null);
+  const snapPoints = useMemo(() => ["17%"], []);
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetRef.current?.present();
+  }, []);
 
   const _autoJoin = async (owner, pin, end, id) => {
     const data = {
@@ -233,8 +243,7 @@ const Friends = (props) => {
           camera_add_social: camera_add_social,
           start: start,
           user: user.user_id,
-                lefthanded: user.lefthanded
-
+          lefthanded: user.lefthanded,
         });
       } else {
         Alert.alert(
@@ -260,8 +269,7 @@ const Friends = (props) => {
                   camera_add_social: camera_add_social,
                   start: start,
                   user: user.user_id,
-                        lefthanded: user.lefthanded
-
+                  lefthanded: user.lefthanded,
                 });
               },
               style: "destructive",
@@ -323,7 +331,6 @@ const Friends = (props) => {
   };
 
   useEffect(() => {
-
     const fetchData = async () => {
       await axiosPull._pullFriendFeed(props.route.params.userID);
       const data = {
@@ -344,19 +351,20 @@ const Friends = (props) => {
             : "Loading...",
         headerRight: () => (
           <View style={{ flexDirection: "row" }}>
-            {isFriend == "0" ? (
+            {props.route.params.userID == user.user_id ? (
+              <></>
+            ) : isFriend == "0" ? (
               <Icon
                 containerStyle={{ marginRight: 10 }}
                 type="material"
                 name="person-add-alt"
                 size={30}
                 onPress={() => {
+                  bottomSheetRef.current?.close();
                   addMember();
                 }}
                 color="#3D4849"
               />
-            ) : props.route.params.userID == user.user_id ? (
-              <></>
             ) : isFriend == "1" ? (
               <Icon
                 containerStyle={{ marginLeft: 5 }}
@@ -364,7 +372,8 @@ const Friends = (props) => {
                 name="menu"
                 size={30}
                 onPress={() => {
-                  setmodalActionVisable(true);
+                  bottomSheetRef.current?.close();
+                  handlePresentModalPress();
                 }}
                 color="#3D4849"
               />
@@ -435,6 +444,9 @@ const Friends = (props) => {
         edges={["bottom", "left", "right", "top"]}
       >
         <AnimatedFlatList
+          onScroll={() => {
+            bottomSheetRef.current?.close();
+          }}
           refreshing={refreshing} // Added pull to refesh state
           onRefresh={_refresh} // Added pull to refresh control
           showsHorizontalScrollIndicator={false}
@@ -517,7 +529,11 @@ const Friends = (props) => {
             )
           }
           ListHeaderComponent={
-            <>
+            <Pressable
+              onPress={() => {
+                bottomSheetRef.current?.close();
+              }}
+            >
               <FriendHeader
                 id={props.route.params.userID}
                 name={friendData.friend_handle}
@@ -534,7 +550,7 @@ const Friends = (props) => {
                 flex={uploading.display}
                 progress={uploading.progress}
               />
-            </>
+            </Pressable>
           }
           keyExtractor={(item) => item.UUID}
           renderItem={(item, index) =>
@@ -552,253 +568,6 @@ const Friends = (props) => {
             )
           }
         />
-        <Modal
-          visible={modalActionVisable}
-          animationType="slide"
-          transparent={true}
-          onRequestClose={() => {
-            setmodalActionVisable(false);
-          }}
-        >
-          <TouchableWithoutFeedback
-            onPressOut={() => setmodalActionVisable(false)}
-          >
-            <View style={style.centeredView}>
-              <View style={style.modalView}>
-                <View
-                  style={{
-                    flexDirection: "column",
-                    marginTop: -20,
-                    marginBottom: 25,
-                  }}
-                >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      gap: 30,
-                      alignContent: "space-between",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        textAlign: "center",
-                        fontSize: 20,
-                        fontWeight: 500,
-                      }}
-                    >
-                      {i18n.t("Make a Selection")}
-                    </Text>
-                  </View>
-                </View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    alignContent: "space-between",
-                    width: "100%",
-                  }}
-                >
-                  <View
-                    style={{
-                      flexDirection: "column",
-                      alignContent: "center",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: "50%",
-                    }}
-                  >
-                    <Icon
-                      type="material"
-                      size={50}
-                      name="report-gmailerrorred"
-                      color={"#fff"}
-                      containerStyle={{
-                        height: 75,
-                        width: 75,
-                        alignContent: "center",
-                        justifyContent: "center",
-                        backgroundColor: "rgba(116, 198, 190, 1)",
-                        borderRadius: 22,
-                      }}
-                      onPress={() => {
-                        setmodalActionVisable(false);
-                        _reportUser(props.route.params.userID);
-                      }}
-                    />
-                    <Text
-                      style={{
-                        textAlign: "center",
-                        marginTop: 10,
-                      }}
-                    >
-                      {i18n.t("Report Friend")}
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      flexDirection: "column",
-                      alignContent: "center",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: "50%",
-                    }}
-                  >
-                    <Icon
-                      type="antdesign"
-                      size={50}
-                      name="deleteuser"
-                      color={"#fff"}
-                      containerStyle={{
-                        height: 75,
-                        width: 75,
-                        alignContent: "center",
-                        justifyContent: "center",
-                        backgroundColor: "rgba(250, 190, 0, 1)",
-                        borderRadius: 22,
-                      }}
-                      onPress={() => {
-                        setmodalActionVisable(false);
-                        _deleteUser();
-                      }}
-                    />
-                    <Text
-                      style={{
-                        textAlign: "center",
-                        marginTop: 10,
-                      }}
-                    >
-                      {i18n.t("Delete Friend")}
-                    </Text>
-                  </View>
-                </View>
-
-                <View
-                  style={{
-                    flexDirection: "row",
-                    height: 25,
-                  }}
-                ></View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    alignContent: "space-between",
-                    width: "100%",
-                  }}
-                >
-                  <View
-                    style={{
-                      flexDirection: "column",
-                      alignContent: "center",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: "50%",
-                    }}
-                  >
-                    <Icon
-                      type="material-community"
-                      size={50}
-                      name="qrcode"
-                      color={"#fff"}
-                      containerStyle={{
-                        height: 75,
-                        width: 75,
-                        alignContent: "center",
-                        justifyContent: "center",
-                        backgroundColor: "#3D4849",
-                        borderRadius: 22,
-                      }}
-                      onPress={() => {
-                        setmodalActionVisable(false);
-                        setTimeout(() => {
-                          setmodalVisable(true);
-                        }, 200);
-                      }}
-                    />
-                    <Text
-                      style={{
-                        textAlign: "center",
-                        marginTop: 10,
-                      }}
-                    >
-                      {i18n.t("QRCode")}
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      flexDirection: "column",
-                      alignContent: "center",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: "50%",
-                    }}
-                  >
-                    <Icon
-                      type="material-community"
-                      size={50}
-                      name="shield-account-variant-outline"
-                      color={"#fff"}
-                      containerStyle={{
-                        height: 75,
-                        width: 75,
-                        alignContent: "center",
-                        justifyContent: "center",
-                        backgroundColor: "#ea5504",
-                        borderRadius: 22,
-                      }}
-                      onPress={() => {
-                        setmodalActionVisable(false);
-                        props.navigation.navigate("About", {
-                          items: friendData,
-                        });
-                      }}
-                    />
-                    <Text
-                      style={{
-                        textAlign: "center",
-                        marginTop: 10,
-                      }}
-                    >
-                      {i18n.t("About")}
-                    </Text>
-                  </View>
-                </View>
-              </View>
-              <TouchableOpacity
-                style={{
-                  marginTop: 20,
-                  flexDirection: "row",
-                  width: 250,
-                  backgroundColor: "rgba(234, 85, 4, 1)",
-                  borderRadius: 8,
-                  padding: 15,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginbottom: 20,
-                }}
-                onPress={() => {
-                  setmodalActionVisable(false);
-                }}
-              >
-                <Text
-                  style={{
-                    textTransform: "uppercase",
-                    fontSize: 20,
-                    fontWeight: 600,
-                    color: "#fff",
-                  }}
-                >
-                  {i18n.t("Close")}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </TouchableWithoutFeedback>
-        </Modal>
-
         <Modal
           visible={modalVisable}
           animationType="slide"
@@ -856,6 +625,155 @@ const Friends = (props) => {
             </View>
           </TouchableWithoutFeedback>
         </Modal>
+        <BottomSheetModal
+          ref={bottomSheetRef}
+          snapPoints={snapPoints}
+          enablePanDownToClose
+          keyboardBlurBehavior={"restore"}
+          android_keyboardInputMode={"adjustPan"}
+          enableDismissOnClose
+          enableDynamicSizing
+          style={{
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 7,
+            },
+            shadowOpacity: 0.43,
+            shadowRadius: 9.51,
+
+            elevation: 15,
+          }}
+        >
+          <BottomSheetView
+            style={[StyleSheet.absoluteFill, { alignItems: "center" }]}
+          >
+            <Text>{i18n.t("Make a Selection")}</Text>
+            <Animated.View
+              style={{
+                justifyContent: "flex-end",
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  alignContent: "space-between",
+                  marginTop:15,
+                  gap: 50,
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "column",
+                    alignContent: "center",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Icon
+                    type="material"
+                    size={40}
+                    name="report-gmailerrorred"
+                    color={"#000"}
+                    containerStyle={{
+                      height: 50,
+                      width: 50,
+                      alignContent: "center",
+                      justifyContent: "center",
+                      borderRadius: 22,
+                    }}
+                    onPress={() => {
+                      bottomSheetRef.current?.close();
+                      _reportUser(props.route.params.userID);
+                    }}
+                  />
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      marginTop: 5,
+                    }}
+                  >
+                    {i18n.t("Report Friend")}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: "column",
+                    alignContent: "center",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Icon
+                    type="antdesign"
+                    size={40}
+                    name="deleteuser"
+                    color={"#000"}
+                    containerStyle={{
+                      height: 50,
+                      width: 50,
+                      alignContent: "center",
+                      justifyContent: "center",
+                      borderRadius: 22,
+                    }}
+                    onPress={() => {
+                      bottomSheetRef.current?.close();
+                      _deleteUser();
+                    }}
+                  />
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      marginTop: 5,
+                    }}
+                  >
+                    {i18n.t("Delete Friend")}
+                  </Text>
+                </View>
+
+                
+                <View
+                  style={{
+                    flexDirection: "column",
+                    alignContent: "center",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Icon
+                    type="material-community"
+                    size={40}
+                    name="shield-account-variant-outline"
+                    color={"#000"}
+                    containerStyle={{
+                      height: 50,
+                      width: 50,
+                      alignContent: "center",
+                      justifyContent: "center",
+                      borderRadius: 22,
+                    }}
+                    onPress={() => {
+                      bottomSheetRef.current?.close();
+                      props.navigation.navigate("About", {
+                        items: friendData,
+                      });
+                    }}
+                  />
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      marginTop: 5,
+                    }}
+                  >
+                    {i18n.t("About")}
+                  </Text>
+                </View>
+              </View>
+            </Animated.View>
+          </BottomSheetView>
+        </BottomSheetModal>
       </SafeAreaView>
     </SafeAreaProvider>
   );

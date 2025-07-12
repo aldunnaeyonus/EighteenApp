@@ -6,7 +6,6 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { storage } from "../../context/components/Storage";
 import Animated from "react-native-reanimated";
 import { useMMKVObject } from "react-native-mmkv";
-import { useToast } from "react-native-styled-toast";
 import AllFriendsListItem from "../SubViews/friends/allfriends";
 import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../i18n";
@@ -20,7 +19,6 @@ import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
 const AllFriends = (props) => {
   const [friendData] = useMMKVObject("user.AllFriend.Feed", storage);
   const AnimatedFlatList = Animated.createAnimatedComponent(Animated.FlatList);
-  const { toast } = useToast();
   const [user] = useMMKVObject("user.Data", storage);
   const [refreshing, serRefreshing] = useState(false);
   const [search, setSearch] = useState("");

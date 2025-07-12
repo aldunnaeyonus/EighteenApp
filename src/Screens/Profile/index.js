@@ -66,6 +66,16 @@ const Profile = (props) => {
           progress: "",
         })
       );
+      storage.clearAll();
+      storage.set(
+        "uploadData",
+        JSON.stringify({
+          message: "",
+          display: "none",
+          image: "",
+          progress: "",
+        })
+      );
       storage.set("user.Join.Feed", JSON.stringify([]));
       storage.set("user.Friend.Feed", JSON.stringify([]));
       storage.set("user.Camera.Feed", JSON.stringify([]));
@@ -287,8 +297,10 @@ Language Code: ${getLocales()[0].languageCode}`,
                 style={{
                   width: "40%",
                   marginLeft: 10,
-                  backgroundColor: "rgba(116, 198, 190, 1)",
+                  backgroundColor: "white",
+                  borderColor: "#3D4849",
                   borderRadius: 8,
+                  borderWidth: 1,
                   padding: 15,
                   alignItems: "center",
                   justifyContent: "center",
@@ -316,7 +328,7 @@ Language Code: ${getLocales()[0].languageCode}`,
                     textTransform: "uppercase",
                     fontSize: 20,
                     fontWeight: 600,
-                    color: "#fff",
+                    color: "#3D4849",
                   }}
                 >
                   {i18n.t("Share")}

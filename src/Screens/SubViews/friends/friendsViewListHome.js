@@ -426,7 +426,11 @@ const FriendListItemHome = (props) => {
             size={17}
             color="#3D4849"
           />
+
           <Text
+          onPress={()=> {
+            props._gotoFriend(props.item.item.lastCommentID);
+          }}
             numberOfLines={3}
             style={{
               color: "#3D4849",
