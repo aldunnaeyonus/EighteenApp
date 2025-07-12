@@ -524,7 +524,10 @@ const PhotoViewer = (props) => {
                   />
                   <BottomSheetTextInput
                     multiline
+<<<<<<< HEAD
                     editable={props.route.params.end >= moment().unix()}
+=======
+>>>>>>> e76d865257712e7c7332593bf7f785e49ab4cec7
                     ref={input}
                     inputContainerStyle={{ borderBottomWidth: 0 }}
                     autoCapitalize="sentences"
