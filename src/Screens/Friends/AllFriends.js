@@ -51,8 +51,8 @@ const AllFriends = (props) => {
              }}  >
             <Icon
               type="material-community"
-              size={25}
-              name="cloud-search-outline"
+              size={30}
+              name="account-search-outline"
               color="#3D4849"
               containerStyle={{
                 height: 44,

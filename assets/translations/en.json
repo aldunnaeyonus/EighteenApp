@@ -342,5 +342,9 @@
     "LeftHanded":"Left Handed Mode",
     "LeftHandedDesc":"Enable left-handed mode to switch the camera button to the left side of the screen. This is useful for left-handed users who find it more comfortable to use the event controls on the left side.",
     "Comments":"Comments",
-    "CommentPlaceholder":"Type a comment!"
+    "CommentPlaceholder":"Type a comment!",
+    "Update Available":"Update Available", 
+    "Update Now":"Update Now",
+    "A new version":"A new version of the app is available. Please update to the latest version."
+
 }			

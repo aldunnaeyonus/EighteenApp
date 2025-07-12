@@ -461,6 +461,17 @@ const PhotoViewer = (props) => {
             enableDismissOnClose
             enableDynamicSizing
             nestedScrollEnabled={true}
+            style={{
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 7,
+              },
+              shadowOpacity: 0.43,
+              shadowRadius: 9.51,
+
+              elevation: 15,
+            }}
           >
             <BottomSheetView
               style={[StyleSheet.absoluteFill, { alignItems: "center" }]}
@@ -489,7 +500,6 @@ const PhotoViewer = (props) => {
                     padding: 10,
                     flexDirection: "row",
                     margin: 20,
-
                   }}
                 >
                   <Image
@@ -541,12 +551,16 @@ const PhotoViewer = (props) => {
                         input.current.clear();
                       }
                     }}
-                    disabledStyle={{backgroundColor:'white'}}
+                    disabledStyle={{ backgroundColor: "white" }}
                     disabled={props.route.params.end >= moment().unix()}
                     type={"ionicon"}
                     name="arrow-up-circle"
                     size={34}
-                    color={props.route.params.end <= moment().unix() ? 'lightgrey' : "#e35504"}
+                    color={
+                      props.route.params.end <= moment().unix()
+                        ? "lightgrey"
+                        : "#e35504"
+                    }
                   />
                 </View>
               </Animated.View>

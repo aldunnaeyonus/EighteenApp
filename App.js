@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
-import { Text, LogBox, Platform, useColorScheme } from "react-native";
+import { Text, LogBox, Platform, useColorScheme, Alert } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
@@ -168,7 +168,15 @@ export default function App() {
     const fetchData = async () => {
       const version = await checkVersion();
       if (version.needsUpdate) {
-        openAppStore();
+        Alert.alert(
+        i18n.t('Update Available'),
+        i18n.t('A new version'),
+        [
+            { text: i18n.t('Cancel'), style: 'cancel' },
+            { text: i18n.t('Update Now'), onPress: () => { openAppStore();}},
+        ],
+        { cancelable: false }
+    );
       }
       //Debug 5E:8F:16:06:2E:A3:CD:2C:4A:0D:54:78:76:BA:A6:F3:8C:AB:F6:25
       //Production 47:8A:0D:AC:7D:4C:98:69:7A:65:D4:97:49:C2:CA:B9:E0:A6:69:A4

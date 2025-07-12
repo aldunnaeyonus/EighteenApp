@@ -9,7 +9,7 @@ import {
   TouchableWithoutFeedback,
   Linking,
 } from "react-native";
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useMemo } from "react";
 import {
   constants,
   SCREEN_WIDTH,
@@ -35,6 +35,7 @@ const stickers = [];
 import Loading from "../SubViews/home/Loading";
 import axios from "axios";
 import FastImage from "react-native-fast-image";
+import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 
 const PhotoGallery = (props) => {
   const [filteredDataSource] = useMMKVObject(
@@ -52,8 +53,10 @@ const PhotoGallery = (props) => {
   );
   const [cameraStatus] = ImagePicker.useCameraPermissions();
   const [libraryStatus] = ImagePicker.useMediaLibraryPermissions();
+  const bottomSheetRef = useRef(null);
+  const snapPoints = useMemo(() => ["17%"], []);
+  const [user] = useMMKVObject("user.Data", storage);
 
-  const [modalUpload, setModalUpload] = useState(false);
   const [cameraData] = useMMKVObject(
     `user.Camera.Friend.Feed.${props.route.params.owner}`,
     storage
@@ -64,13 +67,13 @@ const PhotoGallery = (props) => {
   const createEvent = async () => {
     setAnimating(false);
     storage.set(
-            "uploadData",
-            JSON.stringify({
-              message: i18n.t("Uploading") + " " + i18n.t("PleaseWait"),
-              display: "flex",
-              progress: 0,
-            })
-          );
+      "uploadData",
+      JSON.stringify({
+        message: i18n.t("Uploading") + " " + i18n.t("PleaseWait"),
+        display: "flex",
+        progress: 0,
+      })
+    );
     var formData = new FormData();
     formData.append("pin", props.route.params.pin);
     formData.append("owner", props.route.params.owner);
@@ -105,7 +108,7 @@ const PhotoGallery = (props) => {
           storage.set(
             "uploadData",
             JSON.stringify({
-                            display: "flex",
+              display: "flex",
               progress: progress,
             })
           );
@@ -190,7 +193,9 @@ const PhotoGallery = (props) => {
       });
 
       if (!result.canceled) {
-      const mime = getExtensionFromFilename(result.assets[0].uri).toLowerCase();
+        const mime = getExtensionFromFilename(
+          result.assets[0].uri
+        ).toLowerCase();
         setAnimating(true);
         if (result.assets.length > 1) {
           result.assets.forEach((file) => {
@@ -222,11 +227,6 @@ const PhotoGallery = (props) => {
       }
     }
   };
-
-  const openCloseModal = useCallback(() => {
-    setModalUpload(true);
-  }, [modalUpload]);
-
   useFocusEffect(
     useCallback(() => {
       props.navigation.setOptions({
@@ -241,13 +241,10 @@ const PhotoGallery = (props) => {
           <TouchableOpacity
             onPress={() => {
               props.navigation.goBack();
+              bottomSheetRef.current?.close();
             }}
           >
-            <Icon
-              type="material"
-              size={25}
-              name="arrow-back-ios-new"            
-            />
+            <Icon type="material" size={25} name="arrow-back-ios-new" />
           </TouchableOpacity>
         ),
         headerRight: () =>
@@ -258,7 +255,7 @@ const PhotoGallery = (props) => {
             <TouchableOpacity
               onPress={async () => {
                 if ((await AsyncStorage.getItem("uploadEnabled")) == "1") {
-                  openCloseModal();
+                  handlePresentModalPress();
                 } else {
                   Alert.alert(
                     i18n.t("ActiveUpload"),
@@ -272,7 +269,8 @@ const PhotoGallery = (props) => {
                       {
                         text: i18n.t("Continue"),
                         onPress: async () => {
-                          openCloseModal();
+                          bottomSheetRef.current?.close();
+                          handlePresentModalPress();
                         },
                         style: "destructive",
                       },
@@ -289,7 +287,7 @@ const PhotoGallery = (props) => {
                 containerStyle={{
                   padding: 5,
                   height: 40,
-                  width:40,
+                  width: 40,
                   borderRadius: 15,
                 }}
               />
@@ -366,6 +364,7 @@ const PhotoGallery = (props) => {
   );
 
   const showModalFunction = (index) => {
+                              bottomSheetRef.current?.close();
     props.navigation.navigate("MediaViewer", {
       index: index,
       pin: props.route.params.pin,
@@ -379,253 +378,220 @@ const PhotoGallery = (props) => {
     });
   };
 
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetRef.current?.present();
+  }, []);
+
   return (
-      <SafeAreaView
-        style={{
-          backgroundColor: "transparent",
-          height: SCREEN_HEIGHT - 100,
-          width: SCREEN_WIDTH,
+    <SafeAreaView
+      style={{
+        backgroundColor: "transparent",
+        height: SCREEN_HEIGHT - 100,
+        width: SCREEN_WIDTH,
+      }}
+      edges={["left", "right, top, bottom"]}
+    >
+      <AnimatedFlatlist
+        extraData={filteredDataSource}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        nestedScrollEnabled={true}
+        scrollEventThrottle={16}
+        onScroll={() => {
+          bottomSheetRef.current?.close();
         }}
-        edges={["left", "right, top, bottom"]}
-      >
-        <AnimatedFlatlist
-          extraData={filteredDataSource}
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-          nestedScrollEnabled={true}
-          scrollEventThrottle={16}
-          ListHeaderComponent={
-              <Loading
-                message={uploading.message}
-                flex={uploading.display}
-                progress={uploading.progress}
-              />
-          }
-          ListEmptyComponent={
-            <View style={style.empty}>
-              <View style={style.fake}>
-                <View style={style.fakeSquare} />
-                <View style={[style.fakeSquare, { opacity: 0.5 }]} />
-                <View style={[style.fakeSquare, { opacity: 0.4 }]} />
-              </View>
-              <View style={style.fake}>
-                <View style={style.fakeSquare} />
-                <View style={[style.fakeSquare, { opacity: 0.5 }]} />
-                <View style={[style.fakeSquare, { opacity: 0.4 }]} />
-              </View>
-              <EmptyStateView
-                headerText={""}
-                subHeaderText={i18n.t("A gallery")}
-                headerTextStyle={style.headerTextStyle}
-                subHeaderTextStyle={style.subHeaderTextStyle}
-              />
+        ListHeaderComponent={
+          <Loading
+            message={uploading.message}
+            flex={uploading.display}
+            progress={uploading.progress}
+          />
+        }
+        ListEmptyComponent={
+          <View style={style.empty}>
+            <View style={style.fake}>
+              <View style={style.fakeSquare} />
+              <View style={[style.fakeSquare, { opacity: 0.5 }]} />
+              <View style={[style.fakeSquare, { opacity: 0.4 }]} />
             </View>
-          }
-          ref={photo}
-          style={{ backgroundColor: "white", marginTop: 0, flex: 1,  }}
-          numColumns={4}
-          data={filteredDataSource}
-          keyExtractor={(item) => item.image_id}
-          renderItem={(item, index) => (
-            <ImageGallery
-              item={item}
-              index={index}
-              showModalFunction={showModalFunction}
+            <View style={style.fake}>
+              <View style={style.fakeSquare} />
+              <View style={[style.fakeSquare, { opacity: 0.5 }]} />
+              <View style={[style.fakeSquare, { opacity: 0.4 }]} />
+            </View>
+            <EmptyStateView
+              headerText={""}
+              subHeaderText={i18n.t("A gallery")}
+              headerTextStyle={style.headerTextStyle}
+              subHeaderTextStyle={style.subHeaderTextStyle}
             />
-          )}
-        />
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalUpload}
-          onRequestClose={() => {
-            setModalUpload(!modalUpload);
-          }}
+          </View>
+        }
+        ref={photo}
+        style={{ backgroundColor: "white", marginTop: 0, flex: 1 }}
+        numColumns={4}
+        data={filteredDataSource}
+        keyExtractor={(item) => item.image_id}
+        renderItem={(item, index) => (
+          <ImageGallery
+            item={item}
+            index={index}
+            showModalFunction={showModalFunction}
+          />
+        )}
+      />
+
+      <BottomSheetModal
+        ref={bottomSheetRef}
+        snapPoints={snapPoints}
+        enablePanDownToClose
+        keyboardBlurBehavior={"restore"}
+        android_keyboardInputMode={"adjustPan"}
+        enableDismissOnClose
+        enableDynamicSizing
+        style={{
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 7,
+          },
+          shadowOpacity: 0.43,
+          shadowRadius: 9.51,
+
+          elevation: 15,
+        }}
+      >
+        <BottomSheetView
+          style={[StyleSheet.absoluteFill, { alignItems: "center" }]}
         >
-          <TouchableWithoutFeedback onPressOut={() => setModalUpload(false)}>
-            <View style={style.centeredView}>
-              <View style={style.modalView}>
-                <View
-                  style={{
-                    flexDirection: "column",
-                    marginTop: -20,
-                    marginBottom: 25,
-                  }}
-                >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      gap: 30,
-                      alignContent: "space-between",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        textAlign: "center",
-                        fontSize: 20,
-                        fontWeight: 500,
-                      }}
-                    >
-                      {i18n.t("Make a Selection")}
-                    </Text>
-                  </View>
-                </View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: 70,
-                    alignContent: "space-between",
-                  }}
-                >
-                  <View
-                    style={{
-                      flexDirection: "column",
-                      alignContent: "center",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Icon
-                      type="material-community"
-                      size={50}
-                      name="image-outline"
-                      color={"#fff"}
-                      containerStyle={{
-                        height: 75,
-                        width: 75,
-                        alignContent: "center",
-                        justifyContent: "center",
-                        backgroundColor: "rgba(116, 198, 190, 1)",
-                        borderRadius: 22,
-                      }}
-                      onPress={() => {
-                        setTimeout(() => {
-                          pickImageChooser();
-                        }, 500);
-                        setModalUpload(false);
-                      }}
-                    />
-                    <Text
-                      style={{
-                        textAlign: "center",
-                        marginTop: 10,
-                      }}
-                    >
-                      {i18n.t("Gallery")}
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      flexDirection: "column",
-                    }}
-                  >
-                    <Icon
-                      type="material-community"
-                      size={50}
-                      name="camera-outline"
-                      color={"#fff"}
-                      containerStyle={{
-                        height: 75,
-                        width: 75,
-                        alignContent: "center",
-                        justifyContent: "center",
-                        backgroundColor: "rgba(250, 190, 0, 1)",
-                        borderRadius: 22,
-                      }}
-                      onPress={async () => {
-                        if (
-                          cameraStatus.status ==
-                          ImagePicker.PermissionStatus.UNDETERMINED
-                        ) {
-                          await ImagePicker.requestCameraPermissionsAsync();
-                        } else if (
-                          cameraStatus.status ==
-                          ImagePicker.PermissionStatus.DENIED
-                        ) {
-                          Alert.alert(
-                            i18n.t("Permissions"),
-                            i18n.t("UseCamera"),
-                            [
-                              {
-                                text: i18n.t("Cancel"),
-                                onPress: () => console.log("Cancel Pressed"),
-                                style: "destructive",
-                              },
-                              {
-                                text: i18n.t("Settings"),
-                                onPress: () => {
-                                  Linking.openSettings();
-                                },
-                                style: "default",
-                              },
-                            ],
-                            { cancelable: false }
-                          );
-                        } else {
-                          props.navigation.navigate("CameraPage", {
-                            owner: props.route.params.owner,
-                            pin: props.route.params.pin,
-                            title: props.route.params.title,
-                            credits: credits,
-                            tCredits: "",
-                            UUID: props.route.params.UUID,
-                            end: props.route.params.end,
-                            camera_add_social:
-                              props.route.params.camera_add_social,
-                            start: props.route.params.start,
-                            user: props.route.params.user,
-                                  lefthanded: user.lefthanded
-                          });
-                          setModalUpload(false);
-                        }
-                      }}
-                    />
-                    <Text
-                      style={{
-                        textAlign: "center",
-                        marginTop: 10,
-                      }}
-                    >
-                      {i18n.t("Camera")}
-                    </Text>
-                  </View>
-                </View>
-              </View>
-              <TouchableOpacity
+          <Text>{i18n.t("Make a Selection")}</Text>
+          <Animated.View
+            style={{
+              justifyContent: "flex-end",
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: 70,
+                alignContent: "space-between",
+              }}
+            >
+              <View
                 style={{
-                  marginTop: 20,
-                  flexDirection: "row",
-                  width: 250,
-                  backgroundColor: "rgba(234, 85, 4, 1)",
-                  borderRadius: 8,
-                  padding: 15,
+                  flexDirection: "column",
+                  alignContent: "center",
                   alignItems: "center",
                   justifyContent: "center",
-                  marginBottom: 20,
-                }}
-                onPress={() => {
-                  setModalUpload(false);
                 }}
               >
+                <Icon
+                  type="material-community"
+                  size={50}
+                  name="image-outline"
+                  color={"#000"}
+                  containerStyle={{
+                    height: 75,
+                    width: 75,
+                    alignContent: "center",
+                    justifyContent: "center",
+                    borderRadius: 22,
+                  }}
+                  onPress={() => {
+                    bottomSheetRef.current?.close();
+                    setTimeout(() => {
+                      pickImageChooser();
+                    }, 500);
+                  }}
+                />
                 <Text
                   style={{
-                    textTransform: "uppercase",
-                    fontSize: 20,
-                    fontWeight: 600,
-                    color: "#fff",
+                    textAlign: "center",
+                    marginTop: -10,
                   }}
                 >
-                  {i18n.t("Close")}
+                  {i18n.t("Gallery")}
                 </Text>
-              </TouchableOpacity>
+              </View>
+              <View
+                style={{
+                  flexDirection: "column",
+                }}
+              >
+                <Icon
+                  type="material-community"
+                  size={50}
+                  name="camera-outline"
+                  color={"#000"}
+                  containerStyle={{
+                    height: 75,
+                    width: 75,
+                    alignContent: "center",
+                    justifyContent: "center",
+                    borderRadius: 22,
+                  }}
+                  onPress={async () => {
+                    bottomSheetRef.current?.close();
+                    if (
+                      cameraStatus.status ==
+                      ImagePicker.PermissionStatus.UNDETERMINED
+                    ) {
+                      await ImagePicker.requestCameraPermissionsAsync();
+                    } else if (
+                      cameraStatus.status == ImagePicker.PermissionStatus.DENIED
+                    ) {
+                      Alert.alert(
+                        i18n.t("Permissions"),
+                        i18n.t("UseCamera"),
+                        [
+                          {
+                            text: i18n.t("Cancel"),
+                            onPress: () => console.log("Cancel Pressed"),
+                            style: "destructive",
+                          },
+                          {
+                            text: i18n.t("Settings"),
+                            onPress: () => {
+                              Linking.openSettings();
+                            },
+                            style: "default",
+                          },
+                        ],
+                        { cancelable: false }
+                      );
+                    } else {
+                      props.navigation.navigate("CameraPage", {
+                        owner: props.route.params.owner,
+                        pin: props.route.params.pin,
+                        title: props.route.params.title,
+                        credits: credits,
+                        tCredits: "",
+                        UUID: props.route.params.UUID,
+                        end: props.route.params.end,
+                        camera_add_social: props.route.params.camera_add_social,
+                        start: props.route.params.start,
+                        user: props.route.params.user,
+                        lefthanded: user.lefthanded,
+                      });
+                    }
+                  }}
+                />
+                <Text
+                  style={{
+                    textAlign: "center",
+                    marginTop: -10,
+                  }}
+                >
+                  {i18n.t("Camera")}
+                </Text>
+              </View>
             </View>
-          </TouchableWithoutFeedback>
-        </Modal>
-      </SafeAreaView>
+          </Animated.View>
+        </BottomSheetView>
+      </BottomSheetModal>
+    </SafeAreaView>
   );
 };
 
