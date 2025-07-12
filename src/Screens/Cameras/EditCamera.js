@@ -337,7 +337,6 @@ const EditCamera = (props) => {
           showClose ? (
             <TouchableOpacity
               onPress={() => {
-                bottomSheetRef.current?.close();
                 createEvent();
               }}
             >

@@ -319,7 +319,6 @@ const CreateCamera = (props) => {
             <TouchableOpacity
               onPress={() => {
                 createEvent();
-                bottomSheetRef.current?.close();
               }}
             >
               <Text

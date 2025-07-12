@@ -267,7 +267,6 @@ const PhotoGallery = (props) => {
                       {
                         text: i18n.t("Continue"),
                         onPress: async () => {
-                          bottomSheetRef.current?.close();
                           handlePresentModalPress();
                         },
                         style: "destructive",

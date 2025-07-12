@@ -360,7 +360,6 @@ const Friends = (props) => {
                 name="person-add-alt"
                 size={30}
                 onPress={() => {
-                  bottomSheetRef.current?.close();
                   addMember();
                 }}
                 color="#3D4849"
@@ -372,7 +371,6 @@ const Friends = (props) => {
                 name="menu"
                 size={30}
                 onPress={() => {
-                  bottomSheetRef.current?.close();
                   handlePresentModalPress();
                 }}
                 color="#3D4849"
