@@ -412,15 +412,7 @@ const VisionCamera = (props: {
       
           <View style={props.lefthanded == "1" ? styles.imageUserCameraContainersLeft : styles.imageUserCameraContainers}>
 
-        <Ionicons
-          name={"close"}
-          onPress={() => {
-            props.navigation.goBack();
-            StatusBar.setHidden(false, 'none');
-          }}
-          size={30}
-          color="white"
-        />
+      
         <Ionicons
           name={flash === "off" ? "flash-off-outline" : "flash-outline"}
           onPress={() =>
@@ -456,6 +448,15 @@ const VisionCamera = (props: {
             disabledOpacity={0.4}
           />
         )}
+          <Ionicons
+          name={"close"}
+          onPress={() => {
+            props.navigation.goBack();
+            StatusBar.setHidden(false, 'none');
+          }}
+          size={30}
+          color="white"
+        />
       </View>
       <CaptureButton
         style={{

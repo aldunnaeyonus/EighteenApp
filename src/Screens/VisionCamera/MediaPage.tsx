@@ -220,15 +220,7 @@ const MediaPage = (props: {
           gap: 30,
         }}
       >
-        <Ionicons
-          name={"close"}
-          size={30}
-          onPress={() => {
-            props.navigation.goBack();
-            StatusBar.setHidden(false, 'none');
-          }}
-          color="white"
-        />
+
         {animating ? (
           <ActivityIndicator
             color="white"
@@ -246,6 +238,15 @@ const MediaPage = (props: {
             color="white"
           />
         )}
+                <Ionicons
+          name={"close"}
+          size={30}
+          onPress={() => {
+            props.navigation.goBack();
+            StatusBar.setHidden(false, 'none');
+          }}
+          color="white"
+        />
       </View>
     </View>
   );

@@ -164,7 +164,7 @@ export default function App() {
   }
 };
 
-  useEffect(() => {
+useEffect(() => {
     const fetchData = async () => {
       const version = await checkVersion();
       if (version.needsUpdate) {
@@ -193,6 +193,15 @@ export default function App() {
         } catch (error) {}
       }
       onCheckVersion();
+
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      //Debug 5E:8F:16:06:2E:A3:CD:2C:4A:0D:54:78:76:BA:A6:F3:8C:AB:F6:25
+      //Production 47:8A:0D:AC:7D:4C:98:69:7A:65:D4:97:49:C2:CA:B9:E0:A6:69:A4
       const owner = await AsyncStorage.getItem("user_id");
       await AsyncStorage.setItem("uploadEnabled", "1");
       setOwner(owner);
