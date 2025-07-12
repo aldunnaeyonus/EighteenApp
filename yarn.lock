@@ -10466,6 +10466,11 @@ react-native-actions-sheet@^0.9.7:
   resolved "https://registry.yarnpkg.com/react-native-actions-sheet/-/react-native-actions-sheet-0.9.7.tgz#43ff2d9252f7af2da6dc051be5a5c375a844cdfb"
   integrity sha512-rjUwxUr5dxbdSLDtLDUFAdSlFxpNSpJsbXLhHkBzEBMxEMPUhRT3zqbvKqsPj0JUkjwuRligxrhbIJZkg/6ZDw==
 
+react-native-app-link@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-app-link/-/react-native-app-link-1.0.1.tgz#4a17c01df0230a5e49c117baa5037c5689cee1c6"
+  integrity sha512-usPcJMZMVvRs/lBSy/UU+ooB+h2YhMXGA47xvWVltyOQerQu4hKSWG+qG2BRKcpHmTkmFynDSf5cLWztXwAA1w==
+
 react-native-background-actions@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/react-native-background-actions/-/react-native-background-actions-4.0.1.tgz#51fab1df75fb69428c059929284d2ab3b5ff673b"
@@ -10485,6 +10490,11 @@ react-native-blob-util@0.19.11:
   dependencies:
     base-64 "0.1.0"
     glob "^10.3.10"
+
+react-native-check-version@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/react-native-check-version/-/react-native-check-version-1.4.0.tgz#9650e94c33090c22c1d245f14f75fc40c6b7cfdc"
+  integrity sha512-5Ar/LN0/wFSBEOY9TjtIApTrDu1/i4OYN9u0xW/DG2edlCyyfo/BfQkT15muKrKoDpolaoQfGjkDK8/nx9fT0A==
 
 react-native-circular-progress-indicator@^4.4.2:
   version "4.4.2"
