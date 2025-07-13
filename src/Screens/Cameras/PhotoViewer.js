@@ -35,7 +35,7 @@ const PhotoViewer = (props) => {
   const newphoto = useRef();
   const [activeIndex, setActiveIndex] = useState(props.route.params.pagerIndex);
   const bottomSheetRef = useRef(null);
-  const snapPoints = useMemo(() => ["60%"], []);
+  const snapPoints = useMemo(() => ["60%"], [snapPoints]);
   const [comment, setComment] = useState("");
   const [refreshing, setRefreshing] = useState(false);
   const [user] = useMMKVObject("user.Data", storage);
@@ -276,6 +276,7 @@ const PhotoViewer = (props) => {
     bottomSheetRef.current?.close();
   }, []);
 
+  
   const renderBackdrop = useCallback(
     (props) => (
       <BottomSheetBackdrop
@@ -460,10 +461,11 @@ const PhotoViewer = (props) => {
             ref={bottomSheetRef}
             backdropComponent={renderBackdrop}
             snapPoints={snapPoints}
+            index={0}
             enablePanDownToClose
             enableDismissOnClose
             enableDynamicSizing
-            keyboardBehavior={Platform.OS === "ios" ? "extend" : "interactive"}
+            keyboardBehavior={Platform.OS === "ios" ? "extend" : "extend"}
             keyboardBlurBehavior="restore"
             android_keyboardInputMode="adjustResize"
             style={{
@@ -486,16 +488,18 @@ const PhotoViewer = (props) => {
               </Text>
               <Animated.View
                 style={{
-                  justifyContent: "flex-end",
-                  flex: 1,
+                  flex: Platform.OS === "ios" ? 1 : .59,
                 }}
               >
                 <Animated.FlatList
+                  showsHorizontalScrollIndicator={false}
+                  showsVerticalScrollIndicator={false}
+                  nestedScrollEnabled={true}
                   data={filteredComments}
                   refreshing={refreshing} // Added pull to refesh state
                   onRefresh={_refresh} // Added pull to refresh control
                   extraData={filteredDataSourceGallery}
-                  style={{ flex: 1 }}
+                  style={{ flex:1}}
                   scrollEventThrottle={16}
                   renderItem={(item) => <CommentsView item={item} />}
                   keyExtractor={(item) => item.id}
