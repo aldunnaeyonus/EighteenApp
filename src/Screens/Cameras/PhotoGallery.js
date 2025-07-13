@@ -33,7 +33,7 @@ const stickers = [];
 import Loading from "../SubViews/home/Loading";
 import axios from "axios";
 import FastImage from "react-native-fast-image";
-import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
+import { BottomSheetModal, BottomSheetView, BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 
 const PhotoGallery = (props) => {
   const [filteredDataSource] = useMMKVObject(
@@ -239,7 +239,6 @@ const PhotoGallery = (props) => {
           <TouchableOpacity
             onPress={() => {
               props.navigation.goBack();
-              bottomSheetRef.current?.close();
             }}
           >
             <Icon type="material" size={25} name="arrow-back-ios-new" />
@@ -361,7 +360,6 @@ const PhotoGallery = (props) => {
   );
 
   const showModalFunction = (index) => {
-                              bottomSheetRef.current?.close();
     props.navigation.navigate("MediaViewer", {
       index: index,
       pin: props.route.params.pin,
@@ -375,9 +373,26 @@ const PhotoGallery = (props) => {
     });
   };
 
+    const handleDismissPress = useCallback(() => {
+      bottomSheetRef.current?.close();
+    }, []);
+
   const handlePresentModalPress = useCallback(() => {
     bottomSheetRef.current?.present();
   }, []);
+
+    const renderBackdrop = useCallback(
+      (props) => (
+        <BottomSheetBackdrop
+          enableTouchThrough={false}
+          pressBehavior={"close"}
+          appearsOnIndex={0}
+          disappearsOnIndex={-1}
+          {...props}
+        />
+      ),
+      []
+    );
 
   return (
     <SafeAreaView
@@ -394,9 +409,6 @@ const PhotoGallery = (props) => {
         showsVerticalScrollIndicator={false}
         nestedScrollEnabled={true}
         scrollEventThrottle={16}
-        onScroll={() => {
-          bottomSheetRef.current?.close();
-        }}
         ListHeaderComponent={
           <Loading
             message={uploading.message}
@@ -498,7 +510,7 @@ const PhotoGallery = (props) => {
                     borderRadius: 22,
                   }}
                   onPress={() => {
-                    bottomSheetRef.current?.close();
+                     handleDismissPress();
                     setTimeout(() => {
                       pickImageChooser();
                     }, 500);
@@ -531,7 +543,7 @@ const PhotoGallery = (props) => {
                     borderRadius: 22,
                   }}
                   onPress={async () => {
-                    bottomSheetRef.current?.close();
+                     handleDismissPress();
                     if (
                       cameraStatus.status ==
                       ImagePicker.PermissionStatus.UNDETERMINED

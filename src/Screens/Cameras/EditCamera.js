@@ -4,7 +4,6 @@ import {
   Platform,
   Text,
   NativeModules,
-  Pressable,
   Alert,
 } from "react-native";
 import { TouchableOpacity } from "react-native";
@@ -42,7 +41,11 @@ import NotifService from "../../../NotifService";
 import axios from "axios";
 import { axiosPull } from "../../utils/axiosPull";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
+import {
+  BottomSheetModal,
+  BottomSheetView,
+  BottomSheetBackdrop,
+} from "@gorhom/bottom-sheet";
 import Animated from "react-native-reanimated";
 
 const EditCamera = (props) => {
@@ -515,6 +518,23 @@ const EditCamera = (props) => {
     // }, 3500);
   };
 
+  const handleDismissPress = useCallback(() => {
+    bottomSheetRef.current?.close();
+  }, []);
+
+  const renderBackdrop = useCallback(
+    (props) => (
+      <BottomSheetBackdrop
+        enableTouchThrough={false}
+        pressBehavior={"close"}
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+        {...props}
+      />
+    ),
+    []
+  );
+
   return (
     <SafeAreaProvider>
       <SafeAreaView
@@ -526,254 +546,219 @@ const EditCamera = (props) => {
         edges={["bottom", "left", "right"]}
       >
         <ScrollView
-          onScroll={() => {
-            bottomSheetRef.current?.close();
-          }}
           style={{ backgroundColor: "#fff", flex: 1 }}
           keyboardShouldPersistTaps={"never"}
           keyboardDismissMode="on-drag"
           nestedScrollEnabled={true}
           showsVerticalScrollIndicator={false}
         >
-                    <Pressable
-                    onPress={()=>{bottomSheetRef.current?.close();}}
-                    >
-          <View style={styles.container}>
-            <ListItem key="1">
-              <Icon
-                type="material"
-                name="drive-file-rename-outline"
-                size={25}
-                color="#3D4849"
-                containerStyle={{
-                  width: 28,
-                  height: 28,
-                  borderRadius: 6,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              />
-              <ListItem.Content>
-                <ListItem.Title style={styles.imageUserNameTitleBlack}>
-                  {i18n.t("e4")}
-                </ListItem.Title>
-                <ListItem.Subtitle>{i18n.t("e5")}</ListItem.Subtitle>
-              </ListItem.Content>
-            </ListItem>
-            <View style={[styles.dividerStyle]} />
-            <ListItem
-              containerStyle={{ height: 65, backgroundColor: errorColor }}
-              key="2"
-            >
-              <ListItem.Content>
-                <ListItem.Input
-                  style={{
-                    height: 55,
-                    fontSize: 20,
-                    borderColor: "transparent",
-                    borderWidth: 2,
-                    borderRadius: 10,
-                    paddingRight: 5,
+            <View style={styles.container}>
+              <ListItem key="1">
+                <Icon
+                  type="material"
+                  name="drive-file-rename-outline"
+                  size={25}
+                  color="#3D4849"
+                  containerStyle={{
+                    width: 28,
+                    height: 28,
+                    borderRadius: 6,
+                    alignItems: "center",
+                    justifyContent: "center",
                   }}
-                  value={name}
-                  keyboardType="default"
-                  autoCapitalize="sentences"
-                  maxLength={32}
-                  onChangeText={(text) => {
-                    setName(text);
-                  }}
-                  placeholder={i18n.t("e6")}
-                ></ListItem.Input>
-              </ListItem.Content>
-            </ListItem>
-            <View style={[styles.dividerStyle]} />
-            {isPro && (
-              <>
-                <ListItem key="17">
-                  <Icon
-                    type="material"
-                    name="text-snippet"
-                    size={25}
-                    color="#3D4849"
-                    containerStyle={{
-                      width: 28,
-                      height: 28,
-                      borderRadius: 6,
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  />
-                  <ListItem.Content>
-                    <ListItem.Title style={styles.imageUserNameTitleBlack}>
-                      {i18n.t("AI Image Decription")}
-                    </ListItem.Title>
-                    <ListItem.Subtitle>
-                      {i18n.t("AIDescription")}
-                    </ListItem.Subtitle>
-                  </ListItem.Content>
-                </ListItem>
-                <View style={[styles.dividerStyle]} />
-                <ListItem
-                  contnerStyle={{
-                    height: "auto",
-                    backgroundColor: errorColor,
-                  }}
-                  key="18"
-                >
-                  <ListItem.Content>
-                    <Input
-                      underlineColorAndroid="transparent"
-                      inputContainerStyle={{ borderBottomWidth: 0 }}
-                      style={{
-                        height: "auto",
-                        lineHeight: 20,
-                        fontSize: 17,
-                        borderWidth: 2,
-                        borderColor: "transparent",
-                        borderRadius: 10,
-                        paddingRight: 5,
-                      }}
-                      value={dname}
-                      autoCapitalize="sentences"
-                      keyboardType="default"
-                      onChangeText={(text) => {
-                        setDName(text);
-                      }}
-                      multiline={true}
-                      placeholder={i18n.t("AIPlaceholder")}
-                    ></Input>
-                  </ListItem.Content>
-                </ListItem>
-                <View style={[styles.dividerStyle]} />
-              </>
-            )}
-            <ListItem key="0">
-              <Icon
-                type="ionicon"
-                name="image-outline"
-                size={25}
-                color="#3D4849"
-                containerStyle={{
-                  width: 28,
-                  height: 28,
-                  borderRadius: 6,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              />
-              <ListItem.Content>
-                <ListItem.Title style={styles.imageUserNameTitleBlack}>
-                  {i18n.t("e1")}
-                </ListItem.Title>
-                <ListItem.Subtitle>{i18n.t("e2")}</ListItem.Subtitle>
-              </ListItem.Content>
-            </ListItem>
-            <View style={[styles.dividerStyle]} />
-            <ListItem
-              containerStyle={{ height: 250, backgroundColor: "#fafbfc" }}
-              key="16"
-            >
-              <ListItem.Content
-                style={{
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <TouchableOpacity
-                  onPress={() => {
-                    handlePresentModalPress();
-                  }}
-                >
-                  {image ? (
-                    <Image
-                      key={image}
-                      indicator={Progress}
-                      style={{
-                        height: 200,
-                        width: 300,
-                        overflow: "hidden",
-                        backgroundColor: "#f2f2f2",
-                        borderRadius: 16,
-                      }}
-                      onLoad={async () => {
-                        {
-                          isEditing ? editImage(image) : null;
-                        }
-                      }}
-                      fallback={{ uri: image }}
-                      onError={() => {
-                        {
-                          isAI ? AITexttoImage() : null;
-                        }
-                      }}
-                      resizeMode={FastImage.resizeMode.cover}
-                      source={{
-                        uri: image,
-                        priority: FastImage.priority.high,
-                        cacheControl: FastImage.cacheControl.immutable,
-                      }}
-                    />
-                  ) : (
-                    <Image
-                      key={"elementor-placeholder-image.png"}
-                      source={require("../../../assets/elementor-placeholder-image.png")}
-                      indicator={Progress}
-                      resizeMode={FastImage.resizeMode.cover}
-                      style={{
-                        height: 200,
-                        width: 300,
-                        borderRadius: 16,
-                        overflow: "hidden",
-                      }}
-                    />
-                  )}
-                </TouchableOpacity>
-                <Text style={{ color: "#d2d2d2", margin: 5 }}>
-                  {i18n.t("e3")}
-                </Text>
-              </ListItem.Content>
-            </ListItem>
-            {image ? (
+                />
+                <ListItem.Content>
+                  <ListItem.Title style={styles.imageUserNameTitleBlack}>
+                    {i18n.t("e4")}
+                  </ListItem.Title>
+                  <ListItem.Subtitle>{i18n.t("e5")}</ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+              <View style={[styles.dividerStyle]} />
               <ListItem
-                containerStyle={{ height: 45, backgroundColor: "#fafbfc" }}
-                key="25"
+                containerStyle={{ height: 65, backgroundColor: errorColor }}
+                key="2"
               >
                 <ListItem.Content>
-                  <View
+                  <ListItem.Input
                     style={{
-                      flexDirection: "row",
-                      justifyContent: "space-around",
+                      height: 55,
+                      fontSize: 20,
+                      borderColor: "transparent",
+                      borderWidth: 2,
+                      borderRadius: 10,
+                      paddingRight: 5,
+                    }}
+                    value={name}
+                    keyboardType="default"
+                    autoCapitalize="sentences"
+                    maxLength={32}
+                    onChangeText={(text) => {
+                      setName(text);
+                    }}
+                    placeholder={i18n.t("e6")}
+                  ></ListItem.Input>
+                </ListItem.Content>
+              </ListItem>
+              <View style={[styles.dividerStyle]} />
+              {isPro && (
+                <>
+                  <ListItem key="17">
+                    <Icon
+                      type="material"
+                      name="text-snippet"
+                      size={25}
+                      color="#3D4849"
+                      containerStyle={{
+                        width: 28,
+                        height: 28,
+                        borderRadius: 6,
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    />
+                    <ListItem.Content>
+                      <ListItem.Title style={styles.imageUserNameTitleBlack}>
+                        {i18n.t("AI Image Decription")}
+                      </ListItem.Title>
+                      <ListItem.Subtitle>
+                        {i18n.t("AIDescription")}
+                      </ListItem.Subtitle>
+                    </ListItem.Content>
+                  </ListItem>
+                  <View style={[styles.dividerStyle]} />
+                  <ListItem
+                    contnerStyle={{
+                      height: "auto",
+                      backgroundColor: errorColor,
+                    }}
+                    key="18"
+                  >
+                    <ListItem.Content>
+                      <Input
+                        underlineColorAndroid="transparent"
+                        inputContainerStyle={{ borderBottomWidth: 0 }}
+                        style={{
+                          height: "auto",
+                          lineHeight: 20,
+                          fontSize: 17,
+                          borderWidth: 2,
+                          borderColor: "transparent",
+                          borderRadius: 10,
+                          paddingRight: 5,
+                        }}
+                        value={dname}
+                        autoCapitalize="sentences"
+                        keyboardType="default"
+                        onChangeText={(text) => {
+                          setDName(text);
+                        }}
+                        multiline={true}
+                        placeholder={i18n.t("AIPlaceholder")}
+                      ></Input>
+                    </ListItem.Content>
+                  </ListItem>
+                  <View style={[styles.dividerStyle]} />
+                </>
+              )}
+              <ListItem key="0">
+                <Icon
+                  type="ionicon"
+                  name="image-outline"
+                  size={25}
+                  color="#3D4849"
+                  containerStyle={{
+                    width: 28,
+                    height: 28,
+                    borderRadius: 6,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                />
+                <ListItem.Content>
+                  <ListItem.Title style={styles.imageUserNameTitleBlack}>
+                    {i18n.t("e1")}
+                  </ListItem.Title>
+                  <ListItem.Subtitle>{i18n.t("e2")}</ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+              <View style={[styles.dividerStyle]} />
+              <ListItem
+                containerStyle={{ height: 250, backgroundColor: "#fafbfc" }}
+                key="16"
+              >
+                <ListItem.Content
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <TouchableOpacity
+                    onPress={() => {
+                      handlePresentModalPress();
                     }}
                   >
-                    <TouchableOpacity
+                    {image ? (
+                      <Image
+                        key={image}
+                        indicator={Progress}
+                        style={{
+                          height: 200,
+                          width: 300,
+                          overflow: "hidden",
+                          backgroundColor: "#f2f2f2",
+                          borderRadius: 16,
+                        }}
+                        onLoad={async () => {
+                          {
+                            isEditing ? editImage(image) : null;
+                          }
+                        }}
+                        fallback={{ uri: image }}
+                        onError={() => {
+                          {
+                            isAI ? AITexttoImage() : null;
+                          }
+                        }}
+                        resizeMode={FastImage.resizeMode.cover}
+                        source={{
+                          uri: image,
+                          priority: FastImage.priority.high,
+                          cacheControl: FastImage.cacheControl.immutable,
+                        }}
+                      />
+                    ) : (
+                      <Image
+                        key={"elementor-placeholder-image.png"}
+                        source={require("../../../assets/elementor-placeholder-image.png")}
+                        indicator={Progress}
+                        resizeMode={FastImage.resizeMode.cover}
+                        style={{
+                          height: 200,
+                          width: 300,
+                          borderRadius: 16,
+                          overflow: "hidden",
+                        }}
+                      />
+                    )}
+                  </TouchableOpacity>
+                  <Text style={{ color: "#d2d2d2", margin: 5 }}>
+                    {i18n.t("e3")}
+                  </Text>
+                </ListItem.Content>
+              </ListItem>
+              {image ? (
+                <ListItem
+                  containerStyle={{ height: 45, backgroundColor: "#fafbfc" }}
+                  key="25"
+                >
+                  <ListItem.Content>
+                    <View
                       style={{
-                        width: "50%",
-                        height: 40,
-                        marginTop: 20,
-                      }}
-                      onPress={() => {
-                        editImage(image);
+                        flexDirection: "row",
+                        justifyContent: "space-around",
                       }}
                     >
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          gap: 10,
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <Icon
-                          type="material-community"
-                          name="image-edit-outline"
-                          size={20}
-                          color="#3D4849"
-                        />
-
-                        <Text>{i18n.t("Edit Image")}</Text>
-                      </View>
-                    </TouchableOpacity>
-                    {isAI ? (
                       <TouchableOpacity
                         style={{
                           width: "50%",
@@ -781,26 +766,7 @@ const EditCamera = (props) => {
                           marginTop: 20,
                         }}
                         onPress={() => {
-                          Alert.alert(
-                            i18n.t("ReportAI"),
-                            i18n.t("RReportAIImage"),
-                            [
-                              {
-                                text: i18n.t("Cancel"),
-                                onPress: () => console.log("Cancel Pressed"),
-                                style: "destructive",
-                              },
-                              {
-                                text: i18n.t("Flag & Redraw"),
-                                onPress: () => {
-                                  setSeed(seed - 1);
-                                  AITexttoImage();
-                                },
-                                style: "default",
-                              },
-                            ],
-                            { cancelable: false }
-                          );
+                          editImage(image);
                         }}
                       >
                         <View
@@ -812,489 +778,539 @@ const EditCamera = (props) => {
                           }}
                         >
                           <Icon
-                            type="material"
-                            name="report-gmailerrorred"
+                            type="material-community"
+                            name="image-edit-outline"
                             size={20}
                             color="#3D4849"
                           />
 
-                          <Text>{i18n.t("Flag")}</Text>
+                          <Text>{i18n.t("Edit Image")}</Text>
                         </View>
                       </TouchableOpacity>
-                    ) : (
-                      <></>
-                    )}
-                    <TouchableOpacity
-                      style={{
-                        width: "50%",
-                        height: 40,
-                        marginTop: 20,
-                      }}
-                      onPress={() => setImage("")}
-                    >
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          gap: 10,
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <Icon
-                          type="material-community"
-                          name="delete-empty-outline"
-                          size={20}
-                          color="red"
-                        />
+                      {isAI ? (
+                        <TouchableOpacity
+                          style={{
+                            width: "50%",
+                            height: 40,
+                            marginTop: 20,
+                          }}
+                          onPress={() => {
+                            Alert.alert(
+                              i18n.t("ReportAI"),
+                              i18n.t("RReportAIImage"),
+                              [
+                                {
+                                  text: i18n.t("Cancel"),
+                                  onPress: () => console.log("Cancel Pressed"),
+                                  style: "destructive",
+                                },
+                                {
+                                  text: i18n.t("Flag & Redraw"),
+                                  onPress: () => {
+                                    setSeed(seed - 1);
+                                    AITexttoImage();
+                                  },
+                                  style: "default",
+                                },
+                              ],
+                              { cancelable: false }
+                            );
+                          }}
+                        >
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              gap: 10,
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <Icon
+                              type="material"
+                              name="report-gmailerrorred"
+                              size={20}
+                              color="#3D4849"
+                            />
 
-                        <Text style={{ color: "red" }}>
-                          {i18n.t("Delete Image")}
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                  </View>
+                            <Text>{i18n.t("Flag")}</Text>
+                          </View>
+                        </TouchableOpacity>
+                      ) : (
+                        <></>
+                      )}
+                      <TouchableOpacity
+                        style={{
+                          width: "50%",
+                          height: 40,
+                          marginTop: 20,
+                        }}
+                        onPress={() => setImage("")}
+                      >
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            gap: 10,
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Icon
+                            type="material-community"
+                            name="delete-empty-outline"
+                            size={20}
+                            color="red"
+                          />
+
+                          <Text style={{ color: "red" }}>
+                            {i18n.t("Delete Image")}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  </ListItem.Content>
+                </ListItem>
+              ) : (
+                <></>
+              )}
+              <View style={[styles.dividerStyle]} />
+              <ListItem key="13">
+                <Icon
+                  type="material-community"
+                  name="refresh-auto"
+                  size={25}
+                  color="#3D4849"
+                  containerStyle={{
+                    width: 28,
+                    height: 28,
+                    borderRadius: 6,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                />
+                <ListItem.Content>
+                  <ListItem.Title style={styles.imageUserNameTitleBlack}>
+                    {i18n.t("e7")}
+                  </ListItem.Title>
+                  <ListItem.Subtitle>{i18n.t("e8")}</ListItem.Subtitle>
                 </ListItem.Content>
               </ListItem>
-            ) : (
-              <></>
-            )}
-            <View style={[styles.dividerStyle]} />
-            <ListItem key="13">
-              <Icon
-                type="material-community"
-                name="refresh-auto"
-                size={25}
-                color="#3D4849"
-                containerStyle={{
-                  width: 28,
-                  height: 28,
-                  borderRadius: 6,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              />
-              <ListItem.Content>
-                <ListItem.Title style={styles.imageUserNameTitleBlack}>
-                  {i18n.t("e7")}
-                </ListItem.Title>
-                <ListItem.Subtitle>{i18n.t("e8")}</ListItem.Subtitle>
-              </ListItem.Content>
-            </ListItem>
-            <View style={[styles.dividerStyle]} />
-            <ListItem
-              containerStyle={{ height: 65, backgroundColor: "#fafbfc" }}
-              key="17"
-            >
-              <ListItem.Content>
-                <Switch
-                  style={{ alignSelf: "flex-end" }}
-                  value={switch4}
-                  onValueChange={(value) => toggleSwitch4(value)}
-                />
-              </ListItem.Content>
-            </ListItem>
-
-            <View style={[styles.dividerStyle]} />
-            <ListItem key="5">
-              <Icon
-                type="font-awesome-5"
-                name="camera-retro"
-                size={25}
-                color="#3D4849"
-                containerStyle={{
-                  width: 28,
-                  height: 28,
-                  borderRadius: 6,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              />
-              <ListItem.Content>
-                <ListItem.Title style={styles.imageUserNameTitleBlack}>
-                  {i18n.t("e9")}
-                </ListItem.Title>
-                <ListItem.Subtitle>{i18n.t("e10")}</ListItem.Subtitle>
-              </ListItem.Content>
-            </ListItem>
-
-            <View style={[styles.dividerStyle]} />
-            <ListItem
-              containerStyle={{ height: 100, backgroundColor: "#fafbfc" }}
-              key="6"
-            >
-              <ListItem.Content
-                style={{
-                  alignItems: "center",
-                  justifyContent: "center",
-                  height: 65,
-                }}
+              <View style={[styles.dividerStyle]} />
+              <ListItem
+                containerStyle={{ height: 65, backgroundColor: "#fafbfc" }}
+                key="17"
               >
-                <ButtonGroup
-                  selectedIndex={cameras}
-                  buttons={
-                    isPro
-                      ? constants.camera_amount_PRO
-                      : constants.camera_amount
-                  }
-                  onPress={(value) => {
-                    cameraChange(value);
+                <ListItem.Content>
+                  <Switch
+                    style={{ alignSelf: "flex-end" }}
+                    value={switch4}
+                    onValueChange={(value) => toggleSwitch4(value)}
+                  />
+                </ListItem.Content>
+              </ListItem>
+
+              <View style={[styles.dividerStyle]} />
+              <ListItem key="5">
+                <Icon
+                  type="font-awesome-5"
+                  name="camera-retro"
+                  size={25}
+                  color="#3D4849"
+                  containerStyle={{
+                    width: 28,
+                    height: 28,
+                    borderRadius: 6,
+                    alignItems: "center",
+                    justifyContent: "center",
                   }}
-                  selectedButtonStyle={{ backgroundColor: "#ea5504" }}
-                  containerStyle={{ marginBottom: 5 }}
                 />
-              </ListItem.Content>
-            </ListItem>
-            {isPro && (
-              <>
-                <View style={[styles.dividerStyle]} />
-                <ListItem key="23">
-                  <Icon
-                    type="material"
-                    name="18-up-rating"
-                    size={25}
-                    color="#3D4849"
-                    containerStyle={{
-                      width: 28,
-                      height: 28,
-                      borderRadius: 6,
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  />
-                  <ListItem.Content>
-                    <ListItem.Title style={styles.imageUserNameTitleBlack}>
-                      {i18n.t("Purchase More Shots")}
-                    </ListItem.Title>
-                    <ListItem.Subtitle>
-                      {i18n.t("Allow members")}
-                    </ListItem.Subtitle>
-                  </ListItem.Content>
-                </ListItem>
-                <View style={[styles.dividerStyle]} />
-                <ListItem
-                  containerStyle={{ height: 65, backgroundColor: "#fafbfc" }}
-                  key="22"
+                <ListItem.Content>
+                  <ListItem.Title style={styles.imageUserNameTitleBlack}>
+                    {i18n.t("e9")}
+                  </ListItem.Title>
+                  <ListItem.Subtitle>{i18n.t("e10")}</ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+
+              <View style={[styles.dividerStyle]} />
+              <ListItem
+                containerStyle={{ height: 100, backgroundColor: "#fafbfc" }}
+                key="6"
+              >
+                <ListItem.Content
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: 65,
+                  }}
                 >
-                  <ListItem.Content>
-                    <Switch
-                      style={{ alignSelf: "flex-end" }}
-                      value={switch3}
-                      onValueChange={(value) => toggleSwitch3(value)}
-                    />
-                  </ListItem.Content>
-                </ListItem>
-                <View style={[styles.dividerStyle]} />
-                <ListItem key="19">
-                  <Icon
-                    type="material-community"
-                    name="upload"
-                    size={25}
-                    color="#3D4849"
-                    containerStyle={{
-                      width: 28,
-                      height: 28,
-                      borderRadius: 6,
-                      alignItems: "center",
-                      justifyContent: "center",
+                  <ButtonGroup
+                    selectedIndex={cameras}
+                    buttons={
+                      isPro
+                        ? constants.camera_amount_PRO
+                        : constants.camera_amount
+                    }
+                    onPress={(value) => {
+                      cameraChange(value);
                     }}
+                    selectedButtonStyle={{ backgroundColor: "#ea5504" }}
+                    containerStyle={{ marginBottom: 5 }}
                   />
-                  <ListItem.Content>
-                    <ListItem.Title style={styles.imageUserNameTitleBlack}>
-                      {i18n.t("Media")}
-                    </ListItem.Title>
-                    <ListItem.Subtitle>
-                      {i18n.t("MediaDescription")}
-                    </ListItem.Subtitle>
-                  </ListItem.Content>
-                </ListItem>
-                <View style={[styles.dividerStyle]} />
-                <ListItem
-                  containerStyle={{ height: 100, backgroundColor: "#fafbfc" }}
-                  key="20"
-                >
-                  <ListItem.Content
-                    style={{
-                      alignItems: "center",
-                      justifyContent: "center",
-                      height: 65,
-                    }}
-                  >
-                    <ButtonGroup
-                      buttons={constants.camera_amount}
-                      selectedIndex={media}
-                      onPress={(value) => {
-                        mediaChange(value);
+                </ListItem.Content>
+              </ListItem>
+              {isPro && (
+                <>
+                  <View style={[styles.dividerStyle]} />
+                  <ListItem key="23">
+                    <Icon
+                      type="material"
+                      name="18-up-rating"
+                      size={25}
+                      color="#3D4849"
+                      containerStyle={{
+                        width: 28,
+                        height: 28,
+                        borderRadius: 6,
+                        alignItems: "center",
+                        justifyContent: "center",
                       }}
-                      selectedButtonStyle={{ backgroundColor: "#ea5504" }}
-                      containerStyle={{ marginBottom: 5 }}
                     />
-                  </ListItem.Content>
-                </ListItem>
-              </>
-            )}
-            <View style={[styles.dividerStyle]} />
-            <ListItem key="7">
-              <Icon
-                type="ionicon"
-                name="today-outline"
-                size={25}
-                color="#3D4849"
-                containerStyle={{
-                  width: 28,
-                  height: 28,
-                  borderRadius: 6,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              />
-              <ListItem.Content>
-                <ListItem.Title style={styles.imageUserNameTitleBlack}>
-                  {i18n.t("e11")}
-                </ListItem.Title>
-                <ListItem.Subtitle>{i18n.t("e12")}</ListItem.Subtitle>
-              </ListItem.Content>
-            </ListItem>
-            <View style={[styles.dividerStyle]} />
-            <ListItem containerStyle={{ backgroundColor: "#fafbfc" }} key="8">
-              <ListItem.Content style={{ height: 65, margin: 10 }}>
-                <ButtonGroup
-                  buttons={
-                    isPro
-                      ? constants.camera_time_text_PRO
-                      : constants.camera_time_text
-                  }
-                  selectedIndex={selectedIndex}
-                  onPress={(value) => {
-                    daysChange(value);
-                  }}
-                  selectedButtonStyle={{ backgroundColor: "#ea5504" }}
-                  containerStyle={{ marginBottom: 20 }}
-                />
-              </ListItem.Content>
-            </ListItem>
-            <View style={[styles.dividerStyle]} />
-            <ListItem key="9">
-              <Icon
-                type="material-community"
-                name="clock-start"
-                size={25}
-                color="#3D4849"
-                containerStyle={{
-                  width: 28,
-                  height: 28,
-                  borderRadius: 6,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              />
-              <ListItem.Content>
-                <ListItem.Title style={styles.imageUserNameTitleBlack}>
-                  {i18n.t("e13")}
-                </ListItem.Title>
-                <ListItem.Subtitle>{i18n.t("e14")}</ListItem.Subtitle>
-              </ListItem.Content>
-            </ListItem>
-            <View style={[styles.dividerStyle]} />
-            <ListItem
-              containerStyle={{
-                height: Platform.OS == "ios" ? 360 : 60,
-                backgroundColor: "#fafbfc",
-              }}
-              key="10"
-            >
-              <ListItem.Content
-                style={{
-                  alignItems: "center",
-                  justifyContent: "center",
-                  height: 65,
-                  marginBottom: 20,
-                }}
-              >
-                {Platform.OS == "android" && (
-                  <TouchableOpacity onPress={() => setShow(true)}>
-                    <ListItem.Title
-                      style={[
-                        styles.imageUserNameTitleBlack,
-                        {
-                          marginTop: 20,
-                          color: "#ea5504",
-                          fontWeight: "bold",
-                        },
-                      ]}
+                    <ListItem.Content>
+                      <ListItem.Title style={styles.imageUserNameTitleBlack}>
+                        {i18n.t("Purchase More Shots")}
+                      </ListItem.Title>
+                      <ListItem.Subtitle>
+                        {i18n.t("Allow members")}
+                      </ListItem.Subtitle>
+                    </ListItem.Content>
+                  </ListItem>
+                  <View style={[styles.dividerStyle]} />
+                  <ListItem
+                    containerStyle={{ height: 65, backgroundColor: "#fafbfc" }}
+                    key="22"
+                  >
+                    <ListItem.Content>
+                      <Switch
+                        style={{ alignSelf: "flex-end" }}
+                        value={switch3}
+                        onValueChange={(value) => toggleSwitch3(value)}
+                      />
+                    </ListItem.Content>
+                  </ListItem>
+                  <View style={[styles.dividerStyle]} />
+                  <ListItem key="19">
+                    <Icon
+                      type="material-community"
+                      name="upload"
+                      size={25}
+                      color="#3D4849"
+                      containerStyle={{
+                        width: 28,
+                        height: 28,
+                        borderRadius: 6,
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    />
+                    <ListItem.Content>
+                      <ListItem.Title style={styles.imageUserNameTitleBlack}>
+                        {i18n.t("Media")}
+                      </ListItem.Title>
+                      <ListItem.Subtitle>
+                        {i18n.t("MediaDescription")}
+                      </ListItem.Subtitle>
+                    </ListItem.Content>
+                  </ListItem>
+                  <View style={[styles.dividerStyle]} />
+                  <ListItem
+                    containerStyle={{ height: 100, backgroundColor: "#fafbfc" }}
+                    key="20"
+                  >
+                    <ListItem.Content
+                      style={{
+                        alignItems: "center",
+                        justifyContent: "center",
+                        height: 65,
+                      }}
                     >
-                      {String(selectedDate)}
-                    </ListItem.Title>
-                  </TouchableOpacity>
-                )}
-                {Platform.OS == "android" ? (
-                  show ? (
+                      <ButtonGroup
+                        buttons={constants.camera_amount}
+                        selectedIndex={media}
+                        onPress={(value) => {
+                          mediaChange(value);
+                        }}
+                        selectedButtonStyle={{ backgroundColor: "#ea5504" }}
+                        containerStyle={{ marginBottom: 5 }}
+                      />
+                    </ListItem.Content>
+                  </ListItem>
+                </>
+              )}
+              <View style={[styles.dividerStyle]} />
+              <ListItem key="7">
+                <Icon
+                  type="ionicon"
+                  name="today-outline"
+                  size={25}
+                  color="#3D4849"
+                  containerStyle={{
+                    width: 28,
+                    height: 28,
+                    borderRadius: 6,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                />
+                <ListItem.Content>
+                  <ListItem.Title style={styles.imageUserNameTitleBlack}>
+                    {i18n.t("e11")}
+                  </ListItem.Title>
+                  <ListItem.Subtitle>{i18n.t("e12")}</ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+              <View style={[styles.dividerStyle]} />
+              <ListItem containerStyle={{ backgroundColor: "#fafbfc" }} key="8">
+                <ListItem.Content style={{ height: 65, margin: 10 }}>
+                  <ButtonGroup
+                    buttons={
+                      isPro
+                        ? constants.camera_time_text_PRO
+                        : constants.camera_time_text
+                    }
+                    selectedIndex={selectedIndex}
+                    onPress={(value) => {
+                      daysChange(value);
+                    }}
+                    selectedButtonStyle={{ backgroundColor: "#ea5504" }}
+                    containerStyle={{ marginBottom: 20 }}
+                  />
+                </ListItem.Content>
+              </ListItem>
+              <View style={[styles.dividerStyle]} />
+              <ListItem key="9">
+                <Icon
+                  type="material-community"
+                  name="clock-start"
+                  size={25}
+                  color="#3D4849"
+                  containerStyle={{
+                    width: 28,
+                    height: 28,
+                    borderRadius: 6,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                />
+                <ListItem.Content>
+                  <ListItem.Title style={styles.imageUserNameTitleBlack}>
+                    {i18n.t("e13")}
+                  </ListItem.Title>
+                  <ListItem.Subtitle>{i18n.t("e14")}</ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+              <View style={[styles.dividerStyle]} />
+              <ListItem
+                containerStyle={{
+                  height: Platform.OS == "ios" ? 360 : 60,
+                  backgroundColor: "#fafbfc",
+                }}
+                key="10"
+              >
+                <ListItem.Content
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: 65,
+                    marginBottom: 20,
+                  }}
+                >
+                  {Platform.OS == "android" && (
+                    <TouchableOpacity onPress={() => setShow(true)}>
+                      <ListItem.Title
+                        style={[
+                          styles.imageUserNameTitleBlack,
+                          {
+                            marginTop: 20,
+                            color: "#ea5504",
+                            fontWeight: "bold",
+                          },
+                        ]}
+                      >
+                        {String(selectedDate)}
+                      </ListItem.Title>
+                    </TouchableOpacity>
+                  )}
+                  {Platform.OS == "android" ? (
+                    show ? (
+                      <DateTimePicker
+                        testID="datePicker"
+                        minuteInterval={interval}
+                        locale={deviceLanguage}
+                        is24Hour={RNLocalize.uses24HourClock()}
+                        timeZoneName={RNLocalize.getTimeZone()}
+                        useNativeDriver={false}
+                        maximumDate={maximumDate}
+                        minimumDate={minimumDate}
+                        value={selectedDate}
+                        mode={MODE_VALUES[2]}
+                        display={DISPLAY_VALUES[0]}
+                        negativeButton={{ label: "Cancel", textColor: "red" }}
+                        onChange={onChangeAndroid}
+                      />
+                    ) : clockShow ? (
+                      <DateTimePicker
+                        testID="timePicker"
+                        locale={deviceLanguage}
+                        is24Hour={RNLocalize.uses24HourClock()}
+                        timeZoneName={RNLocalize.getTimeZone()}
+                        minuteInterval={interval}
+                        useNativeDriver={false}
+                        maximumDate={timeDate}
+                        minimumDate={timeDate}
+                        value={timeDate}
+                        mode={MODE_VALUES[1]}
+                        display={DISPLAY_VALUES[0]}
+                        negativeButton={{ label: "Cancel", textColor: "red" }}
+                        onChange={onChange}
+                      />
+                    ) : (
+                      <></>
+                    )
+                  ) : (
                     <DateTimePicker
-                      testID="datePicker"
-                      minuteInterval={interval}
+                      testID="dateTimePicker"
                       locale={deviceLanguage}
                       is24Hour={RNLocalize.uses24HourClock()}
                       timeZoneName={RNLocalize.getTimeZone()}
+                      minuteInterval={interval}
                       useNativeDriver={false}
                       maximumDate={maximumDate}
                       minimumDate={minimumDate}
                       value={selectedDate}
                       mode={MODE_VALUES[2]}
-                      display={DISPLAY_VALUES[0]}
-                      negativeButton={{ label: "Cancel", textColor: "red" }}
-                      onChange={onChangeAndroid}
+                      display={DISPLAY_VALUES[3]}
+                      onChange={onChangeIOS}
                     />
-                  ) : clockShow ? (
-                    <DateTimePicker
-                      testID="timePicker"
-                      locale={deviceLanguage}
-                      is24Hour={RNLocalize.uses24HourClock()}
-                      timeZoneName={RNLocalize.getTimeZone()}
-                      minuteInterval={interval}
-                      useNativeDriver={false}
-                      maximumDate={timeDate}
-                      minimumDate={timeDate}
-                      value={timeDate}
-                      mode={MODE_VALUES[1]}
-                      display={DISPLAY_VALUES[0]}
-                      negativeButton={{ label: "Cancel", textColor: "red" }}
-                      onChange={onChange}
-                    />
-                  ) : (
-                    <></>
-                  )
-                ) : (
-                  <DateTimePicker
-                    testID="dateTimePicker"
-                    locale={deviceLanguage}
-                    is24Hour={RNLocalize.uses24HourClock()}
-                    timeZoneName={RNLocalize.getTimeZone()}
-                    minuteInterval={interval}
-                    useNativeDriver={false}
-                    maximumDate={maximumDate}
-                    minimumDate={minimumDate}
-                    value={selectedDate}
-                    mode={MODE_VALUES[2]}
-                    display={DISPLAY_VALUES[3]}
-                    onChange={onChangeIOS}
-                  />
-                )}
-              </ListItem.Content>
-            </ListItem>
-            <View style={[styles.dividerStyle]} />
-            <ListItem key="11">
-              <Icon
-                type="material-community"
-                name="view-gallery-outline"
-                size={25}
-                color="#3D4849"
-                containerStyle={{
-                  width: 28,
-                  height: 28,
-                  borderRadius: 6,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              />
-              <ListItem.Content>
-                <ListItem.Title style={styles.imageUserNameTitleBlack}>
-                  {i18n.t("e15")}
-                </ListItem.Title>
-                <ListItem.Subtitle>{i18n.t("e16")}</ListItem.Subtitle>
-              </ListItem.Content>
-            </ListItem>
-
-            <View style={[styles.dividerStyle]} />
-            <ListItem
-              style={{ height: 65, backgroundColor: "#fafbfc" }}
-              key="12"
-            >
-              <ListItem.Content>
-                <Switch
-                  style={{ alignSelf: "flex-end" }}
-                  value={switch2}
-                  onValueChange={(value) => toggleSwitch2(value)}
+                  )}
+                </ListItem.Content>
+              </ListItem>
+              <View style={[styles.dividerStyle]} />
+              <ListItem key="11">
+                <Icon
+                  type="material-community"
+                  name="view-gallery-outline"
+                  size={25}
+                  color="#3D4849"
+                  containerStyle={{
+                    width: 28,
+                    height: 28,
+                    borderRadius: 6,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
                 />
-              </ListItem.Content>
-            </ListItem>
+                <ListItem.Content>
+                  <ListItem.Title style={styles.imageUserNameTitleBlack}>
+                    {i18n.t("e15")}
+                  </ListItem.Title>
+                  <ListItem.Subtitle>{i18n.t("e16")}</ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
 
-            <View style={[styles.dividerStyle]} />
-            {isPro && (
-              <>
-                <ListItem key="15">
-                  <Icon
-                    type="material-community"
-                    name="share"
-                    size={25}
-                    color="#3D4849"
-                    containerStyle={{
-                      width: 28,
-                      height: 28,
-                      borderRadius: 6,
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
+              <View style={[styles.dividerStyle]} />
+              <ListItem
+                style={{ height: 65, backgroundColor: "#fafbfc" }}
+                key="12"
+              >
+                <ListItem.Content>
+                  <Switch
+                    style={{ alignSelf: "flex-end" }}
+                    value={switch2}
+                    onValueChange={(value) => toggleSwitch2(value)}
                   />
-                  <ListItem.Content>
-                    <ListItem.Title style={styles.imageUserNameTitleBlack}>
-                      {i18n.t("e17")}
-                    </ListItem.Title>
-                    <ListItem.Subtitle>{i18n.t("e18")}</ListItem.Subtitle>
-                  </ListItem.Content>
-                </ListItem>
-                <View style={[styles.dividerStyle]} />
-                <ListItem
-                  containerStyle={{ height: 65, backgroundColor: "#fafbfc" }}
-                  key="16"
-                >
-                  <ListItem.Content>
-                    <Switch
-                      style={{ alignSelf: "flex-end" }}
-                      value={switch1}
-                      onValueChange={(value) => toggleSwitch1(value)}
+                </ListItem.Content>
+              </ListItem>
+
+              <View style={[styles.dividerStyle]} />
+              {isPro && (
+                <>
+                  <ListItem key="15">
+                    <Icon
+                      type="material-community"
+                      name="share"
+                      size={25}
+                      color="#3D4849"
+                      containerStyle={{
+                        width: 28,
+                        height: 28,
+                        borderRadius: 6,
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
                     />
-                  </ListItem.Content>
-                </ListItem>
-                <View style={[styles.dividerStyle]} />
-              </>
-            )}
-            <ListItem key="26">
-              <Icon
-                type="material"
-                name="hide-source"
-                size={25}
-                color="#3D4849"
-                containerStyle={{
-                  width: 28,
-                  height: 28,
-                  borderRadius: 6,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              />
-              <ListItem.Content>
-                <ListItem.Title style={styles.imageUserNameTitleBlack}>
-                  {i18n.t("HideEvent")}
-                </ListItem.Title>
-                <ListItem.Subtitle>{i18n.t("HideEventDesc")}</ListItem.Subtitle>
-              </ListItem.Content>
-            </ListItem>
-            <View style={[styles.dividerStyle]} />
-            <ListItem
-              containerStyle={{ height: 65, backgroundColor: "#fafbfc" }}
-              key="27"
-            >
-              <ListItem.Content>
-                <Switch
-                  style={{ alignSelf: "flex-end" }}
-                  value={switch5}
-                  onValueChange={(value) => toggleSwitch5(value)}
+                    <ListItem.Content>
+                      <ListItem.Title style={styles.imageUserNameTitleBlack}>
+                        {i18n.t("e17")}
+                      </ListItem.Title>
+                      <ListItem.Subtitle>{i18n.t("e18")}</ListItem.Subtitle>
+                    </ListItem.Content>
+                  </ListItem>
+                  <View style={[styles.dividerStyle]} />
+                  <ListItem
+                    containerStyle={{ height: 65, backgroundColor: "#fafbfc" }}
+                    key="16"
+                  >
+                    <ListItem.Content>
+                      <Switch
+                        style={{ alignSelf: "flex-end" }}
+                        value={switch1}
+                        onValueChange={(value) => toggleSwitch1(value)}
+                      />
+                    </ListItem.Content>
+                  </ListItem>
+                  <View style={[styles.dividerStyle]} />
+                </>
+              )}
+              <ListItem key="26">
+                <Icon
+                  type="material"
+                  name="hide-source"
+                  size={25}
+                  color="#3D4849"
+                  containerStyle={{
+                    width: 28,
+                    height: 28,
+                    borderRadius: 6,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
                 />
-              </ListItem.Content>
-            </ListItem>
-          </View>
-          </Pressable>
+                <ListItem.Content>
+                  <ListItem.Title style={styles.imageUserNameTitleBlack}>
+                    {i18n.t("HideEvent")}
+                  </ListItem.Title>
+                  <ListItem.Subtitle>
+                    {i18n.t("HideEventDesc")}
+                  </ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+              <View style={[styles.dividerStyle]} />
+              <ListItem
+                containerStyle={{ height: 65, backgroundColor: "#fafbfc" }}
+                key="27"
+              >
+                <ListItem.Content>
+                  <Switch
+                    style={{ alignSelf: "flex-end" }}
+                    value={switch5}
+                    onValueChange={(value) => toggleSwitch5(value)}
+                  />
+                </ListItem.Content>
+              </ListItem>
+            </View>
         </ScrollView>
         <BottomSheetModal
+          backdropComponent={renderBackdrop}
           ref={bottomSheetRef}
           snapPoints={snapPoints}
           enablePanDownToClose
@@ -1353,7 +1369,7 @@ const EditCamera = (props) => {
                       borderRadius: 22,
                     }}
                     onPress={() => {
-                      bottomSheetRef.current?.close();
+                     handleDismissPress();
                       if (name.length < 1) {
                         setisEditing(false);
                         setVerified(false);
@@ -1458,7 +1474,7 @@ const EditCamera = (props) => {
                         setIsAI(false);
                         pickImage();
                       }, 200);
-                      bottomSheetRef.current?.close();
+                     handleDismissPress();
                     }}
                   />
                   <Text
@@ -1527,7 +1543,7 @@ const EditCamera = (props) => {
                             title: String(name),
                           });
                         }, 200);
-                        bottomSheetRef.current?.close();
+                     handleDismissPress();
                       }
                     }}
                   />

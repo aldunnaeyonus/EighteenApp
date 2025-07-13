@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback,
+} from "react";
 import {
   Share,
   StyleSheet,
@@ -42,6 +48,11 @@ import RNPrint from "react-native-print";
 import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ListItem } from "@rneui/themed";
+import {
+  BottomSheetModal,
+  BottomSheetView,
+  BottomSheetBackdrop,
+} from "@gorhom/bottom-sheet";
 
 const Home = (props) => {
   const [cameraData, setcameraData] = useMMKVObject(
@@ -50,7 +61,6 @@ const Home = (props) => {
   );
   const flatListViewer = useRef(null);
   const [modalQRCodeVisable, setmodalQRCodeVisable] = useState(false);
-  const [modalShareVisable, setModalShareVisable] = useState(false);
   const [modalVisable, setmodalVisable] = useState(false);
   const [user] = useMMKVObject("user.Data", storage);
   const [refreshing, setRefreshing] = useState(false);
@@ -77,6 +87,15 @@ const Home = (props) => {
     message: "",
   });
   const [cameraStatus] = ImagePicker.useCameraPermissions();
+  const bottomSheetRef = useRef(null);
+  const snapPoints = useMemo(() => ["17%"], []);
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetRef.current?.present();
+  }, []);
+  const handleCloseModalPress = useCallback(() => {
+    bottomSheetRef.current?.close();
+  }, []);
+
   const codeScanner = useCodeScanner({
     codeTypes: ["qr"],
     onCodeScanned: async (codes) => {
@@ -259,7 +278,7 @@ const Home = (props) => {
         console.log("Error =>", error);
       }
     } else {
-      setModalShareVisable(true);
+      handlePresentModalPress();
     }
   };
 
@@ -588,173 +607,23 @@ const Home = (props) => {
     RNFS.unlink(url);
   };
 
+  const renderBackdrop = useCallback(
+    (props) => (
+      <BottomSheetBackdrop
+        enableTouchThrough={false}
+        pressBehavior={"close"}
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+        {...props}
+      />
+    ),
+    []
+  );
+
   return (
     <SafeAreaProvider
       style={{ backgroundColor: "#fff", flex: 1, paddingBottom: 24 }}
     >
-      <Modal
-        visible={modalShareVisable}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => {
-          setModalShareVisable(false);
-        }}
-      >
-        <TouchableWithoutFeedback
-          onPressOut={() => setModalShareVisable(false)}
-        >
-          <View style={style.centeredView}>
-            <View style={style.modalView}>
-              <View
-                style={{
-                  flexDirection: "column",
-                  marginTop: -20,
-                  marginBottom: 25,
-                }}
-              >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: 30,
-                    alignContent: "space-between",
-                  }}
-                >
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      fontSize: 20,
-                      fontWeight: 500,
-                    }}
-                  >
-                    {i18n.t("Make a Selection")}
-                  </Text>
-                </View>
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  gap: 30,
-                  alignContent: "space-between",
-                }}
-              >
-                <View
-                  style={{
-                    flexDirection: "column",
-                    alignContent: "center",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Icon
-                    type="material-community"
-                    size={50}
-                    name="view-gallery-outline"
-                    color={"#fff"}
-                    containerStyle={{
-                      height: 75,
-                      width: 75,
-                      alignContent: "center",
-                      justifyContent: "center",
-                      backgroundColor: "rgba(250, 190, 0, 1)",
-                      borderRadius: 22,
-                    }}
-                    onPress={async () => {
-                      console.log(shareOptionsGallery);
-                      setModalShareVisable(false);
-                      try {
-                        const ShareResponse =
-                          await Share.share(shareOptionsGallery);
-                        console.log("Result =>", ShareResponse);
-                      } catch (error) {
-                        console.log("Error =>", error);
-                      }
-                    }}
-                  />
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      marginTop: 10,
-                    }}
-                  >
-                    {i18n.t("OnlineGallery")}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    flexDirection: "column",
-                    alignContent: "center",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Icon
-                    type="material"
-                    size={50}
-                    name="photo-camera-back"
-                    color={"#fff"}
-                    containerStyle={{
-                      height: 75,
-                      width: 75,
-                      alignContent: "center",
-                      justifyContent: "center",
-                      backgroundColor: "#ea5504",
-                      borderRadius: 22,
-                    }}
-                    onPress={async () => {
-                      setModalShareVisable(false);
-                      try {
-                        const ShareResponse = await Share.share(shareOptions);
-                        console.log("Result =>", ShareResponse);
-                      } catch (error) {
-                        console.log("Error =>", error);
-                      }
-                    }}
-                  />
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      marginTop: 10,
-                    }}
-                  >
-                    {i18n.t("Share Event")}
-                  </Text>
-                </View>
-              </View>
-            </View>
-            <TouchableOpacity
-              style={{
-                marginTop: 20,
-                flexDirection: "row",
-                width: 250,
-                backgroundColor: "rgba(234, 85, 4, 1)",
-                borderRadius: 8,
-                padding: 15,
-                alignItems: "center",
-                justifyContent: "center",
-                marginbottom: 20,
-              }}
-              onPress={() => {
-                setModalShareVisable(false);
-              }}
-            >
-              <Text
-                style={{
-                  textTransform: "uppercase",
-                  fontSize: 20,
-                  fontWeight: 600,
-                  color: "#fff",
-                }}
-              >
-                {i18n.t("Close")}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </TouchableWithoutFeedback>
-      </Modal>
       <Modal
         visible={modalQRCodeVisable}
         animationType="slide"
@@ -880,9 +749,11 @@ const Home = (props) => {
                 style={{
                   width: "40%",
                   marginLeft: 10,
-                  backgroundColor: "rgba(116, 198, 190, 1)",
+                  backgroundColor: "rgba(255, 255, 255, 1)",
                   borderRadius: 8,
                   padding: 15,
+                  borderWidth: 2,
+                  borderColor: "#3D4849",
                   alignItems: "center",
                   justifyContent: "center",
                 }}
@@ -913,7 +784,7 @@ const Home = (props) => {
                     textTransform: "uppercase",
                     fontSize: 20,
                     fontWeight: 600,
-                    color: "#fff",
+                    color: "#3D4849",
                   }}
                 >
                   {i18n.t("Print")}
@@ -1033,6 +904,9 @@ const Home = (props) => {
       </Modal>
 
       <AnimatedFlatList
+        onScroll={() => {
+          handleCloseModalPress();
+        }}
         ref={flatListViewer}
         refreshing={refreshing} // Added pull to refesh state
         onRefresh={_refresh} // Added pull to refresh control
@@ -1160,6 +1034,128 @@ const Home = (props) => {
           )
         }
       />
+      <BottomSheetModal
+        ref={bottomSheetRef}
+        snapPoints={snapPoints}
+        enablePanDownToClose
+        keyboardBlurBehavior={"restore"}
+        android_keyboardInputMode={"adjustPan"}
+        enableDismissOnClose
+        enableDynamicSizing
+        style={{
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 7,
+          },
+          shadowOpacity: 0.43,
+          shadowRadius: 9.51,
+          backgroundColor: "transparent",
+          elevation: 15,
+        }}
+        backdropComponent={renderBackdrop}
+      >
+        <BottomSheetView
+          style={[StyleSheet.absoluteFill, { alignItems: "center" }]}
+        >
+          <Text>{i18n.t("Make a Selection")}</Text>
+          <Animated.View
+            style={{
+              justifyContent: "flex-end",
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                alignContent: "space-between",
+                gap: 50,
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "column",
+                  alignContent: "center",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Icon
+                  type="material-community"
+                  size={40}
+                  name="view-gallery-outline"
+                  color={"#000"}
+                  containerStyle={{
+                    height: 75,
+                    width: 75,
+                    alignContent: "center",
+                    justifyContent: "center",
+                    borderRadius: 22,
+                  }}
+                  onPress={async () => {
+                    handleCloseModalPress();
+                    try {
+                      const ShareResponse =
+                        await Share.share(shareOptionsGallery);
+                      console.log("Result =>", ShareResponse);
+                    } catch (error) {
+                      console.log("Error =>", error);
+                    }
+                  }}
+                />
+                <Text
+                  style={{
+                    textAlign: "center",
+                    marginTop: -10,
+                  }}
+                >
+                  {i18n.t("OnlineGallery")}
+                </Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: "column",
+                  alignContent: "center",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Icon
+                  type="material"
+                  size={40}
+                  name="photo-camera-back"
+                  color={"#000"}
+                  containerStyle={{
+                    height: 75,
+                    width: 75,
+                    alignContent: "center",
+                    justifyContent: "center",
+                    borderRadius: 22,
+                  }}
+                  onPress={async () => {
+                    handleCloseModalPress();
+                    try {
+                      const ShareResponse = await Share.share(shareOptions);
+                      console.log("Result =>", ShareResponse);
+                    } catch (error) {
+                      console.log("Error =>", error);
+                    }
+                  }}
+                />
+                <Text
+                  style={{
+                    textAlign: "center",
+                    marginTop: -10,
+                  }}
+                >
+                  {i18n.t("Share Event")}
+                </Text>
+              </View>
+            </View>
+          </Animated.View>
+        </BottomSheetView>
+      </BottomSheetModal>
     </SafeAreaProvider>
   );
 };

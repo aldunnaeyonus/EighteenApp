@@ -7,7 +7,6 @@ import {
   Alert,
   NativeModules,
   Linking,
-  Pressable,
 } from "react-native";
 import { TouchableOpacity } from "react-native";
 import styles from "../../styles/SliderEntry.style";
@@ -47,7 +46,11 @@ import { ActivityIndicator } from "react-native-paper";
 import axios from "axios";
 import { axiosPull } from "../../utils/axiosPull";
 import RNFS from "react-native-fs";
-import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
+import {
+  BottomSheetModal,
+  BottomSheetView,
+  BottomSheetBackdrop,
+} from "@gorhom/bottom-sheet";
 import Animated from "react-native-reanimated";
 
 const CreateCamera = (props) => {
@@ -516,6 +519,23 @@ const CreateCamera = (props) => {
     // );
   };
 
+  const handleDismissPress = useCallback(() => {
+    bottomSheetRef.current?.close();
+  }, []);
+
+  const renderBackdrop = useCallback(
+    (props) => (
+      <BottomSheetBackdrop
+        enableTouchThrough={false}
+        pressBehavior={"close"}
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+        {...props}
+      />
+    ),
+    []
+  );
+
   return (
     <SafeAreaProvider>
       <SafeAreaView
@@ -527,18 +547,12 @@ const CreateCamera = (props) => {
         edges={["bottom", "left", "right"]}
       >
         <ScrollView
-          onScroll={() => {
-            bottomSheetRef.current?.close();
-          }}
           style={{ backgroundColor: "#fff", marginBottom: 0, flex: 1 }}
           keyboardShouldPersistTaps={"never"}
           keyboardDismissMode="on-drag"
           nestedScrollEnabled={true}
           showsVerticalScrollIndicator={false}
         >
-          <Pressable
-          onPress={()=>{bottomSheetRef.current?.close();}}
-          >
           <View style={styles.container}>
             <ListItem key="1">
               <Icon
@@ -1288,9 +1302,9 @@ const CreateCamera = (props) => {
               </ListItem.Content>
             </ListItem>
           </View>
-          </Pressable>
         </ScrollView>
         <BottomSheetModal
+          backdropComponent={renderBackdrop}
           ref={bottomSheetRef}
           snapPoints={snapPoints}
           enablePanDownToClose
@@ -1349,7 +1363,7 @@ const CreateCamera = (props) => {
                       borderRadius: 22,
                     }}
                     onPress={() => {
-                      bottomSheetRef.current?.close();
+                      handleDismissPress();
                       if (name.length < 1) {
                         setisEditing(false);
                         setVerified(false);
@@ -1454,7 +1468,7 @@ const CreateCamera = (props) => {
                         setIsAI(false);
                         pickImage();
                       }, 200);
-                      bottomSheetRef.current?.close();
+                      handleDismissPress();
                     }}
                   />
                   <Text
@@ -1523,7 +1537,7 @@ const CreateCamera = (props) => {
                             title: String(name),
                           });
                         }, 200);
-                        bottomSheetRef.current?.close();
+                        handleDismissPress();
                       }
                     }}
                   />

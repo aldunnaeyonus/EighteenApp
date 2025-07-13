@@ -231,7 +231,6 @@ export default function App() {
         storage.set("user.AllFriend.Feed", JSON.stringify([]));
         storage.set("user.Friend.Blocked", JSON.stringify([]));
         storage.set("user.All.Global.Friend.Feed", JSON.stringify([]));
-        storage.set("user.Data", JSON.stringify([{"country": "0", "created": "0", "email_notification": "0", "errorResponse": "Member", "ip": "0.0.0.0", "isActive": "0", "isPro": "0", "joined": "10", "mobile_notification": "10", "privacy": "10", "proExire": "0", "showActive": "0", "showAlert": "10", "tz": "0/0", "uploaded": "0", "user_active": "0", "user_avatar": "0", "user_email": "SnapEighteen@SnapEighteen.com", "user_handle": "SnapEighteen", "user_id": "0", "user_joined": "0", "user_motto": "I didn't get the memo, that I'm awesome!", "user_view": "0"}]));
       }
 
       setTimeout(() => {

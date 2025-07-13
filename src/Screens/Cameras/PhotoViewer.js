@@ -1,4 +1,4 @@
-import { Share, Alert, Text, View, StyleSheet } from "react-native";
+import { Share, Alert, Text, View, StyleSheet, Platform } from "react-native";
 import React, { useState, useRef, useCallback, useMemo } from "react";
 import { Icon } from "react-native-elements";
 import Animated from "react-native-reanimated";
@@ -15,6 +15,7 @@ import {
   BottomSheetModal,
   BottomSheetView,
   BottomSheetTextInput,
+  BottomSheetBackdrop,
 } from "@gorhom/bottom-sheet";
 import { useMMKVObject } from "react-native-mmkv";
 import { storage } from "../../context/components/Storage";
@@ -34,7 +35,7 @@ const PhotoViewer = (props) => {
   const newphoto = useRef();
   const [activeIndex, setActiveIndex] = useState(props.route.params.pagerIndex);
   const bottomSheetRef = useRef(null);
-  const snapPoints = useMemo(() => ["50%"], []);
+  const snapPoints = useMemo(() => ["60%"], []);
   const [comment, setComment] = useState("");
   const [refreshing, setRefreshing] = useState(false);
   const [user] = useMMKVObject("user.Data", storage);
@@ -275,6 +276,19 @@ const PhotoViewer = (props) => {
     bottomSheetRef.current?.close();
   }, []);
 
+  const renderBackdrop = useCallback(
+    (props) => (
+      <BottomSheetBackdrop
+        enableTouchThrough={false}
+        pressBehavior={"close"}
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+        {...props}
+      />
+    ),
+    []
+  );
+
   return (
     <SafeAreaProvider>
       <SafeAreaView
@@ -293,20 +307,13 @@ const PhotoViewer = (props) => {
           onMomentumScrollBegin={onMomentumScrollBegin}
           onMomentumScrollEnd={onMomentumScrollEnd}
           pagingEnabled
-          onScroll={() => {
-            bottomSheetRef.current?.close();
-          }}
           horizontal
           getItemLayout={getItemLayout}
           style={{ backgroundColor: "black", flex: 1 }}
           data={filteredDataSourceGallery}
           keyExtractor={(item) => item.image_id}
           renderItem={({ item, index }) => (
-            <ImageGalleryView
-              item={item}
-              index={index}
-              handleDismissPress={handleDismissPress}
-            />
+            <ImageGalleryView item={item} index={index} />
           )}
         />
 
@@ -325,9 +332,6 @@ const PhotoViewer = (props) => {
           extraData={filteredDataSourceGallery}
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ paddingHorizontal: 10 }}
-          onScroll={() => {
-            bottomSheetRef.current?.close();
-          }}
           renderItem={({ item, index }) => {
             return (
               <VideoGalleryView
@@ -454,13 +458,14 @@ const PhotoViewer = (props) => {
           />
           <BottomSheetModal
             ref={bottomSheetRef}
+            backdropComponent={renderBackdrop}
             snapPoints={snapPoints}
             enablePanDownToClose
-            keyboardBlurBehavior={"restore"}
-            android_keyboardInputMode={"adjustPan"}
             enableDismissOnClose
             enableDynamicSizing
-            nestedScrollEnabled={true}
+            keyboardBehavior={Platform.OS === "ios" ? "extend" : "interactive"}
+            keyboardBlurBehavior="restore"
+            android_keyboardInputMode="adjustResize"
             style={{
               shadowColor: "#000",
               shadowOffset: {
@@ -469,7 +474,7 @@ const PhotoViewer = (props) => {
               },
               shadowOpacity: 0.43,
               shadowRadius: 9.51,
-            backgroundColor: "transparent",
+              backgroundColor: "transparent",
               elevation: 15,
             }}
           >

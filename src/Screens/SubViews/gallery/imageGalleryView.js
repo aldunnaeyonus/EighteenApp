@@ -13,11 +13,6 @@ const ImageGalleryView = (props) => {
   const [videoPlayMute] = useState(true);
 
   return props.item.type == "video" ? (
-    <Pressable
-    onPress={()=>{
-      props.handleDismissPress();
-    }}>
-
     <View
       style={{
         flex: 1,
@@ -106,12 +101,7 @@ const ImageGalleryView = (props) => {
         </Text>
       </View>
     </View>
-    </Pressable>
   ) : (
-        <Pressable
-    onPress={()=>{
-      props.handleDismissPress();
-    }}>
     <View
       style={{
         flex: 1,
@@ -214,7 +204,6 @@ const ImageGalleryView = (props) => {
         ></Image>
       </Zoom>
     </View>
-    </Pressable>
   );
 
 };

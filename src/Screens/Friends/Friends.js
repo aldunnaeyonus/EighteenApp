@@ -14,7 +14,6 @@ import {
   TouchableWithoutFeedback,
   Linking,
   Text,
-  Pressable,
 } from "react-native";
 import "moment-duration-format";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
@@ -38,7 +37,11 @@ import Loading from "../SubViews/home/Loading";
 import { getLocales } from "expo-localization";
 import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
+import {
+  BottomSheetModal,
+  BottomSheetView,
+  BottomSheetBackdrop,
+} from "@gorhom/bottom-sheet";
 
 const Friends = (props) => {
   const [cameraData] = useMMKVObject(
@@ -406,6 +409,23 @@ const Friends = (props) => {
     isLoading,
   ]);
 
+  const handleDismissPress = useCallback(() => {
+    bottomSheetRef.current?.close();
+  }, []);
+
+  const renderBackdrop = useCallback(
+    (props) => (
+      <BottomSheetBackdrop
+        enableTouchThrough={false}
+        pressBehavior={"close"}
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+        {...props}
+      />
+    ),
+    []
+  );
+
   if (!ready) {
     return (
       <SafeAreaView
@@ -442,9 +462,6 @@ const Friends = (props) => {
         edges={["bottom", "left", "right", "top"]}
       >
         <AnimatedFlatList
-          onScroll={() => {
-            bottomSheetRef.current?.close();
-          }}
           refreshing={refreshing} // Added pull to refesh state
           onRefresh={_refresh} // Added pull to refresh control
           showsHorizontalScrollIndicator={false}
@@ -527,11 +544,7 @@ const Friends = (props) => {
             )
           }
           ListHeaderComponent={
-            <Pressable
-              onPress={() => {
-                bottomSheetRef.current?.close();
-              }}
-            >
+            <View>
               <FriendHeader
                 id={props.route.params.userID}
                 name={friendData.friend_handle}
@@ -548,7 +561,7 @@ const Friends = (props) => {
                 flex={uploading.display}
                 progress={uploading.progress}
               />
-            </Pressable>
+              </View>
           }
           keyExtractor={(item) => item.UUID}
           renderItem={(item, index) =>
@@ -624,6 +637,7 @@ const Friends = (props) => {
           </TouchableWithoutFeedback>
         </Modal>
         <BottomSheetModal
+          backdropComponent={renderBackdrop}
           ref={bottomSheetRef}
           snapPoints={snapPoints}
           enablePanDownToClose
@@ -682,7 +696,7 @@ const Friends = (props) => {
                       borderRadius: 22,
                     }}
                     onPress={() => {
-                      bottomSheetRef.current?.close();
+                     handleDismissPress();
                       _reportUser(props.route.params.userID);
                     }}
                   />
@@ -716,7 +730,7 @@ const Friends = (props) => {
                       borderRadius: 22,
                     }}
                     onPress={() => {
-                      bottomSheetRef.current?.close();
+                     handleDismissPress();
                       _deleteUser();
                     }}
                   />
@@ -751,7 +765,7 @@ const Friends = (props) => {
                       borderRadius: 22,
                     }}
                     onPress={() => {
-                      bottomSheetRef.current?.close();
+                     handleDismissPress();
                       props.navigation.navigate("About", {
                         items: friendData,
                       });
