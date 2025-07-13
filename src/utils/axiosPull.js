@@ -71,6 +71,7 @@ export const _pullUser = async (id, screen) => {
   const data = {
     owner: id,
   };
+  console.log(screen)
   const response = await postData("/users/index.php", data);
   storage.set("user.Data", JSON.stringify(response[0]));
 };
