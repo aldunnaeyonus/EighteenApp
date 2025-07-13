@@ -112,8 +112,8 @@ android {
         defaultConfig {
         missingDimensionStrategy "store", "play"
         applicationId 'com.dunncarabali.eighteen'
-            versionCode 51
-        versionName "1.1"
+            versionCode 52
+        versionName "1.2"
     }
     signingConfigs {
         debug {
