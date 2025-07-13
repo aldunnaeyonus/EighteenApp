@@ -182,7 +182,6 @@ const ListItem = (props) => {
               numFaces={3}
               faces={FACES}
               circleSize={15}
-              containerStyle={{ position: "absolute" }}
             />
           </View>
         </View>
