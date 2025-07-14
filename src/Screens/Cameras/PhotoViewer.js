@@ -45,7 +45,7 @@ const PhotoViewer = (props) => {
     storage
   );
   const [filteredComments, setFilteredComments] = useState([]);
-  const [filteredDataSourceGallery, setDalleryData] = useMMKVObject(
+  const [filteredDataSourceGallery, setGalleryData] = useMMKVObject(
     `user.Gallery.Friend.Feed.${props.route.params.pin}`,
     storage
   );
@@ -161,7 +161,7 @@ const PhotoViewer = (props) => {
   const _deleteFeedItemIndex = (image_id) => {
     filteredDataSourceGallery.forEach((res, index) => {
       if (res.image_id == image_id) {
-        setDalleryData((prevState) => {
+        setGalleryData((prevState) => {
           prevState.splice(index, 1);
           return [...prevState];
         });
