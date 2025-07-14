@@ -452,6 +452,7 @@ const PhotoGallery = (props) => {
 
       <BottomSheetModal
         ref={bottomSheetRef}
+                    backdropComponent={renderBackdrop}
         snapPoints={snapPoints}
         enablePanDownToClose
         keyboardBlurBehavior={"restore"}

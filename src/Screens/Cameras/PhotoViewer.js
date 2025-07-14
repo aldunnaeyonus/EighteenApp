@@ -16,7 +16,6 @@ import {
   BottomSheetView,
   BottomSheetTextInput,
   BottomSheetBackdrop,
-  BottomSheetFlashList
 } from "@gorhom/bottom-sheet";
 import { useMMKVObject } from "react-native-mmkv";
 import { storage } from "../../context/components/Storage";
@@ -466,7 +465,7 @@ const PhotoViewer = (props) => {
             enablePanDownToClose
             enableDismissOnClose
             enableDynamicSizing
-            keyboardBehavior={Platform.OS === "ios" ? "extend" : "extend"}
+            keyboardBehavior={Platform.OS === "ios" ? "extend" : "interactive"}
             keyboardBlurBehavior="restore"
             android_keyboardInputMode="adjustResize"
             style={{
@@ -492,7 +491,7 @@ const PhotoViewer = (props) => {
                   flex: Platform.OS === "ios" ? 1 : .59,
                 }}
               >
-                <BottomSheetFlashList
+                <Animated.FlatList
                   showsHorizontalScrollIndicator={false}
                   showsVerticalScrollIndicator={false}
                   nestedScrollEnabled={true}
