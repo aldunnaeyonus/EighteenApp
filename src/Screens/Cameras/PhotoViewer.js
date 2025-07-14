@@ -16,6 +16,7 @@ import {
   BottomSheetView,
   BottomSheetTextInput,
   BottomSheetBackdrop,
+  BottomSheetFlatList
 } from "@gorhom/bottom-sheet";
 import { useMMKVObject } from "react-native-mmkv";
 import { storage } from "../../context/components/Storage";
@@ -491,7 +492,7 @@ const PhotoViewer = (props) => {
                   flex: Platform.OS === "ios" ? 1 : .59,
                 }}
               >
-                <Animated.FlatList
+                <BottomSheetFlatList
                   showsHorizontalScrollIndicator={false}
                   showsVerticalScrollIndicator={false}
                   nestedScrollEnabled={true}
