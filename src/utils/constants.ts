@@ -293,7 +293,7 @@ export const productSkus = Platform.select({
 export const remove_duplicates = (a: { camera_id: any; }[], b: any[]) => {
   a.map((firstObj: { camera_id: any; }) => {
     b.map((compareObj: { camera_id: any; }, i: any) => {
-      if (firstObj.camera_id === compareObj.camera_id) {
+      if (firstObj.camera_id == compareObj.camera_id) {
         b.splice(i, 1);
   }
 })
@@ -365,7 +365,7 @@ export const durationAsString = (end: any, start: any, localLang: any) => {
 
 export const getExtensionFromFilename = (filename: string) => {
   const lastDotIndex = filename.lastIndexOf('.');
-  if (lastDotIndex === -1) {
+  if (lastDotIndex == -1) {
     return 'jpg'; // No extension found
   }
   return filename.slice(lastDotIndex + 1);

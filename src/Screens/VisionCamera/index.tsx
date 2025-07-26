@@ -99,7 +99,7 @@ const VisionCamera = (props: {
   );
   const [preferredDevice] = usePreferredCameraDevice();
   let device = useCameraDevice(cameraPosition);
-  if (preferredDevice != null && preferredDevice.position === cameraPosition) {
+  if (preferredDevice != null && preferredDevice.position == cameraPosition) {
     // override default device with the one selected by the user in settings
     device = preferredDevice;
   }
@@ -139,7 +139,7 @@ const VisionCamera = (props: {
   }, [hasPermission, microphonePermission]);
 
   const onFlipCameraPressed = useCallback(() => {
-    setCameraPosition((p) => (p === "back" ? "front" : "back"));
+    setCameraPosition((p) => (p == "back" ? "front" : "back"));
   }, []);
   const minZoom = device?.minZoom ?? 1;
   const maxZoom = Math.min(device?.maxZoom ?? 1, MAX_ZOOM_FACTOR);
@@ -414,9 +414,9 @@ const VisionCamera = (props: {
 
       
         <Ionicons
-          name={flash === "off" ? "flash-off-outline" : "flash-outline"}
+          name={flash == "off" ? "flash-off-outline" : "flash-outline"}
           onPress={() =>
-            setFlash((curValue) => (curValue === "off" ? "on" : "off"))
+            setFlash((curValue) => (curValue == "off" ? "on" : "off"))
           }
           style={[uiStyle]}
           size={30}

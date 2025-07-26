@@ -4,6 +4,33 @@ import { Text, LogBox, Platform, useColorScheme, Alert } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
+import { MenuProvider } from "react-native-popup-menu";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { setup } from "react-native-iap"; // In-App Purchases setup
+import NetInfo from "@react-native-community/netinfo"; // Network connectivity
+import FastImage from "react-native-fast-image"; // Optimized image loading
+import * as i18n from "./i18n"; // Internationalization
+import { setI18nConfig } from "./i18n";
+import { getLocales } from "expo-localization"; // Get device locales for i18n
+import { ToastProvider } from "react-native-styled-toast"; // Toast notifications
+import { storage } from "./src/context/components/Storage"; // Custom storage utility
+import {
+  COLORS,
+  stringToBoolean,
+  SCREEN_WIDTH,
+  SCREEN_HEIGHT,
+  constants,
+} from "./src/utils/constants"; // App constants and utilities
+import { GoogleSignin } from "@react-native-google-signin/google-signin"; // Google Sign-In
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet"; // Bottom sheet component
+import { checkVersion } from "react-native-check-version"; // App version checking
+import AppLink from "react-native-app-link"; // Opening external app links (e.g., app store)
+import DeviceInfo from "react-native-device-info"; // Device information
+import hotUpdate from "react-native-ota-hot-update"; // Over-the-air updates
+import ReactNativeBlobUtil from "react-native-blob-util"; // File system and network operations
+import NotifService from "./NotifService"; // Notification service
+
+// Import all application screens
 import Handle from "./src/Screens/LoginReg/Handle";
 import Verification from "./src/Screens/LoginReg/Verification";
 import Begin from "./src/Screens/LoginReg";
@@ -13,8 +40,6 @@ import EditCamera from "./src/Screens/Cameras/EditCamera";
 import Join from "./src/Screens/Home/Join";
 import Friends from "./src/Screens/Friends/Friends";
 import AllFriends from "./src/Screens/Friends/AllFriends";
-import { MenuProvider } from "react-native-popup-menu";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import MediaGallery from "./src/Screens/Cameras/PhotoGallery";
 import MediaViewer from "./src/Screens/Cameras/PhotoViewer";
 import Profile from "./src/Screens/Profile";
@@ -23,99 +48,118 @@ import WebView from "./src/Screens/WebView/WebView";
 import ClosedCameras from "./src/Screens/Cameras/ClosedCameras";
 import AccountDetails from "./src/Screens/Profile/AccountDetails";
 import Purchase from "./src/Screens/Store";
-import { setup } from "react-native-iap";
-import NetInfo from "@react-native-community/netinfo";
 import JoinedMembers from "./src/Screens/Members";
 import VisionCamera from "./src/Screens/VisionCamera";
 import MediaPage from "./src/Screens/VisionCamera/MediaPage";
-import FastImage from "react-native-fast-image";
-import * as i18n from "./i18n";
-import { setI18nConfig } from "./i18n";
 import AboutProfile from "./src/Screens/Friends/AboutProfile";
 import GlobalFriends from "./src/Screens/Friends/GlobalFriends";
 import Languages from "./src/Screens/Profile/Languages";
 import Notifications from "./src/Screens/Profile/Notifications";
 import Abouts from "./src/Screens/Profile/About";
 import GetPro from "./src/Screens/Store/GetPro";
-import { axiosPull } from "./src/utils/axiosPull";
-import hotUpdate from "react-native-ota-hot-update";
-import { constants, SCREEN_WIDTH, SCREEN_HEIGHT } from "./src/utils/constants";
-import ReactNativeBlobUtil from "react-native-blob-util";
-import NotifService from "./NotifService";
+import { axiosPull } from "./src/utils/axiosPull"; // Axios utility for API calls
 import TempCamera from "./src/Screens/Cameras/TempCamera";
-import { getLocales } from "expo-localization";
-import { ToastProvider } from "react-native-styled-toast";
-import { storage } from "./src/context/components/Storage";
-import { COLORS, stringToBoolean } from "./src/utils/constants";
 import Blocked from "./src/Screens/Profile/Blocked";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import { checkVersion } from "react-native-check-version";
-import AppLink from "react-native-app-link";
-import DeviceInfo from "react-native-device-info";
 
 export default function App() {
+  // Initialize Native Stack Navigator
   const Stack = createNativeStackNavigator();
+
+  // Configure StoreKit2 mode for In-App Purchases
   setup({ storekitMode: "STOREKIT2_MODE" });
+
+  // State to track internet connectivity
   const [isConnected, setIsConnected] = useState(true);
+
+  // Set default prop for all Text components to disable font scaling
   Text.defaultProps = Text.defaultProps || {};
   Text.defaultProps.allowFontScaling = false;
 
+  // Ignore all LogBox warnings in production, show in development
   LogBox.ignoreAllLogs(__DEV__ ? false : true);
-  const [signIn, setSignIn] = useState(false);
-  const appName = DeviceInfo.getApplicationName();
-  const appStoreId = "6463832529";
-  const appStoreLocale = "us";
-  const playStoreId = "com.dunncarabali.eighteen";
-  const [ready, setReady] = useState(false);
-  const [owner, setOwner] = useState("0");
-  let [localLang] = useState(getLocales()[0].languageCode);
-  setI18nConfig(localLang);
 
+  // State to determine if the user is signed in
+  const [signIn, setSignIn] = useState(false);
+
+  // Device and app-specific information for app store links
+  const appName = DeviceInfo.getApplicationName();
+  const appStoreId = "6463832529"; // iOS App Store ID
+  const appStoreLocale = "us"; // App Store locale
+  const playStoreId = "com.dunncarabali.eighteen"; // Android Play Store ID
+
+  // State to indicate if the app is ready to render (after initial data loading)
+  const [ready, setReady] = useState(false);
+
+  // State to store the current user's ID
+  const [owner, setOwner] = useState("0");
+
+  // Get the device's primary language code for internationalization
+  const [localLang] = useState(getLocales()[0].languageCode);
+  setI18nConfig(localLang); // Set i18n configuration based on local language
+
+  /**
+   * Initiates an over-the-air (OTA) update.
+   * @param {string} url - The URL of the update bundle.
+   * @param {string} urlversion - The version of the update bundle.
+   */
   const startUpdate = async (url, urlversion) => {
     await hotUpdate.downloadBundleUri(ReactNativeBlobUtil, url, urlversion, {
       updateSuccess: () => {
-        console.log();
+        console.log("OTA update successful!");
       },
-      updateFail() {
-        console.log(message);
+      updateFail(message) {
+        console.error("OTA update failed:", message);
       },
-      restartAfterInstall: true,
-    });
-  };
-  const colorScheme = useColorScheme();
-  //const colorScheme = useColorScheme();
-  //const colors = COLORS[colorScheme ?? 'dark'];
-  const onCheckVersion = () => {
-    fetch(constants.updateJSON, {
-      headers: {
-        "Cache-Control": "no-cache, no-store, must-revalidate",
-        Pragma: "no-cache",
-        Expires: 0,
-      },
-    }).then(async (data) => {
-      const result = await data.json();
-      const currentVersion = await hotUpdate.getCurrentVersion();
-      if (parseInt(result?.version) > parseInt(currentVersion)) {
-        startUpdate(
-          Platform.OS === "ios"
-            ? result?.downloadIosUrl
-            : result?.downloadAndroidUrl,
-          result?.version
-        );
-      }
+      restartAfterInstall: true, // Restart the app after successful installation
     });
   };
 
+  // Get the user's preferred color scheme (light/dark)
+  const colorScheme = useColorScheme();
+
+  /**
+   * Checks for available over-the-air (OTA) updates.
+   * Fetches update information from a remote JSON and compares versions.
+   */
+  const onCheckVersion = () => {
+    fetch(constants.updateJSON, {
+      headers: {
+        "Cache-Control": "no-cache, no-store, must-revalidate", // Prevent caching
+        Pragma: "no-cache",
+        Expires: 0,
+      },
+    })
+      .then(async (data) => {
+        const result = await data.json();
+        const currentVersion = await hotUpdate.getCurrentVersion();
+        // If a newer version is available, start the update
+        if (parseInt(result?.version) > parseInt(currentVersion)) {
+          startUpdate(
+            Platform.OS == "ios"
+              ? result?.downloadIosUrl
+              : result?.downloadAndroidUrl,
+            result?.version
+          );
+        }
+      })
+      .catch((error) => console.error("Error checking OTA version:", error));
+  };
+
+  /**
+   * Effect hook to listen for network connectivity changes.
+   * Updates the `isConnected` state.
+   */
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener((state) => {
       setIsConnected(state.isInternetReachable);
     });
+    // Cleanup the event listener on component unmount
     return () => {
       unsubscribe();
     };
-  }, [isConnected]);
+  }, [isConnected]); // Re-run if isConnected changes (though typically this is not needed for the listener itself)
 
+  // Deep linking configuration for navigation
   const config = {
     screens: {
       Begin: {
@@ -145,10 +189,13 @@ export default function App() {
     },
   };
   const linking = {
-    prefixes: ["snapseighteenapp://"],
+    prefixes: ["snapseighteenapp://"], // Custom URL scheme for deep linking
     config,
   };
 
+  /**
+   * Opens the appropriate app store (Google Play or Apple App Store).
+   */
   const openAppStore = async () => {
     try {
       await AppLink.openInStore({
@@ -158,18 +205,28 @@ export default function App() {
         playStoreId,
       });
     } catch (error) {
-      // Handle the error, e.g., show an error message to the user
       console.error("Error opening in store:", error);
+      Alert.alert(
+        i18n.t("Error"),
+        i18n.t("Could not open app store. Please try again later.")
+      );
     }
   };
 
+  /**
+   * Initial setup effect hook.
+   * Checks app version, configures Google Sign-In, and checks for OTA updates.
+   */
   useEffect(() => {
     const fetchData = async () => {
+      // Check for app store updates (only in production)
       const version = await checkVersion();
       if (version.needsUpdate && !__DEV__) {
         Alert.alert(
           i18n.t("Update Available"),
-          i18n.t("A new version"),
+          i18n.t(
+            "A new version of the app is available. Please update for the best experience."
+          ),
           [
             { text: i18n.t("Cancel"), style: "cancel" },
             {
@@ -182,38 +239,55 @@ export default function App() {
           { cancelable: false }
         );
       }
-      //Debug 5E:8F:16:06:2E:A3:CD:2C:4A:0D:54:78:76:BA:A6:F3:8C:AB:F6:25
-      //Production 47:8A:0D:AC:7D:4C:98:69:7A:65:D4:97:49:C2:CA:B9:E0:A6:69:A4
+
+      // Configure Google Sign-In for Android
       if (Platform.OS == "android") {
         GoogleSignin.configure({
           scopes: ["profile", "email"],
+          // Replace with your actual web client ID for production
           webClientId:
             "433573575993-b31pdthd0u5bv1mrc0qoftvqoj7bloal.apps.googleusercontent.com",
           offlineAccess: false,
           profileImageSize: 120,
         });
         try {
+          // Attempt to sign out any previous Google session for a clean start
           GoogleSignin.signOut();
-        } catch (error) {}
+        } catch (error) {
+          // Ignore error if no user is signed in
+          console.log(
+            "Google Sign-Out error (might be no user signed in):",
+            error
+          );
+        }
       }
+
+      // Check for and apply OTA updates
       onCheckVersion();
     };
     fetchData();
-  }, []);
+  }, []); // Empty dependency array means this runs once on component mount
 
+  /**
+   * Data fetching and initialization effect hook.
+   * Retrieves user session, sets up notifications, and initializes storage.
+   */
   useEffect(() => {
     const fetchData = async () => {
-      //Debug 5E:8F:16:06:2E:A3:CD:2C:4A:0D:54:78:76:BA:A6:F3:8C:AB:F6:25
-      //Production 47:8A:0D:AC:7D:4C:98:69:7A:65:D4:97:49:C2:CA:B9:E0:A6:69:A4
-      const owner = await AsyncStorage.getItem("user_id");
-      await AsyncStorage.setItem("uploadEnabled", "1");
-      setOwner(owner);
+      // Retrieve user ID and login status from AsyncStorage
+      const storedOwner = await AsyncStorage.getItem("user_id");
+      await AsyncStorage.setItem("uploadEnabled", "1"); // Ensure upload is enabled
+      setOwner(storedOwner);
+
       const logedIn = await AsyncStorage.getItem("logedIn");
-      setSignIn(stringToBoolean(logedIn));
-      if (signIn) {
+      setSignIn(stringToBoolean(logedIn)); // Convert stored string to boolean
+
+      if (stringToBoolean(logedIn)) {
+        // If logged in, initialize notification service and check pro status
         new NotifService();
-        await axiosPull._getProStatus(owner, Platform.OS);
+        await axiosPull._getProStatus(storedOwner, Platform.OS);
       } else {
+        // If not logged in, clear specific app data from storage
         storage.set(
           "uploadData",
           JSON.stringify({
@@ -233,13 +307,15 @@ export default function App() {
         storage.set("user.All.Global.Friend.Feed", JSON.stringify([]));
       }
 
+      // Set ready to true after a delay to show splash screen
       setTimeout(() => {
         setReady(true);
-      }, 5000);
+      }, 5000); // 5-second splash screen duration
     };
     fetchData();
-  }, [signIn, ready, owner]);
+  }, [signIn, ready, owner]); // Re-run when signIn, ready, or owner states change
 
+  // If the app is not ready, display the splash screen
   if (!ready) {
     return (
       <FastImage
@@ -250,15 +326,23 @@ export default function App() {
     );
   }
 
+  // Main application render
   return (
+    // Root view for Gesture Handler
     <GestureHandlerRootView style={{ flex: 1 }}>
+      {/* Provider for Bottom Sheet Modals */}
       <BottomSheetModalProvider>
+        {/* Provider for Toast notifications */}
         <ToastProvider maxToasts={1} offset={65} position="TOP">
+          {/* Provider for React Native Popup Menu */}
           <MenuProvider>
+            {/* Main Navigation Container */}
             <NavigationContainer
-              theme={colorScheme === "dark" ? DefaultTheme : DefaultTheme}
-              linking={linking}
+              // Apply default theme based on color scheme
+              theme={colorScheme == "dark" ? DefaultTheme : DefaultTheme}
+              linking={linking} // Enable deep linking
               fallback={
+                // Fallback splash screen in case of navigation issues
                 <FastImage
                   style={{
                     flex: 1,
@@ -270,11 +354,16 @@ export default function App() {
                 />
               }
             >
+              {/* Manages status bar appearance */}
               <StatusBar style="auto" />
               <Stack.Navigator
+                // Set initial route based on sign-in status
                 initialRouteName={signIn ? "Home" : "Begin"}
-                options={{ animationEnabled: false, animation: "none" }}
+                screenOptions={{ animationEnabled: false, animation: "none" }} // Disable screen transition animations globally
               >
+                {/* Screen Definitions */}
+
+                {/* TempCameraPage Screen */}
                 <Stack.Screen
                   name="TempCameraPage"
                   options={{
@@ -287,13 +376,14 @@ export default function App() {
                   {(props) => (
                     <TempCamera
                       {...props}
-                      UUID={owner}
-                      loggedIn={signIn}
-                      unsubscribe={isConnected}
+                      UUID={owner} // Pass current user ID
+                      loggedIn={signIn} // Pass login status
+                      unsubscribe={isConnected} // Pass network connectivity status
                     />
                   )}
                 </Stack.Screen>
 
+                {/* Begin Screen (Login/Registration entry) */}
                 <Stack.Screen
                   name="Begin"
                   options={{
@@ -312,19 +402,23 @@ export default function App() {
                     />
                   )}
                 </Stack.Screen>
+
+                {/* Friends Screen */}
                 <Stack.Screen
                   name="Friends"
                   options={{
                     title: "",
                     headerShown: true,
                     gestureEnabled: false,
-                    headerTintColor: COLORS[colorScheme ?? "light"],
+                    headerTintColor: COLORS[colorScheme ?? "light"], // Header text color based on theme
                     headerBackTitleVisible: false,
                     headerTitleAlign: "center",
                   }}
                 >
                   {(props) => <Friends {...props} unsubscribe={isConnected} />}
                 </Stack.Screen>
+
+                {/* Handle Screen (Login/Registration forms) */}
                 <Stack.Screen
                   name="Handle"
                   options={{
@@ -336,6 +430,8 @@ export default function App() {
                 >
                   {(props) => <Handle {...props} unsubscribe={isConnected} />}
                 </Stack.Screen>
+
+                {/* AllFriends Screen */}
                 <Stack.Screen
                   name="AllFriends"
                   options={{
@@ -343,8 +439,8 @@ export default function App() {
                     headerShown: true,
                     gestureEnabled: false,
                     headerTintColor: COLORS[colorScheme ?? "light"],
-                    headerBackTitleStyle: COLORS[colorScheme ?? "light"],
-                    headerTitleStyle: COLORS[colorScheme ?? "light"],
+                    headerBackTitleStyle: COLORS[colorScheme ?? "light"], // Specific style for back button title
+                    headerTitleStyle: COLORS[colorScheme ?? "light"], // Specific style for header title
                     headerBackTitleVisible: false,
                     headerTitleAlign: "center",
                   }}
@@ -359,13 +455,14 @@ export default function App() {
                   )}
                 </Stack.Screen>
 
+                {/* Abouts Screen */}
                 <Stack.Screen
                   name="Abouts"
                   options={{
                     title: i18n.t("About"),
                     headerShown: true,
                     gestureEnabled: false,
-                    headerTintColor: "#000",
+                    headerTintColor: "#000", // Fixed header color
                     headerBackTitleVisible: false,
                     headerTitleAlign: "center",
                   }}
@@ -380,13 +477,14 @@ export default function App() {
                   )}
                 </Stack.Screen>
 
+                {/* Purchase Screen (In-App Purchases) */}
                 <Stack.Screen
                   name="Purchase"
                   options={{
                     title: "",
                     headerShown: true,
                     gestureEnabled: false,
-                    headerTransparent: true,
+                    headerTransparent: true, // Transparent header
                     headerBackTitleVisible: false,
                     headerTitleAlign: "center",
                   }}
@@ -400,6 +498,8 @@ export default function App() {
                     />
                   )}
                 </Stack.Screen>
+
+                {/* Notifications Screen */}
                 <Stack.Screen
                   name="Notifications"
                   options={{
@@ -420,6 +520,8 @@ export default function App() {
                     />
                   )}
                 </Stack.Screen>
+
+                {/* GetPro Screen (Upgrade to Pro) */}
                 <Stack.Screen
                   name="GetPro"
                   options={{
@@ -440,6 +542,8 @@ export default function App() {
                     />
                   )}
                 </Stack.Screen>
+
+                {/* ChangeAvatar Screen */}
                 <Stack.Screen
                   name="ChangeAvatar"
                   options={{
@@ -460,6 +564,8 @@ export default function App() {
                     />
                   )}
                 </Stack.Screen>
+
+                {/* WebView Screen */}
                 <Stack.Screen
                   name="WebView"
                   options={{
@@ -472,6 +578,8 @@ export default function App() {
                 >
                   {(props) => <WebView {...props} unsubscribe={isConnected} />}
                 </Stack.Screen>
+
+                {/* Join Screen */}
                 <Stack.Screen
                   name="Join"
                   options={{
@@ -485,6 +593,8 @@ export default function App() {
                 >
                   {(props) => <Join {...props} unsubscribe={isConnected} />}
                 </Stack.Screen>
+
+                {/* Verification Screen */}
                 <Stack.Screen
                   name="Verification"
                   options={{
@@ -502,6 +612,7 @@ export default function App() {
                   )}
                 </Stack.Screen>
 
+                {/* Home Screen */}
                 <Stack.Screen
                   name="Home"
                   options={{
@@ -512,7 +623,7 @@ export default function App() {
                     headerBackTitleStyle: COLORS[colorScheme ?? "light"],
                     headerTitleStyle: COLORS[colorScheme ?? "light"],
                     headerBackTitleVisible: false,
-                    headerBackVisible: false,
+                    headerBackVisible: false, // Hide back button on Home screen
                     headerTitleAlign: "center",
                   }}
                 >
@@ -526,6 +637,7 @@ export default function App() {
                   )}
                 </Stack.Screen>
 
+                {/* JoinedMembers Screen */}
                 <Stack.Screen
                   name="JoinedMembers"
                   options={{
@@ -547,6 +659,7 @@ export default function App() {
                   )}
                 </Stack.Screen>
 
+                {/* Blocked Screen */}
                 <Stack.Screen
                   name="Blocked"
                   options={{
@@ -568,6 +681,7 @@ export default function App() {
                   )}
                 </Stack.Screen>
 
+                {/* MediaGallery Screen */}
                 <Stack.Screen
                   name="MediaGallery"
                   options={{
@@ -577,6 +691,7 @@ export default function App() {
                     headerTransparent: false,
                     headerBackTitleVisible: false,
                     headerTitleAlign: "center",
+                    headerTintColor: "#000",
                   }}
                 >
                   {(props) => (
@@ -589,18 +704,17 @@ export default function App() {
                   )}
                 </Stack.Screen>
 
+                {/* MediaViewer Screen */}
                 <Stack.Screen
                   name="MediaViewer"
                   options={{
                     title: "",
-                    headerShown: true,
+                    headerShown: false,
                     gestureEnabled: false,
                     headerTransparent: true,
                     headerBackTitleVisible: false,
                     headerTitleAlign: "center",
-
-                    headerShown: false,
-                    animation: "fade",
+                    animation: "fade", // Fade animation for this screen
                     animationDuration: 500,
                   }}
                 >
@@ -614,6 +728,7 @@ export default function App() {
                   )}
                 </Stack.Screen>
 
+                {/* CreateCamera Screen */}
                 <Stack.Screen
                   name="CreateCamera"
                   options={{
@@ -635,11 +750,12 @@ export default function App() {
                   )}
                 </Stack.Screen>
 
+                {/* CameraPage (VisionCamera) Screen */}
                 <Stack.Screen
                   name="CameraPage"
                   options={{
                     gestureEnabled: false,
-                    title: i18n.t(""),
+                    title: i18n.t(""), // Empty title for camera screen
                     headerShown: false,
                     headerTitleAlign: "center",
                   }}
@@ -654,11 +770,12 @@ export default function App() {
                   )}
                 </Stack.Screen>
 
+                {/* Languages Screen */}
                 <Stack.Screen
                   name="Languages"
                   options={{
                     title: i18n.t("Languages"),
-                    Edit: true,
+                    Edit: true, // Custom option, perhaps for internal logic
                     headerTintColor: "#000",
                     gestureEnabled: false,
                     headerBackTitleVisible: false,
@@ -675,6 +792,7 @@ export default function App() {
                   )}
                 </Stack.Screen>
 
+                {/* AboutProfile Screen */}
                 <Stack.Screen
                   name="About"
                   options={{
@@ -696,6 +814,7 @@ export default function App() {
                   )}
                 </Stack.Screen>
 
+                {/* VisionCameraMediaPage Screen */}
                 <Stack.Screen
                   name="VisionCameraMediaPage"
                   options={{
@@ -715,6 +834,7 @@ export default function App() {
                   )}
                 </Stack.Screen>
 
+                {/* EditCamera Screen */}
                 <Stack.Screen
                   name="EditCamera"
                   options={{
@@ -736,6 +856,7 @@ export default function App() {
                   )}
                 </Stack.Screen>
 
+                {/* Profile (Settings) Screen */}
                 <Stack.Screen
                   name="Profile"
                   options={{
@@ -756,6 +877,8 @@ export default function App() {
                     />
                   )}
                 </Stack.Screen>
+
+                {/* AccountDetails Screen */}
                 <Stack.Screen
                   name="AccountDetails"
                   options={{
@@ -776,6 +899,8 @@ export default function App() {
                     />
                   )}
                 </Stack.Screen>
+
+                {/* ClosedCameras Screen */}
                 <Stack.Screen
                   name="ClosedCameras"
                   options={{
@@ -796,6 +921,8 @@ export default function App() {
                     />
                   )}
                 </Stack.Screen>
+
+                {/* GlobalFriends Screen */}
                 <Stack.Screen
                   name="GlobalFriends"
                   options={{

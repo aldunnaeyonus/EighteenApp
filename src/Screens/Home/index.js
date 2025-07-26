@@ -16,6 +16,7 @@ import {
   TouchableOpacity,
   Linking,
   TouchableWithoutFeedback,
+  Platform, // Import Platform for OS-specific logic
 } from "react-native";
 import EmptyStateView from "@tttstudios/react-native-empty-state";
 import { constants, SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
@@ -53,42 +54,43 @@ import {
   BottomSheetView,
   BottomSheetBackdrop,
 } from "@gorhom/bottom-sheet";
+import { getLocales } from "expo-localization"; // Added for locale in report
 
-const Home = (props) => {
-  const [cameraData, setcameraData] = useMMKVObject(
+const Home = ({ navigation, props }) => { // Destructure navigation from props
+  const [cameraData, setCameraData] = useMMKVObject( // Renamed setcameraData for consistency
     "user.Camera.Feed",
     storage
   );
   const flatListViewer = useRef(null);
-  const [modalQRCodeVisable, setmodalQRCodeVisable] = useState(false);
-  const [modalVisable, setmodalVisable] = useState(false);
+  const [modalQRCodeVisible, setModalQRCodeVisible] = useState(false); // Renamed for consistency
+  const [modalVisible, setModalVisible] = useState(false); // Renamed for consistency
   const [user] = useMMKVObject("user.Data", storage);
   const [refreshing, setRefreshing] = useState(false);
   const [qrCodeURL, setQrCodeURL] = useState("");
-  const AnimatedFlatList = Animated.createAnimatedComponent(Animated.FlatList);
+  const AnimatedFlatList = useMemo( // Memoize AnimatedFlatList
+    () => Animated.createAnimatedComponent(Animated.FlatList),
+    []
+  );
   const [modalVisibleAlert, setModalVisibleAlert] = useState(false);
   const isFocused = useIsFocused();
   const [uploading] = useMMKVObject("uploadData", storage);
-  var timeout;
-  const triggerProfileFunction = async () => {
-    props.navigation.navigate("Profile");
-  };
+
   const device = useCameraDevice("back");
-  const [isBarcodeScannerEnabled, setisBarcodeScannerEnabled] = useState(true);
+  const [isBarcodeScannerEnabled, setIsBarcodeScannerEnabled] = useState(true); // Renamed for consistency
   const { hasPermission, requestPermission } = useCameraPermission();
-  const [shareOptions, setshareOptions] = useState({
+  const [shareOptions, setShareOptions] = useState({ // Renamed for consistency
     title: "",
     url: "",
     message: "",
   });
-  const [shareOptionsGallery, setshareOptionsGallery] = useState({
+  const [shareOptionsGallery, setShareOptionsGallery] = useState({ // Renamed for consistency
     title: "",
     url: "",
     message: "",
   });
   const [cameraStatus] = ImagePicker.useCameraPermissions();
   const bottomSheetRef = useRef(null);
-  const snapPoints = useMemo(() => ["17%"], []);
+  const snapPoints = useMemo(() => ["20%"], []);
   const handlePresentModalPress = useCallback(() => {
     bottomSheetRef.current?.present();
   }, []);
@@ -96,364 +98,333 @@ const Home = (props) => {
     bottomSheetRef.current?.close();
   }, []);
 
-  const codeScanner = useCodeScanner({
-    codeTypes: ["qr"],
-    onCodeScanned: async (codes) => {
-      if (isBarcodeScannerEnabled) {
-        setmodalQRCodeVisable(false);
-        const code = JSON.parse(JSON.stringify(codes[0].value));
-        if (code.includes("friends")) {
-          let removeCode = code.replace("snapseighteenapp://friends/", "");
-          let newCode = removeCode.split("/");
-          if (newCode[0] == user.user_id) {
-            props.navigation.navigate("Profile");
-          } else {
-            props.navigation.navigate("Friends", {
-              userID: newCode[0],
-              type: newCode[1],
+  const codeScanner = useCodeScanner( // Wrapped in useCallback if onCodeScanned relies on external state
+    useCallback(
+      async (codes) => {
+        if (isBarcodeScannerEnabled) {
+          setModalQRCodeVisible(false);
+          const code = codes[0]?.value; // Use optional chaining for safety
+          if (!code) return; // Handle undefined code
+
+          if (code.includes("friends")) {
+            let removeCode = code.replace("snapseighteenapp://friends/", "");
+            let newCode = removeCode.split("/");
+            if (newCode[0] == user.user_id) {
+              navigation.navigate("Profile");
+            } else {
+              navigation.navigate("Friends", {
+                userID: newCode[0],
+                type: newCode[1],
+              });
+            }
+          } else if (code.includes("join")) {
+            let removeCode = code.replace("snapseighteenapp://join/", "");
+            let newCode = removeCode.split("/");
+            navigation.navigate("Join", {
+              pin: newCode[0],
+              time: newCode[1],
+              owner: newCode[2],
             });
+          } else {
+            await Linking.openURL(code);
           }
-        } else if (code.includes("join")) {
-          let removeCode = code.replace("snapseighteenapp://join/", "");
-          let newCode = removeCode.split("/");
-          props.navigation.navigate("Join", {
-            pin: newCode[0],
-            time: newCode[1],
-            owner: newCode[2],
+          setIsBarcodeScannerEnabled(false);
+        }
+      },
+      [isBarcodeScannerEnabled, user.user_id, navigation]
+    )
+  );
+
+  const _gotoCamera = useCallback(
+    async (
+      pin,
+      title,
+      owner,
+      UUID,
+      end,
+      start,
+      credits,
+      tCredits,
+      camera_add_social
+    ) => {
+      let permissionStatus = cameraStatus.status;
+
+      if (permissionStatus == ImagePicker.PermissionStatus.UNDETERMINED) {
+        const { status } = await ImagePicker.requestCameraPermissionsAsync();
+        permissionStatus = status;
+      }
+
+      if (permissionStatus == ImagePicker.PermissionStatus.DENIED) {
+        Alert.alert(
+          i18n.t("Permissions"),
+          i18n.t("UseCamera"),
+          [
+            { text: i18n.t("Cancel"), style: "destructive" },
+            { text: i18n.t("Settings"), onPress: () => Linking.openSettings() },
+          ],
+          { cancelable: false }
+        );
+      } else {
+        const uploadEnabled = await AsyncStorage.getItem("uploadEnabled");
+        if (uploadEnabled == "1") {
+          navigation.navigate("CameraPage", {
+            owner, pin, title, credits, tCredits, UUID, end, camera_add_social, start,
+            user: user.user_id, lefthanded: user.lefthanded,
           });
         } else {
-          await Linking.openURL(code);
+          Alert.alert(
+            i18n.t("ActiveUpload"),
+            i18n.t("WhileActiveUpload"),
+            [
+              { text: i18n.t("Cancel"), style: "default" },
+              {
+                text: i18n.t("Continue"),
+                onPress: () => {
+                  navigation.navigate("CameraPage", {
+                    owner, pin, title, credits, tCredits, UUID, end, camera_add_social, start,
+                    user: user.user_id, lefthanded: user.lefthanded,
+                  });
+                },
+                style: "destructive",
+              },
+            ],
+            { cancelable: false }
+          );
         }
-        setisBarcodeScannerEnabled(false);
       }
     },
-  });
+    [cameraStatus, navigation, user.user_id, user.lefthanded]
+  );
 
-  const _gotoCamera = async (
-    pin,
-    title,
-    owner,
-    UUID,
-    end,
-    start,
-    credits,
-    tCredits,
-    camera_add_social
-  ) => {
-    if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
-      await ImagePicker.requestCameraPermissionsAsync();
-    } else if (cameraStatus.status == ImagePicker.PermissionStatus.DENIED) {
+  const _gotoAllFriends = useCallback(() => {
+    navigation.navigate("AllFriends");
+  }, [navigation]);
+
+  const _gotoStore = useCallback(
+    (pin, owner, type, name, cameras) => {
+      navigation.navigate("Purchase", {
+        pin, owner, user: user.user_id, type, eventName: name, cameras,
+      });
+    },
+    [navigation, user.user_id]
+  );
+
+  const _editEvent = useCallback(
+    (
+      UUID, pin, owner, user_id, illustration, title, cameras, show_gallery,
+      camera_add_social, start, camera_purchase_more, length_index, end, shots, description
+    ) => {
+      navigation.navigate("EditCamera", {
+        UUID, pin, owner, user: user_id, illustration, title, cameras, show_gallery,
+        camera_add_social, start, end, camera_purchase_more, length_index, shots, description,
+      });
+    },
+    [navigation]
+  );
+
+  const _gotoMedia = useCallback(
+    async (
+      pin, title, owner, UUID, end, start, credits, camera_add_social, illustration
+    ) => {
+      navigation.navigate("MediaGallery", {
+        pin, title, owner, user: user.user_id, UUID,
+        avatar: user.user_avatar, handle: user.user_handle,
+        end, start, credits, camera_add_social, illustration, type: "owner",
+      });
+      await axiosPull._resetBadge(user.user_id, pin);
+      await axiosPull._pullCameraFeed(user.user_id, "owner");
+    },
+    [navigation, user.user_id, user.user_avatar, user.user_handle]
+  );
+
+  const _gotoShare = useCallback(
+    async (pin, time, owner, title) => {
+      const eventShareOptions = {
+        title: title,
+        url: constants.url + "/link.php?pin=" + pin + "." + time + "." + owner,
+        message: i18n.t("Join my Snap Eighteen Event") + " " + title,
+      };
+      const galleryShareOptions = {
+        title: title,
+        url: constants.url + "/gallery/index.php?pin=" + pin,
+        message: i18n.t("ViewLiveGallery"),
+      };
+
+      setShareOptions(eventShareOptions);
+      setShareOptionsGallery(galleryShareOptions);
+
+      if (user.isPro == "0") {
+        try {
+          await Share.share(eventShareOptions);
+        } catch (error) {
+          console.log("Error sharing event:", error);
+        }
+      } else {
+        handlePresentModalPress();
+      }
+    },
+    [user.isPro, handlePresentModalPress]
+  );
+
+  const _deleteFeedItemIndex = useCallback((UUIDToDelete) => {
+    setCameraData((prevCameraData) => {
+      const updatedData = prevCameraData.filter((item) => item.UUID != UUIDToDelete);
+      storage.set("user.Camera.Feed", JSON.stringify(updatedData));
+      return updatedData;
+    });
+  }, [setCameraData]);
+
+  const _addMax = useCallback(
+    async (pin, owner, pro) => {
+      if (owner == user.user_id) {
+        const data = {
+          owner, pin, isPro: pro, user: user.user_id,
+        };
+        await axiosPull.postData("/camera/maxCamera.php", data);
+        await axiosPull._pullCameraFeed(owner, "owner");
+      }
+    },
+    [user.user_id]
+  );
+
+  const _joinFeedItem = useCallback(
+    async (UUID, owner, pin, title) => {
+      navigation.navigate("JoinedMembers", {
+        UUID, pin, owner, title,
+      });
+    },
+    [navigation]
+  );
+
+  const _editItemFeed = useCallback(
+    async (UUID, owner, pin) => {
+      const data = {
+        owner, pin, id: UUID, user: user.user_id,
+      };
+      await axiosPull.postData("/camera/close.php", data);
+      await axiosPull._pullCameraFeed(owner, "owner");
+    },
+    [user.user_id]
+  );
+
+  const _editItem = useCallback(
+    (UUID, owner, pin) => {
       Alert.alert(
-        i18n.t("Permissions"),
-        i18n.t("UseCamera"),
+        i18n.t("Close Event"),
+        i18n.t("close and end this event"),
         [
+          { text: i18n.t("Cancel"), style: "default" },
+          { text: i18n.t("Close Event"), onPress: () => _editItemFeed(UUID, owner, pin), style: "destructive" },
+        ],
+        { cancelable: false }
+      );
+    },
+    [_editItemFeed]
+  );
+
+  const _repotPost = useCallback(
+    async (pin, owner, title) => {
+      Alert.alert(
+        i18n.t("Report Event"),
+        i18n.t("Are you sure you event"),
+        [
+          { text: i18n.t("Cancel"), style: "destructive" },
           {
-            text: i18n.t("Cancel"),
-            onPress: () => console.log("Cancel Pressed"),
-            style: "destructive",
-          },
-          {
-            text: i18n.t("Settings"),
-            onPress: () => {
-              Linking.openSettings();
+            text: i18n.t("Report Event"),
+            onPress: async () => {
+              const data = {
+                owner, user: user.user_id, pin, title, type: "event",
+                locale: getLocales()[0].languageCode,
+              };
+              await axiosPull.postData("/camera/report.php", data);
+              Alert.alert("", i18n.t("A report event"));
             },
-            style: "default",
           },
         ],
         { cancelable: false }
       );
-    } else {
-      props.navigation.navigate("CameraPage", {
-        owner: owner,
-        pin: pin,
-        title: title,
-        credits: credits,
-        tCredits: tCredits,
-        UUID: UUID,
-        end: end,
-        camera_add_social: camera_add_social,
-        start: start,
-        user: user.user_id,
-        lefthanded: user.lefthanded,
-      });
-    }
-  };
+    },
+    [user.user_id]
+  );
 
-  const _gotoAllFriends = () => {
-    props.navigation.navigate("AllFriends");
-  };
-  const _gotoStore = (pin, owner, type, name, camaras) => {
-    props.navigation.navigate("Purchase", {
-      pin: pin,
-      owner: owner,
-      user: user.user_id,
-      type: type,
-      eventName: name,
-      cameras: camaras,
-    });
-  };
-
-  const _editEvent = (
-    UUID,
-    pin,
-    owner,
-    user,
-    illustration,
-    title,
-    cameras,
-    show_gallery,
-    camera_add_social,
-    start,
-    camera_purchase_more,
-    length_index,
-    end,
-    shots,
-    description
-  ) => {
-    props.navigation.navigate("EditCamera", {
-      UUID: UUID,
-      pin: pin,
-      owner: owner,
-      user: user,
-      illustration: illustration,
-      title: title,
-      cameras: cameras,
-      show_gallery: show_gallery,
-      camera_add_social: camera_add_social,
-      start: start,
-      end: end,
-      camera_purchase_more: camera_purchase_more,
-      length_index: length_index,
-      shots: shots,
-      description: description,
-    });
-  };
-
-  const _gotoMedia = async (
-    pin,
-    title,
-    owner,
-    UUID,
-    end,
-    start,
-    credits,
-    camera_add_social,
-    illustration
-  ) => {
-    props.navigation.navigate("MediaGallery", {
-      pin: pin,
-      title: title,
-      owner: owner,
-      user: user.user_id,
-      UUID: UUID,
-      avatar: user.user_avatar,
-      handle: user.user_handle,
-      end: end,
-      start: start,
-      credits: credits,
-      camera_add_social: camera_add_social,
-      illustration: illustration,
-      type: "owner",
-    });
-    await axiosPull._resetBadge(user.user_id, pin);
-    await axiosPull._pullCameraFeed(user.user_id, "owner");
-  };
-
-  const _gotoShare = async (pin, time, owner, title) => {
-    setshareOptions({
-      title: title,
-      url: constants.url + "/link.php?pin=" + pin + "." + time + "." + owner,
-      message: i18n.t("Join my Snap Eighteen Event") + " " + title,
-    });
-    setshareOptionsGallery({
-      title: title,
-      url: constants.url + "/gallery/index.php?pin=" + pin,
-      message: i18n.t("ViewLiveGallery"),
-    });
-    if (user.isPro == "0") {
-      try {
-        const ShareResponse = await Share.share(shareOptions);
-        console.log("Result =>", ShareResponse);
-      } catch (error) {
-        console.log("Error =>", error);
-      }
-    } else {
-      handlePresentModalPress();
-    }
-  };
-
-  const _deleteFeedItemIndex = (UUID) => {
-    cameraData.forEach((res, index) => {
-      if (res.UUID == UUID) {
-        setcameraData((prevState) => {
-          prevState.splice(index, 1);
-          storage.set("user.Camera.Feed", JSON.stringify(prevState));
-          return [...prevState];
-        });
-      }
-    });
-  };
-
-  const _addMax = async (pin, owner, pro) => {
-    if (owner == user.user_id) {
+  const _autoJoin = useCallback(
+    async (owner, pin, end, id) => {
       const data = {
-        owner: owner,
-        pin: pin,
-        isPro: pro,
-        user: user.user_id,
+        owner, user: user.user_id, pin, end, id,
       };
-      await axiosPull.postData("/camera/maxCamera.php", data);
-      await axiosPull._pullCameraFeed(owner, "owner");
-    }
-  };
+      await axiosPull.postData("/camera/autoJoin.php", data);
+      await axiosPull._pullFriendFeed(owner);
+      await axiosPull._pullFriendCameraFeed(owner, "user", user.user_id);
+    },
+    [user.user_id]
+  );
 
-  const _joinFeedItem = async (UUID, owner, pin, title) => {
-    props.navigation.navigate("JoinedMembers", {
-      UUID: UUID,
-      pin: pin,
-      owner: owner,
-      title: title,
-    });
-  };
-
-  const _editItem = (UUID, owner, pin) => {
-    Alert.alert(
-      i18n.t("Close Event"),
-      i18n.t("close and end this event"),
-      [
-        {
-          text: i18n.t("Cancel"),
-          onPress: () => console.log("Cancel Pressed"),
-          style: "default",
-        },
-        {
-          text: i18n.t("Close Event"),
-          onPress: () => _editItemFeed(UUID, owner, pin),
-          style: "destructive",
-        },
-      ],
-      { cancelable: false }
-    );
-  };
-
-  const _editItemFeed = async (UUID, owner, pin) => {
-    const data = {
-      owner: owner,
-      pin: pin,
-      id: UUID,
-      user: user.user_id,
-    };
-    await axiosPull.postData("/camera/close.php", data);
-    await axiosPull._pullCameraFeed(owner, "owner");
-  };
-
-  const _deleteFeedItem = (UUID, owner, pin) => {
-    Alert.alert(
-      i18n.t("Delete Event"),
-      i18n.t("All data will be lost"),
-      [
-        {
-          text: i18n.t("Cancel"),
-          onPress: () => console.log("Cancel Pressed"),
-          style: "default",
-        },
-        {
-          text: i18n.t("Delete Event"),
-          onPress: () => {
-            //deleteItemIndex(JSON.stringify(cameraData), UUID, "user.Camera.Feed");
-
-            _deleteFeedItemSource(UUID, owner, pin);
-          },
-          style: "destructive",
-        },
-      ],
-      { cancelable: false }
-    );
-  };
-
-  const _repotPost = async (pin, owner, title) => {
-    Alert.alert(
-      i18n.t("Report Event"),
-      i18n.t("Are you sure you event"),
-      [
-        {
-          text: i18n.t("Cancel"),
-          onPress: () => console.log("Cancel Pressed"),
-          style: "destructive",
-        },
-        {
-          text: i18n.t("Report Event"),
-          onPress: async () => {
-            const data = {
-              owner: owner,
-              user: user.user_id,
-              pin: pin,
-              title: title,
-              type: "event",
-              locale: getLocales()[0].languageCode,
-            };
-            await axiosPull.postData("/camera/report.php", data);
-            Alert.alert("", i18n.t("A report event"));
-          },
-          style: "default",
-        },
-      ],
-      { cancelable: false }
-    );
-  };
-
-  const _autoJoin = async (owner, pin, end, id) => {
-    const data = {
-      owner: owner,
-      user: user.user_id,
-      pin: pin,
-      end: end,
-      id: id,
-    };
-    await axiosPull.postData("/camera/autoJoin.php", data);
-    await axiosPull._pullFriendFeed(owner);
-    await axiosPull._pullFriendCameraFeed(owner, "user", user.user_id);
-  };
-  const _deleteFeedItemSource = async (UUID, owner, pin) => {
+  const _deleteFeedItemSource = useCallback(async (UUID, owner, pin) => {
     _deleteFeedItemIndex(UUID);
     const data = {
-      owner: owner,
-      pin: pin,
-      id: UUID,
-      user: user.user_id,
+      owner, pin, id: UUID, user: user.user_id,
     };
     await axiosPull.postData("/camera/delete.php", data);
     storage.delete("user.Gallery.Friend.Feed." + pin);
-  };
+  }, [_deleteFeedItemIndex, user.user_id]);
 
-  const _refresh = async () => {
+  const _deleteFeedItem = useCallback(
+    (UUID, owner, pin) => {
+      Alert.alert(
+        i18n.t("Delete Event"),
+        i18n.t("All data will be lost"),
+        [
+          { text: i18n.t("Cancel"), style: "default" },
+          { text: i18n.t("Delete Event"), onPress: () => _deleteFeedItemSource(UUID, owner, pin), style: "destructive" },
+        ],
+        { cancelable: false }
+      );
+    },
+    [_deleteFeedItemSource]
+  );
+
+  const _refresh = useCallback(async () => {
     setRefreshing(true);
     await axiosPull._pullCameraFeed(user.user_id, "owner");
     await axiosPull._pullFriendsFeed(user.user_id);
-    setTimeout(async () => {
+    setTimeout(() => {
       setRefreshing(false);
     }, 1000);
-  };
+  }, [user.user_id]);
 
-  const _gotoQRCode = (link) => {
+  const _gotoQRCode = useCallback((link) => {
     setQrCodeURL(link);
-    setmodalVisable(true);
-  };
+    setModalVisible(true);
+  }, []);
 
   useEffect(() => {
-    props.navigation.setOptions({
+    navigation.setOptions({
       headerLeft: () => (
         <Icon
           containerStyle={{ zIndex: 0, marginRight: 20 }}
           type="material-community"
           name="qrcode-scan"
           size={30}
-          onPress={() => {
+          onPress={async () => {
             if (hasPermission) {
-              setisBarcodeScannerEnabled(true);
-              setmodalQRCodeVisable(true);
+              setIsBarcodeScannerEnabled(true);
+              setModalQRCodeVisible(true);
             } else {
-              requestPermission();
+              const { status } = await requestPermission(); // Request permission directly
+              if (status == 'granted') {
+                setIsBarcodeScannerEnabled(true);
+                setModalQRCodeVisible(true);
+              } else {
+                Alert.alert(
+                  i18n.t("Permissions"),
+                  i18n.t("UseCamera"),
+                  [
+                    { text: i18n.t("Cancel"), style: "destructive" },
+                    { text: i18n.t("Settings"), onPress: () => Linking.openSettings() },
+                  ],
+                  { cancelable: false }
+                );
+              }
             }
           }}
           color="#3D4849"
@@ -466,38 +437,29 @@ const Home = (props) => {
           name="menu"
           size={30}
           onPress={() => {
-            triggerProfileFunction();
+            navigation.navigate("Profile"); // Directly navigate to Profile
           }}
           color="#3D4849"
         />
       ),
     });
-    //timeout = setInterval(async () => {
-    //await axiosPull._pullCameraFeed(user.user_id, "owner");
-    //await axiosPull._pullFriendsFeed(user.user_id);
-    //}, 5000);
 
     const fetchData = async () => {
       await axiosPull._pullUser(user.user_id, "Home");
       await axiosPull._pullCameraFeed(user.user_id, "owner");
       await axiosPull._pullFriendsFeed(user.user_id);
+
       if (user.isActive == "0") {
         Alert.alert(
           i18n.t("Warning"),
           i18n.t("Inactive"),
-          [
-            {
-              text: i18n.t("Close"),
-              onPress: () => console.log("Cancel Pressed"),
-              style: "desructive",
-            },
-          ],
+          [{ text: i18n.t("Close"), style: "destructive" }],
           { cancelable: false }
         );
         await AsyncStorage.removeItem("UUID");
         await AsyncStorage.removeItem("logedIn");
         await AsyncStorage.removeItem("user_id");
-        props.navigation.navigate("Begin");
+        navigation.navigate("Begin");
       }
       const whatnew = await AsyncStorage.getItem(`whatnew.${user.user_id}`);
       if (whatnew == undefined || whatnew == "0") {
@@ -505,22 +467,21 @@ const Home = (props) => {
         await AsyncStorage.setItem(`whatnew.${user.user_id}`, "1");
       }
     };
-    fetchData();
+    if (isFocused) {
+      fetchData();
+    }
+  }, [isFocused, navigation, hasPermission, requestPermission, user.user_id, user.isActive]); // Added navigation and user dependencies
 
-    return () => {
-      clearInterval(timeout);
-    };
-  }, [isFocused, timeout, uploading]);
-
-  const goToFriend = async (friendID) => {
-    props.navigation.navigate("Friends", {
+  const goToFriend = useCallback((friendID) => {
+    navigation.navigate("Friends", {
       userID: friendID,
     });
-  };
+  }, [navigation]);
 
-  const _createCamera = async (userID) => {
-    if ((await AsyncStorage.getItem("uploadEnabled")) == "1") {
-      props.navigation.navigate("CreateCamera", {
+  const _createCamera = useCallback(async (userID) => {
+    const uploadEnabled = await AsyncStorage.getItem("uploadEnabled");
+    if (uploadEnabled == "1") {
+      navigation.navigate("CreateCamera", {
         UUID: userID,
       });
     } else {
@@ -528,15 +489,11 @@ const Home = (props) => {
         i18n.t("ActiveUpload"),
         i18n.t("WhileActiveUpload"),
         [
-          {
-            text: i18n.t("Cancel"),
-            onPress: () => console.log("Cancel Pressed"),
-            style: "default",
-          },
+          { text: i18n.t("Cancel"), style: "default" },
           {
             text: i18n.t("Continue"),
-            onPress: async () => {
-              props.navigation.navigate("CreateCamera", {
+            onPress: () => {
+              navigation.navigate("CreateCamera", {
                 UUID: userID,
               });
             },
@@ -546,66 +503,79 @@ const Home = (props) => {
         { cancelable: false }
       );
     }
-  };
-  const fetchImage = async (qrCodeURL) => {
+  }, [navigation]);
+
+  const fetchImage = useCallback(
+    async (url) => {
+      try {
+        const flyer = constants.flyerdataEvent;
+        const path = `${RNFS.CachesDirectoryPath}/qrcodeEvent.png`;
+        
+        // Ensure the directory exists
+        const dir = `${RNFS.CachesDirectoryPath}`;
+        await RNFS.mkdir(dir, {NSURLIsExcludedFromBackupKey: true});
+
+        const fileExists = await RNFS.exists(path);
+        if (fileExists) {
+          await RNFS.unlink(path); // Delete old file if it exists
+        }
+        await RNFS.downloadFile({ fromUrl: flyer + url, toFile: path }).promise;
+        myAsyncPDFFunction(path);
+      } catch (err) {
+        console.error("Error fetching image for PDF:", err);
+        // Implement retry logic or show error to user
+      }
+    },
+    []
+  );
+
+  const getItemLayout = useCallback(
+    (_, index) => ({
+      length: SCREEN_HEIGHT,
+      offset: SCREEN_HEIGHT * index,
+      index,
+    }),
+    []
+  );
+
+  const myAsyncPDFFunction = useCallback(
+    async (url) => {
+      const path = `${RNFS.CachesDirectoryPath}/qrcodeEvent.pdf`;
+      const options = {
+        imagePaths: [url],
+        name: "qrcodeEvent",
+        quality: 1.0,
+      };
+
+      try {
+        const pdf = await RNImageToPdf.createPDFbyImages(options);
+        handlePrint(pdf.filePath);
+        await RNFS.unlink(url); // Delete the temporary image file
+      } catch (e) {
+        console.error("Error creating PDF:", e);
+        // Implement retry logic or show error to user
+      }
+    },
+    []
+  );
+
+  const handlePrint = useCallback(async (url) => {
     try {
-      const flyer = constants.flyerdataEvent;
-      const path = `${RNFS.CachesDirectoryPath}/qrcodeEvent.png`;
-      const fileExists = await RNFS.exists(path);
-      if (!fileExists) {
-        await RNFS.downloadFile({ fromUrl: flyer + qrCodeURL, toFile: path })
-          .promise;
+      if (Platform.OS == 'ios') {
+        await RNPrint.print({ filePath: url });
       } else {
-        await RNFS.unlink(path);
-        await RNFS.downloadFile({ fromUrl: flyer + qrCodeURL, toFile: path })
-          .promise;
+        // For Android, print HTML requires a local file URI
+        // RNPrint.print({ filePath: `file://${url}` });
+        // The current implementation of RNPrint on Android might expect a content URI or a path that can be accessed by the system.
+        // If issues arise, consider alternative print solutions or check RNPrint's latest documentation for Android.
+        await RNPrint.print({ filePath: url });
       }
-      myAsyncPDFFunction(path);
-    } catch (err) {
-      fetchImage(qrCodeURL);
-    } finally {
+      await RNFS.unlink(url); // Delete the temporary PDF file
+    } catch (error) {
+      console.error("Error printing:", error);
+      Alert.alert(i18n.t("Print Error"), i18n.t("Unable to print. Please try again."));
     }
-  };
-
-  const getItemLayout = (_, index) => ({
-    length: SCREEN_HEIGHT,
-    offset: SCREEN_HEIGHT * index,
-    index,
-  });
-
-  const myAsyncPDFFunction = async (url) => {
-    const path = `${RNFS.CachesDirectoryPath}/qrcodeEvent.pdf`;
-    const fileExists = await RNFS.exists(path);
-    const options = {
-      imagePaths: [url],
-      name: "qrcodeEvent",
-      quality: 1.0, // optional compression paramter
-    };
-    if (!fileExists) {
-      try {
-        const pdf = await RNImageToPdf.createPDFbyImages(options);
-        handlePrint(pdf.filePath);
-        RNFS.unlink(url);
-      } catch (e) {
-        console.log(e);
-        myAsyncPDFFunction(url);
-      }
-    } else {
-      RNFS.unlink(url);
-      try {
-        const pdf = await RNImageToPdf.createPDFbyImages(options);
-        handlePrint(pdf.filePath);
-        RNFS.unlink(url);
-      } catch (e) {
-        myAsyncPDFFunction(url);
-      }
-    }
-  };
-
-  const handlePrint = async (url) => {
-    await RNPrint.print({ filePath: url });
-    RNFS.unlink(url);
-  };
+  }, []);
 
   const renderBackdrop = useCallback(
     (props) => (
@@ -621,88 +591,65 @@ const Home = (props) => {
   );
 
   return (
-    <SafeAreaProvider
-      style={{ backgroundColor: "#fff", flex: 1, paddingBottom: 24 }}
-    >
+    <SafeAreaProvider style={componentStyles.safeAreaProvider}>
       <Modal
-        visible={modalQRCodeVisable}
+        visible={modalQRCodeVisible}
         animationType="slide"
         transparent={true}
-        onRequestClose={() => setmodalQRCodeVisable(false)}
+        onRequestClose={() => setModalQRCodeVisible(false)}
       >
         <TouchableWithoutFeedback
-          onPressOut={() => setmodalQRCodeVisable(false)}
+          onPressOut={() => {
+            setModalQRCodeVisible(false);
+            setIsBarcodeScannerEnabled(false);
+          }}
         >
-          <View style={style.centeredView}>
-            <View style={style.qrmodalView}>
+          <View style={componentStyles.centeredView}>
+            <View style={componentStyles.qrModalView}>
               {device == null ? (
                 <></>
               ) : (
                 <Camera
-                  style={[
-                    StyleSheet.absoluteFill,
-                    { overflow: "hidden", borderRadius: 20 },
-                  ]}
+                  style={componentStyles.cameraPreview}
                   device={device}
                   androidPreviewViewType={"texture-view"}
-                  isActive={true}
+                  isActive={modalQRCodeVisible} // Only active when modal is visible
                   codeScanner={codeScanner}
                 />
               )}
               <Image
                 resizeMode="contain"
-                style={[StyleSheet.absoluteFill]}
+                style={componentStyles.scanOverlay}
                 source={require("../../../assets/scan.png")}
               />
             </View>
             <TouchableOpacity
-              style={{
-                marginTop: 20,
-                flexDirection: "row",
-                width: 250,
-                backgroundColor: "rgba(234, 85, 4, 1)",
-                borderRadius: 8,
-                padding: 15,
-                alignItems: "center",
-                justifyContent: "center",
-                marginbottom: 20,
-              }}
+              style={componentStyles.closeModalButton}
               onPress={() => {
-                setmodalQRCodeVisable(false);
-                setisBarcodeScannerEnabled(false);
+                setModalQRCodeVisible(false);
+                setIsBarcodeScannerEnabled(false);
               }}
             >
-              <Text
-                style={{
-                  textTransform: "uppercase",
-                  fontSize: 20,
-                  fontWeight: 600,
-                  color: "#fff",
-                }}
-              >
+              <Text style={componentStyles.closeModalButtonText}>
                 {i18n.t("Close")}
               </Text>
             </TouchableOpacity>
           </View>
         </TouchableWithoutFeedback>
       </Modal>
+
       <Modal
-        visible={modalVisable}
+        visible={modalVisible}
         animationType="slide"
         transparent={true}
-        onRequestClose={() => setmodalVisable(false)}
+        onRequestClose={() => setModalVisible(false)}
       >
-        <TouchableWithoutFeedback onPressOut={() => setmodalVisable(false)}>
-          <View style={style.centeredView}>
-            <View style={style.modalView}>
+        <TouchableWithoutFeedback onPressOut={() => setModalVisible(false)}>
+          <View style={componentStyles.centeredView}>
+            <View style={componentStyles.modalView}>
               <Image
                 indicator={Progress}
-                style={{
-                  width: SCREEN_WIDTH - 100,
-                  height: SCREEN_WIDTH - 100,
-                  backgroundColor: "white",
-                  alignSelf: "auto",
-                }}
+                style={componentStyles.qrCodeImage}
                 resizeMode={FastImage.resizeMode.contain}
                 source={{
                   priority: FastImage.priority.high,
@@ -711,82 +658,33 @@ const Home = (props) => {
                 }}
               />
             </View>
-            <View
-              style={{
-                flexDirection: "row",
-                width: SCREEN_WIDTH,
-                margin: 20,
-                justifyContent: "center",
-              }}
-            >
+            <View style={componentStyles.modalButtonsContainer}>
               <TouchableOpacity
-                style={{
-                  width: "40%",
-                  marginRight: 10,
-                  backgroundColor: "rgba(234, 85, 4, 1))",
-                  borderRadius: 8,
-                  padding: 15,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
+                style={componentStyles.modalCloseButton}
                 onPress={() => {
                   setQrCodeURL("");
-                  setmodalVisable(false);
+                  setModalVisible(false);
                 }}
               >
-                <Text
-                  style={{
-                    textTransform: "uppercase",
-                    fontSize: 20,
-                    fontWeight: 600,
-                    color: "#fff",
-                  }}
-                >
+                <Text style={componentStyles.modalButtonText}>
                   {i18n.t("Close")}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={{
-                  width: "40%",
-                  marginLeft: 10,
-                  backgroundColor: "rgba(255, 255, 255, 1)",
-                  borderRadius: 8,
-                  padding: 15,
-                  borderWidth: 2,
-                  borderColor: "#3D4849",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
+                style={componentStyles.modalPrintButton}
                 onPress={() => {
                   Alert.alert(
                     i18n.t("FlyerPrint"),
                     i18n.t("Note: FlyerPrint"),
                     [
-                      {
-                        text: i18n.t("Cancel"),
-                        onPress: () => console.log("Cancel Pressed"),
-                        style: "destructive",
-                      },
-                      {
-                        text: i18n.t("Continue"),
-                        onPress: async () => {
-                          fetchImage(qrCodeURL);
-                        },
-                        style: "default",
-                      },
+                      { text: i18n.t("Cancel"), style: "destructive" },
+                      { text: i18n.t("Continue"), onPress: () => fetchImage(qrCodeURL), style: "default" },
                     ],
                     { cancelable: false }
                   );
                 }}
               >
-                <Text
-                  style={{
-                    textTransform: "uppercase",
-                    fontSize: 20,
-                    fontWeight: 600,
-                    color: "#3D4849",
-                  }}
-                >
+                <Text style={componentStyles.modalPrintButtonText}>
                   {i18n.t("Print")}
                 </Text>
               </TouchableOpacity>
@@ -794,8 +692,9 @@ const Home = (props) => {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
+
       <Modal
-        animationType="fade" // or "fade", "none"
+        animationType="fade"
         transparent={true}
         visible={modalVisibleAlert}
         onRequestClose={() => {
@@ -803,16 +702,16 @@ const Home = (props) => {
         }}
       >
         <ScrollView
-          style={{ backgroundColor: "#fff", marginBottom: 0, width: "100%" }}
+          style={componentStyles.whatsNewScrollView}
           keyboardShouldPersistTaps={"never"}
           keyboardDismissMode="on-drag"
           nestedScrollEnabled={true}
           showsVerticalScrollIndicator={false}
         >
-          <View style={style.centeredView}>
-            <View style={style.modalView2}>
-              <Text style={style.modalTitle}>{i18n.t("w1")}</Text>
-              <Text style={style.modalText}>{i18n.t("w2")}</Text>
+          <View style={componentStyles.centeredView}>
+            <View style={componentStyles.modalView2}>
+              <Text style={componentStyles.modalTitle}>{i18n.t("w1")}</Text>
+              <Text style={componentStyles.modalText}>{i18n.t("w2")}</Text>
 
               <ListItem key="1">
                 <Icon
@@ -822,7 +721,7 @@ const Home = (props) => {
                   color="#3D4849"
                 />
                 <ListItem.Content>
-                  <ListItem.Title style={{ fontWeight: "bold" }}>
+                  <ListItem.Title style={componentStyles.listItemTitle}>
                     {i18n.t("w3")}
                   </ListItem.Title>
                   <ListItem.Subtitle>{i18n.t("w4")}</ListItem.Subtitle>
@@ -836,7 +735,7 @@ const Home = (props) => {
                   color="#3D4849"
                 />
                 <ListItem.Content>
-                  <ListItem.Title style={{ fontWeight: "bold" }}>
+                  <ListItem.Title style={componentStyles.listItemTitle}>
                     {i18n.t("w5")}
                   </ListItem.Title>
                   <ListItem.Subtitle>{i18n.t("w6")}</ListItem.Subtitle>
@@ -850,7 +749,7 @@ const Home = (props) => {
                   color="#3D4849"
                 />
                 <ListItem.Content>
-                  <ListItem.Title style={{ fontWeight: "bold" }}>
+                  <ListItem.Title style={componentStyles.listItemTitle}>
                     {i18n.t("w7")}
                   </ListItem.Title>
                   <ListItem.Subtitle>{i18n.t("w8")}</ListItem.Subtitle>
@@ -864,36 +763,20 @@ const Home = (props) => {
                   color="#3D4849"
                 />
                 <ListItem.Content>
-                  <ListItem.Title style={{ fontWeight: "bold" }}>
+                  <ListItem.Title style={componentStyles.listItemTitle}>
                     {i18n.t("w9")}
                   </ListItem.Title>
                   <ListItem.Subtitle>{i18n.t("w10")}</ListItem.Subtitle>
                 </ListItem.Content>
               </ListItem>
-              <View style={style.modalViewButton}>
+              <View style={componentStyles.modalViewButton}>
                 <TouchableOpacity
-                  style={{
-                    marginTop: 50,
-                    width: 250,
-                    backgroundColor: "#e35504",
-                    borderRadius: 8,
-                    padding: 15,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderColor: "#e35504",
-                  }}
+                  style={componentStyles.whatsNewContinueButton}
                   onPress={() => {
                     setModalVisibleAlert(!modalVisibleAlert);
                   }}
                 >
-                  <Text
-                    style={{
-                      textTransform: "uppercase",
-                      fontSize: 20,
-                      fontWeight: "bold",
-                      color: "#fff",
-                    }}
-                  >
+                  <Text style={componentStyles.whatsNewButtonText}>
                     {i18n.t("Continue")}
                   </Text>
                 </TouchableOpacity>
@@ -904,80 +787,51 @@ const Home = (props) => {
       </Modal>
 
       <AnimatedFlatList
-        onScroll={() => {
-          handleCloseModalPress();
-        }}
+        onScroll={handleCloseModalPress}
         ref={flatListViewer}
-        refreshing={refreshing} // Added pull to refesh state
-        onRefresh={_refresh} // Added pull to refresh control
+        refreshing={refreshing}
+        onRefresh={_refresh}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         nestedScrollEnabled={true}
-        style={{ flex: 1 }}
+        style={componentStyles.flatList}
         data={cameraData}
         extraData={cameraData}
         scrollEventThrottle={16}
         ListEmptyComponent={
-          <View style={style.empty}>
-            <View style={style.fake}>
-              <View style={style.fakeSquare}>
+          <View style={componentStyles.empty}>
+            <View style={componentStyles.fake}>
+              <View style={componentStyles.fakeSquare}>
                 <Image
                   source={require("../../../assets/elementor-placeholder-image.png")}
                   resizeMode={FastImage.resizeMode.cover}
-                  style={{
-                    position: "absolute",
-                    height: 175,
-                    width: SCREEN_WIDTH - 150,
-                    borderRadius: 10,
-                    overflow: "hidden",
-                  }}
+                  style={componentStyles.fakeImage}
                 />
               </View>
               <View
                 style={[
-                  style.fakeLine,
-                  {
-                    width: SCREEN_WIDTH - 150,
-                    height: 40,
-                    marginBottom: 0,
-                    position: "absolute",
-                    bottom: 0,
-                  },
+                  componentStyles.fakeLine,
+                  componentStyles.fakeLineLarge,
                 ]}
               />
               <View
                 style={[
-                  style.fakeLine,
-                  {
-                    width: 30,
-                    height: 120,
-                    marginBottom: 0,
-                    position: "absolute",
-                    top: 8,
-                    right: 5,
-                  },
+                  componentStyles.fakeLine,
+                  componentStyles.fakeLineSmallRight,
                 ]}
               />
               <View
                 style={[
-                  style.fakeLine,
-                  {
-                    width: 150,
-                    height: 20,
-                    marginBottom: 0,
-                    position: "absolute",
-                    bottom: 10,
-                    left: 5,
-                    backgroundColor: "#e8e9ed",
-                  },
+                  componentStyles.fakeLine,
+                  componentStyles.fakeLineSmallLeft,
                 ]}
               />
             </View>
             <EmptyStateView
               headerText={i18n.t("Capturing Moments, Crafting Memories!")}
               subHeaderText={i18n.t("Start")}
-              headerTextStyle={style.headerTextStyle}
-              subHeaderTextStyle={style.subHeaderTextStyle}
+              headerTextStyle={componentStyles.headerTextStyle}
+              subHeaderTextStyle={componentStyles.subHeaderTextStyle}
             />
           </View>
         }
@@ -988,20 +842,22 @@ const Home = (props) => {
               _gotoAllFriends={_gotoAllFriends}
               goToFriend={goToFriend}
             />
-
-            <Loading
-              message={uploading.message}
-              flex={uploading.display}
-              progress={uploading.progress}
-            />
+            {uploading && (
+              <Loading
+                message={uploading.message}
+                flex={uploading.display}
+                progress={uploading.progress}
+              />
+            )}
           </View>
         }
         getItemLayout={getItemLayout}
-        keyExtractor={(_, index) => index}
-        renderItem={(item, index) =>
-          item.item.owner == user.user_id ? (
+        keyExtractor={(item) => item.UUID || item.id} // Use UUID or a unique ID from item
+        renderItem={({ item, index }) => // Destructure item and index
+          item.owner == user.user_id ? (
             <ListItems
               item={item}
+              user={user}
               index={index}
               lefthanded={user.lefthanded}
               isPro={user.isPro == undefined ? "0" : user.isPro}
@@ -1042,113 +898,52 @@ const Home = (props) => {
         android_keyboardInputMode={"adjustPan"}
         enableDismissOnClose
         enableDynamicSizing
-        style={{
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 0,
-            height: 7,
-          },
-          shadowOpacity: 0.43,
-          shadowRadius: 9.51,
-          backgroundColor: "transparent",
-          elevation: 15,
-        }}
+        style={componentStyles.bottomSheetModal}
         backdropComponent={renderBackdrop}
       >
-        <BottomSheetView
-          style={[StyleSheet.absoluteFill, { alignItems: "center" }]}
-        >
-          <Text>{i18n.t("Make a Selection")}</Text>
-          <Animated.View
-            style={{
-              justifyContent: "flex-end",
-            }}
-          >
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-                alignContent: "space-between",
-                gap: 50,
-              }}
-            >
-              <View
-                style={{
-                  flexDirection: "column",
-                  alignContent: "center",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
+        <BottomSheetView style={componentStyles.bottomSheetContent}>
+          <Text style={componentStyles.bottomSheetTitle}>
+            {i18n.t("Make a Selection")}
+          </Text>
+          <Animated.View style={componentStyles.bottomSheetActionsContainer}>
+            <View style={componentStyles.bottomSheetIconsRow}>
+              <View style={componentStyles.bottomSheetIconColumn}>
                 <Icon
                   type="material-community"
                   size={40}
                   name="view-gallery-outline"
                   color={"#000"}
-                  containerStyle={{
-                    height: 75,
-                    width: 75,
-                    alignContent: "center",
-                    justifyContent: "center",
-                    borderRadius: 22,
-                  }}
-                  onPress={async () => {
+                  containerStyle={componentStyles.bottomSheetIconContainer}
+                  onPress={useCallback(async () => { // Wrapped in useCallback
                     handleCloseModalPress();
                     try {
-                      const ShareResponse =
-                        await Share.share(shareOptionsGallery);
-                      console.log("Result =>", ShareResponse);
+                      await Share.share(shareOptionsGallery);
                     } catch (error) {
-                      console.log("Error =>", error);
+                      console.log("Error sharing gallery:", error);
                     }
-                  }}
+                  }, [shareOptionsGallery, handleCloseModalPress])}
                 />
-                <Text
-                  style={{
-                    textAlign: "center",
-                    marginTop: -10,
-                  }}
-                >
+                <Text style={componentStyles.bottomSheetIconText}>
                   {i18n.t("OnlineGallery")}
                 </Text>
               </View>
-              <View
-                style={{
-                  flexDirection: "column",
-                  alignContent: "center",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
+              <View style={componentStyles.bottomSheetIconColumn}>
                 <Icon
                   type="material"
                   size={40}
                   name="photo-camera-back"
                   color={"#000"}
-                  containerStyle={{
-                    height: 75,
-                    width: 75,
-                    alignContent: "center",
-                    justifyContent: "center",
-                    borderRadius: 22,
-                  }}
-                  onPress={async () => {
+                  containerStyle={componentStyles.bottomSheetIconContainer}
+                  onPress={useCallback(async () => { // Wrapped in useCallback
                     handleCloseModalPress();
                     try {
-                      const ShareResponse = await Share.share(shareOptions);
-                      console.log("Result =>", ShareResponse);
+                      await Share.share(shareOptions);
                     } catch (error) {
-                      console.log("Error =>", error);
+                      console.log("Error sharing event:", error);
                     }
-                  }}
+                  }, [shareOptions, handleCloseModalPress])}
                 />
-                <Text
-                  style={{
-                    textAlign: "center",
-                    marginTop: -10,
-                  }}
-                >
+                <Text style={componentStyles.bottomSheetIconText}>
                   {i18n.t("Share Event")}
                 </Text>
               </View>
@@ -1159,7 +954,13 @@ const Home = (props) => {
     </SafeAreaProvider>
   );
 };
-const style = StyleSheet.create({
+
+const componentStyles = StyleSheet.create({
+  safeAreaProvider: {
+    backgroundColor: "#fff",
+    flex: 1,
+    paddingBottom: 24,
+  },
   headerTextStyle: {
     color: "rgb(76, 76, 76)",
     fontSize: 18,
@@ -1169,30 +970,56 @@ const style = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    overflow: "hidden",
   },
-  qrmodalView: {
+  qrModalView: {
     width: SCREEN_WIDTH - 50,
     height: SCREEN_WIDTH - 50,
     backgroundColor: "white",
     borderRadius: 20,
     alignItems: "center",
     shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowOffset: { width: 0, height: 2 },
     overflow: "hidden",
     shadowOpacity: 0.25,
     shadowRadius: 22,
     elevation: 7,
+  },
+  noCameraText: {
+    color: "black",
+    fontSize: 18,
+    marginTop: 20,
+  },
+  cameraPreview: {
+    ...StyleSheet.absoluteFillObject, // Use absoluteFillObject for full coverage
+    borderRadius: 20,
+    overflow: "hidden",
+  },
+  scanOverlay: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  closeModalButton: {
+    marginTop: 20,
+    flexDirection: "row",
+    width: 250,
+    backgroundColor: "rgba(234, 85, 4, 1)",
+    borderRadius: 8,
+    padding: 15,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 20,
+  },
+  closeModalButtonText: {
+    textTransform: "uppercase",
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#fff",
   },
   modalView2: {
     width: "100%",
     height: "100%",
     marginTop: 180,
     backgroundColor: "white",
-    margin: 35,
+    marginHorizontal: 35, // Use horizontal margin for better spacing
     padding: 10,
   },
   modalViewButton: {
@@ -1207,129 +1034,59 @@ const style = StyleSheet.create({
     padding: 35,
     alignItems: "center",
     shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 7,
   },
-  whiteIcon2: {
-    marginTop: 5,
-    paddingRight: 5,
-    color: "#000",
-    justifyContent: "center",
+  qrCodeImage: {
+    width: SCREEN_WIDTH - 100,
+    height: SCREEN_WIDTH - 100,
+    backgroundColor: "white",
+    alignSelf: "auto",
   },
-  vertDots: {
-    color: "#000",
-    marginRight: -15,
-    alignItems: "center",
-  },
-  imageStyle: {
-    marginTop: 0,
-    height: 300,
-    width: 300,
-    resizeMode: "contain",
-  },
-  subHeaderTextStyle: {
-    fontSize: 15,
-    color: "rgb(147, 147, 147)",
-    paddingHorizontal: 15,
-    textAlign: "center",
-    marginVertical: 15,
-  },
-  dividerTableStyle: {
-    height: 0.2,
-    marginTop: 0,
-    marginBottom: 5,
-    width: SCREEN_WIDTH * 1,
-    alignSelf: "center",
-    backgroundColor: "#ccc",
-  },
-  buttonStyle: {
+  modalButtonsContainer: {
     flexDirection: "row",
-    marginTop: 20,
-    height: 65,
-    width: "80%",
-    backgroundColor: "#3D4849",
-    borderRadius: 10,
-    paddingHorizontal: 62,
+    width: SCREEN_WIDTH,
+    margin: 20,
+    justifyContent: "center",
+  },
+  modalCloseButton: {
+    width: "40%",
+    marginRight: 10,
+    backgroundColor: "rgba(234, 85, 4, 1)",
+    borderRadius: 8,
+    padding: 15,
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 1,
-    borderColor: "#3D4849",
   },
-  buttonTextStyle: {
-    fontSize: 19,
-    width: SCREEN_WIDTH,
-    color: "#fff",
-    fontWeight: "bold",
-    alignSelf: "center",
-    justifyContent: "center",
-    textAlign: "center",
+  modalButtonText: {
     textTransform: "uppercase",
-    textDecorationLine: "none",
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#fff",
   },
-  listItem: {
-    marginBottom: 20,
-    padding: 10,
-    borderRadius: 20,
-    shadowColor: "rgba(0, 0, 0, 1)",
-    shadowOpacity: 0.4,
-    shadowRadius: 5,
-    shadowOffset: {
-      height: 1,
-      width: 1,
-    },
-    backgroundColor: "#FFF",
-    width: "95%",
-    elevation: 7,
-    flex: 1,
-    alignSelf: "center",
-    flexDirection: "row",
-  },
-  qrImageView: {
-    position: "absolute",
-    width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT,
-  },
-  /** Fake */
-  fake: {
-    flexDirection: "row",
+  modalPrintButton: {
+    width: "40%",
+    marginLeft: 10,
+    backgroundColor: "rgba(255, 255, 255, 1)",
+    borderRadius: 8,
+    padding: 15,
+    borderWidth: 2,
+    borderColor: "#3D4849",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 24,
-    opacity: 0.4,
   },
-  fakeCircle: {
-    width: 44,
-    height: 44,
-    borderRadius: 9999,
-    backgroundColor: "#e8e9ed",
-    marginRight: 16,
+  modalPrintButtonText: {
+    textTransform: "uppercase",
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#3D4849",
   },
-  fakeSquare: {
-    width: SCREEN_WIDTH - 150,
-    height: 175,
-    backgroundColor: "#e8e9ed",
-    borderRadius: 10,
-  },
-  fakeLine: {
-    width: 200,
-    height: 10,
-    borderRadius: 4,
-    backgroundColor: "#e8e9ed",
-    marginBottom: 8,
-    opacity: 0.6,
-  },
-  empty: {
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 50,
+  whatsNewScrollView: {
+    backgroundColor: "#fff",
+    marginBottom: 0,
+    width: "100%",
   },
   modalTitle: {
     fontSize: 24,
@@ -1342,6 +1099,139 @@ const style = StyleSheet.create({
     fontWeight: "500",
     textAlign: "left",
     marginBottom: 15,
+  },
+  listItemTitle: {
+    fontWeight: "bold",
+  },
+  whatsNewContinueButton: {
+    marginTop: 50,
+    width: 250,
+    backgroundColor: "#e35504",
+    borderRadius: 8,
+    padding: 15,
+    alignItems: "center",
+    justifyContent: "center",
+    borderColor: "#e35504",
+  },
+  whatsNewButtonText: {
+    textTransform: "uppercase",
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#fff",
+  },
+  subHeaderTextStyle: {
+    fontSize: 15,
+    color: "rgb(147, 147, 147)",
+    paddingHorizontal: 15,
+    textAlign: "center",
+    marginVertical: 15,
+  },
+  fake: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 24,
+    opacity: 0.4,
+  },
+  fakeSquare: {
+    width: SCREEN_WIDTH - 150,
+    height: 175,
+    backgroundColor: "#e8e9ed",
+    borderRadius: 10,
+  },
+  fakeImage: {
+    position: "absolute",
+    height: 175,
+    width: SCREEN_WIDTH - 150,
+    borderRadius: 10,
+    overflow: "hidden",
+  },
+  fakeLine: {
+    width: 200,
+    height: 10,
+    borderRadius: 4,
+    backgroundColor: "#e8e9ed",
+    marginBottom: 8,
+    opacity: 0.6,
+  },
+  fakeLineLarge: {
+    width: SCREEN_WIDTH - 150,
+    height: 40,
+    marginBottom: 0,
+    position: "absolute",
+    bottom: 0,
+  },
+  fakeLineSmallRight: {
+    width: 30,
+    height: 120,
+    marginBottom: 0,
+    position: "absolute",
+    top: 8,
+    right: 5,
+  },
+  fakeLineSmallLeft: {
+    width: 150,
+    height: 20,
+    marginBottom: 0,
+    position: "absolute",
+    bottom: 10,
+    left: 5,
+    backgroundColor: "#e8e9ed",
+  },
+  empty: {
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 50,
+  },
+  flatList: {
+    flex: 1,
+  },
+  bottomSheetModal: {
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 7 },
+    shadowOpacity: 0.43,
+    shadowRadius: 9.51,
+    backgroundColor: "transparent",
+    elevation: 15,
+  },
+  bottomSheetContent: {
+    flex: 1,
+    alignItems: "center",
+  },
+  bottomSheetTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 15,
+  },
+  bottomSheetActionsContainer: {
+    justifyContent: "flex-end",
+    width: "100%",
+  },
+  bottomSheetIconsRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 50,
+  },
+  bottomSheetIconColumn: {
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  bottomSheetIconContainer: {
+    height: 70,
+    width: 70,
+    alignContent: "center",
+    justifyContent: "center",
+    borderRadius: 35, // Half of height/width for perfect circle
+    backgroundColor: "#f0f0f0", // Added a subtle background for icons
+  },
+  bottomSheetIconText: {
+    textAlign: "center",
+    marginTop: 10,
   },
 });
 

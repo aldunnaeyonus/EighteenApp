@@ -2,7 +2,7 @@ import { StyleSheet, Platform } from "react-native";
 import { colors } from "./index.style";
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../utils/constants";
 
-const IS_IOS = Platform.OS === "ios";
+const IS_IOS = Platform.OS == "ios";
 
 function wp(percentage) {
   const value = (percentage * SCREEN_WIDTH) / 100;
@@ -192,25 +192,45 @@ export default StyleSheet.create({
     backgroundColor: "transparent",
     width: 80,
   },
-  imageUserNameContainers: {
+    imageUserNameContainersUser: {
     position: "absolute",
     overflow: "hidden",
-    right: 5,
-    top: 175,
+    right: 0,
+    top: 25,
     flexDirection: "column",
     justifyContent: "flex-end",
     backgroundColor: "transparent",
-    width: 80,
+    width: 60,
+  },
+  imageUserNameContainersUserLeft: {
+    position: "absolute",
+    overflow: "hidden",
+    left: 0,
+    top: 25,
+    flexDirection: "column",
+    justifyContent: "flex-end",
+    backgroundColor: "transparent",
+    width: 60,
+  },
+  imageUserNameContainers: {
+    position: "absolute",
+    overflow: "hidden",
+    right: 0,
+    top: 150,
+    flexDirection: "column",
+    justifyContent: "flex-end",
+    backgroundColor: "transparent",
+    width: 60,
   },
   imageUserNameContainersLeft: {
     position: "absolute",
     overflow: "hidden",
-    left: -25,
-    top: 175,
+    left: 0,
+    top: 150,
     flexDirection: "column",
     justifyContent: "flex-end",
     backgroundColor: "transparent",
-    width: 80,
+    width: 60,
   },
   imageUserNameTitleBlack: {
     fontFamily: "HelveticaNeue-Medium",

@@ -8,10 +8,11 @@ import { Icon } from "react-native-elements";
 import { SCREEN_WIDTH } from "../../../utils/constants";
 
 const ImageGallery = (props) => {
+
   return (
     <TouchableOpacity
       onPress={() => {
-        props.showModalFunction(props.item.index);
+        props.showModalFunction(props.index);
       }}
     >
       <Image
@@ -21,9 +22,9 @@ const ImageGallery = (props) => {
           cache: FastImage.cacheControl.immutable,
           priority: FastImage.priority.high,
           uri:
-            props.item.item.type == "video"
-              ? props.item.item.videoThumbnail
-              : props.item.item.thumbnail,
+            props.item.type == "video"
+              ? props.item.videoThumbnail
+              : props.item.thumbnail,
         }}
         resizeMode={FastImage.resizeMode.cover}
         style={{
@@ -34,7 +35,7 @@ const ImageGallery = (props) => {
           width: SCREEN_WIDTH / 4.0,
         }}
       />
-      {props.item.item.type == "video" && (
+      {props.item.type == "video" && (
         <Icon
           type="material-community"
           name="play-box-outline"
@@ -49,7 +50,7 @@ const ImageGallery = (props) => {
           color="white"
         />
       )}
-      {props.item.item.comments > 0 && (
+      {props.item.comments > 0 && (
       <Icon
         name={"comment-outline"}
         type="material-community"

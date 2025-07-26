@@ -12,10 +12,10 @@ const AllFriendsListItem = (props) => {
     <>
       <TouchableOpacity
         onPress={async () => {
-          props.goToFriend(props.item.item.friendID);
+          props.goToFriend(props.item.friendID);
         }}
       >
-        <View key={props.item.item.UUID} style={style.listItem}>
+        <View key={props.item.UUID} style={style.listItem}>
           <View
             style={{
               flexDirection: "row",
@@ -27,7 +27,7 @@ const AllFriendsListItem = (props) => {
             <Image
               indicator={Progress}
               source={{
-                uri: props.item.item.friend_avatar,
+                uri: props.item.friend_avatar,
                 priority: FastImage.priority.high,
                 cache: FastImage.cacheControl.immutable,
               }}
@@ -43,7 +43,7 @@ const AllFriendsListItem = (props) => {
               }}
             />
           </View>
-          {props.item.item.friend_isPro == "1" && (
+          {props.item.friend_isPro == "1" && (
             <View style={{ position: "absolute" }}>
               <View
                 style={{
@@ -79,7 +79,7 @@ const AllFriendsListItem = (props) => {
             }}
           >
             <Text style={style.titleText}>
-              {props.item.item.friend_handle.toLowerCase()}
+              {props.item.friend_handle.toLowerCase()}
             </Text>
           </View>
           <ListItem.Chevron style={{ marginRight: 10 }} />

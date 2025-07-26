@@ -27,7 +27,7 @@ import { storage, updateItemFeed } from "../../context/components/Storage";
 import { useMMKVObject } from "react-native-mmkv";
 
 const requestSavePermission = async (): Promise<boolean> => {
-  if (Platform.OS !== "android" || Platform.Version >= 33) return true;
+  if (Platform.OS != "android" || Platform.Version >= 33) return true;
 
   const permission = PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
   if (permission == null) return false;
@@ -35,7 +35,7 @@ const requestSavePermission = async (): Promise<boolean> => {
   if (!hasPermission) {
     const permissionRequestResult =
       await PermissionsAndroid.request(permission);
-    hasPermission = permissionRequestResult === "granted";
+    hasPermission = permissionRequestResult == "granted";
   }
   return hasPermission;
 };
@@ -182,7 +182,7 @@ const MediaPage = (props: {
 
   return (
     <View style={[styles.container, screenStyle]}>
-      {type === "photo" && (
+      {type == "photo" && (
         <Image
           source={source}
           style={StyleSheet.absoluteFill}
@@ -191,7 +191,7 @@ const MediaPage = (props: {
           onLoad={onMediaLoad}
         />
       )}
-      {type === "video" && (
+      {type == "video" && (
         <Video
           source={source}
           style={{width:SCREEN_WIDTH, height:SCREEN_HEIGHT}}

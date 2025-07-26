@@ -22,7 +22,7 @@ export const Row = ({
     <View>
       {fields.map((field, index) => (
         <View
-          style={[styles.row, fields.length - 1 === index && styles.rowLast]}
+          style={[styles.row, fields.length - 1 == index && styles.rowLast]}
           key={field.label}>
           <Text style={{}}>{field.label}</Text>
           <Text style={{}}>{field.value}</Text>

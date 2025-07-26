@@ -5,6 +5,8 @@ import {
   Text,
   NativeModules,
   Alert,
+  Linking,
+  StyleSheet, // Added StyleSheet import
 } from "react-native";
 import { TouchableOpacity } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
@@ -50,33 +52,28 @@ import Animated from "react-native-reanimated";
 
 const EditCamera = (props) => {
   const [user] = useMMKVObject("user.Data", storage);
-  const [switch1, setSwitch1] = useState(
-    (props.route.params.camera_add_social = "1" ? true : false)
-  );
-  const [switch5, setSwitch5] = useState(
-    (props.route.params.isHidden = "1" ? true : false)
-  );
-  const [switch3, setSwitch3] = useState(
-    (props.route.params.camera_purchase_more = "1" ? true : false)
-  );
+
+  const [switch1, setSwitch1] = useState(props.route.params.camera_add_social == "1");
+  const [switch5, setSwitch5] = useState(props.route.params.isHidden == "1");
+  const [switch3, setSwitch3] = useState(props.route.params.camera_purchase_more == "1");
   const [dname, setDName] = useState(props.route.params.description.trim());
-  const [isPro] = useState(user.isPro == "1" ? true : false);
-  const [switch2, setSwitch2] = useState(
-    (props.route.params.show_gallery = "1" ? true : false)
-  );
-  const [interval] = useState(1);
-  const [switch4, setSwitch4] = useState(
-    (props.route.params.autoJoin = "1" ? true : false)
-  );
+  const [isPro] = useState(user.isPro == "1");
+  const [switch2, setSwitch2] = useState(props.route.params.show_gallery == "1");
+  const [switch4, setSwitch4] = useState(props.route.params.autoJoin == "1");
+
   const timestamp = parseInt(props.route.params.start);
   const timestampEnd = parseInt(props.route.params.end);
   const sourcedDate = moment(timestamp);
   const [selectedDate, setSelectedDate] = useState(sourcedDate.toDate());
+
   const snapPoints = useMemo(() => ["17%"], []);
+  const bottomSheetRef = useRef(null);
   const handlePresentModalPress = useCallback(() => {
     bottomSheetRef.current?.present();
   }, []);
-  const bottomSheetRef = useRef(null);
+  const handleDismissModalPress = useCallback(() => {
+    bottomSheetRef.current?.close();
+  }, []);
 
   const [minimumDate] = useState(new Date());
   const [cameraStatus] = ImagePicker.useCameraPermissions();
@@ -97,213 +94,163 @@ const EditCamera = (props) => {
   );
   const [name, setName] = useState(props.route.params.title);
   const [image, setImage] = useState(props.route.params.illustration);
-  const [maximumDate] = useState();
-  const [show, setShow] = useState(false);
-  const [clockShow, setClockShow] = useState(false);
+  // Removed maximumDate as it was unused
+  const [showDatePicker, setShowDatePicker] = useState(false); // Controls visibility of date picker
+  const [showTimePicker, setShowTimePicker] = useState(false); // Controls visibility of time picker (Android only, shown after date)
   const [verified, setVerified] = useState(true);
-  const [errorColor] = useState(verified ? "#fafbfc" : "#ffa3a6");
-  const [isAI, setIsAI] = useState(false);
+  const errorColor = verified ? "#fafbfc" : "#ffa3a6";
+  const [isAI, setIsAI] = useState(false); // Tracks if the current image is AI generated
+  const [interval] = useState(1); // Interval for minute picker
   let deviceLanguage =
-    Platform.OS === "ios"
-      ? NativeModules.SettingsManager.settings.AppleLocale
-      : NativeModules.I18nManager.localeIdentifier;
+    Platform.OS == "ios"
+      ? NativeModules.SettingsManager.settings.AppleLocale || NativeModules.SettingsManager.settings.AppleLanguages[0]
+      : RNLocalize.getLocales()[0].languageTag; // More robust language tag
   const [start, setStart] = useState(timestamp);
   const [end, setEnd] = useState(timestampEnd);
-  const [isEditing, setisEditing] = useState(false);
+  const [isEditing, setisEditing] = useState(false); // True when image is sent to editor, false when returned
+  const [showSaveIndicator, setShowSaveIndicator] = useState(false); // For header right saving indicator
+
   let notification = new NotifService();
   const [seed, setSeed] = useState(72);
-  const [showClose, setShowClose] = useState(true);
+  const [showClose, setShowClose] = useState(true); // Controls visibility of save button vs loading
 
-  const onChange = (event, selectDate) => {
-    if (event.type === "set") {
-      setClockShow(false);
-      setSelectedDate(selectDate);
-      setStart(moment(selectDate).unix());
-      setEnd(
-        parseInt(moment(selectDate).unix()) +
-          (isPro
-            ? parseInt(constants.camera_time_seconds_PRO[selectedIndex])
-            : parseInt(constants.camera_time_seconds_PRO[selectedIndex]))
-      );
-    } else {
-      setClockShow(false);
-      setSelectedDate(selectedDate);
-      setStart(moment(selectedDate).unix());
-      setEnd(
-        parseInt(moment(selectedDate).unix()) +
-          (isPro
-            ? parseInt(constants.camera_time_seconds_PRO[selectedIndex])
-            : parseInt(constants.camera_time_seconds_PRO[selectedIndex]))
-      );
+  const calculateEndTime = useCallback((selectedStartTime, durationIndex) => {
+    const durationSeconds = isPro
+      ? parseInt(constants.camera_time_seconds_PRO[durationIndex])
+      : parseInt(constants.camera_time_seconds[durationIndex]);
+    return parseInt(moment(selectedStartTime).unix()) + durationSeconds;
+  }, [isPro, constants.camera_time_seconds_PRO, constants.camera_time_seconds]);
+
+  const onChange = (event, selected) => {
+    // This handles the general onChange for iOS (datetime) and Android (time after date)
+    setShowDatePicker(false); // Hide date picker if shown
+    setShowTimePicker(false); // Hide time picker if shown
+
+    if (event.type == "set" && selected) {
+      setSelectedDate(selected);
+      setStart(moment(selected).unix());
+      setEnd(calculateEndTime(selected, selectedIndex));
     }
   };
 
-  const cameraChange = (value) => {
+  const onChangeAndroid = (event, selected) => {
+    setShowDatePicker(false); // Always hide date picker after interaction
+    if (event.type == "set" && selected) {
+      setSelectedDate(selected);
+      setStart(moment(selected).unix());
+      // On Android, after selecting a date, show the time picker
+      setShowTimePicker(true);
+    }
+  };
+
+  const onChangeIOS = (event, selected) => {
+    // For iOS, which can show both date and time at once
+    if (event.type == "neutralButtonPressed") {
+      // Handle neutral button if needed, here we just keep current state
+      setSelectedDate(selectedDate);
+      setStart(moment(selectedDate).unix());
+      setEnd(calculateEndTime(selectedDate, selectedIndex));
+    } else if (selected) {
+      setSelectedDate(selected);
+      setStart(moment(selected).unix());
+      setEnd(calculateEndTime(selected, selectedIndex));
+    }
+  };
+
+  const cameraChange = useCallback((value) => {
     setCameras(value);
-  };
+  }, []);
 
-  const daysChange = (value) => {
+  const daysChange = useCallback((value) => {
     setSelectedIndex(value);
-    setEnd(
-      start +
-        (isPro
-          ? parseInt(constants.camera_time_seconds_PRO[value])
-          : parseInt(constants.camera_time_seconds_PRO[value]))
-    );
-  };
+    setEnd(calculateEndTime(selectedDate, value));
+  }, [selectedDate, calculateEndTime]);
 
-  const onChangeIOS = (event, selectDate) => {
-    if (event.type === "neutralButtonPressed") {
-      setSelectedDate(selectedDate);
-      setStart(moment(selectedDate).unix());
-      setEnd(
-        parseInt(moment(selectedDate).unix()) +
-          (isPro
-            ? parseInt(constants.camera_time_seconds_PRO[selectedIndex])
-            : parseInt(constants.camera_time_seconds_PRO[selectedIndex]))
-      );
-    } else {
-      setSelectedDate(selectDate);
-      setStart(moment(selectDate).unix());
-      setEnd(
-        parseInt(moment(selectDate).unix()) +
-          (isPro
-            ? parseInt(constants.camera_time_seconds_PRO[selectedIndex])
-            : parseInt(constants.camera_time_seconds_PRO[selectedIndex]))
-      );
-    }
-  };
-
-  const mediaChange = (value) => {
+  const mediaChange = useCallback((value) => {
     setMedia(value);
-  };
-  const toggleSwitch1 = () => {
-    setSwitch1(!switch1);
-  };
+  }, []);
 
-  const toggleSwitch3 = () => {
-    setSwitch3(!switch3);
-  };
+  const toggleSwitch1 = useCallback(() => setSwitch1(!switch1), [switch1]);
+  const toggleSwitch3 = useCallback(() => setSwitch3(!switch3), [switch3]);
+  const toggleSwitch2 = useCallback(() => setSwitch2(!switch2), [switch2]);
+  const toggleSwitch4 = useCallback(() => setSwitch4(!switch4), [switch4]);
+  const toggleSwitch5 = useCallback(() => setSwitch5(!switch5), [switch5]);
 
-  const usePollinationsImages = (prompt, options = {}) => {
+  const usePollinationsImages = useCallback((prompt, options = {}) => {
     const {
       width = 1024,
       height = 863,
       model = "flux",
-      seed = seed,
+      seed: currentSeed = seed, // Use the stateful seed
       nologo = true,
       enhance = false,
     } = options;
-    const imageUrl = () => {
-      const params = new URLSearchParams({
-        width,
-        height,
-        model,
-        seed,
-        nologo,
-        enhance,
-      });
-      return `https://pollinations.ai/p/${encodeURIComponent(prompt)}?${params.toString()}`;
-    };
-    return imageUrl;
-  };
+    const params = new URLSearchParams({
+      width,
+      height,
+      model,
+      seed: currentSeed,
+      nologo,
+      enhance,
+    });
+    return `https://pollinations.ai/p/${encodeURIComponent(prompt)}?${params.toString()}`;
+  }, [seed]); // Depends on `seed`
 
-  const AITexttoImage = () => {
-    const userImage = usePollinationsImages(
-      dname.length > 5
-        ? dname
-        : `Create a cinematic 4K photo shot on a 70mm, Ultra-Wide Angle, Depth of Field, Shutter Speed 1/1000, F/22 camera for a gathering that is titled ${name} and is in dramatic and stunning setting located in ${RNLocalize.getTimeZone()} and is also an award winning photo worthy of instagram.`,
-      {
-        width: 1024,
-        height: 863,
-        seed: seed,
-        model: "flux",
-        nologo: true,
-        enhance: true,
-      }
-    );
+  const AITexttoImage = useCallback(() => {
+    setIsAI(true);
+    const promptText = dname.length > 5
+      ? dname
+      : `Create a cinematic 4K photo shot on a 70mm, Ultra-Wide Angle, Depth of Field, Shutter Speed 1/1000, F/22 camera for a gathering that is titled ${name} and is in dramatic and stunning setting located in ${RNLocalize.getTimeZone()} and is also an award winning photo worthy of instagram.`;
+
+    const userImage = usePollinationsImages(promptText, {
+      seed: seed, // Pass the current seed
+    });
     setImage(userImage);
     setisEditing(true);
     setShowClose(false);
-  };
+  }, [dname, name, seed, usePollinationsImages]);
 
-  const onChangeAndroid = (event, selectDate) => {
-    if (event.type === "set") {
-      setShow(false);
-      setSelectedDate(selectDate);
-      setsTimeDate(selectDate);
-      setClockShow(true);
-    } else {
-      setShow(false);
-      setSelectedDate(selectedDate);
-      setsTimeDate(selectedDate);
-      setClockShow(false);
-    }
-  };
-
-  const MODE_VALUES = Platform.select({
-    ios: Object.values(IOS_MODE),
-    android: Object.values(ANDROID_MODE),
-    windows: [],
-  });
-  const DISPLAY_VALUES = Platform.select({
-    ios: Object.values(IOS_DISPLAY),
-    android: Object.values(ANDROID_DISPLAY),
-    windows: [],
-  });
-
-  const toggleSwitch2 = () => {
-    setSwitch2(!switch2);
-  };
-
-  const toggleSwitch4 = () => {
-    setSwitch4(!switch4);
-  };
-
-  const toggleSwitch5 = () => {
-    setSwitch5(!switch5);
-  };
-  const editImage = async (image) => {
+  const editImage = useCallback(async (imgUri) => {
     try {
-      await PhotoEditor.open({
-        path: image,
+      setisEditing(true);
+      setShowClose(false);
+      const result = await PhotoEditor.open({
+        path: imgUri,
         stickers,
-      }).then((image) => {
-        setShowClose(true);
-        setImage(image);
-        setisEditing(false);
       });
-    } catch (e) {
-      console.log("e", e);
+      setShowClose(true);
+      setImage(result);
       setisEditing(false);
+    } catch (e) {
+      console.log("Photo editor error:", e);
+      Alert.alert(i18n.t("Error"), i18n.t("Failed to edit image."));
+      setisEditing(false);
+      setShowClose(true);
+    } finally {
+      await AsyncStorage.removeItem("media.path");
     }
-    await AsyncStorage.removeItem("media.path");
-  };
+  }, []); // No dependencies that change value here
 
-  const pickImage = async () => {
-    if (libraryStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
-      await ImagePicker.getMediaLibraryPermissionsAsync();
-    } else if (libraryStatus.status == ImagePicker.PermissionStatus.DENIED) {
+  const pickImage = useCallback(async () => {
+    handleDismissModalPress();
+    setIsAI(false); // Reset AI state when picking from gallery
+
+    let permissionStatus;
+    // Request permission if not granted for media library
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    permissionStatus = status;
+
+    if (permissionStatus == ImagePicker.PermissionStatus.DENIED) {
       Alert.alert(
         i18n.t("Permissions"),
         i18n.t("UseLibrary"),
         [
-          {
-            text: i18n.t("Cancel"),
-            onPress: () => console.log("Cancel Pressed"),
-            style: "destructive",
-          },
-          {
-            text: i18n.t("Settings"),
-            onPress: () => {
-              Linking.openSettings();
-            },
-            style: "default",
-          },
+          { text: i18n.t("Cancel"), style: "destructive" },
+          { text: i18n.t("Settings"), onPress: () => Linking.openSettings() },
         ],
         { cancelable: false }
       );
-    } else {
+    } else if (permissionStatus == ImagePicker.PermissionStatus.GRANTED) {
       setShowClose(false);
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -314,87 +261,69 @@ const EditCamera = (props) => {
         quality: 1,
         orderedSelection: true,
       });
-      if (!result.canceled) {
+      if (!result.canceled && result.assets && result.assets.length > 0) {
         setShowClose(true);
         setImage(result.assets[0].uri);
-        setisEditing(true);
+        setisEditing(true); // Image might need editing
       } else {
-        setImage(image);
+        setImage(image); // Revert to original if cancelled
         setisEditing(false);
+        setShowClose(true);
       }
     }
-  };
+  }, [handleDismissModalPress, image]); // Added image as dependency to revert to it
 
-  useFocusEffect(
-    useCallback(() => {
-      const pickImage = async () => {
-        const value = await AsyncStorage.getItem("media.path");
-        if (value != undefined) {
-          setShowClose(false);
-          editImage(value);
-        }
-      };
-      pickImage();
-      props.navigation.setOptions({
-        headerRight: () =>
-          showClose ? (
-            <TouchableOpacity
-              onPress={() => {
-                createEvent();
-              }}
-            >
-              <Text style={{ color: "#3D4849", marginRight: 10 }}>
-                {i18n.t("Save")}
-              </Text>
-            </TouchableOpacity>
-          ) : (
-            <></>
-          ),
+  const takePhoto = useCallback(async () => {
+    handleDismissModalPress();
+    setIsAI(false); // Reset AI state when taking photo
+
+    let permissionStatus;
+    // Request permission if not granted for camera
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    permissionStatus = status;
+
+    if (permissionStatus == ImagePicker.PermissionStatus.DENIED) {
+      Alert.alert(
+        i18n.t("Permissions"),
+        i18n.t("UseCamera"),
+        [
+          { text: i18n.t("Cancel"), style: "destructive" },
+          { text: i18n.t("Settings"), onPress: () => Linking.openSettings() },
+        ],
+        { cancelable: false }
+      );
+    } else if (permissionStatus == ImagePicker.PermissionStatus.GRANTED) {
+      setShowClose(false);
+      let result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        exif: true,
+        allowsEditing: true,
+        quality: 1,
       });
-    }, [
-      verified,
-      showClose,
-      props,
-      name,
-      isEditing,
-      verified,
-      image,
-      errorColor,
-      selectedIndex,
-      selectedDate,
-      start,
-      end,
-      cameras,
-      switch4,
-      switch5,
-      media,
-      switch2,
-      switch3,
-      switch1,
-      dname,
-      isAI,
-      props,
-      user,
-      show,
-      isPro,
-    ])
-  );
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        setShowClose(true);
+        setImage(result.assets[0].uri);
+        setisEditing(true); // Image might need editing
+      } else {
+        setImage(image); // Revert to original if cancelled
+        setisEditing(false);
+        setShowClose(true);
+      }
+    }
+  }, [handleDismissModalPress, image]); // Added image as dependency to revert to it
 
-  const createEvent = async () => {
-    props.navigation.setOptions({
-      headerRight: () => (
-        <ActivityIndicator color="black" size={"small"} animating={true} />
-      ),
-    });
-    var fileName = "";
-    var formData = new FormData();
-    fileName =
+  const createEvent = useCallback(async () => {
+    setShowSaveIndicator(true);
+
+    const fileName =
       "SNAP18-cover-" +
       user.user_id +
       "-" +
       moment().unix() +
       "." +
       getExtensionFromFilename(image).toLowerCase();
+
+    const formData = new FormData();
     formData.append("user", props.route.params.user);
     formData.append("owner", props.route.params.owner);
     formData.append("eventName", name);
@@ -423,104 +352,153 @@ const EditCamera = (props) => {
     formData.append("isHidden", switch5 ? "1" : "0");
     formData.append("device", Platform.OS);
     formData.append("camera", "0");
-    formData.append("isAI", "0");
-    formData.append("aiIMAGE", "0");
+    formData.append("isAI", isAI ? "1" : "0");
+    formData.append("aiIMAGE", isAI ? "1" : "0");
 
     if (props.route.params.illustration != image) {
       formData.append("photoCount", "1");
       formData.append("photoName", fileName);
       formData.append("file", {
         name: fileName,
-        type: constants.mimes(getExtensionFromFilename(image).toLowerCase()), // set MIME type
-        uri: Platform.OS === "android" ? image : image.replace("file://", ""),
+        type: constants.mimes(getExtensionFromFilename(image).toLowerCase()),
+        uri: Platform.OS == "android" ? image : image.replace("file://", ""),
       });
     } else {
       formData.append("photoCount", "0");
     }
-    await AsyncStorage.setItem("uploadEnabled", "0");
 
-    const preLoading = async () => {
+    try {
+      await AsyncStorage.setItem("uploadEnabled", "0");
+
       await axios({
         method: "POST",
         url: constants.url + "/camera/save.php",
         data: formData,
         onUploadProgress: (progressEvent) => {
           let { loaded, total } = progressEvent;
-          console.log((loaded / total) * 100);
+          console.log(`Upload Progress: ${((loaded / total) * 100).toFixed(2)}%`);
         },
         headers: {
           Accept: "application/json",
-          "content-Type": "multipart/form-data",
+          "Content-Type": "multipart/form-data",
         },
-      })
-        .then(async () => {
-          await AsyncStorage.setItem("uploadEnabled", "1");
-          const postLoading = async () => {
-            setIsAI(false);
-            await axiosPull._pullCameraFeed(props.route.params.user, "owner");
+      });
 
-            if (start != props.route.params.start) {
-              notification.cancelNotif(props.route.params.pin + "-start");
-              if (parseInt(start) >= moment().unix()) {
-                notification.scheduleNotif(
-                  String(name),
-                  i18n.t("EvnetStart"),
-                  parseInt(start),
-                  props.route.params.pin + "-start",
-                  constants.urldata +
-                    "/" +
-                    user.user_id +
-                    "/events/" +
-                    props.route.params.pin +
-                    "/" +
-                    fileName
-                );
-              }
-            }
-            if (end != props.route.params.end) {
-              notification.cancelNotif(props.route.params.pin + "-end");
-              notification.scheduleNotif(
-                String(name),
-                i18n.t("EvnetEnd"),
-                parseInt(end),
-                props.route.params.pin + "-end",
-                constants.urldata +
-                  "/" +
-                  user.user_id +
-                  "/events/" +
-                  props.route.params.pin +
-                  "/" +
-                  fileName
-              );
-            }
-          };
-          postLoading();
-        })
-        .catch(console.error);
-    };
-    preLoading();
-    props.navigation.goBack();
+      await AsyncStorage.setItem("uploadEnabled", "1");
+      setIsAI(false);
+      await axiosPull._pullCameraFeed(user.user_id, "owner");
 
-    // handleUpload(
-    //   constants.url + "/camera/save.php",
-    //   formData,
-    //   user.user_id,
-    //   "save",
-    //   props.route.params.pin,
-    //   "",
-    //   i18n.t("EdintEvent") + " " + i18n.t("PleaseWait"),
-    //   image,
-    //   uploading
-    // );
-    // setTimeout(() => {
-    //   setIsAI(false);
-    //   props.navigation.goBack();
-    // }, 3500);
-  };
+      const currentMoment = moment().unix();
+      if (start != props.route.params.start) {
+        notification.cancelNotif(props.route.params.pin + "-start");
+        if (parseInt(start) >= currentMoment) {
+          notification.scheduleNotif(
+            String(name),
+            i18n.t("EvnetStart"),
+            parseInt(start),
+            props.route.params.pin + "-start",
+            constants.urldata +
+              "/" +
+              user.user_id +
+              "/events/" +
+              props.route.params.pin +
+              "/" +
+              fileName
+          );
+        }
+      }
+      if (end != props.route.params.end) {
+        notification.cancelNotif(props.route.params.pin + "-end");
+        if (parseInt(end) >= currentMoment) {
+          notification.scheduleNotif(
+            String(name),
+            i18n.t("EvnetEnd"),
+            parseInt(end),
+            props.route.params.pin + "-end",
+            constants.urldata +
+              "/" +
+              user.user_id +
+              "/events/" +
+              props.route.params.pin +
+              "/" +
+              fileName
+          );
+        }
+      }
 
-  const handleDismissPress = useCallback(() => {
-    bottomSheetRef.current?.close();
-  }, []);
+      Alert.alert(i18n.t("Success"), i18n.t("Event updated successfully!"));
+      props.navigation.goBack();
+
+    } catch (error) {
+      console.error("Error saving event:", error);
+      Alert.alert(i18n.t("Error"), i18n.t("Failed to save event. Please try again."));
+    } finally {
+      setShowSaveIndicator(false);
+    }
+  }, [
+    user.user_id,
+    props.route.params.user,
+    props.route.params.owner,
+    props.route.params.pin,
+    props.route.params.UUID,
+    props.route.params.illustration,
+    props.route.params.start,
+    props.route.params.end,
+    name,
+    switch3,
+    isPro,
+    selectedIndex,
+    dname,
+    cameras,
+    start,
+    end,
+    media,
+    switch2,
+    switch1,
+    switch4,
+    switch5,
+    isAI,
+    image,
+    notification,
+    props.navigation,
+  ]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const checkAndEditImage = async () => {
+        const value = await AsyncStorage.getItem("media.path");
+        if (value) {
+          setShowClose(false);
+          await editImage(value);
+        }
+      };
+      checkAndEditImage();
+
+      props.navigation.setOptions({
+        headerRight: () =>
+          showSaveIndicator ? (
+            <ActivityIndicator color="black" size={"small"} animating={true} />
+          ) : showClose ? (
+            <TouchableOpacity
+              onPress={createEvent}
+              disabled={showSaveIndicator}
+            >
+              <Text style={{ color: "#3D4849", marginRight: 10 }}>
+                {i18n.t("Save")}
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <></>
+          ),
+      });
+    }, [
+      showClose,
+      showSaveIndicator,
+      editImage,
+      createEvent,
+      props.navigation,
+    ])
+  );
 
   const renderBackdrop = useCallback(
     (props) => (
@@ -628,7 +606,7 @@ const EditCamera = (props) => {
                   </ListItem>
                   <View style={[styles.dividerStyle]} />
                   <ListItem
-                    contnerStyle={{
+                    containerStyle={{
                       height: "auto",
                       backgroundColor: errorColor,
                     }}
@@ -652,6 +630,7 @@ const EditCamera = (props) => {
                         keyboardType="default"
                         onChangeText={(text) => {
                           setDName(text);
+                          setIsAI(false);
                         }}
                         multiline={true}
                         placeholder={i18n.t("AIPlaceholder")}
@@ -694,9 +673,7 @@ const EditCamera = (props) => {
                   }}
                 >
                   <TouchableOpacity
-                    onPress={() => {
-                      handlePresentModalPress();
-                    }}
+                    onPress={handlePresentModalPress}
                   >
                     {image ? (
                       <Image
@@ -710,14 +687,16 @@ const EditCamera = (props) => {
                           borderRadius: 16,
                         }}
                         onLoad={async () => {
-                          {
-                            isEditing ? editImage(image) : null;
+                          if (isEditing && !isAI) {
+                            await editImage(image);
                           }
                         }}
-                        fallback={{ uri: image }}
-                        onError={() => {
-                          {
-                            isAI ? AITexttoImage() : null;
+                        // Provide a local fallback image for better UX
+                        fallback={require("../../../assets/elementor-placeholder-image.png")}
+                        onError={(e) => {
+                          console.log("Image load error:", e.nativeEvent.error);
+                          if (isAI && image.includes("pollinations.ai")) {
+                            AITexttoImage(); // Try regenerating if AI image failed to load
                           }
                         }}
                         resizeMode={FastImage.resizeMode.cover}
@@ -787,7 +766,7 @@ const EditCamera = (props) => {
                           <Text>{i18n.t("Edit Image")}</Text>
                         </View>
                       </TouchableOpacity>
-                      {isAI ? (
+                      {isAI && image.includes("pollinations.ai") ? (
                         <TouchableOpacity
                           style={{
                             width: "50%",
@@ -807,7 +786,7 @@ const EditCamera = (props) => {
                                 {
                                   text: i18n.t("Flag & Redraw"),
                                   onPress: () => {
-                                    setSeed(seed - 1);
+                                    setSeed(prevSeed => prevSeed - 1);
                                     AITexttoImage();
                                   },
                                   style: "default",
@@ -844,7 +823,10 @@ const EditCamera = (props) => {
                           height: 40,
                           marginTop: 20,
                         }}
-                        onPress={() => setImage("")}
+                        onPress={() => {
+                          setImage("");
+                          setIsAI(false);
+                        }}
                       >
                         <View
                           style={{
@@ -872,6 +854,87 @@ const EditCamera = (props) => {
               ) : (
                 <></>
               )}
+              {isPro && (
+                <ListItem
+                  containerStyle={{ height: 45, backgroundColor: "#fafbfc" }}
+                  key="26_ai" // Changed key to avoid conflict
+                >
+                  <ListItem.Content>
+                    <TouchableOpacity
+                      style={{
+                        width: "100%",
+                        padding: 5, // Reduced padding
+                        borderRadius: 10,
+                        alignItems: "center",
+                      }}
+                      onPress={() => {
+                        handleDismissModalPress(); // Dismiss bottom sheet if open
+                        if (name.length < 1) {
+                            setVerified(false);
+                            Alert.alert(
+                                i18n.t("e4"),
+                                i18n.t("EventName"),
+                                [
+                                    { text: i18n.t("Close"), style: "destructive" },
+                                ],
+                                { cancelable: false }
+                            );
+                        } else {
+                            setVerified(true);
+                            Alert.alert(
+                                i18n.t("AI Image Generator"),
+                                i18n.t("Note: AI Image"),
+                                [
+                                    { text: i18n.t("Cancel"), style: "destructive" },
+                                    {
+                                        text: i18n.t("Continue"),
+                                        onPress: () => {
+                                            const proTitle = constants.badWords.some(
+                                                (word) => dname.toLowerCase().includes(word.toLowerCase())
+                                            );
+                                            const title = constants.badWords.some(
+                                                (word) => name.toLowerCase().includes(word.toLowerCase())
+                                            );
+                                            if (proTitle || title) {
+                                                Alert.alert(
+                                                    i18n.t("BadWords"),
+                                                    i18n.t("BadWordsDescription"),
+                                                    [{ text: i18n.t("Close"), style: "destructive" }],
+                                                    { cancelable: false }
+                                                );
+                                            } else {
+                                                AITexttoImage();
+                                            }
+                                        },
+                                        style: "default",
+                                    },
+                                ],
+                                { cancelable: false }
+                            );
+                        }
+                      }}
+                    >
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          gap: 10,
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Icon
+                          type="material-community"
+                          name="robot"
+                          size={20}
+                          color="#3D4849"
+                        />
+
+                        <Text>{i18n.t("Generate AI Image")}</Text>
+                      </View>
+                    </TouchableOpacity>
+                  </ListItem.Content>
+                </ListItem>
+              )}
               <View style={[styles.dividerStyle]} />
               <ListItem key="13">
                 <Icon
@@ -897,13 +960,13 @@ const EditCamera = (props) => {
               <View style={[styles.dividerStyle]} />
               <ListItem
                 containerStyle={{ height: 65, backgroundColor: "#fafbfc" }}
-                key="17"
+                key="17_autoJoin" // Changed key for clarity
               >
                 <ListItem.Content>
                   <Switch
                     style={{ alignSelf: "flex-end" }}
                     value={switch4}
-                    onValueChange={(value) => toggleSwitch4(value)}
+                    onValueChange={toggleSwitch4}
                   />
                 </ListItem.Content>
               </ListItem>
@@ -950,9 +1013,7 @@ const EditCamera = (props) => {
                         ? constants.camera_amount_PRO
                         : constants.camera_amount
                     }
-                    onPress={(value) => {
-                      cameraChange(value);
-                    }}
+                    onPress={cameraChange}
                     selectedButtonStyle={{ backgroundColor: "#ea5504" }}
                     containerStyle={{ marginBottom: 5 }}
                   />
@@ -993,7 +1054,7 @@ const EditCamera = (props) => {
                       <Switch
                         style={{ alignSelf: "flex-end" }}
                         value={switch3}
-                        onValueChange={(value) => toggleSwitch3(value)}
+                        onValueChange={toggleSwitch3}
                       />
                     </ListItem.Content>
                   </ListItem>
@@ -1034,11 +1095,9 @@ const EditCamera = (props) => {
                       }}
                     >
                       <ButtonGroup
-                        buttons={constants.camera_amount}
+                        buttons={constants.media_amount}
                         selectedIndex={media}
-                        onPress={(value) => {
-                          mediaChange(value);
-                        }}
+                        onPress={mediaChange}
                         selectedButtonStyle={{ backgroundColor: "#ea5504" }}
                         containerStyle={{ marginBottom: 5 }}
                       />
@@ -1047,9 +1106,9 @@ const EditCamera = (props) => {
                 </>
               )}
               <View style={[styles.dividerStyle]} />
-              <ListItem key="7">
+              <ListItem key="7_time">
                 <Icon
-                  type="ionicon"
+                  type="ionicon" // Corrected type for 'today-outline'
                   name="today-outline"
                   size={25}
                   color="#3D4849"
@@ -1069,7 +1128,7 @@ const EditCamera = (props) => {
                 </ListItem.Content>
               </ListItem>
               <View style={[styles.dividerStyle]} />
-              <ListItem containerStyle={{ backgroundColor: "#fafbfc" }} key="8">
+              <ListItem containerStyle={{ backgroundColor: "#fafbfc" }} key="8_duration">
                 <ListItem.Content style={{ height: 65, margin: 10 }}>
                   <ButtonGroup
                     buttons={
@@ -1078,16 +1137,14 @@ const EditCamera = (props) => {
                         : constants.camera_time_text
                     }
                     selectedIndex={selectedIndex}
-                    onPress={(value) => {
-                      daysChange(value);
-                    }}
+                    onPress={daysChange}
                     selectedButtonStyle={{ backgroundColor: "#ea5504" }}
                     containerStyle={{ marginBottom: 20 }}
                   />
                 </ListItem.Content>
               </ListItem>
               <View style={[styles.dividerStyle]} />
-              <ListItem key="9">
+              <ListItem key="9_start_date">
                 <Icon
                   type="material-community"
                   name="clock-start"
@@ -1107,25 +1164,31 @@ const EditCamera = (props) => {
                   </ListItem.Title>
                   <ListItem.Subtitle>{i18n.t("e14")}</ListItem.Subtitle>
                 </ListItem.Content>
+                <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+                  <Text style={{ color: "#ea5504", fontWeight: "bold" }}>
+                    {moment(selectedDate).format("LLL")}
+                  </Text>
+                </TouchableOpacity>
               </ListItem>
               <View style={[styles.dividerStyle]} />
               <ListItem
                 containerStyle={{
-                  height: Platform.OS == "ios" ? 360 : 60,
+                  // Height is managed by DateTimePicker directly if shown, otherwise minimal
+                  height: Platform.OS == "ios" ? (showDatePicker ? 360 : 60) : 60,
                   backgroundColor: "#fafbfc",
                 }}
-                key="10"
+                key="10_datetimepicker_container" // Changed key
               >
                 <ListItem.Content
                   style={{
                     alignItems: "center",
                     justifyContent: "center",
-                    height: 65,
-                    marginBottom: 20,
+                    height: "100%", // Let content take full height
+                    marginBottom: 20, // Keep original margin if needed
                   }}
                 >
-                  {Platform.OS == "android" && (
-                    <TouchableOpacity onPress={() => setShow(true)}>
+                  {Platform.OS == "android" && !showDatePicker && !showTimePicker && (
+                    <TouchableOpacity onPress={() => setShowDatePicker(true)}>
                       <ListItem.Title
                         style={[
                           styles.imageUserNameTitleBlack,
@@ -1136,66 +1199,56 @@ const EditCamera = (props) => {
                           },
                         ]}
                       >
-                        {String(selectedDate)}
+                        {moment(selectedDate).format("LLL")}
                       </ListItem.Title>
                     </TouchableOpacity>
                   )}
-                  {Platform.OS == "android" ? (
-                    show ? (
-                      <DateTimePicker
-                        testID="datePicker"
-                        minuteInterval={interval}
-                        locale={deviceLanguage}
-                        is24Hour={RNLocalize.uses24HourClock()}
-                        timeZoneName={RNLocalize.getTimeZone()}
-                        useNativeDriver={false}
-                        maximumDate={maximumDate}
-                        minimumDate={minimumDate}
-                        value={selectedDate}
-                        mode={MODE_VALUES[2]}
-                        display={DISPLAY_VALUES[0]}
-                        negativeButton={{ label: "Cancel", textColor: "red" }}
-                        onChange={onChangeAndroid}
-                      />
-                    ) : clockShow ? (
-                      <DateTimePicker
-                        testID="timePicker"
-                        locale={deviceLanguage}
-                        is24Hour={RNLocalize.uses24HourClock()}
-                        timeZoneName={RNLocalize.getTimeZone()}
-                        minuteInterval={interval}
-                        useNativeDriver={false}
-                        maximumDate={timeDate}
-                        minimumDate={timeDate}
-                        value={timeDate}
-                        mode={MODE_VALUES[1]}
-                        display={DISPLAY_VALUES[0]}
-                        negativeButton={{ label: "Cancel", textColor: "red" }}
-                        onChange={onChange}
-                      />
-                    ) : (
-                      <></>
-                    )
-                  ) : (
+                  {showDatePicker && Platform.OS == "android" && (
+                    <DateTimePicker
+                      testID="datePicker"
+                      minuteInterval={interval}
+                      locale={deviceLanguage}
+                      is24Hour={RNLocalize.uses24HourClock()}
+                      timeZoneName={RNLocalize.getTimeZone()}
+                      value={selectedDate}
+                      mode={ANDROID_MODE.DATE}
+                      display={ANDROID_DISPLAY.CALENDAR}
+                      onChange={onChangeAndroid}
+                      minimumDate={minimumDate}
+                    />
+                  )}
+                  {showTimePicker && Platform.OS == "android" && (
+                    <DateTimePicker
+                      testID="timePicker"
+                      locale={deviceLanguage}
+                      is24Hour={RNLocalize.uses24HourClock()}
+                      timeZoneName={RNLocalize.getTimeZone()}
+                      minuteInterval={interval}
+                      value={selectedDate} // Use selectedDate for time picker as well
+                      mode={ANDROID_MODE.TIME}
+                      display={ANDROID_DISPLAY.CLOCK}
+                      onChange={onChange}
+                      minimumDate={minimumDate} // Pass minimumDate if applicable to time component
+                    />
+                  )}
+                  {showDatePicker && Platform.OS == "ios" && (
                     <DateTimePicker
                       testID="dateTimePicker"
                       locale={deviceLanguage}
                       is24Hour={RNLocalize.uses24HourClock()}
                       timeZoneName={RNLocalize.getTimeZone()}
                       minuteInterval={interval}
-                      useNativeDriver={false}
-                      maximumDate={maximumDate}
-                      minimumDate={minimumDate}
                       value={selectedDate}
-                      mode={MODE_VALUES[2]}
-                      display={DISPLAY_VALUES[3]}
+                      mode={IOS_MODE.DATETIME}
+                      display={IOS_DISPLAY.COMPACT}
                       onChange={onChangeIOS}
+                      minimumDate={minimumDate}
                     />
                   )}
                 </ListItem.Content>
               </ListItem>
               <View style={[styles.dividerStyle]} />
-              <ListItem key="11">
+              <ListItem key="11_gallery_toggle">
                 <Icon
                   type="material-community"
                   name="view-gallery-outline"
@@ -1219,14 +1272,14 @@ const EditCamera = (props) => {
 
               <View style={[styles.dividerStyle]} />
               <ListItem
-                style={{ height: 65, backgroundColor: "#fafbfc" }}
-                key="12"
+                containerStyle={{ height: 65, backgroundColor: "#fafbfc" }}
+                key="12_gallery_switch"
               >
                 <ListItem.Content>
                   <Switch
                     style={{ alignSelf: "flex-end" }}
                     value={switch2}
-                    onValueChange={(value) => toggleSwitch2(value)}
+                    onValueChange={toggleSwitch2}
                   />
                 </ListItem.Content>
               </ListItem>
@@ -1234,7 +1287,7 @@ const EditCamera = (props) => {
               <View style={[styles.dividerStyle]} />
               {isPro && (
                 <>
-                  <ListItem key="15">
+                  <ListItem key="15_social_share">
                     <Icon
                       type="material-community"
                       name="share"
@@ -1258,20 +1311,20 @@ const EditCamera = (props) => {
                   <View style={[styles.dividerStyle]} />
                   <ListItem
                     containerStyle={{ height: 65, backgroundColor: "#fafbfc" }}
-                    key="16"
+                    key="16_social_switch"
                   >
                     <ListItem.Content>
                       <Switch
                         style={{ alignSelf: "flex-end" }}
                         value={switch1}
-                        onValueChange={(value) => toggleSwitch1(value)}
+                        onValueChange={toggleSwitch1}
                       />
                     </ListItem.Content>
                   </ListItem>
                   <View style={[styles.dividerStyle]} />
                 </>
               )}
-              <ListItem key="26">
+              <ListItem key="26_hide_event">
                 <Icon
                   type="material"
                   name="hide-source"
@@ -1297,13 +1350,13 @@ const EditCamera = (props) => {
               <View style={[styles.dividerStyle]} />
               <ListItem
                 containerStyle={{ height: 65, backgroundColor: "#fafbfc" }}
-                key="27"
+                key="27_hide_switch"
               >
                 <ListItem.Content>
                   <Switch
                     style={{ alignSelf: "flex-end" }}
                     value={switch5}
-                    onValueChange={(value) => toggleSwitch5(value)}
+                    onValueChange={toggleSwitch5}
                   />
                 </ListItem.Content>
               </ListItem>
@@ -1333,25 +1386,24 @@ const EditCamera = (props) => {
           <BottomSheetView
             style={[StyleSheet.absoluteFill, { alignItems: "center" }]}
           >
-            <Text>{i18n.t("Make a Selection")}</Text>
+            <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 20 }}>{i18n.t("Make a Selection")}</Text>
             <Animated.View
               style={{
                 justifyContent: "flex-end",
+                width: '100%', // Ensure it takes full width of bottom sheet
+                paddingHorizontal: 20, // Add padding
               }}
             >
               <View
                 style={{
                   flexDirection: "row",
-                  justifyContent: "center",
+                  justifyContent: "space-around", // Changed to space-around for better spacing
                   alignItems: "center",
-                  alignContent: "space-between",
-                  gap: 50,
                 }}
               >
                 <View
                   style={{
                     flexDirection: "column",
-                    alignContent: "center",
                     alignItems: "center",
                     justifyContent: "center",
                   }}
@@ -1359,7 +1411,7 @@ const EditCamera = (props) => {
                   <Icon
                     type="material-community"
                     size={40}
-                    name="chip"
+                    name="robot" // Changed icon to robot for AI
                     color={"#000"}
                     containerStyle={{
                       height: 75,
@@ -1369,20 +1421,14 @@ const EditCamera = (props) => {
                       borderRadius: 22,
                     }}
                     onPress={() => {
-                     handleDismissPress();
+                      handleDismissModalPress(); // Dismiss bottom sheet immediately
                       if (name.length < 1) {
-                        setisEditing(false);
                         setVerified(false);
-
                         Alert.alert(
                           i18n.t("e4"),
                           i18n.t("EventName"),
                           [
-                            {
-                              text: i18n.t("Close"),
-                              onPress: () => console.log("Cancel Pressed"),
-                              style: "destructive",
-                            },
+                            { text: i18n.t("Close"), style: "destructive" },
                           ],
                           { cancelable: false }
                         );
@@ -1392,44 +1438,27 @@ const EditCamera = (props) => {
                           i18n.t("AI Image Generator"),
                           i18n.t("Note: AI Image"),
                           [
-                            {
-                              text: i18n.t("Cancel"),
-                              onPress: () => console.log("Cancel Pressed"),
-                              style: "destructive",
-                            },
+                            { text: i18n.t("Cancel"), style: "destructive" },
                             {
                               text: i18n.t("Continue"),
-                              onPress: async () => {
+                              onPress: () => {
                                 const proTitle = constants.badWords.some(
-                                  (word) =>
-                                    dname
-                                      .toLowerCase()
-                                      .includes(word.toLowerCase())
+                                  (word) => dname.toLowerCase().includes(word.toLowerCase())
                                 );
                                 const title = constants.badWords.some((word) =>
-                                  name
-                                    .toLowerCase()
-                                    .includes(word.toLowerCase())
+                                  name.toLowerCase().includes(word.toLowerCase())
                                 );
                                 if (proTitle || title) {
                                   Alert.alert(
                                     i18n.t("BadWords"),
                                     i18n.t("BadWordsDescription"),
                                     [
-                                      {
-                                        text: i18n.t("Close"),
-                                        onPress: () =>
-                                          console.log("Cancel Pressed"),
-                                        style: "destructive",
-                                      },
+                                      { text: i18n.t("Close"), style: "destructive" },
                                     ],
                                     { cancelable: false }
                                   );
                                 } else {
-                                  setTimeout(() => {
-                                    setIsAI(true);
-                                    AITexttoImage();
-                                  }, 500);
+                                  AITexttoImage();
                                 }
                               },
                               style: "default",
@@ -1452,7 +1481,6 @@ const EditCamera = (props) => {
                 <View
                   style={{
                     flexDirection: "column",
-                    alignContent: "center",
                     alignItems: "center",
                     justifyContent: "center",
                   }}
@@ -1469,13 +1497,7 @@ const EditCamera = (props) => {
                       justifyContent: "center",
                       borderRadius: 22,
                     }}
-                    onPress={() => {
-                      setTimeout(() => {
-                        setIsAI(false);
-                        pickImage();
-                      }, 200);
-                     handleDismissPress();
-                    }}
+                    onPress={pickImage} // Direct call
                   />
                   <Text
                     style={{
@@ -1489,7 +1511,6 @@ const EditCamera = (props) => {
                 <View
                   style={{
                     flexDirection: "column",
-                    alignContent: "center",
                     alignItems: "center",
                     justifyContent: "center",
                   }}
@@ -1506,45 +1527,9 @@ const EditCamera = (props) => {
                       justifyContent: "center",
                       borderRadius: 22,
                     }}
-                    onPress={async () => {
-                      if (
-                        cameraStatus.status ==
-                        ImagePicker.PermissionStatus.UNDETERMINED
-                      ) {
-                        await ImagePicker.requestCameraPermissionsAsync();
-                      } else if (
-                        cameraStatus.status ==
-                        ImagePicker.PermissionStatus.DENIED
-                      ) {
-                        Alert.alert(
-                          i18n.t("Permissions"),
-                          i18n.t("UseCamera"),
-                          [
-                            {
-                              text: i18n.t("Cancel"),
-                              onPress: () => console.log("Cancel Pressed"),
-                              style: "destructive",
-                            },
-                            {
-                              text: i18n.t("Settings"),
-                              onPress: () => {
-                                Linking.openSettings();
-                              },
-                              style: "default",
-                            },
-                          ],
-                          { cancelable: false }
-                        );
-                      } else {
-                        setTimeout(() => {
-                          setIsAI(false);
-
-                          props.navigation.navigate("TempCameraPage", {
-                            title: String(name),
-                          });
-                        }, 200);
-                     handleDismissPress();
-                      }
+                    onPress={() => {
+                        handleDismissModalPress();
+                        takePhoto(); // Direct call
                     }}
                   />
                   <Text

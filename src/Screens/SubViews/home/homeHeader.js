@@ -40,8 +40,7 @@ const FriendHeader = (props) => {
         <TouchableOpacity onPress={() => props._gotoAllFriends()}>
           <Text
             style={{
-              fontSize: 15,
-              fontWeight: "300",
+              fontSize: 14,
             }}
           >
             {i18n.t("ViewAll")}

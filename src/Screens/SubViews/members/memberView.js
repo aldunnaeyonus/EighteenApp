@@ -22,7 +22,7 @@ const MemberListItem = (props) => {
     <View style={styles.slideInnerContaineMember}>
       <TouchableOpacity
         onPress={async () => {
-          props.goToFriend(props.item.item.user_id);
+          props.goToFriend(props.item.user_id);
         }}
       >
         <View style={styles.shadow2} />
@@ -35,7 +35,7 @@ const MemberListItem = (props) => {
           <Image
             indicator={Progress}
             source={{
-              uri: props.item.item.user_avatar,
+              uri: props.item.user_avatar,
               priority: FastImage.priority.high,
               cache: FastImage.cacheControl.immutable,
             }}
@@ -52,7 +52,7 @@ const MemberListItem = (props) => {
             }}
           />
 
-          {props.item.item.isPro == "1" && (
+          {props.item.isPro == "1" && (
             <View style={{ position: "absolute" }}>
               <View
                 style={{
@@ -96,7 +96,7 @@ const MemberListItem = (props) => {
               }}
               numberOfLines={1}
             >
-              {props.item.item.user_handle.toUpperCase()}
+              {props.item.user_handle.toUpperCase()}
             </Text>
             <Text
               style={{
@@ -110,16 +110,16 @@ const MemberListItem = (props) => {
             >
               {i18n.t("Joined")}:{" "}
               {moment
-                .unix(parseInt(props.item.item.user_joined))
+                .unix(parseInt(props.item.user_joined))
                 .locale(localLang)
                 .format("LLL")}
             </Text>
           </View>
           <TouchableOpacity
             onPress={async () => {
-              user.isPro == "1" && props.item.item.credits == 0
+              user.isPro == "1" && props.item.credits == 0
                 ? props.moreCredits(
-                    props.item.item.user_id,
+                    props.item.user_id,
                     props.pin,
                     props.UUID
                   )
@@ -127,8 +127,8 @@ const MemberListItem = (props) => {
             }}
           >
             <CameraLens
-              credits={props.item.item.credits}
-              tCredits={props.item.item.tCredits}
+              credits={props.item.credits}
+              tCredits={props.item.tCredits}
             />
           </TouchableOpacity>
         </View>

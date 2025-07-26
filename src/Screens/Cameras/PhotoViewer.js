@@ -7,7 +7,7 @@ import * as i18n from "../../../i18n";
 import ImageGalleryView from "../SubViews/gallery/imageGalleryView";
 import VideoGalleryView from "../SubViews/gallery/videoGalleryView";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
-import { SCREEN_WIDTH, SCREEN_HEIGHT, url } from "../../utils/constants";
+import { SCREEN_WIDTH, url } from "../../utils/constants";
 import { axiosPull } from "../../utils/axiosPull";
 import { getLocales } from "expo-localization";
 import styles from "../../styles/SliderEntry.style";
@@ -35,7 +35,7 @@ const PhotoViewer = (props) => {
   const newphoto = useRef();
   const [activeIndex, setActiveIndex] = useState(props.route.params.pagerIndex);
   const bottomSheetRef = useRef(null);
-  const snapPoints = useMemo(() => ["60%"], [snapPoints]);
+  const snapPoints = useMemo(() => ["60%"], []); // No longer depends on `snapPoints` itself
   const [comment, setComment] = useState("");
   const [refreshing, setRefreshing] = useState(false);
   const [user] = useMMKVObject("user.Data", storage);
@@ -49,234 +49,313 @@ const PhotoViewer = (props) => {
     storage
   );
 
-  const handleSearch = (index) => {
-    const filtered = filteredDataSource.filter((media) => {
-      return media.media_id.includes(filteredDataSourceGallery[index].image_id);
-    });
-    const myData = []
-      .concat(filtered)
-      .sort((a, b) => String(b.time_date).localeCompare(String(a.time_date)));
-    setFilteredComments(myData);
-  };
+  const handleSearch = useCallback(
+    (index) => {
+      if (!filteredDataSourceGallery || filteredDataSourceGallery.length == 0) {
+        setFilteredComments([]);
+        return;
+      }
+      const currentMediaId = filteredDataSourceGallery[index]?.image_id;
+      if (!currentMediaId || !filteredDataSource) {
+        setFilteredComments([]);
+        return;
+      }
 
-  const createEvent = async () => {
-    var formData = new FormData();
-    formData.append(
-      "media_id",
-      filteredDataSourceGallery[activeIndex].image_id
-    );
+      const filtered = filteredDataSource.filter((media) => {
+        return media.media_id == currentMediaId;
+      });
+      const myData = []
+        .concat(filtered)
+        .sort((a, b) => String(b.time_date).localeCompare(String(a.time_date)));
+      setFilteredComments(myData);
+    },
+    [filteredDataSource, filteredDataSourceGallery]
+  );
+
+  const createEvent = useCallback(async () => {
+    if (!comment.trim()) {
+      return; // Prevent sending empty comments
+    }
+
+    if (!filteredDataSourceGallery || filteredDataSourceGallery.length == 0) {
+      Alert.alert(i18n.t("Error"), i18n.t("No media available to comment on."));
+      return;
+    }
+
+    const currentMedia = filteredDataSourceGallery[activeIndex];
+    if (!currentMedia) {
+      Alert.alert(i18n.t("Error"), i18n.t("Selected media not found."));
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("media_id", currentMedia.image_id);
     formData.append("comment", comment);
     formData.append("time_date", moment().unix());
     formData.append("comment_owner", user.user_id);
     formData.append("media_pin", props.route.params.pin);
 
-    const preLoading = async () => {
+    try {
       await axios({
         method: "POST",
         url: url + "/camera/addComment.php",
         data: formData,
         headers: {
           Accept: "application/json",
-          "content-Type": "multipart/form-data",
+          "Content-Type": "multipart/form-data",
         },
-      }).then(async () => {
-        setComment("");
-        input.current.clear();
-        await axiosPull._requestComments(props.route.params.pin);
-        await axiosPull._pullGalleryFeed(props.route.params.pin, user.user_id);
-        setTimeout(() => {
-          handleSearch(activeIndex);
-        }, 500);
       });
-    };
-    preLoading();
-  };
+      setComment("");
+      if (input.current) {
+        input.current.clear();
+      }
+      await axiosPull._requestComments(props.route.params.pin);
+      await axiosPull._pullGalleryFeed(props.route.params.pin, user.user_id);
+      // Wait for MMKV to update then refresh comments
+      //setTimeout(() => handleSearch(activeIndex), 500); // Small delay to ensure MMKV is updated
+    } catch (error) {
+      console.error("Error adding comment:", error);
+      Alert.alert(i18n.t("Error"), i18n.t("Failed to add comment."));
+    }
+  }, [
+    comment,
+    activeIndex,
+    filteredDataSourceGallery,
+    user.user_id,
+    props.route.params.pin,
+    handleSearch,
+  ]);
 
-  const _refresh = async () => {
+  const _refresh = useCallback(async () => {
     setRefreshing(true);
-    await axiosPull._requestComments(props.route.params.pin);
-    await axiosPull._pullGalleryFeed(props.route.params.pin, user.user_id);
-    handleSearch(activeIndex);
-
-    setTimeout(async () => {
+    try {
+      await axiosPull._requestComments(props.route.params.pin);
+      await axiosPull._pullGalleryFeed(props.route.params.pin, user.user_id);
+      handleSearch(activeIndex);
+    } catch (error) {
+      console.error("Refresh error:", error);
+    } finally {
       setRefreshing(false);
-    }, 1000);
-  };
+    }
+  }, [activeIndex, handleSearch, props.route.params.pin, user.user_id]);
 
-  const addComment = useCallback(
-    (value) => {
-      setComment(value);
+  const addComment = useCallback((value) => {
+    setComment(value);
+  }, []);
+
+  const scrollToActiveIndex = useCallback(
+    (index) => {
+      setActiveIndex(index);
+      handleSearch(index);
+      newphoto.current?.scrollToOffset({
+        offset: index * SCREEN_WIDTH,
+        animated: true,
+      });
+      // Adjust scroll for bottom thumbnail carousel
+      if (index * 90 - 80 / 2 > SCREEN_WIDTH / 2) {
+        bottomPhoto.current?.scrollToOffset({
+          offset: index * 90 - SCREEN_WIDTH / 2 + 80 / 2,
+          animated: true,
+        });
+      } else {
+        bottomPhoto.current?.scrollToOffset({
+          offset: 0,
+          animated: true,
+        });
+      }
     },
-    [comment]
+    [handleSearch]
   );
 
-  const scrollToActiveIndex = (index) => {
-    setActiveIndex(index);
-    handleSearch(index);
-    newphoto?.current?.scrollToOffset({
-      offset: index * SCREEN_WIDTH,
-      animated: true,
-    });
-    if (index * 90 - 80 / 2 > SCREEN_WIDTH / 2) {
-      bottomPhoto?.current.scrollToOffset({
-        offset: index * 90 - SCREEN_WIDTH / 2 + 80 / 2,
-        animated: true,
-      });
-    } else {
-      bottomPhoto?.current.scrollToOffset({
-        offset: 0,
-        animated: true,
-      });
-    }
-  };
-
-  const _gotoShare = async (image) => {
-    const shareOptions = {
-      url: image,
-      title: "",
-    };
+  const _gotoShare = useCallback(async (image) => {
     try {
-      const ShareResponse = await Share.share(shareOptions);
-      console.log("Result =>", ShareResponse);
+      await Share.share({ url: image });
     } catch (error) {
-      console.log("Error =>", error);
+      console.error("Error sharing:", error.message);
     }
-  };
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
-      newphoto?.current.scrollToIndex({
-        animate: true,
-        index: props.route.params.pagerIndex,
-      });
-      bottomPhoto?.current.scrollToIndex({
-        animate: true,
-        index: props.route.params.pagerIndex,
-      });
-      handleSearch(activeIndex);
-    }, [])
-  );
-
-  const _deleteFeedItemIndex = (image_id) => {
-    filteredDataSourceGallery.forEach((res, index) => {
-      if (res.image_id == image_id) {
-        setGalleryData((prevState) => {
-          prevState.splice(index, 1);
-          return [...prevState];
+      if (newphoto.current) {
+        newphoto.current.scrollToIndex({
+          animated: false, // Set to false to prevent initial animation issues
+          index: props.route.params.pagerIndex,
         });
       }
-    });
-  };
+      if (bottomPhoto.current) {
+        bottomPhoto.current.scrollToIndex({
+          animated: false, // Set to false
+          index: props.route.params.pagerIndex,
+        });
+      }
+      setActiveIndex(props.route.params.pagerIndex); // Ensure activeIndex is set
+      handleSearch(props.route.params.pagerIndex);
+    }, [handleSearch, props.route.params.pagerIndex])
+  );
 
-  const _hideContent = async () => {
+  const _deleteFeedItemIndex = useCallback(
+    (image_id) => {
+      setGalleryData((currentData) =>
+        currentData.filter((res) => res.image_id != image_id)
+      );
+    },
+    [setGalleryData]
+  );
+
+  const _hideContent = useCallback(async () => {
     Alert.alert(
       i18n.t("HideContent"),
       i18n.t("AreyousureyouHide"),
       [
         {
           text: i18n.t("Cancel"),
-          onPress: () => console.log("Cancel Pressed"),
           style: "destructive",
         },
         {
           text: i18n.t("HideContent"),
           onPress: async () => {
-            props.route.params.data;
+            if (
+              !filteredDataSourceGallery ||
+              filteredDataSourceGallery.length == 0
+            ) {
+              Alert.alert(
+                i18n.t("Error"),
+                i18n.t("No media available to hide.")
+              );
+              return;
+            }
+            const currentMedia = filteredDataSourceGallery[activeIndex];
+            if (!currentMedia) {
+              Alert.alert(i18n.t("Error"), i18n.t("Selected media not found."));
+              return;
+            }
 
             const data = {
-              user: filteredDataSourceGallery[activeIndex].user_id,
-              pin: filteredDataSourceGallery[activeIndex].image_id,
+              user: currentMedia.user_id,
+              pin: currentMedia.image_id,
               type: "hide",
-              title: "",
+              title: "", // This field seems unused for 'hide'
               owner: props.route.params.user,
               locale: getLocales()[0].languageCode,
             };
-            _deleteFeedItemIndex(
-              filteredDataSourceGallery[activeIndex].image_id
-            );
+            _deleteFeedItemIndex(currentMedia.image_id);
             await axiosPull.postData("/camera/report.php", data);
             await axiosPull._pullGalleryFeed(
               props.route.params.pin,
               props.route.params.user
             );
+            handleDismissPress(); // Close bottom sheet
             Alert.alert("", i18n.t("HideContentComplete"));
           },
-          style: "default",
         },
       ],
       { cancelable: false }
     );
-  };
-  // callbacks
-  const handlePresentModalPress = useCallback(() => {
-    bottomSheetRef.current?.present();
-  }, []);
+  }, [
+    _deleteFeedItemIndex,
+    activeIndex,
+    filteredDataSourceGallery,
+    handleDismissPress,
+    props.route.params.pin,
+    props.route.params.user,
+  ]);
 
-  const _reportContent = async () => {
+  const _reportContent = useCallback(async () => {
     Alert.alert(
       i18n.t("ReportContent"),
       i18n.t("Areyousureyou"),
       [
         {
           text: i18n.t("Cancel"),
-          onPress: () => console.log("Cancel Pressed"),
           style: "destructive",
         },
         {
           text: i18n.t("ReportContent"),
           onPress: async () => {
+            if (
+              !filteredDataSourceGallery ||
+              filteredDataSourceGallery.length == 0
+            ) {
+              Alert.alert(
+                i18n.t("Error"),
+                i18n.t("No media available to report.")
+              );
+              return;
+            }
+            const currentMedia = filteredDataSourceGallery[activeIndex];
+            if (!currentMedia) {
+              Alert.alert(i18n.t("Error"), i18n.t("Selected media not found."));
+              return;
+            }
+
             const data = {
-              user: filteredDataSourceGallery[activeIndex].user_id,
-              pin: filteredDataSourceGallery[activeIndex].image_id,
-              title: filteredDataSourceGallery[activeIndex].uri,
+              user: currentMedia.user_id,
+              pin: currentMedia.image_id,
+              title: currentMedia.uri,
               type: "content",
               owner: props.route.params.user,
               locale: getLocales()[0].languageCode,
             };
             await axiosPull.postData("/camera/report.php", data);
+            handleDismissPress(); // Close bottom sheet
             Alert.alert("", i18n.t("AreportContent"));
           },
-          style: "default",
         },
       ],
       { cancelable: false }
     );
-  };
+  }, [
+    activeIndex,
+    filteredDataSourceGallery,
+    handleDismissPress,
+    props.route.params.user,
+  ]);
 
-  const onMomentumScrollBegin = () => {
+  const onMomentumScrollBegin = useCallback(() => {
     canMomentum.current = true;
-  };
-
-  const onMomentumScrollEnd = useCallback((ev) => {
-    if (canMomentum.current) {
-      const index = Math.floor(
-        Math.floor(ev.nativeEvent.contentOffset.x) / SCREEN_WIDTH
-      );
-      setActiveIndex(index);
-      scrollToActiveIndex(index);
-      handleSearch(index);
-    }
-    canMomentum.current = false;
   }, []);
 
-  const getItemLayout = (_, index) => ({
-    length: SCREEN_WIDTH,
-    offset: SCREEN_WIDTH * index,
-    index,
-  });
+  const onMomentumScrollEnd = useCallback(
+    (ev) => {
+      if (canMomentum.current) {
+        const index = Math.floor(
+          Math.floor(ev.nativeEvent.contentOffset.x + SCREEN_WIDTH / 2) /
+            SCREEN_WIDTH // Added SCREEN_WIDTH / 2 for more accurate snapping
+        );
+        setActiveIndex(index);
+        scrollToActiveIndex(index);
+      }
+      canMomentum.current = false;
+    },
+    [scrollToActiveIndex]
+  );
 
-  const getItemLayoutBottom = (_, index) => {
+  const getItemLayout = useCallback(
+    (_, index) => ({
+      length: SCREEN_WIDTH,
+      offset: SCREEN_WIDTH * index,
+      index,
+    }),
+    []
+  );
+
+  const getItemLayoutBottom = useCallback((_, index) => {
     return {
       length: 80,
       offset: index * 90 - SCREEN_WIDTH / 2 + 90 / 2,
       index,
     };
-  };
+  }, []);
+
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetRef.current?.present();
+  }, []);
+
   const handleDismissPress = useCallback(() => {
     bottomSheetRef.current?.close();
   }, []);
 
-  
   const renderBackdrop = useCallback(
     (props) => (
       <BottomSheetBackdrop
@@ -290,15 +369,13 @@ const PhotoViewer = (props) => {
     []
   );
 
+  const isEventActive = props.route.params.end >= moment().unix();
+
   return (
     <SafeAreaProvider>
       <SafeAreaView
-        style={{
-          backgroundColor: "transparent",
-          height: SCREEN_HEIGHT,
-          width: SCREEN_WIDTH,
-        }}
-        edges={["left", "right"]}
+        style={componentStyles.safeArea}
+        edges={["top", "bottom", "left", "right"]}
       >
         <Animated.FlatList
           ref={newphoto}
@@ -310,7 +387,7 @@ const PhotoViewer = (props) => {
           pagingEnabled
           horizontal
           getItemLayout={getItemLayout}
-          style={{ backgroundColor: "black", flex: 1 }}
+          style={componentStyles.mainFlatList}
           data={filteredDataSourceGallery}
           keyExtractor={(item) => item.image_id}
           renderItem={({ item, index }) => (
@@ -324,15 +401,10 @@ const PhotoViewer = (props) => {
           horizontal
           getItemLayout={getItemLayoutBottom}
           keyExtractor={(item) => item.image_id}
-          style={{
-            position: "absolute",
-            bottom: 90,
-            width: SCREEN_WIDTH,
-            flex: 1,
-          }}
+          style={componentStyles.bottomFlatList}
           extraData={filteredDataSourceGallery}
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ paddingHorizontal: 10 }}
+          contentContainerStyle={componentStyles.bottomFlatListContent}
           renderItem={({ item, index }) => {
             return (
               <VideoGalleryView
@@ -346,93 +418,49 @@ const PhotoViewer = (props) => {
         />
         <Animated.View
           style={
-            props.lefthanded == "1"
+            user.lefthanded == "1"
               ? styles.imageUserNameContainersGalleryLeft
               : styles.imageUserNameContainersGallery
           }
         >
           <Icon
-            onPress={() => {
-              _hideContent();
-              handleDismissPress();
-            }}
+            onPress={_hideContent}
             type={"material"}
             name={"hide-image"}
             size={30}
             color="white"
-            containerStyle={{
-              alignSelf: "flex-end",
-              width: 40,
-              padding: 5,
-              paddingTop: 15,
-              height: 50,
-              marginRight: 5,
-              marginBottom: 15,
-              borderTopRightRadius: 5,
-              borderTopLeftRadius: 5,
-              backgroundColor: "rgba(0, 0, 0, 0.60)",
-            }}
+            containerStyle={componentStyles.iconContainer}
           />
           <Icon
-            onPress={() => {
-              _reportContent();
-              handleDismissPress();
-            }}
+            onPress={_reportContent}
             type={"octicons"}
             name={"report"}
             size={30}
             color="white"
-            containerStyle={{
-              alignSelf: "flex-end",
-              width: 40,
-              padding: 5,
-              paddingTop: 15,
-              marginTop: -15,
-              height: 50,
-              marginRight: 5,
-              backgroundColor: "rgba(0, 0, 0, 0.60)",
-            }}
+            containerStyle={componentStyles.iconContainer}
           />
-          {props.route.params.share == "1" ||
-          props.route.params.owner == props.route.params.user ? (
-            <Icon
-              onPress={async () => {
-                _gotoShare(filteredDataSourceGallery[activeIndex].uri);
-              }}
-              type="material-community"
-              size={30}
-              name="share"
-              color="#fff"
-              containerStyle={{
-                alignSelf: "flex-end",
-                width: 40,
-                paddingTop: 10,
-                height: 50,
-                marginRight: 5,
-                marginBottom: 0,
-                backgroundColor: "rgba(0, 0, 0, 0.60)",
-              }}
-            />
-          ) : (
-            <></>
-          )}
+          {(props.route.params.share == "1" ||
+            props.route.params.owner == props.route.params.user) &&
+            filteredDataSourceGallery &&
+            filteredDataSourceGallery.length > 0 && (
+              <Icon
+                onPress={() =>
+                  _gotoShare(filteredDataSourceGallery[activeIndex]?.uri)
+                }
+                type="material-community"
+                size={30}
+                name="share"
+                color="#fff"
+                containerStyle={componentStyles.iconContainer}
+              />
+            )}
           <Icon
-            onPress={() => {
-              handlePresentModalPress();
-            }}
+            onPress={handlePresentModalPress}
             name={"comment-outline"}
             type="material-community"
             size={30}
             color="white"
-            containerStyle={{
-              alignSelf: "flex-end",
-              width: 40,
-              paddingTop: 10,
-              height: 50,
-              marginRight: 5,
-              marginBottom: 10,
-              backgroundColor: "rgba(0, 0, 0, 0.60)",
-            }}
+            containerStyle={componentStyles.iconContainer}
           />
           <Icon
             onPress={() => {
@@ -441,21 +469,7 @@ const PhotoViewer = (props) => {
             name={"close"}
             size={30}
             color="white"
-            containerStyle={{
-              alignSelf: "flex-end",
-              width: 40,
-              paddingTop: 10,
-              marginTop:
-                props.route.params.share == "1" ||
-                props.route.params.owner == props.route.params.user
-                  ? -10
-                  : 0,
-              height: 50,
-              marginRight: 5,
-              borderBottomRightRadius: 5,
-              borderBottomLeftRadius: 5,
-              backgroundColor: "rgba(0, 0, 0, 0.60)",
-            }}
+            containerStyle={[componentStyles.iconContainer]}
           />
           <BottomSheetModal
             ref={bottomSheetRef}
@@ -465,43 +479,26 @@ const PhotoViewer = (props) => {
             enablePanDownToClose
             enableDismissOnClose
             enableDynamicSizing
-            keyboardBehavior={Platform.OS === "ios" ? "extend" : "interactive"}
+            keyboardBehavior={Platform.OS == "ios" ? "extend" : "interactive"}
             keyboardBlurBehavior="restore"
             android_keyboardInputMode="adjustResize"
-            style={{
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 7,
-              },
-              shadowOpacity: 0.43,
-              shadowRadius: 9.51,
-              backgroundColor: "transparent",
-              elevation: 15,
-            }}
+            style={componentStyles.bottomSheetModal}
           >
-            <BottomSheetView
-              style={[StyleSheet.absoluteFill, { alignItems: "center" }]}
-            >
-              <Text>
+            <BottomSheetView style={componentStyles.bottomSheetContent}>
+              <Text style={componentStyles.commentCountText}>
                 {filteredComments.length} {i18n.t("Comments")}
               </Text>
-              <Animated.View
-                style={{
-                  flex: Platform.OS === "ios" ? 1 : .59,
-                }}
-              >
+              <View style={{ flex: Platform.OS === "ios" ? 1 : 0.59 }}>
                 <Animated.FlatList
                   showsHorizontalScrollIndicator={false}
                   showsVerticalScrollIndicator={false}
                   nestedScrollEnabled={true}
                   data={filteredComments}
-                  refreshing={refreshing} // Added pull to refesh state
-                  onRefresh={_refresh} // Added pull to refresh control
-                  extraData={filteredDataSourceGallery}
-                  style={{ flex:1}}
+                  refreshing={refreshing}
+                  onRefresh={_refresh}
+                  extraData={filteredDataSourceGallery} // Changed to filteredComments
                   scrollEventThrottle={16}
-                  renderItem={(item) => <CommentsView item={item} />}
+                  renderItem={({ item }) => <CommentsView item={item} />}
                   keyExtractor={(item) => item.id}
                 />
                 <View
@@ -514,17 +511,7 @@ const PhotoViewer = (props) => {
                   <Image
                     indicator={Progress}
                     resizeMode={FastImage.resizeMode.contain}
-                    style={{
-                      height: 32,
-                      width: 32,
-                      marginRight: 10,
-                      marginLeft: 10,
-                      borderRadius: 16,
-                      borderColor: "#e35504",
-                      borderWidth: 1,
-                      overflow: "hidden",
-                      borderRadius: 16,
-                    }}
+                    style={componentStyles.userAvatar}
                     source={{
                       priority: FastImage.priority.high,
                       cache: FastImage.cacheControl.immutable,
@@ -533,9 +520,8 @@ const PhotoViewer = (props) => {
                   />
                   <BottomSheetTextInput
                     multiline
-                    editable={props.route.params.end >= moment().unix()}
+                    editable={isEventActive}
                     ref={input}
-                    inputContainerStyle={{ borderBottomWidth: 0 }}
                     autoCapitalize="sentences"
                     underlineColorAndroid="transparent"
                     keyboardType="default"
@@ -545,13 +531,7 @@ const PhotoViewer = (props) => {
                     enablesReturnKeyAutomatically
                     maxLength={180}
                     onChangeText={addComment}
-                    style={{
-                      borderColor: "lightgray",
-                      borderBottomWidth: 1,
-                      borderStyle: "solid",
-                      paddingVertical: 5,
-                      width: SCREEN_WIDTH - 100,
-                    }}
+                    style={componentStyles.commentTextInput(isEventActive)}
                   />
                   <Icon
                     onPress={() => {
@@ -561,7 +541,7 @@ const PhotoViewer = (props) => {
                       }
                     }}
                     disabledStyle={{ backgroundColor: "white" }}
-                    disabled={props.route.params.end >= moment().unix()}
+                    disabled={props.route.params.end <= moment().unix()}
                     type={"ionicon"}
                     name="arrow-up-circle"
                     size={34}
@@ -572,7 +552,7 @@ const PhotoViewer = (props) => {
                     }
                   />
                 </View>
-              </Animated.View>
+              </View>
             </BottomSheetView>
           </BottomSheetModal>
         </Animated.View>
@@ -580,5 +560,97 @@ const PhotoViewer = (props) => {
     </SafeAreaProvider>
   );
 };
+
+const componentStyles = StyleSheet.create({
+  safeArea: {
+    backgroundColor: "black",
+    flex: 1,
+    width: SCREEN_WIDTH,
+  },
+  mainFlatList: {
+    backgroundColor: "black",
+    flex: 1,
+  },
+  bottomFlatList: {
+    position: "absolute",
+    bottom: 90,
+    width: SCREEN_WIDTH,
+    flex: 1,
+  },
+  bottomFlatListContent: {
+    paddingHorizontal: 10,
+  },
+  iconContainer: {
+    alignSelf: "flex-end",
+    width: 40,
+    padding: 5,
+    paddingTop: 15,
+    height: 50,
+    marginRight: 5,
+    marginBottom: 15,
+  },
+  reportIcon: {
+    marginTop: -15, // Adjusted margin to prevent overlap
+  },
+  closeIcon: (hasShareButton) => ({
+    marginTop: hasShareButton ? -10 : 0,
+    marginBottom: 10,
+    borderBottomRightRadius: 5,
+    borderBottomLeftRadius: 5,
+  }),
+  bottomSheetModal: {
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 7 },
+    shadowOpacity: 0.43,
+    shadowRadius: 9.51,
+    backgroundColor: "transparent",
+    elevation: 15,
+  },
+  bottomSheetContent: {
+    flex: 1,
+    alignItems: "center",
+    paddingTop: 10, // Added padding top
+  },
+  commentCountText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  commentsListContainer: {
+    flex: 1,
+    width: "100%",
+  },
+  commentsFlatList: {
+    flex: 1,
+    width: "100%", // Ensure FlatList takes full width
+  },
+  commentInputContainer: {
+    padding: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    marginHorizontal: 10,
+    borderTopWidth: StyleSheet.hairlineWidth, // Subtle separator
+    borderColor: "lightgray",
+    paddingVertical: 10,
+  },
+  userAvatar: {
+    height: 32,
+    width: 32,
+    marginRight: 10,
+    marginLeft: 10,
+    borderRadius: 16,
+    borderColor: "#e35504",
+    borderWidth: 1,
+    overflow: "hidden",
+  },
+  commentTextInput: (isEditable) => ({
+    borderColor: "lightgray",
+    borderBottomWidth: 1,
+    borderStyle: "solid",
+    paddingVertical: 5,
+    width: SCREEN_WIDTH - 100,
+    color: isEditable ? "black" : "grey", // Text color based on editability
+  }),
+});
 
 export default PhotoViewer;

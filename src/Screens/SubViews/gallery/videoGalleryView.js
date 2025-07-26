@@ -46,11 +46,11 @@ const VideoGalleryView = (props) => {
             marginRight: 10,
             borderWidth: 2,
             borderColor:
-              props.activeIndex === props.index ? "white" : "transparent",
+              props.activeIndex == props.index ? "white" : "transparent",
           }}
         />
 
-        {props.item.type === "video" && (
+        {props.item.type == "video" && (
           <Icon
             type="material-community"
             name="play-box-outline"

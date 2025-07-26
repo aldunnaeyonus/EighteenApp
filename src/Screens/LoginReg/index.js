@@ -65,20 +65,20 @@ export const Title = styled.Text`
   letter-spacing: 3px;
 `;
 const StyledButton = styled.TouchableHighlight`
-  width: 350px;
+  width: "90%";
   background-color: ${(props) =>
     props.transparent ? "transparent" : "#e35504"};
-  padding: 20px;
+  padding: 15px;
   border: ${(props) => (props.transparent ? "1px solid #e35504" : 0)};
   justify-content: center;
   margin-bottom: 20px;
-  border-radius: 8px;
+  border-radius: 24px;
 `;
 StyledTitle = styled.Text`
   text-transform: uppercase;
   text-align: center;
   font-weight: bold;
-  font-size: 20px;
+    font-size: 20px;
   letter-spacing: 3px;
   color: ${(props) => (props.transparent ? "#000" : "#fff")};
 `;

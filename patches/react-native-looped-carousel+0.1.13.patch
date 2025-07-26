@@ -100,6 +100,6 @@ index a47d574..33aa916 100644
      this.offset = currentOffset;
      const nextPage = this._calculateNextPage(direction);
 +    await AsyncStorage.setItem("current", ""+nextPage);
-     if (this.nextPage !== nextPage) {
+     if (this.nextPage != nextPage) {
        this.nextPage = nextPage;
        if (this.props.onPageBeingChanged) {

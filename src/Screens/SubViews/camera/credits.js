@@ -31,9 +31,8 @@ const CreditsFont = (props) => {
         alignItems: "center",
         justifyContent: "center",
         height: 60,
-        marginRight: 5,
+        marginRight: 11,
         paddingBottom:10,
-        backgroundColor: "rgba(0, 0, 0, 0.60)",
         flexDirection: "row",
       }}
     >
@@ -42,12 +41,13 @@ const CreditsFont = (props) => {
         containerStyle={{
           marginRight: -15,
           paddingTop:5,
+                        alignSelf: "auto",
         }}
         name={first}
-        size={30}
+        size={35}
         color="white"
       />
-      <Icon type="material-community" name={second} size={30} color="white"  containerStyle={{
+      <Icon type="material-community" name={second} size={35} color="white"  containerStyle={{
           paddingTop:5,
         }}/>
     </View>

@@ -32,18 +32,18 @@ const CommentsView = (props) => {
         source={{
           priority: FastImage.priority.high,
           cache: FastImage.cacheControl.immutable,
-          uri: props.item.item.photoURL,
+          uri: props.item.photoURL,
         }}
       />
 
       <View style={{ marginHorizontal: 5 }}>
         <Text style={{ color: "#3D4849", fontSize: 13 }}>
-          {props.item.item.displayName} - {" "}
+          {props.item.displayName} - {" "}
           <Text style={{ color: "grey", fontSize: 10 }}>
-            {moment.unix(props.item.item.time_date).locale(localLang).format("LLL")}
+            {moment.unix(props.item.time_date).locale(localLang).format("LLL")}
           </Text>
         </Text>
-        <Text>{props.item.item.comment}</Text>
+        <Text>{props.item.comment}</Text>
       </View>
     </View>
   );

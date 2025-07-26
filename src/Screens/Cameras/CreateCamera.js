@@ -5,93 +5,118 @@ import {
   Platform,
   Text,
   Alert,
-  NativeModules,
-  Linking,
+  NativeModules, // Used to get native module information (e.g., locale on iOS)
+  Linking, // For opening external links/app settings
+  TouchableOpacity, // For creating tappable components
 } from "react-native";
-import { TouchableOpacity } from "react-native";
-import styles from "../../styles/SliderEntry.style";
-import { ListItem, Switch, ButtonGroup, Input } from "@rneui/themed";
-import React, { useState, useCallback, useRef, useMemo } from "react";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import styles from "../../styles/SliderEntry.style"; // Custom styles for slider entries
+import { ListItem, Switch, ButtonGroup, Input } from "@rneui/themed"; // UI components from @rneui/themed
+import React, { useState, useCallback, useRef, useMemo } from "react"; // React hooks
+import DateTimePicker from "@react-native-community/datetimepicker"; // Date and time picker component
 import {
   ANDROID_MODE,
   IOS_MODE,
   ANDROID_DISPLAY,
   IOS_DISPLAY,
-  constants,
-  SCREEN_WIDTH,
-  makeid,
-  getExtensionFromFilename,
+  constants, // Application-wide constants
+  SCREEN_WIDTH, // Screen width constant
+  makeid, // Utility for generating random IDs
+  getExtensionFromFilename, // Utility for extracting file extensions
 } from "../../utils/constants";
-import * as ImagePicker from "expo-image-picker";
-import FormData from "form-data";
-import { storage } from "../../context/components/Storage";
-import { useMMKVObject } from "react-native-mmkv";
-import FastImage from "react-native-fast-image";
-import { createImageProgress } from "react-native-image-progress";
-const Image = createImageProgress(FastImage);
-import Progress from "react-native-progress";
-import moment from "moment";
-import { useFocusEffect } from "@react-navigation/native";
-import * as i18n from "../../../i18n";
-import { Icon } from "react-native-elements";
-import * as RNLocalize from "react-native-localize";
-import PhotoEditor from "@baronha/react-native-photo-editor";
-const stickers = [];
-import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
-import { CameraRoll } from "@react-native-camera-roll/camera-roll";
-import NotifService from "../../../NotifService";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ActivityIndicator } from "react-native-paper";
-import axios from "axios";
-import { axiosPull } from "../../utils/axiosPull";
-import RNFS from "react-native-fs";
+import * as ImagePicker from "expo-image-picker"; // Image picker for camera and media library
+import FormData from "form-data"; // For constructing multipart/form-data requests
+import { storage } from "../../context/components/Storage"; // MMKV storage instance
+import { useMMKVObject } from "react-native-mmkv"; // Hook for MMKV storage
+import FastImage from "react-native-fast-image"; // Optimized image loading
+import { createImageProgress } from "react-native-image-progress"; // Image loading with progress indicator
+const Image = createImageProgress(FastImage); // Combined FastImage with progress indicator
+import Progress from "react-native-progress"; // Progress bar component
+import moment from "moment"; // Date and time manipulation library
+import { useFocusEffect } from "@react-navigation/native"; // Hook to run effects when screen is focused
+import * as i18n from "../../../i18n"; // Internationalization utilities
+import { Icon } from "react-native-elements"; // Icon component from react-native-elements (might be redundant with @rneui/themed)
+import * as RNLocalize from "react-native-localize"; // For getting device localization info (e.g., timezone)
+import PhotoEditor from "@baronha/react-native-photo-editor"; // Photo editing library
+const stickers = []; // Placeholder for stickers array, if photo editor supports them
+import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context"; // For handling safe area insets
+import { CameraRoll } from "@react-native-camera-roll/camera-roll"; // Access device's camera roll/gallery
+import NotifService from "../../../NotifService"; // Custom notification service
+import AsyncStorage from "@react-native-async-storage/async-storage"; // Persistent key-value storage
+import { ActivityIndicator } from "react-native-paper"; // Loading indicator from react-native-paper
+import axios from "axios"; // HTTP client for making requests
+import { axiosPull } from "../../utils/axiosPull"; // Custom axios utility for pull operations
+import RNFS from "react-native-fs"; // File system module for React Native
 import {
-  BottomSheetModal,
-  BottomSheetView,
-  BottomSheetBackdrop,
+  BottomSheetModal, // Bottom sheet modal component
+  BottomSheetView, // View within the bottom sheet
+  BottomSheetBackdrop, // Backdrop for the bottom sheet
 } from "@gorhom/bottom-sheet";
-import Animated from "react-native-reanimated";
 
+/**
+ * CreateCamera Component
+ * This component allows users to create a new "camera" event. It includes options for:
+ * - Event name
+ * - Cover image (from gallery or AI-generated)
+ * - Event duration
+ * - Number of cameras/shots allowed
+ * - Various event settings (e.g., photo gallery, social media sharing, auto-join)
+ * - Pro features like AI image description and advanced settings.
+ */
 const CreateCamera = (props) => {
-  var newDate = new Date();
-  const [switch2, setSwitch2] = useState(true);
-  const [switch3, setSwitch3] = useState(false);
-  const [switch4, setSwitch4] = useState(false);
-  const [switch5, setSwitch5] = useState(false);
-  const [switch1, setSwitch1] = useState(false);
-  const [interval] = useState(1);
-  const [minimumDate] = useState(newDate);
-  const [maximumDate] = useState();
-  const [selectedDate, setSelectedDate] = useState(newDate);
-  const [timeDate, setTimeDate] = useState(newDate);
-  const [show, setShow] = useState(false);
-  const [clockShow, setClockShow] = useState(false);
-  const [isEditing, setisEditing] = useState(false);
-  const [isAI, setIsAI] = useState(false);
-  const [user] = useMMKVObject("user.Data", storage);
-  const [cameras, setCameras] = useState(0);
-  const [media, setMedia] = useState(0);
-  const [name, setName] = useState("");
-  const [dname, setDName] = useState("");
-  const [isPro] = useState(user.isPro == "1" ? true : false);
-  const [image, setImage] = useState("");
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [start, setStart] = useState(moment().unix());
-  const [end, setEnd] = useState(moment().unix() + 28800);
-  const [verified, setVerified] = useState(true);
-  const [errorColor] = useState(verified ? "#fafbfc" : "#ffa3a6");
-  let notification = new NotifService();
-  const [cameraStatus] = ImagePicker.useCameraPermissions();
-  const [libraryStatus] = ImagePicker.useMediaLibraryPermissions();
-  const [seed, setSeed] = useState(72);
-  const bottomSheetRef = useRef(null);
-  const [showClose, setShowClose] = useState(false);
-  const snapPoints = useMemo(() => ["17%"], []);
+  // Initialize current date for date pickers
+  const newDate = new Date();
+
+  // --- State Variables ---
+  // Switches for various event settings
+  const [switch2, setSwitch2] = useState(true); // Photo Gallery
+  const [switch3, setSwitch3] = useState(false); // Purchases (likely allow members to purchase more shots)
+  const [switch4, setSwitch4] = useState(false); // Auto Join
+  const [switch5, setSwitch5] = useState(false); // Is Hidden
+  const [switch1, setSwitch1] = useState(false); // Social Media
+
+  // Event time configuration
+  const [interval] = useState(1); // Not explicitly used but might be for future time intervals
+  const [minimumDate] = useState(newDate); // Minimum selectable date (today)
+  const [maximumDate] = useState(); // Maximum selectable date (not set, meaning no upper limit)
+  const [selectedDate, setSelectedDate] = useState(newDate); // Currently selected date for the event start
+  const [timeDate, setTimeDate] = useState(newDate); // Used with Android date/time picker
+  const [show, setShow] = useState(false); // Controls visibility of date picker
+  const [clockShow, setClockShow] = useState(false); // Controls visibility of time picker (Android specific)
+
+  // Image and AI settings
+  const [isEditing, setIsEditing] = useState(false); // True if the image is being edited
+  const [isAI, setIsAI] = useState(false); // True if the image is AI-generated
+  const [dname, setDName] = useState(""); // AI image description/prompt
+  const [image, setImage] = useState(""); // URI of the selected/generated cover image
+  const [seed, setSeed] = useState(72); // Seed for AI image generation (for reproducibility/variation)
+
+  // User and event details
+  const [user] = useMMKVObject("user.Data", storage); // Current user data
+  const [cameras, setCameras] = useState(0); // Index for number of cameras allowed
+  const [name, setName] = useState(""); // Event name
+  const [isPro] = useState(user.isPro == "1"); // Check if user has Pro subscription
+  const [selectedIndex, setSelectedIndex] = useState(0); // Index for selected event duration
+  const [start, setStart] = useState(moment().unix()); // Event start timestamp (Unix)
+  const [end, setEnd] = useState(moment().unix() + 28800); // Event end timestamp (Unix), defaults to 8 hours after start
+  const [verified, setVerified] = useState(true); // Verification status (e.g., for event name validity)
+  const [errorColor] = useState(verified ? "#fafbfc" : "#ffa3a6"); // Background color based on verification
+
+  // Permissions and Services
+  const notification = useRef(new NotifService()).current; // Notification service instance
+  const [cameraStatus, requestCameraPermission] =
+    ImagePicker.useCameraPermissions(); // Camera permissions
+  const [libraryStatus, requestLibraryPermission] =
+    ImagePicker.useMediaLibraryPermissions(); // Media library permissions
+
+  // Bottom Sheet Modal (for image selection/options)
+  const bottomSheetRef = useRef(null); // Ref for BottomSheetModal
+  const [showClose, setShowClose] = useState(false); // Controls visibility of "Create" button in header
+  const snapPoints = useMemo(() => ["20%"], []); // Snap points for the bottom sheet
   const handlePresentModalPress = useCallback(() => {
-    bottomSheetRef.current?.present();
+    bottomSheetRef.current?.present(); // Open the bottom sheet
   }, []);
 
+  // Platform-specific date/time picker modes
   const MODE_VALUES = Platform.select({
     ios: Object.values(IOS_MODE),
     android: Object.values(ANDROID_MODE),
@@ -102,58 +127,45 @@ const CreateCamera = (props) => {
     android: Object.values(ANDROID_DISPLAY),
     windows: [],
   });
-  let deviceLanguage =
-    Platform.OS === "ios"
-      ? NativeModules.SettingsManager.settings.AppleLocale
-      : NativeModules.I18nManager.localeIdentifier;
-  const usePollinationsImages = (prompt, options = {}) => {
-    const {
-      width = 1024,
-      height = 863,
-      model = "flux",
-      seed = seed,
-      nologo = true,
-      enhance = false,
-    } = options;
-    const imageUrl = () => {
-      const params = new URLSearchParams({
-        width,
-        height,
-        model,
-        seed,
-        nologo,
-        enhance,
-      });
-      return `https://pollinations.ai/p/${encodeURIComponent(prompt)}?${params.toString()}`;
-    };
-    return imageUrl;
-  };
 
-  const editImage = async (image) => {
-    try {
-      await PhotoEditor.open({
-        path: image,
-        stickers,
-      }).then((image) => {
-        setImage(image);
-        setisEditing(false);
-        setShowClose(true);
-      });
-    } catch (e) {
-      setImage("");
-      console.log("e", e);
-      setisEditing(false);
-    }
-    await AsyncStorage.removeItem("media.path");
-  };
+  // Get device language for AI image generation prompt
+  const deviceLanguage =
+    Platform.OS == "ios"
+      ? NativeModules.SettingsManager.settings.AppleLocale // iOS specific locale
+      : NativeModules.I18nManager.localeIdentifier; // Android specific locale
 
-  const cameraChange = (value) => {
-    setCameras(value);
-  };
+  /**
+   * Hook to generate image URLs from Pollinations.ai based on a prompt.
+   * @param {string} prompt - The text prompt for image generation.
+   * @param {object} options - Configuration options for the image (width, height, model, seed, etc.).
+   * @returns {function} A function that returns the generated image URL.
+   */
+  const usePollinationsImages = useCallback(
+    (prompt, options = {}) => {
+      const {
+        width = 1024,
+        height = 863,
+        model = "flux",
+        seed: imageSeed = seed, // Use component's seed state by default
+        nologo = true,
+        enhance = false,
+      } = options;
 
-  const mediaChange = (value) => {
-    setMedia(value);
-  };
+      // Return a function that generates the URL, useful for `source` prop in Image.
+      return () => {
+        const params = new URLSearchParams({
+          width,
+          height,
+          model,
+          seed: imageSeed,
+          nologo,
+          enhance,
+        });
+        return `https://pollinations.ai/p/${encodeURIComponent(prompt)}?${params.toString()}`;
+      };
+    },
+    [seed]
+  ); // Recreate if seed changes
 
   const daysChange = (value) => {
     setSelectedIndex(value);
@@ -165,8 +177,45 @@ const CreateCamera = (props) => {
     );
   };
 
+  /**
+   * Opens the photo editor for the given image URI.
+   * After editing, updates the image state and relevant flags.
+   * @param {string} imageUri - The URI of the image to edit.
+   */
+  const editImage = async (imageUri) => {
+    try {
+      await PhotoEditor.open({
+        path: imageUri,
+        stickers,
+      }).then((image) => {
+        setImage(image);
+        setIsEditing(false);
+        setShowClose(true);
+      });
+    } catch (e) {
+      setImage("");
+      console.log("e", e);
+      setIsEditing(false);
+    }
+    await AsyncStorage.removeItem("media.path");
+  };
+
+  /**
+   * Updates the state for the number of cameras allowed in the event.
+   * @param {number} value - The selected index from the ButtonGroup.
+   */
+  const cameraChange = (value) => {
+    setCameras(value);
+  };
+
+  /**
+   * Handles date/time changes for iOS `DateTimePicker`.
+   * @param {object} event - The event object from DateTimePicker.
+   * @param {Date} selectDate - The newly selected Date object.
+   */
   const onChangeIOS = (event, selectDate) => {
-    if (event.type === "neutralButtonPressed") {
+    if (event.type == "neutralButtonPressed") {
+      // If "Clear" or "Neutral" button pressed, retain current date
       setSelectedDate(selectedDate);
       setStart(moment(selectedDate).unix());
       setEnd(
@@ -187,9 +236,14 @@ const CreateCamera = (props) => {
     }
   };
 
+  /**
+   * Handles general date/time changes (likely for Android `DateTimePicker` time selection after date).
+   * @param {object} event - The event object from DateTimePicker.
+   * @param {Date} selectDate - The newly selected Date object.
+   */
   const onChange = (event, selectDate) => {
-    if (event.type === "set") {
-      setClockShow(false);
+    if (event.type == "set") {
+      setClockShow(false); // Hide time picker
       setSelectedDate(selectDate);
       setStart(moment(selectDate).unix());
       setEnd(
@@ -199,8 +253,8 @@ const CreateCamera = (props) => {
             : parseInt(constants.camera_time_seconds[selectedIndex]))
       );
     } else {
-      setClockShow(false);
-      setSelectedDate(selectedDate);
+      setClockShow(false); // Hide time picker on cancel
+      setSelectedDate(selectedDate); // Revert to previous selected date
       setStart(moment(selectedDate).unix());
       setEnd(
         moment(selectedDate).unix() +
@@ -211,117 +265,140 @@ const CreateCamera = (props) => {
     }
   };
 
-  const AITexttoImage = async () => {
-    const userImage = usePollinationsImages(
-      dname.length > 5
+  /**
+   * Generates an AI image using Pollinations.ai based on event name or AI description.
+   * Sets the generated image URI and initiates editing mode.
+   */
+  const AITexttoImage = () => {
+    const prompt =
+      dname.length > 5 // Use AI description if available and long enough, otherwise a default prompt
         ? dname
-        : `Create a cinematic 4K photo shot on a 70mm, Ultra-Wide Angle, Depth of Field, Shutter Speed 1/1000, F/22 camera for a gathering that is titled ${name} and is in dramatic and stunning setting located in ${RNLocalize.getTimeZone()} and is also an award winning photo worthy of instagram.`,
-      {
-        width: 1024,
-        height: 863,
-        seed: seed,
-        model: "flux",
-        nologo: true,
-        enhance: true,
-      }
-    );
+        : `Create a cinematic 4K photo shot on a 70mm, Ultra-Wide Angle, Depth of Field, Shutter Speed 1/1000, F/22 camera for a gathering that is titled ${name} and is in dramatic and stunning setting located in ${RNLocalize.getTimeZone()} and is also an award winning photo worthy of instagram.`;
+
+    const userImage = usePollinationsImages(prompt, {
+      width: 1024,
+      height: 863,
+      seed: seed,
+      model: "flux",
+      nologo: true,
+      enhance: true,
+    })(); // Call the function returned by usePollinationsImages to get the URL
+
     setImage(userImage);
-    setisEditing(true);
+    setIsEditing(true); // Automatically enter editing mode for AI images
+    setIsAI(true); // Mark as AI-generated
   };
 
+  /**
+   * Handles date/time changes for Android `DateTimePicker`.
+   * First selects date, then shows time picker.
+   * @param {object} event - The event object from DateTimePicker.
+   * @param {Date} selectDate - The newly selected Date object.
+   */
   const onChangeAndroid = (event, selectDate) => {
-    if (event.type === "set") {
-      setShow(false);
+    if (event.type == "set") {
+      setShow(false); // Hide date picker
       setSelectedDate(selectDate);
-      setTimeDate(selectDate);
-      setClockShow(true);
+      setTimeDate(selectDate); // Set timeDate for the time picker
+      setClockShow(true); // Show time picker
     } else {
-      setShow(false);
-      setSelectedDate(selectedDate);
-      setTimeDate(selectedDate);
-      setClockShow(false);
+      setShow(false); // Hide date picker on cancel
+      setSelectedDate(selectedDate); // Revert to previous date
+      setTimeDate(selectedDate); // Revert timeDate as well
+      setClockShow(false); // Hide time picker
     }
   };
 
-  const toggleSwitch1 = () => {
-    setSwitch1(!switch1);
-  };
+  // --- Toggle Switch Functions ---
+  const toggleSwitch1 = () => setSwitch1(!switch1); // Social Media
+  const toggleSwitch2 = () => setSwitch2(!switch2); // Photo Gallery
+  const toggleSwitch4 = () => setSwitch4(!switch4); // Auto Join
+  const toggleSwitch3 = () => setSwitch3(!switch3); // Purchases
+  const toggleSwitch5 = () => setSwitch5(!switch5); // Is Hidden
 
-  const toggleSwitch2 = () => {
-    setSwitch2(!switch2);
-  };
-
-  const toggleSwitch4 = () => {
-    setSwitch4(!switch4);
-  };
-
-  const toggleSwitch3 = () => {
-    setSwitch3(!switch3);
-  };
-
-  const toggleSwitch5 = () => {
-    setSwitch5(!switch5);
-  };
-
+  /**
+   * Allows picking an image from the device's media library.
+   * Handles permission requests and sets the selected image.
+   */
   const pickImage = async () => {
-    if (libraryStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
-      await ImagePicker.requestCameraPermissionsAsync();
-    } else if (libraryStatus.status == ImagePicker.PermissionStatus.DENIED) {
+    // Check and request media library permissions
+    const permissionResponse = await requestLibraryPermission();
+    if (
+      libraryStatus.status == ImagePicker.PermissionStatus.DENIED ||
+      !permissionResponse.granted ||
+      libraryStatus.status == ImagePicker.PermissionStatus.UNDETERMINED
+    ) {
       Alert.alert(
         i18n.t("Permissions"),
         i18n.t("UseLibrary"),
         [
           {
             text: i18n.t("Cancel"),
-            onPress: () => console.log("Cancel Pressed"),
+            onPress: () =>
+              console.log("Image picker cancelled due to permissions."),
             style: "destructive",
           },
           {
             text: i18n.t("Settings"),
             onPress: () => {
-              Linking.openSettings();
+              Linking.openSettings(); // Direct user to app settings
             },
             style: "default",
           },
         ],
         { cancelable: false }
       );
+      return; // Stop execution if permission is denied
+    }
+
+    // Launch image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      exif: true, // Include EXIF data
+      selectionLimit: 1, // Only allow single image selection
+      allowsEditing: true, // Allow basic editing (cropping)
+      allowsMultipleSelection: false,
+      quality: 1, // High quality
+      orderedSelection: true,
+    });
+
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      setImage(result.assets[0].uri); // Set image URI
+      setIsEditing(true); // Indicate that the image is ready for editing
+      setIsAI(false); // Not an AI image
+      setShowClose(true); // Show the "Create" button
     } else {
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        exif: true,
-        selectionLimit: 1,
-        allowsEditing: true,
-        allowsMultipleSelection: false,
-        quality: 1,
-        orderedSelection: true,
-      });
-      if (!result.canceled) {
-        setImage(result.assets[0].uri);
-        setisEditing(true);
-      } else {
-        setImage(image);
-        setisEditing(false);
-      }
+      setImage(image); // Revert to previous image if cancelled
+      setIsEditing(false); // No editing needed if cancelled
+      setShowClose(false); // Show the "Create" button
     }
   };
 
+  /**
+   * `useFocusEffect` hook to manage side effects when the screen is focused.
+   * It checks for a pending image path from AsyncStorage (e.g., after camera capture)
+   * and updates the navigation header options.
+   */
   useFocusEffect(
     useCallback(() => {
-      const pickImage = async () => {
+      // Check for a pending image path (e.g., from `VisionCamera` or `TempCamera` after capturing)
+      const checkPendingImage = async () => {
         const value = await AsyncStorage.getItem("media.path");
-        if (value != undefined) {
-          editImage(value);
+        if (value) {
+          editImage(value); // If a path exists, open the photo editor
+          await AsyncStorage.removeItem("media.path"); // Clear the path after use
         }
       };
-      pickImage();
+      checkPendingImage();
+
+      // Set navigation header options (title and right button)
       props.navigation.setOptions({
-        title: isPro == "1" ? i18n.t("CreatePro") : i18n.t("Create"),
+        title: isPro ? i18n.t("CreatePro") : i18n.t("Create"), // Dynamic title based on Pro status
         headerRight: () =>
-          showClose ? (
+          showClose ? ( // Show "Create" button if `showClose` is true
             <TouchableOpacity
               onPress={() => {
-                createEvent();
+                createEvent(); // Trigger event creation
               }}
             >
               <Text
@@ -336,16 +413,16 @@ const CreateCamera = (props) => {
               </Text>
             </TouchableOpacity>
           ) : (
-            <></>
+            <></> // Otherwise, render nothing
           ),
       });
+      // Dependencies: Re-run effect if any of these values change
     }, [
       verified,
       props,
       name,
       showClose,
       isEditing,
-      verified,
       image,
       errorColor,
       selectedIndex,
@@ -360,23 +437,24 @@ const CreateCamera = (props) => {
       isAI,
       user,
       show,
+      isPro, // Added isPro to dependencies as it affects header title
     ])
   );
 
+  /**
+   * Initiates the event creation process.
+   * Constructs FormData, sends it to the server, handles upload progress,
+   * saves the cover image to Camera Roll, and schedules notifications.
+   */
   const createEvent = async () => {
+    // Show a loading indicator in the navigation header
     props.navigation.setOptions({
       headerRight: () => (
-        <ActivityIndicator color="black" size={"small"} animating={true} />
+        <ActivityIndicator color="black" size="small" animating={true} />
       ),
     });
-    storage.set(
-      "uploadData",
-      JSON.stringify({
-        message: i18n.t("CreatingEvent") + " " + i18n.t("PleaseWait"),
-        display: "flex",
-        progress: 0,
-      })
-    );
+
+    // Generate a unique PIN for the event
     const pin =
       "SNAP-" +
       makeid(4) +
@@ -386,83 +464,89 @@ const CreateCamera = (props) => {
       moment().unix() +
       "-" +
       makeid(3);
-    var formData = new FormData();
-    var fileName = "";
-    formData.append("owner", user.user_id);
-    formData.append("owner", user.user_id);
-    formData.append("eventName", name);
-    formData.append("purchases", switch3 ? "1" : "0");
+
+    // Prepare FormData for the API request
+    const formData = new FormData();
+    formData.append("owner", user.user_id); // Event owner ID
+    formData.append("eventName", name); // Event name
+    formData.append("purchases", switch3 ? "1" : "0"); // Allow purchases
     formData.append(
       "length",
       isPro
-        ? constants.camera_time_text_PRO[selectedIndex]
-        : constants.camera_time_text[selectedIndex]
+        ? constants.camera_time_text_PRO[selectedIndex] // Pro duration text
+        : constants.camera_time_text[selectedIndex] // Standard duration text
     );
     formData.append(
       "cameras",
       isPro
-        ? constants.camera_amount_PRO[cameras]
-        : constants.camera_amount[cameras]
+        ? constants.camera_amount_PRO[cameras] // Pro camera limit
+        : constants.camera_amount[cameras] // Standard camera limit
     );
-    formData.append("shots", isPro ? constants.media_amount[media] : "18");
-    formData.append("start", start);
-    formData.append("pin", pin);
-    formData.append("ai_description", isPro ? dname.trim() : "");
-    formData.append("end", end);
-    formData.append("photoGallery", switch2 ? "1" : "0");
-    formData.append("socialMedia", isPro ? (switch1 ? "1" : "0") : "1");
-    formData.append("autoJoin", switch4 ? "1" : "0");
-    formData.append("device", Platform.OS);
-    formData.append("camera", "0");
-    formData.append("isHidden", switch5 ? "1" : "0");
-    fileName =
+    formData.append("shots", "18");
+    formData.append("start", start); // Event start timestamp
+    formData.append("pin", pin); // Generated PIN
+    formData.append("ai_description", isPro ? dname.trim() : ""); // AI description (only for Pro)
+    formData.append("end", end); // Event end timestamp
+    formData.append("photoGallery", switch2 ? "1" : "0"); // Enable photo gallery
+    formData.append("socialMedia", isPro ? (switch1 ? "1" : "0") : "1"); // Social media sharing (Pro users can toggle, others default to 1)
+    formData.append("autoJoin", switch4 ? "1" : "0"); // Auto-join
+    formData.append("device", Platform.OS); // Device OS
+    formData.append("camera", "0"); // Unclear usage, possibly legacy or placeholder
+    formData.append("isHidden", switch5 ? "1" : "0"); // Hidden event
+
+    // Prepare the cover image file for upload
+    const fileName =
       "SNAP18-cover-" +
       user.user_id +
       "-" +
       moment().unix() +
       "." +
       getExtensionFromFilename(image).toLowerCase();
-    formData.append("aiIMAGE", "");
+
+    formData.append("aiIMAGE", isAI ? image : ""); // If AI image, send its URL (or empty string)
     formData.append("file", {
       name: fileName,
-      type: constants.mimes(getExtensionFromFilename(image).toLowerCase()), // set MIME type
-      uri: Platform.OS === "android" ? image : image.replace("file://", ""),
+      type: constants.mimes(getExtensionFromFilename(image).toLowerCase()), // Determine MIME type from extension
+      uri: Platform.OS == "android" ? image : image.replace("file://", ""), // Adjust URI for Android/iOS
     });
-    formData.append("photoName", fileName);
-    formData.append("isAI", "0");
-    await AsyncStorage.setItem("uploadEnabled", "0");
+    formData.append("photoName", fileName); // Name of the uploaded photo
+    formData.append("isAI", isAI ? "1" : "0"); // Is this an AI-generated image
 
+    await AsyncStorage.setItem("uploadEnabled", "1"); // Disable other uploads during this process
+
+    // Function to handle the actual upload
     const preLoading = async () => {
-      await axios({
-        method: "POST",
-        url: constants.url + "/camera/create.php",
-        data: formData,
-        onUploadProgress: (progressEvent) => {
-          const { progress } = progressEvent;
-          storage.set(
-            "uploadData",
-            JSON.stringify({
-              display: "flex",
-              progress: progress,
-            })
-          );
-        },
-        headers: {
-          Accept: "application/json",
-          "content-Type": "multipart/form-data",
-        },
-      }).then(async (res) => {
-        await AsyncStorage.setItem("uploadEnabled", "1");
+      try {
+        await axios({
+          method: "POST",
+          url: constants.url + "/camera/create.php", // API endpoint for creating camera
+          data: formData,
+          onUploadProgress: (progressEvent) => {
+            //const { loaded, total } = progressEvent;
+            //const progress = total > 0 ? loaded / total : 0;
+          },
+          headers: {
+            Accept: "application/json",
+            "content-Type": "multipart/form-data", // Important for FormData
+          },
+        });
+
+        await AsyncStorage.setItem("uploadEnabled", "0"); // Re-enable other uploads
+
+        // After successful upload, perform post-loading actions
         const postLoading = async () => {
-          storage.set(
-            "uploadData",
-            JSON.stringify({
-              message: "",
-              display: "none",
-              progress: 0,
-            })
-          );
-          await CameraRoll.saveAsset(image);
+          // Clear global upload message
+          // Save the event cover image to the device's camera roll
+          if (image) {
+            try {
+              await CameraRoll.saveAsset(image, { type: "photo" });
+            } catch (saveError) {
+              console.warn("Failed to save image to CameraRoll:", saveError);
+              // Optionally alert user or log more details
+            }
+          }
+
+          // Refresh various feeds to reflect the new event
           await axiosPull._pullGalleryFeed(pin, user.user_id);
           await axiosPull._pullFriendCameraFeed(
             user.user_id,
@@ -470,66 +554,83 @@ const CreateCamera = (props) => {
             user.user_id
           );
           await axiosPull._pullCameraFeed(user.user_id, "owner");
+
+          // Schedule notifications for event start and end
+          const coverImageUrl =
+            constants.urldata +
+            "/" +
+            user.user_id +
+            "/events/" +
+            pin +
+            "/" +
+            fileName;
+
           if (parseInt(start) >= moment().unix()) {
             notification.scheduleNotif(
               String(name),
               i18n.t("EvnetStart"),
               parseInt(start),
               pin + "-start",
-              constants.urldata +
-                "/" +
-                user.user_id +
-                "/events/" +
-                pin +
-                "/" +
-                fileName
+              coverImageUrl
             );
           }
-          RNFS.unlink(image);
           notification.scheduleNotif(
             String(name),
             i18n.t("EvnetEnd"),
             parseInt(end),
             pin + "-end",
-            constants.urldata +
-              "/" +
-              user.user_id +
-              "/events/" +
-              pin +
-              "/" +
-              fileName
+            coverImageUrl
           );
-        };
-        postLoading();
-      });
-    };
-    preLoading();
-    props.navigation.goBack();
 
-    // handleUpload(
-    //   constants.url + "/camera/create.php",
-    //   formData,
-    //   user.user_id,
-    //   "create",
-    //   "",
-    //   name,
-    //   i18n.t("CreatingEvent") + " " + i18n.t("PleaseWait"),
-    //   image,
-    //   uploading
-    // );
+          // Delete the temporary local image file after upload and saving
+          try {
+            if (image.startsWith("file://") || image.startsWith("content://")) {
+              // Ensure it's a local file before attempting to unlink
+              await RNFS.unlink(image);
+            }
+          } catch (unlinkError) {
+            console.warn("Failed to delete local image file:", unlinkError);
+          }
+        };
+        await postLoading();
+      } catch (uploadError) {
+        console.error("Error creating event:", uploadError);
+        Alert.alert(i18n.t("Error"), i18n.t("EventCreationFailed"));
+        // Ensure upload UI is reset on error
+        storage.set(
+          "uploadData",
+          JSON.stringify({
+            message: "",
+            display: "none",
+            progress: 0,
+          })
+        );
+      } finally {
+        // Always navigate back regardless of success or failure
+        props.navigation.goBack();
+      }
+    };
+    await preLoading(); // Start the upload process
   };
 
+  /**
+   * Closes the bottom sheet modal.
+   */
   const handleDismissPress = useCallback(() => {
     bottomSheetRef.current?.close();
   }, []);
 
+  /**
+   * Renders the backdrop for the bottom sheet modal.
+   * Configured to close the modal when pressed outside.
+   */
   const renderBackdrop = useCallback(
     (props) => (
       <BottomSheetBackdrop
-        enableTouchThrough={false}
-        pressBehavior={"close"}
-        appearsOnIndex={0}
-        disappearsOnIndex={-1}
+        enableTouchThrough={false} // Prevents interaction with content behind
+        pressBehavior={"close"} // Closes modal on backdrop press
+        appearsOnIndex={0} // Appears at the first snap point
+        disappearsOnIndex={-1} // Disappears when fully closed
         {...props}
       />
     ),
@@ -548,13 +649,14 @@ const CreateCamera = (props) => {
       >
         <ScrollView
           style={{ backgroundColor: "#fff", marginBottom: 0, flex: 1 }}
-          keyboardShouldPersistTaps={"never"}
-          keyboardDismissMode="on-drag"
+          keyboardShouldPersistTaps={"never"} // Keyboard dismisses on tap outside
+          keyboardDismissMode="on-drag" // Keyboard dismisses on scroll
           nestedScrollEnabled={true}
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.container}>
-            <ListItem key="1">
+            {/* Event Name Section */}
+            <ListItem bottomDivider>
               <Icon
                 type="material"
                 name="drive-file-rename-outline"
@@ -575,10 +677,9 @@ const CreateCamera = (props) => {
                 <ListItem.Subtitle>{i18n.t("e5")}</ListItem.Subtitle>
               </ListItem.Content>
             </ListItem>
-            <View style={[styles.dividerStyle]} />
             <ListItem
               containerStyle={{ height: "auto", backgroundColor: errorColor }}
-              key="2"
+              bottomDivider
             >
               <ListItem.Content>
                 <ListItem.Input
@@ -590,11 +691,11 @@ const CreateCamera = (props) => {
                     borderRadius: 10,
                     paddingRight: 5,
                   }}
-                  underlineColorAndroid="transparent"
-                  inputContainerStyle={{ borderBottomWidth: 0 }}
+                  underlineColorAndroid="transparent" // Remove underline on Android
+                  inputContainerStyle={{ borderBottomWidth: 0 }} // Remove bottom border for Input
                   autoCapitalize="sentences"
                   keyboardType="default"
-                  maxLength={32}
+                  maxLength={32} // Max length for event name
                   onChangeText={(text) => {
                     setName(text);
                   }}
@@ -602,10 +703,10 @@ const CreateCamera = (props) => {
                 ></ListItem.Input>
               </ListItem.Content>
             </ListItem>
-            <View style={[styles.dividerStyle]} />
+            {/* AI Image Description (Pro Feature) */}
             {isPro && (
               <>
-                <ListItem key="17">
+                <ListItem bottomDivider>
                   <Icon
                     type="material"
                     name="text-snippet"
@@ -628,13 +729,12 @@ const CreateCamera = (props) => {
                     </ListItem.Subtitle>
                   </ListItem.Content>
                 </ListItem>
-                <View style={[styles.dividerStyle]} />
                 <ListItem
                   containerStyle={{
                     height: "auto",
                     backgroundColor: errorColor,
                   }}
-                  key="18"
+                  bottomDivider
                 >
                   <ListItem.Content>
                     <Input
@@ -654,15 +754,16 @@ const CreateCamera = (props) => {
                       onChangeText={(text) => {
                         setDName(text);
                       }}
-                      multiline={true}
+                      multiline={true} // Allow multiple lines for description
                       placeholder={i18n.t("AIPlaceholder")}
                     ></Input>
                   </ListItem.Content>
                 </ListItem>
-                <View style={[styles.dividerStyle]} />
               </>
             )}
-            <ListItem key="0">
+
+            {/* Cover Image Section */}
+            <ListItem bottomDivider>
               <Icon
                 type="ionicon"
                 name="image-outline"
@@ -683,10 +784,8 @@ const CreateCamera = (props) => {
                 <ListItem.Subtitle>{i18n.t("e2")}</ListItem.Subtitle>
               </ListItem.Content>
             </ListItem>
-            <View style={[styles.dividerStyle]} />
             <ListItem
               containerStyle={{ height: 250, backgroundColor: "#fafbfc" }}
-              key="16"
             >
               <ListItem.Content
                 style={{
@@ -696,13 +795,13 @@ const CreateCamera = (props) => {
               >
                 <TouchableOpacity
                   onPress={() => {
-                    handlePresentModalPress();
+                    handlePresentModalPress(); // Open bottom sheet for image options
                   }}
                 >
                   {image ? (
                     <Image
                       key={image}
-                      indicator={Progress}
+                      indicator={Progress} // Show progress bar
                       style={{
                         height: 200,
                         width: 300,
@@ -710,26 +809,29 @@ const CreateCamera = (props) => {
                         backgroundColor: "#f2f2f2",
                         borderRadius: 16,
                       }}
-                      onLoadEnd={async () => {}}
+                      onLoadEnd={async () => {}} // Callback when image finishes loading
                       onLoad={async () => {
-                        {
-                          isEditing ? editImage(image) : null;
+                        // If `isEditing` is true (e.g., from a fresh capture), open editor
+                        if (isEditing) {
+                          editImage(image);
                         }
                       }}
-                      fallback={{ uri: image }}
+                      fallback={{ uri: image }} // Fallback if main source fails
                       onError={() => {
-                        {
-                          isAI ? AITexttoImage() : null;
+                        // If it's an AI image and fails to load, try regenerating
+                        if (isAI) {
+                          AITexttoImage();
                         }
                       }}
                       resizeMode={FastImage.resizeMode.cover}
                       source={{
                         uri: image,
                         priority: FastImage.priority.high,
-                        cacheControl: FastImage.cacheControl.immutable,
+                        cacheControl: FastImage.cacheControl.immutable, // Cache immutably
                       }}
                     />
                   ) : (
+                    // Placeholder image if no image is selected
                     <Image
                       key={"elementor-placeholder-image.png"}
                       source={require("../../../assets/elementor-placeholder-image.png")}
@@ -747,10 +849,12 @@ const CreateCamera = (props) => {
                 <Text style={{ color: "grey", margin: 5 }}>{i18n.t("e3")}</Text>
               </ListItem.Content>
             </ListItem>
+
+            {/* Image Actions (Edit, Flag, Delete) */}
             {image ? (
               <ListItem
                 containerStyle={{ height: 45, backgroundColor: "#fafbfc" }}
-                key="25"
+                bottomDivider
               >
                 <ListItem.Content>
                   <View
@@ -766,7 +870,7 @@ const CreateCamera = (props) => {
                         marginTop: 20,
                       }}
                       onPress={() => {
-                        editImage(image);
+                        editImage(image); // Re-open photo editor
                       }}
                     >
                       <View
@@ -783,11 +887,12 @@ const CreateCamera = (props) => {
                           size={20}
                           color="#3D4849"
                         />
-
                         <Text>{i18n.t("Edit Image")}</Text>
                       </View>
                     </TouchableOpacity>
+
                     {isAI ? (
+                      // Option to flag/redraw AI image
                       <TouchableOpacity
                         style={{
                           width: "50%",
@@ -801,14 +906,15 @@ const CreateCamera = (props) => {
                             [
                               {
                                 text: i18n.t("Cancel"),
-                                onPress: () => console.log("Cancel Pressed"),
+                                onPress: () =>
+                                  console.log("AI image redraw cancelled."),
                                 style: "destructive",
                               },
                               {
                                 text: i18n.t("Flag&Redraw"),
                                 onPress: () => {
-                                  setSeed(seed - 1);
-                                  AITexttoImage();
+                                  setSeed(seed - 1); // Change seed for a different AI image
+                                  AITexttoImage(); // Regenerate AI image
                                 },
                                 style: "default",
                               },
@@ -831,20 +937,20 @@ const CreateCamera = (props) => {
                             size={20}
                             color="#3D4849"
                           />
-
                           <Text>{i18n.t("Flag")}</Text>
                         </View>
                       </TouchableOpacity>
                     ) : (
                       <></>
                     )}
+
                     <TouchableOpacity
                       style={{
                         width: "50%",
                         height: 40,
                         marginTop: 20,
                       }}
-                      onPress={() => setImage("")}
+                      onPress={() => setImage("")} // Clear the image
                     >
                       <View
                         style={{
@@ -860,7 +966,6 @@ const CreateCamera = (props) => {
                           size={20}
                           color="red"
                         />
-
                         <Text style={{ color: "red" }}>
                           {i18n.t("Delete Image")}
                         </Text>
@@ -872,8 +977,41 @@ const CreateCamera = (props) => {
             ) : (
               <></>
             )}
-            <View style={[styles.dividerStyle]} />
-            <ListItem key="13">
+            <ListItem bottomDivider>
+              <Icon
+                type="material-community"
+                name="view-gallery-outline"
+                size={25}
+                color="#3D4849"
+                containerStyle={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: 6,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              />
+              <ListItem.Content>
+                <ListItem.Title style={styles.imageUserNameTitleBlack}>
+                  {i18n.t("e15")}
+                </ListItem.Title>
+                <ListItem.Subtitle>{i18n.t("e16")}</ListItem.Subtitle>
+              </ListItem.Content>
+            </ListItem>
+            <ListItem
+              containerStyle={{ height: 65, backgroundColor: "#fafbfc" }}
+              bottomDivider
+            >
+              <ListItem.Content>
+                <Switch
+                  style={{ alignSelf: "flex-end" }}
+                  value={switch2}
+                  onValueChange={(value) => toggleSwitch2(value)}
+                />
+              </ListItem.Content>
+            </ListItem>
+            {/* Auto Join Feature */}
+            <ListItem bottomDivider>
               <Icon
                 type="material-community"
                 name="refresh-auto"
@@ -894,21 +1032,92 @@ const CreateCamera = (props) => {
                 <ListItem.Subtitle>{i18n.t("e8")}</ListItem.Subtitle>
               </ListItem.Content>
             </ListItem>
-            <View style={[styles.dividerStyle]} />
             <ListItem
               containerStyle={{ height: 65, backgroundColor: "#fafbfc" }}
-              key="17"
+              bottomDivider
             >
               <ListItem.Content>
                 <Switch
                   style={{ alignSelf: "flex-end" }}
                   value={switch4}
-                  onValueChange={(value) => toggleSwitch4(value)}
+                  onValueChange={toggleSwitch4} // Toggle auto-join switch
                 />
               </ListItem.Content>
             </ListItem>
-            <View style={[styles.dividerStyle]} />
-            <ListItem key="5">
+            <ListItem bottomDivider>
+              <Icon
+                type="material"
+                name="hide-source"
+                size={25}
+                color="#3D4849"
+                containerStyle={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: 6,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              />
+              <ListItem.Content>
+                <ListItem.Title style={styles.imageUserNameTitleBlack}>
+                  {i18n.t("HideEvent")}
+                </ListItem.Title>
+                <ListItem.Subtitle>{i18n.t("HideEventDesc")}</ListItem.Subtitle>
+              </ListItem.Content>
+            </ListItem>
+            <ListItem
+              containerStyle={{ height: 65, backgroundColor: "#fafbfc" }}
+              bottomDivider
+            >
+              <ListItem.Content>
+                <Switch
+                  style={{ alignSelf: "flex-end" }}
+                  value={switch5}
+                  onValueChange={(value) => toggleSwitch5(value)}
+                />
+              </ListItem.Content>
+            </ListItem>
+
+            {isPro && (
+              <>
+                <ListItem bottomDivider>
+                  <Icon
+                    type="material-community"
+                    name="share"
+                    size={25}
+                    color="#3D4849"
+                    containerStyle={{
+                      width: 28,
+                      height: 28,
+                      borderRadius: 6,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  />
+                  <ListItem.Content>
+                    <ListItem.Title style={styles.imageUserNameTitleBlack}>
+                      {i18n.t("e17")}
+                    </ListItem.Title>
+                    <ListItem.Subtitle>{i18n.t("e18")}</ListItem.Subtitle>
+                  </ListItem.Content>
+                </ListItem>
+                <ListItem
+                  containerStyle={{ height: 65, backgroundColor: "#fafbfc" }}
+                  bottomDivider
+                >
+                  <ListItem.Content>
+                    <Switch
+                      style={{ alignSelf: "flex-end" }}
+                      value={switch1}
+                      onValueChange={(value) => toggleSwitch1(value)}
+                    />
+                  </ListItem.Content>
+                </ListItem>
+              </>
+            )}
+
+            {/* Number of Cameras Allowed */}
+            <ListItem bottomDivider>
               <Icon
                 type="font-awesome-5"
                 name="camera-retro"
@@ -929,10 +1138,9 @@ const CreateCamera = (props) => {
                 <ListItem.Subtitle>{i18n.t("e10")}</ListItem.Subtitle>
               </ListItem.Content>
             </ListItem>
-            <View style={[styles.dividerStyle]} />
             <ListItem
               containerStyle={{ height: 100, backgroundColor: "#fafbfc" }}
-              key="6"
+              bottomDivider
             >
               <ListItem.Content
                 style={{
@@ -943,111 +1151,54 @@ const CreateCamera = (props) => {
               >
                 <ButtonGroup
                   buttons={
-                    isPro
+                    isPro // Pro users have different camera amount options
                       ? constants.camera_amount_PRO
                       : constants.camera_amount
                   }
                   selectedIndex={cameras}
-                  onPress={(value) => {
-                    cameraChange(value);
-                  }}
+                  onPress={cameraChange} // Handle camera amount selection
                   selectedButtonStyle={{ backgroundColor: "#ea5504" }}
                   containerStyle={{ marginBottom: 5 }}
                 />
               </ListItem.Content>
             </ListItem>
-            {isPro && (
-              <>
-                <View style={[styles.dividerStyle]} />
-                <ListItem key="23">
-                  <Icon
-                    type="material"
-                    name="18-up-rating"
-                    size={25}
-                    color="#3D4849"
-                    containerStyle={{
-                      width: 28,
-                      height: 28,
-                      borderRadius: 6,
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  />
-                  <ListItem.Content>
-                    <ListItem.Title style={styles.imageUserNameTitleBlack}>
-                      {i18n.t("Purchase More Shots")}
-                    </ListItem.Title>
-                    <ListItem.Subtitle>
-                      {i18n.t("Allow members")}
-                    </ListItem.Subtitle>
-                  </ListItem.Content>
-                </ListItem>
-                <View style={[styles.dividerStyle]} />
-                <ListItem
-                  containerStyle={{ height: 65, backgroundColor: "#fafbfc" }}
-                  key="22"
-                >
-                  <ListItem.Content>
-                    <Switch
-                      style={{ alignSelf: "flex-end" }}
-                      value={switch3}
-                      onValueChange={(value) => toggleSwitch3(value)}
-                    />
-                  </ListItem.Content>
-                </ListItem>
-                <View style={[styles.dividerStyle]} />
-                <ListItem key="19">
-                  <Icon
-                    type="material-community"
-                    name="upload"
-                    size={25}
-                    color="#3D4849"
-                    containerStyle={{
-                      width: 28,
-                      height: 28,
-                      borderRadius: 6,
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  />
-                  <ListItem.Content>
-                    <ListItem.Title style={styles.imageUserNameTitleBlack}>
-                      {i18n.t("Media")}
-                    </ListItem.Title>
-                    <ListItem.Subtitle>
-                      {i18n.t("MediaDescription")}
-                    </ListItem.Subtitle>
-                  </ListItem.Content>
-                </ListItem>
-                <View style={[styles.dividerStyle]} />
 
-                <ListItem
-                  containerStyle={{ height: 100, backgroundColor: "#fafbfc" }}
-                  key="20"
-                >
-                  <ListItem.Content
-                    style={{
-                      alignItems: "center",
-                      justifyContent: "center",
-                      height: 65,
-                    }}
-                  >
-                    <ButtonGroup
-                      buttons={constants.camera_amount}
-                      selectedIndex={media}
-                      onPress={(value) => {
-                        mediaChange(value);
-                      }}
-                      selectedButtonStyle={{ backgroundColor: "#ea5504" }}
-                      containerStyle={{ marginBottom: 5 }}
-                    />
-                  </ListItem.Content>
-                </ListItem>
-              </>
-            )}
+            {/* Purchase More Shots (Pro Feature) */}
+            <ListItem bottomDivider>
+              <Icon
+                type="material"
+                name="18-up-rating" // Icon suggesting age rating or premium
+                size={25}
+                color="#3D4849"
+                containerStyle={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: 6,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              />
+              <ListItem.Content>
+                <ListItem.Title style={styles.imageUserNameTitleBlack}>
+                  {i18n.t("Purchase More Shots")}
+                </ListItem.Title>
+                <ListItem.Subtitle>{i18n.t("Allow members")}</ListItem.Subtitle>
+              </ListItem.Content>
+            </ListItem>
+            <ListItem
+              containerStyle={{ height: 65, backgroundColor: "#fafbfc" }}
+              bottomDivider
+            >
+              <ListItem.Content>
+                <Switch
+                  style={{ alignSelf: "flex-end" }}
+                  value={switch3} // Allow purchases switch
+                  onValueChange={toggleSwitch3}
+                />
+              </ListItem.Content>
+            </ListItem>
 
-            <View style={[styles.dividerStyle]} />
-            <ListItem key="7">
+            <ListItem bottomDivider>
               <Icon
                 type="ionicon"
                 name="today-outline"
@@ -1068,8 +1219,10 @@ const CreateCamera = (props) => {
                 <ListItem.Subtitle>{i18n.t("e12")}</ListItem.Subtitle>
               </ListItem.Content>
             </ListItem>
-            <View style={[styles.dividerStyle]} />
-            <ListItem containerStyle={{ backgroundColor: "#fafbfc" }} key="8">
+            <ListItem
+              containerStyle={{ backgroundColor: "#fafbfc" }}
+              bottomDivider
+            >
               <ListItem.Content style={{ height: 65, margin: 10 }}>
                 <ButtonGroup
                   buttons={
@@ -1086,8 +1239,7 @@ const CreateCamera = (props) => {
                 />
               </ListItem.Content>
             </ListItem>
-            <View style={[styles.dividerStyle]} />
-            <ListItem key="9">
+            <ListItem bottomDivider>
               <Icon
                 type="material-community"
                 name="clock-start"
@@ -1108,13 +1260,12 @@ const CreateCamera = (props) => {
                 <ListItem.Subtitle>{i18n.t("e14")}</ListItem.Subtitle>
               </ListItem.Content>
             </ListItem>
-            <View style={[styles.dividerStyle]} />
             <ListItem
               containerStyle={{
                 height: Platform.OS == "ios" ? 360 : 60,
                 backgroundColor: "#fafbfc",
               }}
-              key="10"
+              bottomDivider
             >
               <ListItem.Content
                 style={{
@@ -1191,372 +1342,301 @@ const CreateCamera = (props) => {
                 )}
               </ListItem.Content>
             </ListItem>
-
-            <View style={[styles.dividerStyle]} />
-            <ListItem key="11">
-              <Icon
-                type="material-community"
-                name="view-gallery-outline"
-                size={25}
-                color="#3D4849"
-                containerStyle={{
-                  width: 28,
-                  height: 28,
-                  borderRadius: 6,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              />
-              <ListItem.Content>
-                <ListItem.Title style={styles.imageUserNameTitleBlack}>
-                  {i18n.t("e15")}
-                </ListItem.Title>
-                <ListItem.Subtitle>{i18n.t("e16")}</ListItem.Subtitle>
-              </ListItem.Content>
-            </ListItem>
-            <View style={[styles.dividerStyle]} />
-            <ListItem
-              containerStyle={{ height: 65, backgroundColor: "#fafbfc" }}
-              key="12"
-            >
-              <ListItem.Content>
-                <Switch
-                  style={{ alignSelf: "flex-end" }}
-                  value={switch2}
-                  onValueChange={(value) => toggleSwitch2(value)}
-                />
-              </ListItem.Content>
-            </ListItem>
-            <View style={[styles.dividerStyle]} />
-            {isPro && (
-              <>
-                <ListItem key="15">
-                  <Icon
-                    type="material-community"
-                    name="share"
-                    size={25}
-                    color="#3D4849"
-                    containerStyle={{
-                      width: 28,
-                      height: 28,
-                      borderRadius: 6,
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  />
-                  <ListItem.Content>
-                    <ListItem.Title style={styles.imageUserNameTitleBlack}>
-                      {i18n.t("e17")}
-                    </ListItem.Title>
-                    <ListItem.Subtitle>{i18n.t("e18")}</ListItem.Subtitle>
-                  </ListItem.Content>
-                </ListItem>
-                <View style={[styles.dividerStyle]} />
-                <ListItem
-                  containerStyle={{ height: 65, backgroundColor: "#fafbfc" }}
-                  key="16"
-                >
-                  <ListItem.Content>
-                    <Switch
-                      style={{ alignSelf: "flex-end" }}
-                      value={switch1}
-                      onValueChange={(value) => toggleSwitch1(value)}
-                    />
-                  </ListItem.Content>
-                </ListItem>
-                <View style={[styles.dividerStyle]} />
-              </>
-            )}
-            <ListItem key="26">
-              <Icon
-                type="material"
-                name="hide-source"
-                size={25}
-                color="#3D4849"
-                containerStyle={{
-                  width: 28,
-                  height: 28,
-                  borderRadius: 6,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              />
-              <ListItem.Content>
-                <ListItem.Title style={styles.imageUserNameTitleBlack}>
-                  {i18n.t("HideEvent")}
-                </ListItem.Title>
-                <ListItem.Subtitle>{i18n.t("HideEventDesc")}</ListItem.Subtitle>
-              </ListItem.Content>
-            </ListItem>
-            <View style={[styles.dividerStyle]} />
-            <ListItem
-              containerStyle={{ height: 65, backgroundColor: "#fafbfc" }}
-              key="27"
-            >
-              <ListItem.Content>
-                <Switch
-                  style={{ alignSelf: "flex-end" }}
-                  value={switch5}
-                  onValueChange={(value) => toggleSwitch5(value)}
-                />
-              </ListItem.Content>
-            </ListItem>
           </View>
         </ScrollView>
+
+        {/* Bottom Sheet Modal for Image Source Selection */}
         <BottomSheetModal
-          backdropComponent={renderBackdrop}
           ref={bottomSheetRef}
+          index={0}
           snapPoints={snapPoints}
+          backdropComponent={renderBackdrop}
           enablePanDownToClose
           keyboardBlurBehavior={"restore"}
           android_keyboardInputMode={"adjustPan"}
-          enableDismissOnClose
-          enableDynamicSizing
-          style={{
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 7,
-            },
-            shadowOpacity: 0.43,
-            shadowRadius: 9.51,
-            backgroundColor: "transparent",
-            elevation: 15,
-          }}
+          enableDismissOnClose={true}
         >
           <BottomSheetView
             style={[StyleSheet.absoluteFill, { alignItems: "center" }]}
           >
             <Text>{i18n.t("Make a Selection")}</Text>
-            <Animated.View
+            <View
               style={{
-                justifyContent: "flex-end",
+    flexDirection: "row",
+    justifyContent: "center", // Changed to center for better spacing
+    alignItems: "center",
+    marginTop: 15,
+    gap: 50, // Use gap for spacing instead of fixed margins
               }}
             >
               <View
                 style={{
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  alignContent: "space-between",
-                  gap: 50,
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
                 }}
               >
-                <View
-                  style={{
-                    flexDirection: "column",
-                    alignContent: "center",
-                    alignItems: "center",
-                    justifyContent: "center",
+                <Icon
+                  type="material-community"
+                  size={40}
+                  name="chip"
+                  color={"#000"}
+                  containerStyle={{
+    height: 70,
+    width: 70,
+    alignContent: "center",
+    justifyContent: "center",
+    borderRadius: 35, // Half of height/width for perfect circle
+    backgroundColor: "#f0f0f0", // Added a subtle background for icons
                   }}
-                >
-                  <Icon
-                    type="material-community"
-                    size={40}
-                    name="chip"
-                    color={"#000"}
-                    containerStyle={{
-                      height: 75,
-                      width: 75,
-                      alignContent: "center",
-                      justifyContent: "center",
-                      borderRadius: 22,
-                    }}
-                    onPress={() => {
-                      handleDismissPress();
-                      if (name.length < 1) {
-                        setisEditing(false);
-                        setVerified(false);
+                  onPress={() => {
+                    handleDismissPress();
+                    if (name.length < 1) {
+                      setIsEditing(false);
+                      setVerified(false);
 
-                        Alert.alert(
-                          i18n.t("e4"),
-                          i18n.t("EventName"),
-                          [
-                            {
-                              text: i18n.t("Close"),
-                              onPress: () => console.log("Cancel Pressed"),
-                              style: "destructive",
-                            },
-                          ],
-                          { cancelable: false }
-                        );
-                      } else {
-                        setVerified(true);
-                        Alert.alert(
-                          i18n.t("AI Image Generator"),
-                          i18n.t("Note: AI Image"),
-                          [
-                            {
-                              text: i18n.t("Cancel"),
-                              onPress: () => console.log("Cancel Pressed"),
-                              style: "destructive",
-                            },
-                            {
-                              text: i18n.t("Continue"),
-                              onPress: async () => {
-                                const proTitle = constants.badWords.some(
-                                  (word) =>
-                                    dname
-                                      .toLowerCase()
-                                      .includes(word.toLowerCase())
+                      Alert.alert(
+                        i18n.t("e4"),
+                        i18n.t("EventName"),
+                        [
+                          {
+                            text: i18n.t("Close"),
+                            onPress: () => console.log("Cancel Pressed"),
+                            style: "destructive",
+                          },
+                        ],
+                        { cancelable: false }
+                      );
+                    } else {
+                      setVerified(true);
+                      Alert.alert(
+                        i18n.t("AI Image Generator"),
+                        i18n.t("Note: AI Image"),
+                        [
+                          {
+                            text: i18n.t("Cancel"),
+                            onPress: () => console.log("Cancel Pressed"),
+                            style: "destructive",
+                          },
+                          {
+                            text: i18n.t("Continue"),
+                            onPress: async () => {
+                              const proTitle = constants.badWords.some((word) =>
+                                dname.toLowerCase().includes(word.toLowerCase())
+                              );
+                              const title = constants.badWords.some((word) =>
+                                name.toLowerCase().includes(word.toLowerCase())
+                              );
+                              if (proTitle || title) {
+                                Alert.alert(
+                                  i18n.t("BadWords"),
+                                  i18n.t("BadWordsDescription"),
+                                  [
+                                    {
+                                      text: i18n.t("Close"),
+                                      onPress: () =>
+                                        console.log("Cancel Pressed"),
+                                      style: "destructive",
+                                    },
+                                  ],
+                                  { cancelable: false }
                                 );
-                                const title = constants.badWords.some((word) =>
-                                  name
-                                    .toLowerCase()
-                                    .includes(word.toLowerCase())
-                                );
-                                if (proTitle || title) {
-                                  Alert.alert(
-                                    i18n.t("BadWords"),
-                                    i18n.t("BadWordsDescription"),
-                                    [
-                                      {
-                                        text: i18n.t("Close"),
-                                        onPress: () =>
-                                          console.log("Cancel Pressed"),
-                                        style: "destructive",
-                                      },
-                                    ],
-                                    { cancelable: false }
-                                  );
-                                } else {
-                                  setTimeout(() => {
-                                    setIsAI(true);
-                                    AITexttoImage();
-                                  }, 500);
-                                }
-                              },
-                              style: "default",
+                              } else {
+                                setTimeout(() => {
+                                  setIsAI(true);
+                                  AITexttoImage();
+                                }, 500);
+                              }
                             },
-                          ],
-                          { cancelable: false }
-                        );
-                      }
-                    }}
-                  />
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      marginTop: -10,
-                    }}
-                  >
-                    {i18n.t("AI")}
-                  </Text>
-                </View>
-                <View
+                            style: "default",
+                          },
+                        ],
+                        { cancelable: false }
+                      );
+                    }
+                  }}
+                />
+                <Text
                   style={{
-                    flexDirection: "column",
-                    alignContent: "center",
-                    alignItems: "center",
-                    justifyContent: "center",
+    textAlign: "center",
+    marginTop: 10,
                   }}
                 >
-                  <Icon
-                    type="material-community"
-                    size={40}
-                    name="image-outline"
-                    color={"#000"}
-                    containerStyle={{
-                      height: 75,
-                      width: 75,
-                      alignContent: "center",
-                      justifyContent: "center",
-                      borderRadius: 22,
-                    }}
-                    onPress={() => {
+                  {i18n.t("AI")}
+                </Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: "column",
+                  alignContent: "center",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Icon
+                  type="material-community"
+                  size={40}
+                  name="image-outline"
+                  color={"#000"}
+                  containerStyle={{
+    height: 70,
+    width: 70,
+    alignContent: "center",
+    justifyContent: "center",
+    borderRadius: 35, // Half of height/width for perfect circle
+    backgroundColor: "#f0f0f0", // Added a subtle background for icons
+                  }}
+                  onPress={() => {
+                    setTimeout(() => {
+                      setIsAI(false);
+                      pickImage();
+                    }, 200);
+                    handleDismissPress();
+                  }}
+                />
+                <Text
+                  style={{
+    textAlign: "center",
+    marginTop: 10,
+                  }}
+                >
+                  {i18n.t("Gallery")}
+                </Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: "column",
+                  alignContent: "center",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Icon
+                  type="material-community"
+                  size={40}
+                  name="camera-outline"
+                  color={"#000"}
+                  containerStyle={{
+    height: 70,
+    width: 70,
+    alignContent: "center",
+    justifyContent: "center",
+    borderRadius: 35, // Half of height/width for perfect circle
+    backgroundColor: "#f0f0f0", // Added a subtle background for icons
+                  }}
+                  onPress={async () => {
+                    if (
+                      cameraStatus.status ==
+                      ImagePicker.PermissionStatus.UNDETERMINED
+                    ) {
+                      await ImagePicker.requestCameraPermissionsAsync();
+                    } else if (
+                      cameraStatus.status == ImagePicker.PermissionStatus.DENIED
+                    ) {
+                      Alert.alert(
+                        i18n.t("Permissions"),
+                        i18n.t("UseCamera"),
+                        [
+                          {
+                            text: i18n.t("Cancel"),
+                            onPress: () => console.log("Cancel Pressed"),
+                            style: "destructive",
+                          },
+                          {
+                            text: i18n.t("Settings"),
+                            onPress: () => {
+                              Linking.openSettings();
+                            },
+                            style: "default",
+                          },
+                        ],
+                        { cancelable: false }
+                      );
+                    } else {
                       setTimeout(() => {
                         setIsAI(false);
-                        pickImage();
+
+                        props.navigation.navigate("TempCameraPage", {
+                          title: String(name),
+                        });
                       }, 200);
-                      handleDismissPress();
-                    }}
-                  />
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      marginTop: -10,
-                    }}
-                  >
-                    {i18n.t("Gallery")}
-                  </Text>
-                </View>
-                <View
+                    handleDismissPress();
+                    }
+                  }}
+                />
+                <Text
                   style={{
-                    flexDirection: "column",
-                    alignContent: "center",
-                    alignItems: "center",
-                    justifyContent: "center",
+    textAlign: "center",
+    marginTop: 10,
                   }}
                 >
-                  <Icon
-                    type="material-community"
-                    size={40}
-                    name="camera-outline"
-                    color={"#000"}
-                    containerStyle={{
-                      height: 75,
-                      width: 75,
-                      alignContent: "center",
-                      justifyContent: "center",
-                      borderRadius: 22,
-                    }}
-                    onPress={async () => {
-                      if (
-                        cameraStatus.status ==
-                        ImagePicker.PermissionStatus.UNDETERMINED
-                      ) {
-                        await ImagePicker.requestCameraPermissionsAsync();
-                      } else if (
-                        cameraStatus.status ==
-                        ImagePicker.PermissionStatus.DENIED
-                      ) {
-                        Alert.alert(
-                          i18n.t("Permissions"),
-                          i18n.t("UseCamera"),
-                          [
-                            {
-                              text: i18n.t("Cancel"),
-                              onPress: () => console.log("Cancel Pressed"),
-                              style: "destructive",
-                            },
-                            {
-                              text: i18n.t("Settings"),
-                              onPress: () => {
-                                Linking.openSettings();
-                              },
-                              style: "default",
-                            },
-                          ],
-                          { cancelable: false }
-                        );
-                      } else {
-                        setTimeout(() => {
-                          setIsAI(false);
-
-                          props.navigation.navigate("TempCameraPage", {
-                            title: String(name),
-                          });
-                        }, 200);
-                        handleDismissPress();
-                      }
-                    }}
-                  />
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      marginTop: -10,
-                    }}
-                  >
-                    {i18n.t("Camera")}
-                  </Text>
-                </View>
+                  {i18n.t("Camera")}
+                </Text>
               </View>
-            </Animated.View>
+            </View>
           </BottomSheetView>
         </BottomSheetModal>
+
+        {/* Date and Time Pickers */}
+        {show && (
+          <DateTimePicker
+            value={selectedDate}
+            mode={Platform.OS == "ios" ? IOS_MODE.date : ANDROID_MODE.date}
+            display={
+              Platform.OS == "ios"
+                ? IOS_DISPLAY.inline
+                : ANDROID_DISPLAY.calendar
+            }
+            minimumDate={minimumDate}
+            maximumDate={maximumDate}
+            onChange={Platform.OS == "ios" ? onChangeIOS : onChangeAndroid}
+            locale={RNLocalize.getLocales()[0].languageTag} // Use device locale for picker
+            neutralButton={{
+              label: i18n.t("Clear"),
+              AITexttoImage: i18n.t("Clear"),
+            }} // iOS clear button
+          />
+        )}
+        {clockShow && Platform.OS == "android" && (
+          <DateTimePicker
+            value={timeDate}
+            mode={ANDROID_MODE.time}
+            display={ANDROID_DISPLAY.spinner}
+            onChange={onChange}
+            is24Hour={true}
+            locale={RNLocalize.getLocales()[0].languageTag}
+          />
+        )}
       </SafeAreaView>
     </SafeAreaProvider>
   );
 };
+
+// --- Additional Styles for the Bottom Sheet Modal ---
+const modalStyles = StyleSheet.create({
+  contentContainer: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+  },
+  optionButton: {
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+    alignItems: "center",
+  },
+  optionText: {
+    fontSize: 18,
+    color: "#333",
+  },
+});
+
+// --- Main Styles (imported from SliderEntry.style, assuming these are global) ---
+// Note: The original code imports `styles` from `../../styles/SliderEntry.style`.
+// For clarity, if these styles were defined directly in this file, they would be here.
+// Assuming `styles` contains common styles like `container`, `dividerStyle`, `imageUserNameTitleBlack`.
+// If `SliderEntry.style` only contains `SliderEntry.style`, it's a naming conflict.
+// It's better to name imported styles specifically, e.g., `sliderStyles` and local `componentStyles`.
+// For now, I'll refer to them as `styles` as per the original.
 
 export default CreateCamera;

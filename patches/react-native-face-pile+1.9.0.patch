@@ -1,5 +1,5 @@
 diff --git a/node_modules/react-native-face-pile/src/index.js b/node_modules/react-native-face-pile/src/index.js
-index 76562d7..996290a 100644
+index 76562d7..8ed5ba0 100644
 --- a/node_modules/react-native-face-pile/src/index.js
 +++ b/node_modules/react-native-face-pile/src/index.js
 @@ -1,6 +1,9 @@
@@ -13,7 +13,7 @@ index 76562d7..996290a 100644
  
  const styles = StyleSheet.create({
    container: {
-@@ -11,7 +14,7 @@ const styles = StyleSheet.create({
+@@ -11,20 +14,19 @@ const styles = StyleSheet.create({
      alignSelf: 'center'
    },
    circleImage: {
@@ -22,7 +22,22 @@ index 76562d7..996290a 100644
      borderColor: 'white'
    },
    overflow: {
-@@ -37,7 +40,7 @@ class Circle extends PureComponent {
+-    backgroundColor: '#b6c0ca',
+     justifyContent: 'center',
+     alignItems: 'center',
+     marginLeft: 18
+   },
+   overflowLabel: {
+-    color: '#fff',
++    color: '#000',
+     fontSize: 14,
+     letterSpacing: -1,
+-    marginLeft: 3,
++    marginLeft: 5,
+     fontWeight: 'bold'
+   }
+ })
+@@ -37,7 +39,7 @@ class Circle extends PureComponent {
  
      return (
        <Animated.View
@@ -31,7 +46,7 @@ index 76562d7..996290a 100644
        >
          <Image
            style={[
-@@ -45,11 +48,15 @@ class Circle extends PureComponent {
+@@ -45,11 +47,15 @@ class Circle extends PureComponent {
              {
                width: innerCircleSize,
                height: innerCircleSize,
@@ -49,7 +64,7 @@ index 76562d7..996290a 100644
          />
        </Animated.View>
      )
-@@ -103,6 +110,53 @@ export default class FacePile extends PureComponent {
+@@ -103,6 +109,53 @@ export default class FacePile extends PureComponent {
      hideOverflow: false,
    }
  
@@ -103,13 +118,21 @@ index 76562d7..996290a 100644
    _renderOverflowCircle = overflow => {
      const {
        circleStyle,
-@@ -174,7 +228,8 @@ export default class FacePile extends PureComponent {
+@@ -167,14 +220,15 @@ export default class FacePile extends PureComponent {
+   }
+ 
+   render () {
+-    const { render, faces, numFaces, hideOverflow, containerStyle } = this.props
++    const { render, faces, numFaces, containerStyle } = this.props
+     if (render) return render({ faces, numFaces })
+ 
+     const { facesToRender, overflow } = renderFacePile(faces, numFaces)
  
      return (
        <View style={[styles.container, containerStyle]}>
 -        {overflow > 0 && !hideOverflow && this._renderOverflowCircle(overflow)}
 +        {overflow > 0 && this._renderOverflowCircle(overflow)}
-+        {facesToRender <= 0 && this._renderOverflowCircleZero(overflow)}
++        {facesToRender < 0 && this._renderOverflowCircleZero(overflow)}
          {Array.isArray(facesToRender) && facesToRender.map(this._renderFace)}
        </View>
      )

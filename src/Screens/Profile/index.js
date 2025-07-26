@@ -13,7 +13,6 @@ import React, { useEffect, useState, useCallback } from "react";
 import { ListItem, Icon } from "@rneui/themed";
 import InfoText from "../../utils/InfoText";
 import * as Application from "expo-application";
-import axios from "axios";
 import { constants, SCREEN_WIDTH } from "../../utils/constants";
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
@@ -43,7 +42,6 @@ const Profile = (props) => {
   const isFocused = useIsFocused();
   const [upload] = useMMKVObject("uploadData", storage);
   const [version, setVersion] = useState("0");
-
   const clearCache = async () => {
     Alert.alert(i18n.t("CacheCleared"));
 
@@ -107,30 +105,8 @@ const Profile = (props) => {
     props.navigation.navigate("Abouts");
   });
 
-  const faq = useCallback(() => {
-    props.navigation.navigate("WebView", {
-      url:
-        constants.url + "/faq/index.php?locale=" + getLocales()[0].languageCode,
-      name: i18n.t("FAQs"),
-    });
-  });
-
   const blocked = useCallback(() => {
     props.navigation.navigate("Blocked");
-  });
-
-  const privacy = useCallback(() => {
-    props.navigation.navigate("WebView", {
-      url: constants.url + "/privacyPolicy.html",
-      name: i18n.t("Privacy Policy"),
-    });
-  });
-
-  const terms = useCallback(() => {
-    props.navigation.navigate("WebView", {
-      url: constants.url + "/termsUsePolicy.html",
-      name: i18n.t("Terms & Use"),
-    });
   });
 
   const closedCameras = useCallback(() => {
@@ -168,55 +144,6 @@ Language Code: ${getLocales()[0].languageCode}`,
       checkCanOpen: true, // Call Linking.canOpenURL prior to Linking.openURL
     }).catch(console.error);
   };
-
-  const eula = useCallback(() => {
-    props.navigation.navigate("WebView", {
-      url: constants.url + "/EULA.html",
-      name: "EULA",
-    });
-  });
-
-  const preview = useCallback(() => {
-    Alert.alert(
-      i18n.t("Delete Account"),
-      i18n.t("Are you sure"),
-      [
-        {
-          text: i18n.t("Cancel"),
-          onPress: () => console.log("Cancel Pressed"),
-          style: "default",
-        },
-        {
-          text: i18n.t("Delete Account"),
-          onPress: () => previewAction(),
-          style: "destructive",
-        },
-      ],
-      { cancelable: false }
-    );
-  }, []);
-
-  const previewAction = useCallback(() => {
-    const execute = async () => {
-      await axios
-        .post(
-          constants.url + "/users/delete.php",
-          {
-            id: user.user_id,
-          },
-          { headers: { "Content-Type": "application/json;charset=utf-8" } }
-        )
-        .then((response) => {
-          logout();
-        })
-        .catch((error) => {});
-    };
-    execute();
-  });
-
-  const deleteAccount = useCallback(() => {
-    preview();
-  }, []);
 
   return (
     <ScrollView
@@ -330,20 +257,14 @@ Language Code: ${getLocales()[0].languageCode}`,
       </Modal>
       <View style={{ width: SCREEN_WIDTH, backgroundColor: "#fff" }}>
         <Loading
+          upload={upload}
           message={upload.message}
           flex={upload.display}
           progress={upload.progress}
         />
 
         <ProfileHeader
-          name={user.user_handle}
-          id={user.user_id}
-          motto={user.user_motto}
-          avatar={user.user_avatar}
-          join={user.joined}
-          create={user.created}
-          isPro={user.isPro}
-          upload={user.uploaded}
+          item={user}
         />
 
         <View>
@@ -533,33 +454,6 @@ Language Code: ${getLocales()[0].languageCode}`,
               <ListItem.Chevron />
             </ListItem>
             <View style={[styles.dividerTableStyle]} />
-            <ListItem
-              containerStyle={{ paddingVertical: 5 }}
-              key="4"
-              onPress={() => {
-                about();
-              }}
-            >
-              <Icon
-                type="material-community"
-                name="shield-account-variant-outline"
-                size={20}
-                color="#3D4849"
-                containerStyle={{
-                  width: 28,
-                  height: 28,
-                  borderRadius: 6,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              />
-              <ListItem.Content>
-                <ListItem.Title>{i18n.t("Account Details")}</ListItem.Title>
-              </ListItem.Content>
-              <ListItem.Chevron />
-            </ListItem>
-            <View style={[styles.dividerTableStyle]} />
-
             <InfoText text={i18n.t("SupportEmailHeader")} />
             <View style={[styles.dividerTableStyleShort]} />
             <ListItem
@@ -589,8 +483,6 @@ Language Code: ${getLocales()[0].languageCode}`,
             </ListItem>
             <View style={[styles.dividerTableStyle]} />
 
-            <InfoText text={i18n.t("Account Actions")} />
-            <View style={[styles.dividerTableStyleShort]} />
             <ListItem
               containerStyle={{ paddingVertical: 5 }}
               key="25"
@@ -616,19 +508,19 @@ Language Code: ${getLocales()[0].languageCode}`,
               </ListItem.Content>
               <ListItem.Chevron />
             </ListItem>
-            <View style={[styles.dividerTableStyle]} />
+                      <View style={[styles.dividerTableStyle]} />
             <ListItem
               containerStyle={{ paddingVertical: 5 }}
-              key="5"
+              key="4"
               onPress={() => {
-                deleteAccount();
+                about();
               }}
             >
               <Icon
-                type="ionicon"
-                name="close-circle-outline"
+                type="material-community"
+                name="shield-account-variant-outline"
                 size={20}
-                color="#FF3232"
+                color="#3D4849"
                 containerStyle={{
                   width: 28,
                   height: 28,
@@ -638,12 +530,11 @@ Language Code: ${getLocales()[0].languageCode}`,
                 }}
               />
               <ListItem.Content>
-                <ListItem.Title>{i18n.t("Delete/Remove")}</ListItem.Title>
+                <ListItem.Title>{i18n.t("About")}</ListItem.Title>
               </ListItem.Content>
               <ListItem.Chevron />
             </ListItem>
-            <View style={[styles.dividerTableStyleShort]} />
-
+            <View style={[styles.dividerTableStyle]} />
             <ListItem
               containerStyle={{ paddingVertical: 5 }}
               key="6"
@@ -669,135 +560,9 @@ Language Code: ${getLocales()[0].languageCode}`,
               </ListItem.Content>
               <ListItem.Chevron />
             </ListItem>
-
-            <View style={[styles.dividerTableStyle]} />
           </View>
-          <InfoText text={i18n.t("Policies")} />
-          <View style={[styles.dividerTableStyle]} />
-          <ListItem
-            containerStyle={{ paddingVertical: 5 }}
-            key="7"
-            onPress={() => {
-              privacy();
-            }}
-          >
-            <Icon
-              type="material"
-              name="policy"
-              size={20}
-              color="#3D4849"
-              containerStyle={{
-                width: 28,
-                height: 28,
-                borderRadius: 6,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            />
-            <ListItem.Content>
-              <ListItem.Title>{i18n.t("Privacy Policy")}</ListItem.Title>
-            </ListItem.Content>
-            <ListItem.Chevron />
-          </ListItem>
-          <View style={[styles.dividerTableStyleShort]} />
 
-          <ListItem
-            containerStyle={{ paddingVertical: 5 }}
-            key="27"
-            onPress={() => {
-              terms();
-            }}
-          >
-            <Icon
-              type="material"
-              name="policy"
-              size={20}
-              color="#3D4849"
-              containerStyle={{
-                width: 28,
-                height: 28,
-                borderRadius: 6,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            />
-            <ListItem.Content>
-              <ListItem.Title>{i18n.t("Terms & Use")}</ListItem.Title>
-            </ListItem.Content>
-            <ListItem.Chevron />
-          </ListItem>
-          <View style={[styles.dividerTableStyleShort]} />
-          <ListItem
-            containerStyle={{ paddingVertical: 5 }}
-            key="28"
-            onPress={() => {
-              eula();
-            }}
-          >
-            <Icon
-              type="material"
-              name="policy"
-              size={20}
-              color="#3D4849"
-              containerStyle={{
-                width: 28,
-                height: 28,
-                borderRadius: 6,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            />
-            <ListItem.Content>
-              <ListItem.Title>{i18n.t("EULA")}</ListItem.Title>
-            </ListItem.Content>
-            <ListItem.Chevron />
-          </ListItem>
-          <View style={[styles.dividerTableStyle]} />
-          <InfoText text={i18n.t("AppData")} />
-          <View style={[styles.dividerTableStyle]} />
-          <ListItem
-            containerStyle={{ paddingVertical: 5 }}
-            key="24"
-            onPress={() => {}}
-          >
-            <Icon
-              type="octicon"
-              name="versions"
-              size={20}
-              color="#3D4849"
-              containerStyle={{
-                width: 28,
-                height: 28,
-                borderRadius: 6,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            />
-            <ListItem.Content>
-              <ListItem.Title>{i18n.t("Version")}</ListItem.Title>
-            </ListItem.Content>
-            <View
-              style={{
-                marginLeft: 65,
-                width: 75,
-                height: 22,
-                borderRadius: 11,
-                justifyContent: "center",
-              }}
-            >
-              <Text
-                style={{
-                  color: "#3D4849",
-                  textAlignVertical: "center",
-                  textAlign: "center",
-                  fontSize: 13,
-                  fontWeight: "bold",
-                }}
-              >
-                {Application.nativeApplicationVersion} ({version})
-              </Text>
-            </View>
-          </ListItem>
+
         </View>
         <View style={{ marginBottom: 25 }} />
       </View>

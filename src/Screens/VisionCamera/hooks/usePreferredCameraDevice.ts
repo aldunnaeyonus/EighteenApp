@@ -14,7 +14,7 @@ export function usePreferredCameraDevice(): [CameraDevice | undefined, (device: 
   )
 
   const devices = useCameraDevices()
-  const device = useMemo(() => devices.find((d) => d.id === preferredDeviceId), [devices, preferredDeviceId])
+  const device = useMemo(() => devices.find((d) => d.id == preferredDeviceId), [devices, preferredDeviceId])
 
   return [device, set]
 }

@@ -35,7 +35,7 @@ export default class ParallaxImage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps !== this.props) {
+    if (nextProps != this.props) {
       this.isLayoutStale = true;
     }
   }

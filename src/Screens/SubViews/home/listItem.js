@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import moment from "moment/min/moment-with-locales";
 import FastImage from "react-native-fast-image";
@@ -9,7 +9,6 @@ import Progress from "react-native-progress";
 import { Icon } from "react-native-elements";
 import styles from "../../../styles/SliderEntry.style";
 import { useIsFocused } from "@react-navigation/native";
-import FacePile from "react-native-face-pile";
 import { getLocales } from "expo-localization";
 import {
   SCREEN_WIDTH,
@@ -22,29 +21,28 @@ import { axiosPull } from "../../../utils/axiosPull";
 
 const ListItem = (props) => {
   const isFocused = useIsFocused();
-  let FACES = JSON.parse(JSON.stringify(props.item.item.joinedAvatars));
   let [localLang] = useState(getLocales()[0].languageCode);
 
   useEffect(() => {
-    if (props.item.item.end - moment().unix() <= 0) {
+    if (props.item.end - moment().unix() <= 0) {
       clearInterval(timeout);
     }
     return () => {
       clearInterval(timeout);
     };
   }, [isFocused, props]);
-  let eventEnd = props.item.item.end;
+  let eventEnd = props.item.end;
 
   let endEventTime = durationAsString(
-    parseInt(props.item.item.end),
-    parseInt(props.item.item.start),
+    parseInt(props.item.end),
+    parseInt(props.item.start),
     localLang
   );
 
   let timeout = setInterval(() => {
     endEventTime = durationAsString(
-      parseInt(props.item.item.end),
-      parseInt(props.item.item.start),
+      parseInt(props.item.end),
+      parseInt(props.item.start),
       localLang
     );
   }, 45000);
@@ -52,7 +50,7 @@ const ListItem = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       if (eventEnd - moment().unix() <= 0) {
-        await axiosPull._pullCameraFeed(user.user_id, "owner");
+        await axiosPull._pullCameraFeed(props.user.user_id, "owner");
       }
     };
     fetchData();
@@ -61,7 +59,7 @@ const ListItem = (props) => {
   return (
     <SafeAreaView
       edges={["bottom", "left", "right"]}
-      key={props.item.item.UUID}
+      key={props.item.UUID}
       style={style.listItem}
     >
       <View
@@ -103,10 +101,10 @@ const ListItem = (props) => {
             source={{
               priority: FastImage.priority.high,
               cache: FastImage.cacheControl.immutable,
-              uri: props.item.item.icon,
+              uri: props.item.icon,
             }}
           />
-          {props.item.item.isPro == "1" && (
+          {props.item.isPro == "1" && (
             <View style={{ position: "absolute" }}>
               <View
                 style={{
@@ -152,7 +150,7 @@ const ListItem = (props) => {
                 marginTop: 2,
               }}
             >
-              {props.item.item.userName}
+              {props.item.userName}
             </Text>
             <Text
               numberOfLines={1}
@@ -167,39 +165,10 @@ const ListItem = (props) => {
                 marginTop: 2,
               }}
             >
-              {props.item.item.title.toUpperCase()}
+              {props.item.title.toUpperCase()}
             </Text>
           </View>
-          <View
-            style={{
-              top: 10,
-              right: 45,
-              height: 27,
-              position: "absolute",
-            }}
-          >
-            <FacePile
-              numFaces={3}
-              faces={FACES}
-              circleSize={15}
-            />
-          </View>
         </View>
-        <Pressable
-          onPress={() => {
-            props._gotoMedia(
-              props.item.item.pin,
-              props.item.item.title,
-              props.item.item.owner,
-              props.item.item.UUID,
-              props.item.item.end,
-              props.item.item.start,
-              props.item.item.credits,
-              props.item.item.camera_add_social,
-              props.item.item.illustration
-            );
-          }}
-        >
           <Image
             indicator={Progress}
             style={{
@@ -211,136 +180,127 @@ const ListItem = (props) => {
             source={{
               priority: FastImage.priority.high,
               cache: FastImage.cacheControl.immutable,
-              uri: props.item.item.illustration,
+              uri: props.item.illustration,
             }}
           />
-        </Pressable>
         <View
-          style={
-            props.lefthanded == "1"
-              ? styles.imageUserNameContainersLeft
-              : styles.imageUserNameContainers
-          }
+          style={{
+            top: 20,
+            right: 10,
+            height: 27,
+            position: "absolute",
+          }}
         >
           <MenuView
-            key={props.item.item.UUID}
+            key={props.item.UUID}
             index={props.item.index}
-            title={
-              props.item.item.title == undefined
-                ? ""
-                : props.item.item.title.toUpperCase()
-            }
             isAnchoredToRight={true}
             onPressAction={async ({ nativeEvent }) => {
-              if (nativeEvent.event == "Delete-" + props.item.item.UUID) {
+              if (nativeEvent.event == "Delete-" + props.item.UUID) {
                 props._deleteFeedItem(
-                  props.item.item.UUID,
-                  props.item.item.owner,
-                  props.item.item.pin
+                  props.item.UUID,
+                  props.item.owner,
+                  props.item.pin
                 );
-              } else if (nativeEvent.event == "End-" + props.item.item.UUID) {
+              } else if (nativeEvent.event == "End-" + props.item.UUID) {
                 props._editItem(
-                  props.item.item.UUID,
-                  props.item.item.owner,
-                  props.item.item.pin
+                  props.item.UUID,
+                  props.item.owner,
+                  props.item.pin
                 );
-              } else if (nativeEvent.event == "Edit-" + props.item.item.UUID) {
+              } else if (nativeEvent.event == "Edit-" + props.item.UUID) {
                 props._editEvent(
-                  props.item.item.UUID,
-                  props.item.item.pin,
-                  props.item.item.owner,
-                  props.item.item.user,
-                  props.item.item.illustration,
-                  props.item.item.title,
-                  props.item.item.cameras,
-                  props.item.item.show_gallery,
-                  props.item.item.camera_add_social,
-                  props.item.item.start,
-                  props.item.item.camera_purchase_more,
-                  props.item.item.length_index,
-                  props.item.item.end,
-                  props.item.item.shots,
-                  props.item.item.ai_description
+                  props.item.UUID,
+                  props.item.pin,
+                  props.item.owner,
+                  props.item.user,
+                  props.item.illustration,
+                  props.item.title,
+                  props.item.cameras,
+                  props.item.show_gallery,
+                  props.item.camera_add_social,
+                  props.item.start,
+                  props.item.camera_purchase_more,
+                  props.item.length_index,
+                  props.item.end,
+                  props.item.shots,
+                  props.item.ai_description
                 );
               }
             }}
             actions={
-              props.item.item.start < moment().unix() && props.isPro != "1"
-                ? constants.endActions(props.item.item.UUID)
-                : constants.actions(props.item.item.UUID)
+              props.item.start < moment().unix() && props.isPro != "1"
+                ? constants.endActions(props.item.UUID)
+                : constants.actions(props.item.UUID)
             }
             shouldOpenOnLongPress={false}
             themeVariant="light"
           >
             <Icon
-              containerStyle={{
-                alignSelf: "flex-end",
-                width: 40,
-                height: 40,
-                marginRight: 5,
-                marginTop: 5,
-                paddingTop: 5,
-                borderTopRightRadius: 5,
-                borderTopLeftRadius: 5,
-                backgroundColor: "rgba(0, 0, 0, 0.60)",
-              }}
               type="material-community"
-              size={30}
-              name="menu-open"
-              color="#fff"
+              size={25}
+              name="dots-horizontal"
+              color="#3D4849"
             />
           </MenuView>
+        </View>
+        <View
+          style={[
+            props.lefthanded == "1"
+              ? styles.imageUserNameContainersLeft
+              : styles.imageUserNameContainers, {
+               backgroundColor: "rgba(0, 0, 0, 0.60)",
+                               borderRadius: 10,
+                               margin:5
+
+              }]
+          }
+        >
           <Icon
             onPress={() => {
               props._gotoMedia(
-                props.item.item.pin,
-                props.item.item.title,
-                props.item.item.owner,
-                props.item.item.UUID,
-                props.item.item.end,
-                props.item.item.start,
-                props.item.item.credits,
-                props.item.item.camera_add_social,
-                props.item.item.illustration
+                props.item.pin,
+                props.item.title,
+                props.item.owner,
+                props.item.UUID,
+                props.item.end,
+                props.item.start,
+                props.item.credits,
+                props.item.camera_add_social,
+                props.item.illustration
               );
             }}
             containerStyle={{
-              alignSelf: "flex-end",
-              width: 40,
-              height: 40,
-              marginRight: 5,
-              paddingTop: 5,
-              backgroundColor: "rgba(0, 0, 0, 0.60)",
+              alignSelf: "auto",
+              margin: 15,
+
             }}
             type="material-community"
-            size={25}
+            size={27}
             name="view-gallery-outline"
             color="#fff"
           />
           <Icon
             onPress={() => {
               props._gotoCamera(
-                props.item.item.pin,
-                props.item.item.title,
-                props.item.item.owner,
-                props.item.item.UUID,
-                props.item.item.end,
-                props.item.item.start,
-                props.item.item.credits,
-                props.item.item.tCredits,
-                props.item.item.camera_add_social
+                props.item.pin,
+                props.item.title,
+                props.item.owner,
+                props.item.UUID,
+                props.item.end,
+                props.item.start,
+                props.item.credits,
+                props.item.tCredits,
+                props.item.camera_add_social
               );
             }}
             containerStyle={{
-              alignSelf: "flex-end",
-              width: 40,
-              height: 40,
-              marginRight: 5,
-              paddingTop: 5,
-              backgroundColor: "rgba(0, 0, 0, 0.60)",
+              alignSelf: "auto",
+              margin: 15,
+
             }}
             type="material-community"
-            size={25}
+            size={30}
             name="camera-outline"
             color="#fff"
           />
@@ -349,47 +309,41 @@ const ListItem = (props) => {
               props._gotoQRCode(
                 constants.url +
                   "/qrcode.php?pin=" +
-                  props.item.item.pin +
+                  props.item.pin +
                   "&time=" +
-                  props.item.item.end +
+                  props.item.end +
                   "&owner=" +
-                  props.item.item.owner +
+                  props.item.owner +
                   "&UUID=" +
-                  props.item.item.user
+                  props.item.user
               );
             }}
             containerStyle={{
-              alignSelf: "flex-end",
-              width: 40,
-              height: 40,
-              marginRight: 5,
-              paddingTop: 5,
-              backgroundColor: "rgba(0, 0, 0, 0.60)",
+              alignSelf: "auto",
+              margin: 15,
+
             }}
             type="material-community"
-            size={25}
+            size={30}
             name="qrcode"
             color="#fff"
           />
           <Icon
             onPress={() => {
               props._joinFeedItem(
-                props.item.item.UUID,
-                props.item.item.owner,
-                props.item.item.pin,
-                props.item.item.title
+                props.item.UUID,
+                props.item.owner,
+                props.item.pin,
+                props.item.title
               );
             }}
             containerStyle={{
-              alignSelf: "flex-end",
-              width: 40,
-              height: 40,
-              marginRight: 5,
-              marginTop: 0,
-              backgroundColor: "rgba(0, 0, 0, 0.60)",
+              alignSelf: "auto",
+              margin: 15,
+
             }}
             type="material-community"
-            size={25}
+            size={30}
             name="account-group-outline"
             color="#fff"
           />
@@ -397,25 +351,20 @@ const ListItem = (props) => {
             <Icon
               onPress={() => {
                 props._gotoStore(
-                  props.item.item.pin,
-                  props.item.item.owner,
-                  props.item.item.user == props.item.item.owner
-                    ? "owner"
-                    : "user",
-                  props.item.item.title,
-                  props.item.item.cameras
+                  props.item.pin,
+                  props.item.owner,
+                  props.item.user == props.item.owner ? "owner" : "user",
+                  props.item.title,
+                  props.item.cameras
                 );
               }}
               containerStyle={{
-                alignSelf: "flex-end",
-                width: 40,
-                height: 40,
-                marginRight: 5,
-                marginTop: 0,
-                backgroundColor: "rgba(0, 0, 0, 0.60)",
+              alignSelf: "auto",
+              margin: 15,
+
               }}
               type="ionicon"
-              size={25}
+              size={30}
               name="storefront-outline"
               color="#fff"
             />
@@ -423,24 +372,18 @@ const ListItem = (props) => {
           <Icon
             onPress={() => {
               props._gotoShare(
-                props.item.item.pin,
-                props.item.item.end,
-                props.item.item.owner,
-                props.item.item.title
+                props.item.pin,
+                props.item.end,
+                props.item.owner,
+                props.item.title
               );
             }}
             containerStyle={{
-              alignSelf: "flex-end",
-              width: 40,
-              height: 40,
-              marginRight: 5,
-              marginTop: 0,
-              borderBottomRightRadius: 5,
-              borderBottomLeftRadius: 5,
-              backgroundColor: "rgba(0, 0, 0, 0.60)",
+              alignSelf: "auto",
+              margin: 15,
             }}
             type="material-community"
-            size={25}
+            size={30}
             name="share"
             color="#fff"
           />
@@ -455,42 +398,42 @@ const ListItem = (props) => {
             alignItems: "center",
           }}
         >
-          <Icon type="material" size={17} name="camera" color="#3D4849" />
+          <Icon type="material" size={13} name="camera" color="#3D4849" />
           <Text
             style={{
-              color: "grey",
-              fontSize: 15,
+              color: "#000",
+              fontSize: 13,
               marginRight: 20,
             }}
           >
             {" "}
-            {props.item.item.camera_count} /{" "}
-            {parseInt(props.item.item.cameras) +
-              parseInt(props.item.item.camera_cameras_extra)}{" "}
+            {props.item.camera_count} /{" "}
+            {parseInt(props.item.cameras) +
+              parseInt(props.item.camera_cameras_extra)}{" "}
           </Text>
-          <Icon type="material" size={17} name="perm-media" color="#3D4849" />
+          <Icon type="material" size={13} name="perm-media" color="#3D4849" />
 
           <Text
             style={{
-              color: "grey",
-              fontSize: 15,
+              color: "#000",
+              fontSize: 13,
               marginRight: 20,
             }}
           >
             {" "}
-            {props.item.item.media_count - 1}
+            {props.item.media_count - 1}
           </Text>
           <Icon
             type="material-community"
-            size={17}
+            size={13}
             name="calendar"
             color="#3D4849"
           />
           <Text
             numberOfLines={2}
             style={{
-              color: "grey",
-              fontSize: 15,
+              color: "#000",
+              fontSize: 13,
               width: "auto",
               textAlign: "left",
             }}
@@ -507,7 +450,7 @@ const ListItem = (props) => {
             height: 27,
             flexDirection: "row",
             alignItems: "center",
-            display: props.item.item.lastComment == "" ? "none" : "flex",
+            display: props.item.lastComment == "" ? "none" : "flex",
           }}
         >
           <Icon
@@ -519,7 +462,7 @@ const ListItem = (props) => {
           />
           <Text
             onPress={() => {
-              props._gotoFriend(props.item.item.lastCommentID);
+              props._gotoFriend(props.item.lastCommentID);
             }}
             numberOfLines={3}
             style={{
@@ -531,19 +474,19 @@ const ListItem = (props) => {
               fontWeight: "700",
             }}
           >
-            {props.item.item.lastCommentUser}
+            {props.item.lastCommentUser}
           </Text>
           <Text
             numberOfLines={3}
             style={{
-              color: "#3D4849",
+              color: "#000",
               marginLeft: 10,
               fontSize: 13,
               height: "auto",
               textAlign: "left",
             }}
           >
-            {props.item.item.lastComment}
+            {props.item.lastComment}
           </Text>
         </View>
       </View>

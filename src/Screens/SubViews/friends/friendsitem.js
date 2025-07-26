@@ -28,11 +28,11 @@ import {
 
 const FriendListItem = (props) => {
   const isFocused = useIsFocused();
-  let FACES = JSON.parse(JSON.stringify(props.item.item.joinedAvatars));
+  let FACES = JSON.parse(JSON.stringify(props.item.joinedAvatars));
   let [localLang] = useState(getLocales()[0].languageCode);
 
   useEffect(() => {
-    if (props.item.item.end - moment().unix() <= 0) {
+    if (props.item.end - moment().unix() <= 0) {
       clearInterval(timeout);
     }
     return () => {
@@ -44,19 +44,19 @@ const FriendListItem = (props) => {
     return moment.unix(parseInt(date)).locale(localLang).format("LLL");
   };
 
-  let eventStart = startDate(props.item.item.start);
-  let eventEnd = startDate(props.item.item.end);
+  let eventStart = startDate(props.item.start);
+  let eventEnd = startDate(props.item.end);
   
   let endEventTime = durationAsString(
-    parseInt(props.item.item.end),
-    parseInt(props.item.item.start),
+    parseInt(props.item.end),
+    parseInt(props.item.start),
     localLang
   );
 
   let timeout = setInterval(() => {
     endEventTime = durationAsString(
-      parseInt(props.item.item.end),
-      parseInt(props.item.item.start),
+      parseInt(props.item.end),
+      parseInt(props.item.start),
       localLang
     );
   }, 45000);
@@ -71,27 +71,27 @@ const FriendListItem = (props) => {
   }, [isFocused, props, timeout, endEventTime]);
 
   return (
-    <SafeAreaView key={props.item.item.UUID} style={style.listItem}>
+    <SafeAreaView key={props.item.UUID} style={style.listItem}>
       <Pressable
         disabled={
-          props.item.item.subscribed == "0"
+          props.item.subscribed == "0"
             ? true
-            : props.item.item.show_gallery == "1"
+            : props.item.show_gallery == "1"
               ? false
               : false
         }
         onPress={() => {
-          if (props.item.item.start < moment().unix()) {
+          if (props.item.start < moment().unix()) {
             props._gotoMedia(
-              props.item.item.pin,
-              props.item.item.title,
-              props.item.item.owner,
-              props.item.item.UUID,
-              props.item.item.end,
-              props.item.item.start,
-              props.item.item.credits,
-              props.item.item.camera_add_social,
-              props.item.item.illustration
+              props.item.pin,
+              props.item.title,
+              props.item.owner,
+              props.item.UUID,
+              props.item.end,
+              props.item.start,
+              props.item.credits,
+              props.item.camera_add_social,
+              props.item.illustration
             );
           }
         }}
@@ -113,7 +113,7 @@ const FriendListItem = (props) => {
             source={{
               priority: FastImage.priority.high,
               cache: FastImage.cacheControl.immutable,
-              uri: props.item.item.illustration,
+              uri: props.item.illustration,
             }}
           />
           <View
@@ -137,7 +137,7 @@ const FriendListItem = (props) => {
                 width: SCREEN_WIDTH,
               }}
             >
-              {props.item.item.title.toUpperCase()}
+              {props.item.title.toUpperCase()}
             </Text>
             <Text
               numberOfLines={2}
@@ -153,103 +153,97 @@ const FriendListItem = (props) => {
               {endEventTime}
             </Text>
           </View>
-          {props.item.item.subscribed == "1" ? (
+          {props.item.subscribed == "1" ? (
             <View
-              style={props.lefthanded == "1" ? styles.imageUserNameSmallContainersLeft : styles.imageUserNameSmallContainers}
+                          style={[
+                           props.lefthanded == "1"
+                                         ? styles.imageUserNameContainersUserLeft
+                                         : styles.imageUserNameContainersUser, {
+                                          backgroundColor: "rgba(0, 0, 0, 0.60)",
+                                                          borderRadius: 10,
+                                                          margin:5
+                           
+                                         }]}
             >
               <Icon
                 onPress={() => {
-                  if (props.item.item.start > moment().unix()) {
+                  if (props.item.start > moment().unix()) {
                     Alert.alert("", i18n.t("Notstared"));
                   } else {
-                    props.item.item.show_gallery == "1"
+                    props.item.show_gallery == "1"
                       ? props._gotoMedia(
-                          props.item.item.pin,
-                          props.item.item.title,
-                          props.item.item.owner,
-                          props.item.item.UUID,
-                          props.item.item.end,
-                          props.item.item.start,
-                          props.item.item.credits,
-                          props.item.item.camera_add_social,
-                          props.item.item.illustration
+                          props.item.pin,
+                          props.item.title,
+                          props.item.owner,
+                          props.item.UUID,
+                          props.item.end,
+                          props.item.start,
+                          props.item.credits,
+                          props.item.camera_add_social,
+                          props.item.illustration
                         )
                       : Alert.alert("", i18n.t("BlockedGallery"));
                   }
                 }}
                 containerStyle={{
-                  alignSelf: "flex-end",
-                  width: 40,
-                  height: 40,
-                  marginRight: 5,
-                  marginTop: 5,
-                  paddingTop: 10,
-                  borderTopRightRadius: 5,
-                  borderTopLeftRadius: 5,
-                  backgroundColor: "rgba(0, 0, 0, 0.60)",
+              alignSelf: "auto",
+              margin: 15,
                 }}
                 type="material-community"
-                size={25}
+                size={30}
                 name="view-gallery-outline"
                 color="#fff"
               />
               <Icon
                 onPress={() => {
-                  if (props.item.item.start > moment().unix()) {
+                  if (props.item.start > moment().unix()) {
                     Alert.alert("", i18n.t("Notstared"));
                   } else {
-                    if (parseInt(props.item.item.credits) <= 0) {
+                    if (parseInt(props.item.credits) <= 0) {
                       props._gotoStore(
-                        props.item.item.pin,
-                        props.item.item.owner,
-                        props.item.item.title
+                        props.item.pin,
+                        props.item.owner,
+                        props.item.title
                       );
                     } else {
                       props._gotoCamera(
-                        props.item.item.pin,
-                        props.item.item.title,
-                        props.item.item.owner,
-                        props.item.item.UUID,
-                        props.item.item.end,
-                        props.item.item.start,
-                        props.item.item.credits,
-                        props.item.item.tCredits,
-                        props.item.item.camera_add_social
+                        props.item.pin,
+                        props.item.title,
+                        props.item.owner,
+                        props.item.UUID,
+                        props.item.end,
+                        props.item.start,
+                        props.item.credits,
+                        props.item.tCredits,
+                        props.item.camera_add_social
                       );
                     }
                   }
                 }}
                 containerStyle={{
-                  alignSelf: "flex-end",
-                  width: 40,
-                  height: 40,
-                  marginRight: 5,
-                  paddingTop: 15,
-                  backgroundColor: "rgba(0, 0, 0, 0.60)",
+              alignSelf: "auto",
+              margin: 15,
                 }}
                 type="material-community"
-                size={25}
+                size={30}
                 name="camera-outline"
                 color="#fff"
               />
-              <CreditsFont credits={props.item.item.credits} />
+              <CreditsFont credits={props.item.credits} />
               <Icon
                 onPress={() => {
                   props._gotoStore(
-                    props.item.item.pin,
-                    props.item.item.owner,
-                    props.item.item.title
+                    props.item.pin,
+                    props.item.owner,
+                    props.item.title
                   );
                 }}
                 containerStyle={{
-                  alignSelf: "flex-end",
-                  width: 40,
-                  height: 40,
-                  marginRight: 5,
-                  backgroundColor: "rgba(0, 0, 0, 0.60)",
+              alignSelf: "auto",
+              margin: 15,
                 }}
                 type="material-community"
-                size={25}
+                size={30}
                 name="cart-plus"
                 color="#fff"
               />
@@ -257,42 +251,35 @@ const FriendListItem = (props) => {
               <Icon
                 onPress={() => {
                   props._repotPost(
-                    props.item.item.pin,
-                    props.item.item.owner,
-                    props.item.item.title
+                    props.item.pin,
+                    props.item.owner,
+                    props.item.title
                   );
                 }}
                 containerStyle={{
-                  alignSelf: "flex-end",
-                  width: 40,
-                  paddingTop: 5,
-                  height: 40,
-                  marginRight: 5,
-                  marginTop: 0,
-                  borderBottomRightRadius: 5,
-                  borderBottomLeftRadius: 5,
-                  backgroundColor: "rgba(0, 0, 0, 0.60)",
+              alignSelf: "auto",
+              margin: 15,
                 }}
                 type="octicons"
-                size={25}
+                size={30}
                 name="report"
                 color="#fff"
               />
             </View>
-          ) : props.item.item.autoJoin == "1" &&
-            props.item.item.camera_count <
-              parseInt(props.item.item.cameras) +
-                parseInt(props.item.item.camera_cameras_extra) &&
-            props.item.item.subscribed == "0" &&
-            props.item.item.end >= moment().unix() ? (
+          ) : props.item.autoJoin == "1" &&
+            props.item.camera_count <
+              parseInt(props.item.cameras) +
+                parseInt(props.item.camera_cameras_extra) &&
+            props.item.subscribed == "0" &&
+            props.item.end >= moment().unix() ? (
             <View style={styles.imageUserNameContainer}>
               <TouchableOpacity
                 onPress={() =>
                   props._autoJoin(
-                    props.item.item.owner,
-                    props.item.item.pin,
-                    props.item.item.end,
-                    props.item.item.UUID
+                    props.item.owner,
+                    props.item.pin,
+                    props.item.end,
+                    props.item.UUID
                   )
                 }
               >
@@ -328,9 +315,9 @@ const FriendListItem = (props) => {
               <Icon
                 onPress={() => {
                   props._repotPost(
-                    props.item.item.pin,
-                    props.item.item.owner,
-                    props.item.item.title
+                    props.item.pin,
+                    props.item.owner,
+                    props.item.title
                   );
                 }}
                 containerStyle={{
@@ -382,9 +369,9 @@ const FriendListItem = (props) => {
               <Icon
                 onPress={() => {
                   props._repotPost(
-                    props.item.item.pin,
-                    props.item.item.owner,
-                    props.item.item.title
+                    props.item.pin,
+                    props.item.owner,
+                    props.item.title
                   );
                 }}
                 containerStyle={{
@@ -432,9 +419,9 @@ const FriendListItem = (props) => {
               >
                 {i18n.t("Cameras:")}
               </Text>{" "}
-              {props.item.item.camera_count} of{" "}
-              {parseInt(props.item.item.cameras) +
-                parseInt(props.item.item.camera_cameras_extra)}{" "}
+              {props.item.camera_count} of{" "}
+              {parseInt(props.item.cameras) +
+                parseInt(props.item.camera_cameras_extra)}{" "}
               |{" "}
               <Text
                 style={{
@@ -445,7 +432,7 @@ const FriendListItem = (props) => {
               >
                 {i18n.t("Media:")}
               </Text>{" "}
-              {props.item.item.media_count - 1}
+              {props.item.media_count - 1}
             </Text>
           </View>
           <View

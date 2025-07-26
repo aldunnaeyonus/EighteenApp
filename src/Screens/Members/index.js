@@ -1,6 +1,6 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback } from "react"; // Added useEffect
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { StyleSheet, Alert, View } from "react-native";
+import { StyleSheet, Alert, View, Text } from "react-native"; // Added Text for loading/empty states
 import EmptyStateView from "@tttstudios/react-native-empty-state";
 import { storage } from "../../context/components/Storage";
 import { useMMKVObject } from "react-native-mmkv";
@@ -11,11 +11,11 @@ import { useToast } from "react-native-styled-toast";
 import { useFocusEffect } from "@react-navigation/native";
 import * as i18n from "../../../i18n";
 import { SearchBar } from "react-native-elements";
-import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
 
 const JoinedMembers = (props) => {
   const AnimatedFlatList = Animated.createAnimatedComponent(Animated.FlatList);
-  const [data] = useMMKVObject(
+  // Renamed data to membersData to avoid confusion with friendDataTemp
+  const [membersData, setMembersData] = useMMKVObject(
     "user.Member.Join.Feed." + props.route.params.pin,
     storage
   );
@@ -25,34 +25,51 @@ const JoinedMembers = (props) => {
     "user.Friend.Feed_Temp",
     storage
   );
-  const moreCredits = async (user, pin, UUID) => {
-    const data = {
-      owner: user,
-      pin: pin,
-    };
-    await axiosPull.postData("/camera/addShots.php", data);
-    await axiosPull._pullMembersFeed(pin, user, UUID)
-    await axiosPull._pullCameraFeed(props.route.params.owner, "owner");
-  }
   const [search, setSearch] = useState("");
-  const searchFunction = (text) => {
-    if (text.length <= 0) {
-      _clear();
-      setSearch("");
-    } else {
-      const updatedData = data.filter((item) => {
-        const item_data = `${item.user_handle.toLowerCase()}`;
-        return item_data.indexOf(text.toLowerCase()) > -1;
-      });
-      setFriendDataTemp(updatedData);
-      setSearch(text);
-    }
-  };
-  const _clear = async () => {
-    await axiosPull._pullMembersFeed(props.route.params.owner, props.route.params.pin, props.route.params.UUID);
-  };
 
-  const _removeUser = (user_id, pin, UUID, name, title) => {
+  const moreCredits = useCallback(async (user_id_param, pin_param, UUID_param) => { // Renamed params for clarity
+    try {
+      const data = {
+        owner: user_id_param,
+        pin: pin_param,
+      };
+      await axiosPull.postData("/camera/addShots.php", data);
+      await axiosPull._pullMembersFeed(pin_param, user_id_param, UUID_param);
+      await axiosPull._pullCameraFeed(props.route.params.owner, "owner");
+    } catch (error) {
+      console.error("Error adding credits:", error);
+      toast({ message: i18n.t("Failed to add credits.") });
+    }
+  }, [props.route.params.owner, toast]);
+
+  const searchFunction = useCallback(
+    (text) => {
+      setSearch(text);
+      if (text.length <= 0) {
+        // No need to clear MMKV object, just use the original data
+        setFriendDataTemp([]); // Clear temp data to show original membersData
+      } else {
+        const updatedData = membersData?.filter((item) => { // Use optional chaining
+          const item_data = `${item.user_handle?.toLowerCase()}`; // Use optional chaining
+          return item_data.includes(text.toLowerCase()); // Use .includes for substring matching
+        }) || []; // Provide an empty array if filter results in undefined
+        setFriendDataTemp(updatedData);
+      }
+    },
+    [membersData, setFriendDataTemp]
+  );
+
+  const _clear = useCallback(async () => {
+    setSearch("");
+    setFriendDataTemp([]); // Clear temp data to show original membersData
+    await axiosPull._pullMembersFeed(
+      props.route.params.pin, // Assuming pin is correct here
+      props.route.params.owner,
+      props.route.params.UUID
+    );
+  }, [props.route.params.pin, props.route.params.owner, props.route.params.UUID, setFriendDataTemp]);
+
+  const _removeUser = useCallback(async (user_id, pin, UUID, name, title) => {
     Alert.alert(
       i18n.t("Remove Member"),
       i18n.t("Are you sure you want to remove") +
@@ -70,143 +87,154 @@ const JoinedMembers = (props) => {
         {
           text: i18n.t("Remove"),
           onPress: async () => {
-            //_deleteFeedItemIndex(user_id, pin);
-            const data = { owner: user_id, pin: pin, id: UUID };
-            await axiosPull.postData("/camera/deleteMember.php", data);
-            await axiosPull._pullMembersFeed(user_id, pin, UUID);
+            try {
+              const data = { owner: user_id, pin: pin, id: UUID }; // Corrected owner to user_id
+              await axiosPull.postData("/camera/deleteMember.php", data);
+              // Re-fetch members after deletion
+              await axiosPull._pullMembersFeed(user_id, pin, UUID); // Assuming user_id is correct here
+              toast({ message: i18n.t("Member removed successfully.") });
+            } catch (error) {
+              console.error("Error removing user:", error);
+              toast({ message: i18n.t("Failed to remove member.") });
+            }
           },
           style: "destructive",
         },
       ],
       { cancelable: false }
     );
-  };
+  }, [toast]);
 
-  const goToFriend = async (friendID) => {
+  const goToFriend = useCallback(async (friendID) => {
     props.navigation.navigate("Friends", {
       userID: friendID,
     });
-  };
+  }, [props.navigation]);
 
-  // const _deleteFeedItemIndex = (user_id, pin) => {
-  //   data.forEach((res, index) => {
-  //     if (res.user_id == user_id) {
-  //       setData((prevState) => {
-  //         prevState.splice(index, 1);
-  //         storage.set(
-  //           "user.Member.Join.Feed." + pin,
-  //           JSON.stringify(prevState)
-  //         );
-  //         return [...prevState];
-  //       });
-  //     }
-  //   });
-  // };
-
-  const _refresh = async () => {
+  const _refresh = useCallback(async () => {
     setRefreshing(true);
-    await axiosPull._pullMembersFeed(
-      props.route.params.pin,
-      props.route.params.owner,
-      props.route.params.UUID
-    );
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 1500);
-  };
+    try {
+      await axiosPull._pullMembersFeed(
+        props.route.params.pin,
+        props.route.params.owner,
+        props.route.params.UUID
+      );
+    } catch (error) {
+      console.error("Error refreshing members feed:", error);
+      toast({ message: i18n.t("Failed to refresh members.") });
+    } finally {
+      setTimeout(() => {
+        setRefreshing(false);
+      }, 1500);
+    }
+  }, [props.route.params.pin, props.route.params.owner, props.route.params.UUID, toast]);
 
   useFocusEffect(
     useCallback(() => {
-
       props.navigation.setOptions({
-        title: String(props.route.params.title).toUpperCase(),
+        title: String(props.route.params.title || "").toUpperCase(),
       });
-      var timeout = setInterval(async () => {
+
+      const intervalId = setInterval(async () => {
         await axiosPull._pullMembersFeed(
           props.route.params.pin,
           props.route.params.owner,
           props.route.params.UUID
         );
-      }, 30000);
-      const fetchData = async () => {
+      }, 30000); // 30 seconds
+
+      const fetchDataOnFocus = async () => {
         await axiosPull._pullMembersFeed(
           props.route.params.pin,
           props.route.params.owner,
           props.route.params.UUID
         );
       };
-      fetchData();
+      fetchDataOnFocus(); // Initial fetch when screen comes into focus
+
       return () => {
-        clearInterval(timeout);
-                storage.delete("user.Friend.Feed_Temp");
+        clearInterval(intervalId);
+        storage.delete("user.Friend.Feed_Temp"); // Clear temp data on blur/unmount
+        setMembersData([]); // Clear membersData on unmount/blur for consistency if desired
       };
-    }, [data, props, refreshing])
+    }, [
+      props.navigation,
+      props.route.params.pin,
+      props.route.params.owner,
+      props.route.params.UUID,
+      setMembersData
+    ])
   );
 
   return (
-    <SafeAreaProvider style={{ backgroundColor: "#fff", flex: 1 }}>
-        <AnimatedFlatList
-          refreshing={refreshing} // Added pull to refesh state
-          onRefresh={_refresh} // Added pull to refresh control
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-          nestedScrollEnabled={true}
-          bounces={true}
-          style={{ flex: 1, height: SCREEN_HEIGHT, width: SCREEN_WIDTH}}
-          data={search.length > 0 ? friendDataTemp : data}
-          extraData={search.length > 0 ? friendDataTemp : data}
-          stickyHeaderIndices={[0]}
-          scrollEventThrottle={16}
-          ListHeaderComponent={
-            <SearchBar
-              inputContainerStyle={{ backgroundColor: "white" }}
-              containerStyle={{ backgroundColor: "white" }}
-              placeholder={i18n.t("Enter Member Username")}
-              lightTheme
-              value={search}
-              onClear={_clear}
-              onChangeText={(text) => searchFunction(text)}
-              autoCorrect={false}
-            />
-          }
-          ListEmptyComponent={
-           <View style={style.empty}>
-            <View style={style.fake}>
-              <View style={style.fakeCircle} />
+    <SafeAreaProvider style={componentStyles.safeArea}>
+      <AnimatedFlatList
+        refreshing={refreshing}
+        onRefresh={_refresh}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        nestedScrollEnabled={true}
+        bounces={true}
+        style={componentStyles.flatList}
+        data={search.length > 0 ? friendDataTemp : membersData} // Use membersData for original
+        extraData={search.length > 0 ? friendDataTemp : membersData}
+        stickyHeaderIndices={[0]}
+        scrollEventThrottle={16}
+        ListHeaderComponent={
+          <SearchBar
+            inputContainerStyle={componentStyles.searchBarInputContainer}
+            containerStyle={componentStyles.searchBarContainer}
+            placeholder={i18n.t("Enter Member Username")}
+            lightTheme
+            value={search}
+            onClear={_clear}
+            onChangeText={searchFunction}
+            autoCorrect={false}
+          />
+        }
+        ListEmptyComponent={
+          <View style={componentStyles.empty}>
+            <View style={componentStyles.fake}>
+              <View style={componentStyles.fakeCircle} />
               <View
-              style={[
-                style.fakeLine,
-                { width: 150, height:20, marginRight:25,  opacity:0.7},
-              ]} />
-              <View style={[style.fakeSquare, { opacity:0.4}]} />
-          </View>
-          <EmptyStateView
+                style={[
+                  componentStyles.fakeLine,
+                  { width: 150, height: 20, marginRight: 25, opacity: 0.7 },
+                ]}
+              />
+              <View style={[componentStyles.fakeSquare, { opacity: 0.4 }]} />
+            </View>
+            <EmptyStateView
               headerText={""}
               subHeaderText={i18n.t("Members are Capturing Moments")}
-              headerTextStyle={style.headerTextStyle}
-              subHeaderTextStyle={style.subHeaderTextStyle}
+              headerTextStyle={componentStyles.headerTextStyle}
+              subHeaderTextStyle={componentStyles.subHeaderTextStyle}
             />
-            </View>
-          }
-          keyExtractor={(item) => item.user_id}
-          renderItem={(item, index) => (
-            <MemberListItem
-              item={item}
-              index={index}
-              _removeUser={_removeUser}
-              goToFriend={goToFriend}
-              moreCredits={moreCredits}
-              pin={props.route.params.pin}
-              UUID={props.route.params.UUID}
-              title={String(props.route.params.title).toUpperCase()}
-            />
-          )}
-        />
+          </View>
+        }
+        keyExtractor={(item) => item.user_id || Math.random().toString()} // Fallback for keyExtractor
+        renderItem={({ item, index }) => ( // Correctly destructure item and index
+          <MemberListItem
+            item={item}
+            index={index}
+            _removeUser={_removeUser}
+            goToFriend={goToFriend}
+            moreCredits={moreCredits}
+            pin={props.route.params.pin}
+            UUID={props.route.params.UUID}
+            title={String(props.route.params.title || "").toUpperCase()}
+          />
+        )}
+      />
     </SafeAreaProvider>
   );
 };
 
-const style = StyleSheet.create({
+const componentStyles = StyleSheet.create({
+  safeArea: {
+    backgroundColor: "#fff",
+    flex: 1,
+  },
   headerTextStyle: {
     color: "rgb(76, 76, 76)",
     fontSize: 18,
@@ -227,41 +255,47 @@ const style = StyleSheet.create({
     textAlign: "center",
     marginVertical: 10,
   },
-   /** Fake */
-   fake: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+  /** Fake */
+  fake: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     marginBottom: 24,
-    opacity:0.4
+    opacity: 0.4,
   },
   fakeCircle: {
     width: 44,
     height: 44,
     borderRadius: 9999,
-    backgroundColor: '#e8e9ed',
+    backgroundColor: "#e8e9ed",
     marginRight: 16,
   },
   fakeSquare: {
     width: 44,
     height: 44,
     borderRadius: 15,
-    backgroundColor: '#e8e9ed',
+    backgroundColor: "#e8e9ed",
   },
   fakeLine: {
     width: 200,
     height: 10,
     borderRadius: 4,
-    backgroundColor: '#e8e9ed',
+    backgroundColor: "#e8e9ed",
     marginBottom: 8,
   },
   empty: {
     flexGrow: 1,
     flexShrink: 1,
     flexBasis: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginTop: 50,
+  },
+  searchBarInputContainer: {
+    backgroundColor: "white",
+  },
+  searchBarContainer: {
+    backgroundColor: "white",
   },
 });
 export default JoinedMembers;

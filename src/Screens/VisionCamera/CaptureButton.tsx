@@ -160,7 +160,7 @@ const _CaptureButton: React.FC<Props> = ({
           const now = new Date()
           pressDownDate.current = now
           setTimeout(() => {
-            if (pressDownDate.current === now) {
+            if (pressDownDate.current == now) {
               // user is still pressing down after 200ms, so his intention is to create a video
               startRecording()
             }

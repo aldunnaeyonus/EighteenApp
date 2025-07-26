@@ -14,6 +14,7 @@ import {
   TouchableWithoutFeedback,
   Linking,
   Text,
+  ActivityIndicator,
 } from "react-native";
 import "moment-duration-format";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
@@ -30,12 +31,11 @@ import { constants, SCREEN_WIDTH, SCREEN_HEIGHT } from "../../utils/constants";
 import Progress from "react-native-progress";
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
-const Image = createImageProgress(FastImage);
 import { useIsFocused } from "@react-navigation/native";
-import { ActivityIndicator, MD2Colors } from "react-native-paper";
+import { MD2Colors } from "react-native-paper";
 import Loading from "../SubViews/home/Loading";
 import { getLocales } from "expo-localization";
-import * as ImagePicker from "expo-image-picker";
+import * as  ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   BottomSheetModal,
@@ -43,150 +43,112 @@ import {
   BottomSheetBackdrop,
 } from "@gorhom/bottom-sheet";
 
-const Friends = (props) => {
+const Image = createImageProgress(FastImage);
+
+const Friends = ({ route, navigation }) => {
+  const { userID } = route.params;
+
   const [cameraData] = useMMKVObject(
-    `user.Camera.Friend.Feed.${props.route.params.userID}`,
+    `user.Camera.Friend.Feed.${userID}`,
     storage
   );
-  const [friendData] = useMMKVObject(
-    `user.Feed.${props.route.params.userID}`,
-    storage
-  );
+  const [friendData] = useMMKVObject(`user.Feed.${userID}`, storage);
   const [uploading] = useMMKVObject("uploadData", storage);
   const [cameraStatus] = ImagePicker.useCameraPermissions();
   const [ready, setReady] = useState(false);
-  const [refreshing, serRefreshing] = useState(false);
-  const [isFriend, setisFriend] = useState("2");
+  const [refreshing, setRefreshing] = useState(false);
+  const [isFriend, setIsFriend] = useState("2");
   const AnimatedFlatList = Animated.createAnimatedComponent(Animated.FlatList);
   const [user] = useMMKVObject("user.Data", storage);
-  const [modalVisable, setmodalVisable] = useState(false);
-  const [qrCodeURL] = useState(
-    constants.url + "/friendQRCode.php?owner=" + props.route.params.userID
+  const [modalVisible, setModalVisible] = useState(false);
+  const qrCodeURL = useMemo(
+    () => constants.url + "/friendQRCode.php?owner=" + userID,
+    [userID]
   );
-  var timeout;
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
   const bottomSheetRef = useRef(null);
-  const snapPoints = useMemo(() => ["17%"], []);
+  const snapPoints = useMemo(() => ["22%"], []);
+
   const handlePresentModalPress = useCallback(() => {
     bottomSheetRef.current?.present();
   }, []);
 
-  const _autoJoin = async (owner, pin, end, id) => {
-    const data = {
-      owner: owner,
-      user: user.user_id,
-      pin: pin,
-      end: end,
-      id: id,
-    };
-    await axiosPull.postData("/camera/autoJoin.php", data);
-    await axiosPull._pullFriendFeed(owner);
-    await axiosPull._pullFriendCameraFeed(owner, "user", user.user_id);
-  };
+  const handleDismissPress = useCallback(() => {
+    bottomSheetRef.current?.close();
+  }, []);
 
-  const _repotPost = async (pin, owner, title) => {
-    Alert.alert(
-      i18n.t("Report Event"),
-      i18n.t("Are you sure you event"),
-      [
-        {
-          text: i18n.t("Cancel"),
-          onPress: () => console.log("Cancel Pressed"),
-          style: "destructive",
-        },
-        {
-          text: i18n.t("Report Event"),
-          onPress: async () => {
-            const data = {
-              owner: owner,
-              user: user.user_id,
-              pin: pin,
-              title: title,
-              type: "event",
-              locale: getLocales()[0].languageCode,
-            };
-            await axiosPull.postData("/camera/report.php", data);
-            Alert.alert("", i18n.t("A report event"));
+  const _autoJoin = useCallback(
+    async (owner, pin, end, id) => {
+      const data = { owner, user: user.user_id, pin, end, id };
+      await axiosPull.postData("/camera/autoJoin.php", data);
+      await axiosPull._pullFriendFeed(owner);
+      await axiosPull._pullFriendCameraFeed(owner, "user", user.user_id);
+    },
+    [user.user_id]
+  );
+
+  const _repotPost = useCallback(
+    async (pin, owner, title) => {
+      Alert.alert(
+        i18n.t("Report Event"),
+        i18n.t("Are you sure you event"),
+        [
+          { text: i18n.t("Cancel"), style: "destructive" },
+          {
+            text: i18n.t("Report Event"),
+            onPress: async () => {
+              const data = {
+                owner,
+                user: user.user_id,
+                pin,
+                title,
+                type: "event",
+                locale: getLocales()[0].languageCode,
+              };
+              await axiosPull.postData("/camera/report.php", data);
+              Alert.alert("", i18n.t("A report event"));
+            },
           },
-          style: "default",
-        },
-      ],
-      { cancelable: false }
-    );
-  };
-
-  const _reportUser = async (owner) => {
-    Alert.alert(
-      i18n.t("Report Friend"),
-      i18n.t("Are you sure you"),
-      [
-        {
-          text: i18n.t("Cancel"),
-          onPress: () => console.log("Cancel Pressed"),
-          style: "destructive",
-        },
-        {
-          text: i18n.t("Report Friend"),
-          onPress: async () => {
-            const data = {
-              owner: owner,
-              user: user.user_id,
-              pin: "",
-              title: "",
-              type: "friend",
-              locale: getLocales()[0].languageCode,
-            };
-            await axiosPull.postData("/camera/report.php", data);
-            Alert.alert("", i18n.t("A report"));
-          },
-          style: "default",
-        },
-      ],
-      { cancelable: false }
-    );
-  };
-
-  const _deleteUser = async () => {
-    Alert.alert(
-      i18n.t("Delete Friend"),
-      i18n.t("Are you sure"),
-      [
-        {
-          text: i18n.t("Cancel"),
-          onPress: () => console.log("Cancel Pressed"),
-          style: "default",
-        },
-        {
-          text: i18n.t("Delete Friend"),
-          onPress: () => deleteMember(),
-          style: "destructive",
-        },
-      ],
-      { cancelable: false }
-    );
-  };
-
-  const addMember = async () => {
-    if (props.route.params.userID != user.user_id) {
-      const data = { user: props.route.params.userID, owner: user.user_id };
-      await axiosPull.postData("/users/add.php", data);
-      await axiosPull._pullFriendCameraFeed(
-        props.route.params.userID,
-        "user",
-        user.user_id
+        ],
+        { cancelable: false }
       );
-      const datas = { friend: props.route.params.userID, owner: user.user_id };
-      const results = await axiosPull.postData("/users/check.php", datas);
-      setisFriend(results[0]["response"]);
-      Alert.alert(i18n.t("SnapEighteen"), i18n.t("FreiendsNow"));
-      await axiosPull._pullFriendFeed(props.route.params.userID);
-    }
-  };
+    },
+    [user.user_id]
+  );
 
-  const deleteMember = async () => {
+  const _reportUser = useCallback(
+    async (owner) => {
+      Alert.alert(
+        i18n.t("Report Friend"),
+        i18n.t("Are you sure you"),
+        [
+          { text: i18n.t("Cancel"), style: "destructive" },
+          {
+            text: i18n.t("Report Friend"),
+            onPress: async () => {
+              const data = {
+                owner,
+                user: user.user_id,
+                pin: "",
+                title: "",
+                type: "friend",
+                locale: getLocales()[0].languageCode,
+              };
+              await axiosPull.postData("/camera/report.php", data);
+              Alert.alert("", i18n.t("A report"));
+            },
+          },
+        ],
+        { cancelable: false }
+      );
+    },
+    [user.user_id]
+  );
+
+  const deleteMember = useCallback(async () => {
     const data = {
-      user: props.route.params.userID,
+      user: userID,
       pin: "",
       type: "block",
       title: "",
@@ -195,223 +157,172 @@ const Friends = (props) => {
     };
     await axiosPull.postData("/camera/report.php", data);
     await axiosPull._pullFriendsFeed(user.user_id);
-    storage.delete("user.Camera.Friend.Feed." + props.route.params.userID);
+    storage.delete("user.Camera.Friend.Feed." + userID);
+    navigation.pop(1);
+  }, [userID, user.user_id, navigation]);
 
-    props.navigation.pop(1);
-  };
+  const _deleteUser = useCallback(() => {
+    Alert.alert(
+      i18n.t("Delete Friend"),
+      i18n.t("Are you sure"),
+      [
+        { text: i18n.t("Cancel"), style: "default" },
+        { text: i18n.t("Delete Friend"), onPress: deleteMember, style: "destructive" },
+      ],
+      { cancelable: false }
+    );
+  }, [deleteMember]);
 
-  const _gotoCamera = async (
-    pin,
-    title,
-    owner,
-    UUID,
-    end,
-    start,
-    credits,
-    tCredits,
-    camera_add_social
-  ) => {
-    if (cameraStatus.status == ImagePicker.PermissionStatus.UNDETERMINED) {
-      await ImagePicker.requestCameraPermissionsAsync();
-    } else if (cameraStatus.status == ImagePicker.PermissionStatus.DENIED) {
-      Alert.alert(
-        i18n.t("Permissions"),
-        i18n.t("UseCamera"),
-        [
-          {
-            text: i18n.t("Cancel"),
-            onPress: () => console.log("Cancel Pressed"),
-            style: "destructive",
-          },
-          {
-            text: i18n.t("Settings"),
-            onPress: () => {
-              Linking.openSettings();
-            },
-            style: "default",
-          },
-        ],
-        { cancelable: false }
-      );
-    } else {
-      if ((await AsyncStorage.getItem("uploadEnabled")) == "1") {
-        props.navigation.navigate("CameraPage", {
-          owner: owner,
-          pin: pin,
-          title: title,
-          credits: credits,
-          tCredits: tCredits,
-          UUID: UUID,
-          end: end,
-          camera_add_social: camera_add_social,
-          start: start,
-          user: user.user_id,
-          lefthanded: user.lefthanded,
-        });
-      } else {
+  const addMember = useCallback(async () => {
+    if (userID != user.user_id) {
+      const addFriendData = { user: userID, owner: user.user_id };
+      await axiosPull.postData("/users/add.php", addFriendData);
+      await axiosPull._pullFriendCameraFeed(userID, "user", user.user_id);
+
+      const checkFriendData = { friend: userID, owner: user.user_id };
+      const results = await axiosPull.postData("/users/check.php", checkFriendData);
+      setIsFriend(results[0]?.["response"]); // Use optional chaining for safety
+      Alert.alert(i18n.t("SnapEighteen"), i18n.t("FreiendsNow"));
+      await axiosPull._pullFriendFeed(userID);
+    }
+  }, [userID, user.user_id]);
+
+  const _gotoCamera = useCallback(
+    async (
+      pin,
+      title,
+      owner,
+      UUID,
+      end,
+      start,
+      credits,
+      tCredits,
+      camera_add_social
+    ) => {
+      let cameraPermissionStatus = cameraStatus.status;
+
+      if (cameraPermissionStatus == ImagePicker.PermissionStatus.UNDETERMINED) {
+        const { status } = await ImagePicker.requestCameraPermissionsAsync();
+        cameraPermissionStatus = status;
+      }
+
+      if (cameraPermissionStatus == ImagePicker.PermissionStatus.DENIED) {
         Alert.alert(
-          i18n.t("ActiveUpload"),
-          i18n.t("WhileActiveUpload"),
+          i18n.t("Permissions"),
+          i18n.t("UseCamera"),
           [
-            {
-              text: i18n.t("Cancel"),
-              onPress: () => console.log("Cancel Pressed"),
-              style: "default",
-            },
-            {
-              text: i18n.t("Continue"),
-              onPress: async () => {
-                props.navigation.navigate("CameraPage", {
-                  owner: owner,
-                  pin: pin,
-                  title: title,
-                  credits: credits,
-                  tCredits: tCredits,
-                  UUID: UUID,
-                  end: end,
-                  camera_add_social: camera_add_social,
-                  start: start,
-                  user: user.user_id,
-                  lefthanded: user.lefthanded,
-                });
-              },
-              style: "destructive",
-            },
+            { text: i18n.t("Cancel"), style: "destructive" },
+            { text: i18n.t("Settings"), onPress: () => Linking.openSettings() },
           ],
           { cancelable: false }
         );
+      } else {
+        const uploadEnabled = await AsyncStorage.getItem("uploadEnabled");
+        if (uploadEnabled == "1") {
+          navigation.navigate("CameraPage", {
+            owner, pin, title, credits, tCredits, UUID, end, camera_add_social, start,
+            user: user.user_id, lefthanded: user.lefthanded,
+          });
+        } else {
+          Alert.alert(
+            i18n.t("ActiveUpload"),
+            i18n.t("WhileActiveUpload"),
+            [
+              { text: i18n.t("Cancel"), style: "default" },
+              {
+                text: i18n.t("Continue"),
+                onPress: () => {
+                  navigation.navigate("CameraPage", {
+                    owner, pin, title, credits, tCredits, UUID, end, camera_add_social, start,
+                    user: user.user_id, lefthanded: user.lefthanded,
+                  });
+                },
+                style: "destructive",
+              },
+            ],
+            { cancelable: false }
+          );
+        }
       }
-    }
-  };
+    },
+    [cameraStatus, navigation, user.user_id, user.lefthanded]
+  );
 
-  const _gotoStore = (pin, owner, name) => {
-    props.navigation.navigate("Purchase", {
-      pin: pin,
-      owner: owner,
-      type: "user",
-      eventName: name,
-    });
-  };
+  const _gotoStore = useCallback(
+    (pin, owner, name) => {
+      navigation.navigate("Purchase", { pin, owner, type: "user", eventName: name });
+    },
+    [navigation]
+  );
 
-  const _gotoMedia = async (
-    pin,
-    title,
-    owner,
-    UUID,
-    end,
-    start,
-    credits,
-    camera_add_social,
-    illustration
-  ) => {
-    props.navigation.navigate("MediaGallery", {
-      pin: pin,
-      title: title,
-      owner: owner,
-      user: user.user_id,
-      UUID: UUID,
-      avatar: user.user_avatar,
-      handle: user.user_handle,
-      end: end,
-      start: start,
-      credits: credits,
-      camera_add_social: camera_add_social,
-      illustration: illustration,
-      type: "user",
-    });
-  };
+  const _gotoMedia = useCallback(
+    async (
+      pin, title, owner, UUID, end, start, credits, camera_add_social, illustration
+    ) => {
+      navigation.navigate("MediaGallery", {
+        pin, title, owner, user: user.user_id, UUID,
+        avatar: user.user_avatar, handle: user.user_handle,
+        end, start, credits, camera_add_social, illustration, type: "user",
+      });
+    },
+    [navigation, user.user_id, user.user_avatar, user.user_handle]
+  );
 
-  const _refresh = async () => {
-    serRefreshing(true);
-    await axiosPull._pullFriendCameraFeed(
-      props.route.params.userID,
-      "user",
-      user.user_id
-    );
-    setTimeout(() => {
-      serRefreshing(false);
-    }, 1500);
-  };
+  const _refresh = useCallback(async () => {
+    setRefreshing(true);
+    await axiosPull._pullFriendCameraFeed(userID, "user", user.user_id);
+    setRefreshing(false);
+  }, [userID, user.user_id]);
 
   useEffect(() => {
     const fetchData = async () => {
-      await axiosPull._pullFriendFeed(props.route.params.userID);
-      const data = {
-        friend: props.route.params.userID,
-        owner: user.user_id,
-      };
-      const results = await axiosPull.postData("/users/check.php", data);
-      setisFriend(results[0]["response"]);
-      await axiosPull._pullFriendCameraFeed(
-        props.route.params.userID,
-        "user",
-        user.user_id
-      );
-      props.navigation.setOptions({
-        title:
-          friendData != undefined
-            ? friendData.friend_handle.toUpperCase()
-            : "Loading...",
-        headerRight: () => (
-          <View style={{ flexDirection: "row" }}>
-            {props.route.params.userID == user.user_id ? (
-              <></>
-            ) : isFriend == "0" ? (
-              <Icon
-                containerStyle={{ marginRight: 10 }}
-                type="material"
-                name="person-add-alt"
-                size={30}
-                onPress={() => {
-                  addMember();
-                }}
-                color="#3D4849"
-              />
-            ) : isFriend == "1" ? (
-              <Icon
-                containerStyle={{ marginLeft: 5 }}
-                type="material"
-                name="menu"
-                size={30}
-                onPress={() => {
-                  handlePresentModalPress();
-                }}
-                color="#3D4849"
-              />
-            ) : (
-              <></>
-            )}
-          </View>
-        ),
-      });
-      setReady(true);
-      setIsLoading(false);
+      setIsLoading(true);
+        await axiosPull._pullFriendFeed(userID);
+        const data = { friend: userID, owner: user.user_id };
+        const results = await axiosPull.postData("/users/check.php", data);
+        setIsFriend(results[0]?.["response"]); // Use optional chaining for safety
+        await axiosPull._pullFriendCameraFeed(userID, "user", user.user_id);
+        navigation.setOptions({
+          title: friendData?.friend_handle?.toUpperCase() || "...",
+          headerRight: () => (
+            <View style={{ flexDirection: "row" }}>
+              {userID == user.user_id ? null : isFriend == "0" ? (
+                <Icon
+                  containerStyle={{ marginRight: 10 }}
+                  type="material"
+                  name="person-add-alt"
+                  size={30}
+                  onPress={addMember}
+                  color="#3D4849"
+                />
+              ) : results[0]?.["response"] == "1" ? (
+                <Icon
+                  containerStyle={{ marginLeft: 5 }}
+                  type="material"
+                  name="menu"
+                  size={30}
+                  onPress={handlePresentModalPress}
+                  color="#3D4849"
+                />
+              ) : null}
+            </View>
+          ),
+        });
     };
-    fetchData();
 
-    timeout = setInterval(async () => {
-      // await axiosPull._pullFriendCameraFeed(
-      //   props.route.params.userID,
-      //   "user",
-      //   user.user_id
-      // );
-    }, 60000);
-
-    return () => {
-      clearInterval(timeout);
-    };
+    if (isFocused) {
+      fetchData();
+    }
   }, [
     isFocused,
-    isFriend,
-    friendData,
-    props.route.params.userID,
+    userID,
     user.user_id,
-    isLoading,
+    isFriend,
+    friendData, // Added friendData to dependencies for title update
+    navigation,
+    addMember,
+    handlePresentModalPress,
   ]);
-
-  const handleDismissPress = useCallback(() => {
-    bottomSheetRef.current?.close();
-  }, []);
 
   const renderBackdrop = useCallback(
     (props) => (
@@ -426,145 +337,87 @@ const Friends = (props) => {
     []
   );
 
-  if (!ready) {
-    return (
-      <SafeAreaView
-        style={{
-          backgroundColor: "white",
-          height: SCREEN_HEIGHT,
-          width: SCREEN_WIDTH,
-        }}
-        edges={["bottom", "left", "right"]}
-      >
-        <ActivityIndicator
-          size={80}
-          style={{
-            position: "absolute",
-            top: SCREEN_HEIGHT / 3.5,
-            left: SCREEN_WIDTH / 2 - 40,
-          }}
-          animating={isLoading}
-          hidesWhenStopped={true}
-          color={MD2Colors.orange900}
-        />
-      </SafeAreaView>
-    );
-  }
-
   return (
     <SafeAreaProvider>
       <SafeAreaView
-        style={{
-          backgroundColor: "white",
-          height: SCREEN_HEIGHT - 60,
-          width: SCREEN_WIDTH,
-        }}
+        style={componentStyles.safeArea}
         edges={["bottom", "left", "right", "top"]}
       >
         <AnimatedFlatList
-          refreshing={refreshing} // Added pull to refesh state
-          onRefresh={_refresh} // Added pull to refresh control
+          refreshing={refreshing}
+          onRefresh={_refresh}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           nestedScrollEnabled={true}
           bounces={true}
-          style={{
-            flex: 1,
-            height: SCREEN_HEIGHT,
-            width: SCREEN_WIDTH,
-            marginBottom: 15,
-          }}
+          style={componentStyles.flatList}
           data={cameraData}
           extraData={cameraData}
           scrollEventThrottle={16}
           ListEmptyComponent={
             isFriend == "1" && (
-              <View style={style.empty}>
-                <View style={style.fake}>
-                  <View style={style.fakeSquare}>
+              <View style={componentStyles.empty}>
+                <View style={componentStyles.fake}>
+                  <View style={componentStyles.fakeSquare}>
                     <Image
                       source={require("../../../assets/elementor-placeholder-image.png")}
                       resizeMode={FastImage.resizeMode.cover}
-                      style={{
-                        position: "absolute",
-                        height: 175,
-                        width: SCREEN_WIDTH - 150,
-                        borderRadius: 10,
-                        overflow: "hidden",
-                      }}
+                      style={componentStyles.fakeImage}
                     />
                   </View>
                   <View
                     style={[
-                      style.fakeLine,
-                      {
-                        width: SCREEN_WIDTH - 150,
-                        height: 40,
-                        marginBottom: 0,
-                        position: "absolute",
-                        bottom: 0,
-                      },
+                      componentStyles.fakeLine,
+                      componentStyles.fakeLineLarge,
                     ]}
                   />
                   <View
                     style={[
-                      style.fakeLine,
-                      {
-                        width: 30,
-                        height: 120,
-                        marginBottom: 0,
-                        position: "absolute",
-                        top: 8,
-                        right: 5,
-                      },
+                      componentStyles.fakeLine,
+                      componentStyles.fakeLineSmallRight,
                     ]}
                   />
                   <View
                     style={[
-                      style.fakeLine,
-                      {
-                        width: 150,
-                        height: 20,
-                        marginBottom: 0,
-                        position: "absolute",
-                        bottom: 10,
-                        left: 5,
-                        backgroundColor: "#e8e9ed",
-                      },
+                      componentStyles.fakeLine,
+                      componentStyles.fakeLineSmallLeft,
                     ]}
                   />
                 </View>
                 <EmptyStateView
                   headerText={""}
                   subHeaderText={i18n.t("A gallery")}
-                  headerTextStyle={style.headerTextStyle}
-                  subHeaderTextStyle={style.subHeaderTextStyle}
+                  headerTextStyle={componentStyles.headerTextStyle}
+                  subHeaderTextStyle={componentStyles.subHeaderTextStyle}
                 />
               </View>
             )
           }
           ListHeaderComponent={
             <View>
-              <FriendHeader
-                id={props.route.params.userID}
-                name={friendData.friend_handle}
-                motto={friendData.friend_motto}
-                avatar={friendData.friend_avatar}
-                join={friendData.friend_join}
-                create={friendData.friend_camera}
-                upload={friendData.friend_media}
-                isPro={friendData.friend_isPro}
-              />
-
-              <Loading
-                message={uploading.message}
-                flex={uploading.display}
-                progress={uploading.progress}
-              />
-              </View>
+              {friendData && (
+                <FriendHeader
+                  id={userID}
+                  name={friendData.friend_handle}
+                  motto={friendData.friend_motto}
+                  avatar={friendData.friend_avatar}
+                  join={friendData.friend_join}
+                  create={friendData.friend_camera}
+                  upload={friendData.friend_media}
+                  isPro={friendData.friend_isPro}
+                />
+              )}
+              {uploading && ( // Ensure uploading object exists before accessing its properties
+                <Loading
+                  message={uploading.message}
+                  flex={uploading.display}
+                  progress={uploading.progress}
+                />
+              )}
+            </View>
           }
           keyExtractor={(item) => item.UUID}
-          renderItem={(item, index) =>
+          renderItem={({ item, index }) =>
             isFriend == "1" && (
               <FriendListItem
                 item={item}
@@ -580,24 +433,17 @@ const Friends = (props) => {
           }
         />
         <Modal
-          visible={modalVisable}
+          visible={modalVisible}
           animationType="slide"
           transparent={true}
-          onRequestClose={() => {
-            setmodalVisable(false);
-          }}
+          onRequestClose={() => setModalVisible(false)}
         >
-          <TouchableWithoutFeedback onPressOut={() => setmodalVisable(false)}>
-            <View style={style.centeredView}>
-              <View style={style.modalView}>
+          <TouchableWithoutFeedback onPressOut={() => setModalVisible(false)}>
+            <View style={componentStyles.centeredView}>
+              <View style={componentStyles.modalView}>
                 <Image
                   indicator={Progress}
-                  style={{
-                    width: 300,
-                    height: 300,
-                    backgroundColor: "white",
-                    alignSelf: "auto",
-                  }}
+                  style={componentStyles.qrCodeImage}
                   resizeMode={FastImage.resizeMode.contain}
                   source={{
                     cache: FastImage.cacheControl.immutable,
@@ -607,29 +453,10 @@ const Friends = (props) => {
                 />
               </View>
               <TouchableOpacity
-                style={{
-                  marginTop: 20,
-                  flexDirection: "row",
-                  width: 250,
-                  backgroundColor: "rgba(234, 85, 4, 1)",
-                  borderRadius: 8,
-                  padding: 15,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginBottom: 20,
-                }}
-                onPress={() => {
-                  setmodalVisable(false);
-                }}
+                style={componentStyles.closeButton}
+                onPress={() => setModalVisible(false)}
               >
-                <Text
-                  style={{
-                    textTransform: "uppercase",
-                    fontSize: 20,
-                    fontWeight: 600,
-                    color: "#fff",
-                  }}
-                >
+                <Text style={componentStyles.closeButtonText}>
                   {i18n.t("Close")}
                 </Text>
               </TouchableOpacity>
@@ -644,139 +471,59 @@ const Friends = (props) => {
           keyboardBlurBehavior={"restore"}
           android_keyboardInputMode={"adjustPan"}
           enableDismissOnClose
-          style={{
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 7,
-            },
-            shadowOpacity: 0.43,
-            shadowRadius: 9.51,
-            backgroundColor: "transparent",
-            elevation: 15,
-          }}
+          style={componentStyles.bottomSheetModal}
         >
-          <BottomSheetView
-            style={[StyleSheet.absoluteFill, { alignItems: "center" }]}
-          >
-            <Text>{i18n.t("Make a Selection")}</Text>
-            <Animated.View
-              style={{
-                justifyContent: "flex-end",
-              }}
-            >
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  alignContent: "space-between",
-                  marginTop: 15,
-                  gap: 50,
-                }}
-              >
-                <View
-                  style={{
-                    flexDirection: "column",
-                    alignContent: "center",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
+          <BottomSheetView style={componentStyles.bottomSheetContent}>
+            <Text style={componentStyles.bottomSheetTitle}>
+              {i18n.t("Make a Selection")}
+            </Text>
+            <Animated.View style={componentStyles.bottomSheetActionsContainer}>
+              <View style={componentStyles.bottomSheetIconsRow}>
+                <View style={componentStyles.bottomSheetIconColumn}>
                   <Icon
                     type="material"
                     size={40}
                     name="report-gmailerrorred"
                     color={"#000"}
-                    containerStyle={{
-                      height: 50,
-                      width: 50,
-                      alignContent: "center",
-                      justifyContent: "center",
-                      borderRadius: 22,
-                    }}
+                    containerStyle={componentStyles.bottomSheetIconContainer}
                     onPress={() => {
-                     handleDismissPress();
-                      _reportUser(props.route.params.userID);
+                      handleDismissPress();
+                      _reportUser(userID);
                     }}
                   />
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      marginTop: 5,
-                    }}
-                  >
+                  <Text style={componentStyles.bottomSheetIconText}>
                     {i18n.t("Report Friend")}
                   </Text>
                 </View>
-                <View
-                  style={{
-                    flexDirection: "column",
-                    alignContent: "center",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
+                <View style={componentStyles.bottomSheetIconColumn}>
                   <Icon
                     type="antdesign"
                     size={40}
                     name="deleteuser"
                     color={"#000"}
-                    containerStyle={{
-                      height: 50,
-                      width: 50,
-                      alignContent: "center",
-                      justifyContent: "center",
-                      borderRadius: 22,
-                    }}
+                    containerStyle={componentStyles.bottomSheetIconContainer}
                     onPress={() => {
-                     handleDismissPress();
+                      handleDismissPress();
                       _deleteUser();
                     }}
                   />
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      marginTop: 5,
-                    }}
-                  >
+                  <Text style={componentStyles.bottomSheetIconText}>
                     {i18n.t("Delete Friend")}
                   </Text>
                 </View>
-
-                <View
-                  style={{
-                    flexDirection: "column",
-                    alignContent: "center",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
+                <View style={componentStyles.bottomSheetIconColumn}>
                   <Icon
                     type="material-community"
                     size={40}
                     name="shield-account-variant-outline"
                     color={"#000"}
-                    containerStyle={{
-                      height: 50,
-                      width: 50,
-                      alignContent: "center",
-                      justifyContent: "center",
-                      borderRadius: 22,
-                    }}
+                    containerStyle={componentStyles.bottomSheetIconContainer}
                     onPress={() => {
-                     handleDismissPress();
-                      props.navigation.navigate("About", {
-                        items: friendData,
-                      });
+                      handleDismissPress();
+                      navigation.navigate("About", { items: friendData });
                     }}
                   />
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      marginTop: 5,
-                    }}
-                  >
+                  <Text style={componentStyles.bottomSheetIconText}>
                     {i18n.t("About")}
                   </Text>
                 </View>
@@ -789,20 +536,28 @@ const Friends = (props) => {
   );
 };
 
-const style = StyleSheet.create({
-  imageStyle: {
-    marginTop: 50,
-    height: 125,
-    width: 300,
-    resizeMode: "contain",
+const componentStyles = StyleSheet.create({
+  loadingContainer: {
+    backgroundColor: "white",
+    height: SCREEN_HEIGHT,
+    width: SCREEN_WIDTH,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  dividerTableStyle: {
-    height: 0,
-    marginTop: 10,
-    marginBottom: 10,
-    width: SCREEN_WIDTH * 1,
-    alignSelf: "center",
-    backgroundColor: "#ccc",
+  activityIndicator: {
+    position: "absolute",
+    top: SCREEN_HEIGHT / 3.5,
+    left: SCREEN_WIDTH / 2 - 40,
+  },
+  safeArea: {
+    backgroundColor: "white",
+    flex: 1, // Use flex: 1 instead of fixed height to adapt to screen size
+    width: SCREEN_WIDTH,
+  },
+  flatList: {
+    flex: 1,
+    width: SCREEN_WIDTH,
+    marginBottom: 15,
   },
   headerTextStyle: {
     color: "rgb(76, 76, 76)",
@@ -820,6 +575,7 @@ const style = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)", // Dim background for modal
   },
   modalView: {
     width: "80%",
@@ -828,15 +584,34 @@ const style = StyleSheet.create({
     padding: 35,
     alignItems: "center",
     shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 7,
   },
-  /** Fake */
+  qrCodeImage: {
+    width: 300,
+    height: 300,
+    backgroundColor: "white",
+    alignSelf: "auto",
+  },
+  closeButton: {
+    marginTop: 20,
+    flexDirection: "row",
+    width: 250,
+    backgroundColor: "rgba(234, 85, 4, 1)",
+    borderRadius: 8,
+    padding: 15,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 20,
+  },
+  closeButtonText: {
+    textTransform: "uppercase",
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#fff",
+  },
   fake: {
     flexDirection: "row",
     alignItems: "center",
@@ -844,18 +619,18 @@ const style = StyleSheet.create({
     marginBottom: 24,
     opacity: 0.4,
   },
-  fakeCircle: {
-    width: 44,
-    height: 44,
-    borderRadius: 9999,
-    backgroundColor: "#e8e9ed",
-    marginRight: 16,
-  },
   fakeSquare: {
     width: SCREEN_WIDTH - 150,
     height: 175,
     backgroundColor: "#e8e9ed",
     borderRadius: 10,
+  },
+  fakeImage: {
+    position: "absolute",
+    height: 175,
+    width: SCREEN_WIDTH - 150,
+    borderRadius: 10,
+    overflow: "hidden",
   },
   fakeLine: {
     width: 200,
@@ -865,6 +640,30 @@ const style = StyleSheet.create({
     marginBottom: 8,
     opacity: 0.6,
   },
+  fakeLineLarge: {
+    width: SCREEN_WIDTH - 150,
+    height: 40,
+    marginBottom: 0,
+    position: "absolute",
+    bottom: 0,
+  },
+  fakeLineSmallRight: {
+    width: 30,
+    height: 120,
+    marginBottom: 0,
+    position: "absolute",
+    top: 8,
+    right: 5,
+  },
+  fakeLineSmallLeft: {
+    width: 150,
+    height: 20,
+    marginBottom: 0,
+    position: "absolute",
+    bottom: 10,
+    left: 5,
+    backgroundColor: "#e8e9ed",
+  },
   empty: {
     flexGrow: 1,
     flexShrink: 1,
@@ -872,6 +671,51 @@ const style = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginTop: 50,
+  },
+  bottomSheetModal: {
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 7 },
+    shadowOpacity: 0.43,
+    shadowRadius: 9.51,
+    backgroundColor: "transparent",
+    elevation: 15,
+  },
+  bottomSheetContent: {
+    flex: 1,
+    alignItems: "center",
+  },
+  bottomSheetTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 15,
+  },
+  bottomSheetActionsContainer: {
+    justifyContent: "flex-end",
+    width: "100%", // Ensure container takes full width
+  },
+  bottomSheetIconsRow: {
+    flexDirection: "row",
+    justifyContent: "center", // Changed to center for better spacing
+    alignItems: "center",
+    marginTop: 15,
+    gap: 50, // Use gap for spacing instead of fixed margins
+  },
+  bottomSheetIconColumn: {
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  bottomSheetIconContainer: {
+    height: 70,
+    width: 70,
+    alignContent: "center",
+    justifyContent: "center",
+    borderRadius: 35, // Half of height/width for perfect circle
+    backgroundColor: "#f0f0f0", // Added a subtle background for icons
+  },
+  bottomSheetIconText: {
+    textAlign: "center",
+    marginTop: 10,
   },
 });
 

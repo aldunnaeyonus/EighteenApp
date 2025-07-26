@@ -7,7 +7,7 @@ import StaticSafeAreaInsets from 'react-native-static-safe-area-insets'
 const FALLBACK_COLOR = 'rgba(140, 140, 140, 0.3)'
 
 const StatusBarBlurBackgroundImpl = ({ style, ...props }: BlurViewProps): React.ReactElement | null => {
-  if (Platform.OS !== 'ios') return null
+  if (Platform.OS != 'ios') return null
 
   return (
     <BlurView

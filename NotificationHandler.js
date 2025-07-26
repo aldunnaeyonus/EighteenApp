@@ -8,7 +8,7 @@ class NotificationHandler {
   onNotification(notification) {
     //console.log('NotificationHandler:', notification);
 
-    if (typeof this._onNotification === 'function') {
+    if (typeof this._onNotification == 'function') {
       this._onNotification(notification);
     }
   }
@@ -28,7 +28,7 @@ class NotificationHandler {
                   'Expires': 0,
           },
               });
-    if (typeof this._onRegister === 'function') {
+    if (typeof this._onRegister == 'function') {
       this._onRegister(token);
     }
   }
@@ -38,7 +38,7 @@ class NotificationHandler {
     console.log(notification.action);
     console.log(notification);
 
-    if(notification.action === 'Yes') {
+    if(notification.action == 'Yes') {
       PushNotification.invokeApp(notification);
     }
   }

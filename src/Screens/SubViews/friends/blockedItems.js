@@ -9,7 +9,7 @@ import { SCREEN_WIDTH } from "../../../utils/constants";
 
 const BlockedItems = (props) => {
   return (
-    <View key={props.item.item.UUID} style={style.listItem}>
+    <View key={props.item.UUID} style={style.listItem}>
       <View
         style={{
           flexDirection: "row",
@@ -21,7 +21,7 @@ const BlockedItems = (props) => {
         <Image
           indicator={Progress}
           source={{
-            uri: props.item.item.friend_avatar,
+            uri: props.item.friend_avatar,
             priority: FastImage.priority.high,
             cache: FastImage.cacheControl.immutable,
           }}
@@ -37,7 +37,7 @@ const BlockedItems = (props) => {
           }}
         />
       </View>
-      {props.item.item.friend_isPro == "1" && (
+      {props.item.friend_isPro == "1" && (
         <View style={{ position: "absolute" }}>
           <View
             style={{
@@ -72,7 +72,7 @@ const BlockedItems = (props) => {
           paddingLeft: 10,
         }}
       >
-        <Text style={style.titleText}>{props.item.item.friend_handle}</Text>
+        <Text style={style.titleText}>{props.item.friend_handle}</Text>
       </View>
       <TouchableOpacity
         style={{
@@ -84,7 +84,7 @@ const BlockedItems = (props) => {
           justifyContent: "center",
         }}
         onPress={() => {
-          props.unblock(props.item.item.friendID);
+          props._unBlock(props.item.friendID);
         }}
       >
         <View

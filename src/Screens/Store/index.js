@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, Platform, StyleSheet, TouchableWithoutFeedback, TouchableOpacity, ScrollView} from "react-native";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
+import { View, Text, Platform, StyleSheet, TouchableWithoutFeedback, TouchableOpacity, ScrollView, Alert} from "react-native";
 import { ActivityIndicator, MD2Colors } from "react-native-paper";
 import {
   isIosStorekit2,
@@ -26,193 +26,213 @@ const Products = (props) => {
   } = useIAP();
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
+  const [selected, setSelected] = useState(0);
 
-  useEffect(() => {
-    
+  useEffect(() => {    
     props.navigation.setOptions({
       headerLeft: () => (
         <TouchableOpacity
           onPress={() => {
             props.navigation.goBack();
           }}
+          style={componentStyles.backButtonTouchable}
         >
- <Icon
-              type="material"
-              size={25}
-              name="arrow-back-ios-new"
-              color="#fff"
-              containerStyle={{
-                padding: 7,
-                height: 40,
-                backgroundColor: "rgba(0, 0, 0, 0.60)",
-                borderRadius: 20,
-              }}
-              textStyle={{ color: "white" }}
-            />
+          <Icon
+            type="material"
+            size={25}
+            name="arrow-back-ios-new"
+            color="#fff"
+            containerStyle={componentStyles.backButtonContainer}
+          />
         </TouchableOpacity>
       ),
     });
-  }, []);
+  }, [props.navigation]); // Depend on props.navigation
 
-  const handleGetProducts = async () => {
+  const handleGetProducts = useCallback(async () => {
     try {
       await getProducts({
         skus:
-          props.route.params.type == "owner"
+          props.route.params.type == "owner" // Use strict equality
             ? constants.productSkus
             : constants.productSkusUser,
       });
       setIsLoading(false);
     } catch (error) {
-      errorLog({ message: "handleGetProducts", error });
+      console.error("Error fetching products:", error);
+      // errorLog({ message: "handleGetProducts", error }); // Assuming errorLog is a custom utility
+      toast({ message: i18n.t("Failed to load products.") });
+      setIsLoading(false); // Ensure loading is stopped even on error
     }
-  };
+  }, [getProducts, props.route.params.type, toast]); // Add getProducts and props.route.params.type to dependencies
 
-  const handleBuyProduct = async (sku) => {
+  const handleBuyProduct = useCallback(async (sku) => {
     try {
-      if (Platform.OS === "ios") {
+      if (Platform.OS == "ios") {
         await requestPurchase({ sku });
-      } else if (Platform.OS === "android") {
+      } else if (Platform.OS == "android") {
         await requestPurchase({ skus: [sku] });
       }
     } catch (error) {
       if (error instanceof PurchaseError) {
-        errorLog({ message: `[${error.code}]: ${error.message}`, error });
+        console.error(`[${error.code}]: ${error.message}`);
+        toast({ message: `[${error.code}]: ${error.message}` });
       } else {
-        errorLog({ message: "handleBuyProduct", error });
+        console.error("Error buying product:", error);
+        // errorLog({ message: "handleBuyProduct", error });
+        toast({ message: i18n.t("Failed to complete purchase.") });
       }
     }
-  };
+  }, [requestPurchase, toast]); // Add requestPurchase and toast to dependencies
 
-  
+  // Effect to handle purchases after they are made
   useEffect(() => {
-    handleGetProducts();
-    const checkCurrentPurchase = async () => {
+    const checkAndFinishPurchase = async () => {
       try {
-        if (
-          (isIosStorekit2() && currentPurchase?.transactionId) ||
-          currentPurchase?.transactionReceipt
-        ) {
-          await finishTransaction({
-            purchase: currentPurchase,
-            isConsumable: true,
-          });
-          const data = {
-            owner: props.route.params.owner,
-            receipt: String(currentPurchase?.transactionReceipt),
-            transID: String(currentPurchase?.transactionId),
-            transDate: String(currentPurchase?.transactionDate),
-            token: String(currentPurchase?.purchaseToken),
-            user: props.route.params.user,
-            pin: props.route.params.pin,
-            currentPurchase: currentPurchase?.localizedPrice,
-            sku: String(currentPurchase?.productId),
-            eventName: props.route.params.eventName,
-          };
-          await axiosPull.postData("/store/index.php", data);
-          await axiosPull._pullCameraFeed(
-            props.route.params.owner,
-            props.route.params.type
-          );
+        if (connected && currentPurchase) {
+          if (
+            (isIosStorekit2() && currentPurchase?.transactionId) ||
+            currentPurchase?.transactionReceipt
+          ) {
+            await finishTransaction({
+              purchase: currentPurchase,
+              isConsumable: true,
+            });
+            const data = {
+              owner: props.route.params.owner,
+              receipt: String(currentPurchase?.transactionReceipt),
+              transID: String(currentPurchase?.transactionId),
+              transDate: String(currentPurchase?.transactionDate),
+              token: String(currentPurchase?.purchaseToken),
+              user: props.route.params.user,
+              pin: props.route.params.pin,
+              currentPurchase: currentPurchase?.localizedPrice,
+              sku: String(currentPurchase?.productId),
+              eventName: props.route.params.eventName,
+            };
+            await axiosPull.postData("/store/index.php", data);
+            await axiosPull._pullCameraFeed(
+              props.route.params.owner,
+              props.route.params.type
+            );
+            toast({ message: i18n.t("Purchase successful!") }); // User feedback
+          }
         }
       } catch (error) {
         if (error instanceof PurchaseError) {
-          errorLog({ message: `[${error.code}]: ${error.message}`, error });
+          console.error(`[${error.code}]: ${error.message}`);
+          toast({ message: `[${error.code}]: ${error.message}` });
         } else {
-          errorLog({ message: "handleBuyProduct", error });
+          console.error("Error finishing transaction:", error);
+          toast({ message: i18n.t("Failed to finalize purchase.") });
         }
       }
     };
 
-    checkCurrentPurchase();
-  }, [currentPurchase, finishTransaction, connected]);
-      const [selected, setSelected] = useState(0);
+    checkAndFinishPurchase();
+  }, [currentPurchase, finishTransaction, connected, props.route.params, toast]); // Add currentPurchase and relevant props to dependencies
+
+  // Effect to fetch products on component mount/focus
+  useEffect(() => {
+    handleGetProducts();
+  }, [handleGetProducts]); // Depend on handleGetProducts callback
 
   return (
-          <SafeAreaView
-            style={{
-              backgroundColor: "transparent",
-              height: SCREEN_HEIGHT,
-              width: SCREEN_WIDTH,
-            }}
-            edges={["left", "right"]}
-          >
-    <ScrollView 
-    showsVerticalScrollIndicator={false} 
-    nestedScrollEnabled={true} 
-    style={{backgroundColor: 'white', paddingTop:130,height: '100%',width: SCREEN_WIDTH, flex: 1}}>
-      <View style={styles.header}>
-        <Text style={styles.title}>{i18n.t("In App Extras")}</Text>
-        <Text style={styles.subtitle}>{i18n.t("storeslogan")}</Text>
-      </View>
-      <View style={styles.form}>
-        <View>
-          {products.map((item, index) => {
-            const isActive = selected === index;
-            return (
-              <TouchableWithoutFeedback
-                key={index}
-                onPress={() => setSelected(index)}>
-                <View
-                  style={[
-                    styles.radio,
-                    isActive
-                      ? { borderColor: '#F82E08', backgroundColor: '#feeae6' }
-                      : {},
-                  ]}>
-                  <FeatherIcon
-                    color={isActive ? '#F82E08' : '#363636'}
-                    name={isActive ? 'check-circle' : 'circle'}
-                    size={24} />
-                  <View style={styles.radioBody}>
-                    <View>
-                      <Text style={styles.radioLabel}>{item.title}</Text>
-                      <Text style={styles.radioText}>{item.description}</Text>
+    <SafeAreaView
+      style={componentStyles.safeArea}
+      edges={["left", "right"]}
+    >
+      <ScrollView 
+        showsVerticalScrollIndicator={false} 
+        nestedScrollEnabled={true} 
+        style={componentStyles.scrollViewContent}
+      >
+        <View style={componentStyles.header}>
+          <Text style={componentStyles.title}>{i18n.t("In App Extras")}</Text>
+          <Text style={componentStyles.subtitle}>{i18n.t("storeslogan")}</Text>
+        </View>
+        <View style={componentStyles.form}>
+          <View>
+            {products.map((item, index) => {
+              const isActive = selected == index;
+              return (
+                <TouchableWithoutFeedback
+                  key={item.productId} // Use a unique ID for the key
+                  onPress={() => setSelected(index)}>
+                  <View
+                    style={[
+                      componentStyles.radio,
+                      isActive
+                        ? { borderColor: '#F82E08', backgroundColor: '#feeae6' }
+                        : {},
+                    ]}>
+                    <FeatherIcon
+                      color={isActive ? '#F82E08' : '#363636'}
+                      name={isActive ? 'check-circle' : 'circle'}
+                      size={24} />
+                    <View style={componentStyles.radioBody}>
+                      <View>
+                        <Text style={componentStyles.radioLabel}>{item.title}</Text>
+                        <Text style={componentStyles.radioText}>{item.description}</Text>
+                      </View>
+                      <Text
+                        style={[
+                          componentStyles.radioPrice,
+                          isActive && componentStyles.radioPriceActive,
+                        ]}>
+                        {item.localizedPrice}
+                      </Text>
                     </View>
-                    <Text
-                      style={[
-                        styles.radioPrice,
-                        isActive && styles.radioPriceActive,
-                      ]}>
-                      {item.localizedPrice}
-                    </Text>
                   </View>
-                </View>
-              </TouchableWithoutFeedback>
-            );
-          })}
-        </View>
-        <TouchableOpacity
-            onPress={() => {
-              handleBuyProduct(products[selected].productId)
-            }}>
-            <View style={styles.btn}>
-              <Text style={styles.btnText}>{i18n.t("Purchase")}</Text>
-            </View>
-          </TouchableOpacity>
+                </TouchableWithoutFeedback>
+              );
+            })}
+          </View>
+          <TouchableOpacity
+              onPress={() => {
+                // Ensure products[selected] exists before calling handleBuyProduct
+                if (products.length > selected) {
+                  handleBuyProduct(products[selected].productId);
+                } else {
+                  Alert.alert(i18n.t("Error"), i18n.t("No product selected or available."));
+                }
+              }}
+              disabled={isLoading || products.length == 0} // Disable if loading or no products
+          >
+              <View style={componentStyles.btn}>
+                <Text style={componentStyles.btnText}>{isLoading ? i18n.t("Loading") : i18n.t("Purchase")}</Text>
+              </View>
+            </TouchableOpacity>
 
-        <View >
-          <Text style={styles.formFooterText}>{i18n.t("In-app purchases")} </Text>
+          <View >
+            <Text style={componentStyles.formFooterText}>{i18n.t("In-app purchases")} </Text>
+          </View>
         </View>
-      </View>
-      <ActivityIndicator
-        size={80}
-        style={{
-          position: "absolute",
-          top:SCREEN_HEIGHT / 3.5,
-          left: SCREEN_WIDTH / 2 - 40,
-        }}
-        animating={isLoading}
-        hidesWhenStopped={true}
-        color={MD2Colors.orange900}
-      />
-    </ScrollView>
-          </SafeAreaView>
-
+        <ActivityIndicator
+          size={80}
+          style={componentStyles.activityIndicator}
+          animating={isLoading}
+          hidesWhenStopped={true}
+          color={MD2Colors.orange900}
+        />
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
+const componentStyles = StyleSheet.create({
+  safeArea: {
+    backgroundColor: "transparent",
+    height: SCREEN_HEIGHT,
+    width: SCREEN_WIDTH,
+  },
+  scrollViewContent: {
+    backgroundColor: 'white',
+    paddingTop: 130,
+    height: '100%',
+    width: SCREEN_WIDTH,
+    flex: 1
+  },
   title: {
     fontSize: 34,
     fontWeight: 'bold',
@@ -332,6 +352,20 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     fontWeight: 'bold',
     color: '#F82E08',
+  },
+  activityIndicator: {
+    position: "absolute",
+    top:SCREEN_HEIGHT / 3.5,
+    left: SCREEN_WIDTH / 2 - 40,
+  },
+  backButtonTouchable: {
+    // Add styles if needed for the TouchableOpacity itself
+  },
+  backButtonContainer: {
+    padding: 7,
+    height: 40,
+    backgroundColor: "rgba(0, 0, 0, 0.60)",
+    borderRadius: 20,
   },
 });
 export default withIAPContext(Products);

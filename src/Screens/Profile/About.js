@@ -1,208 +1,135 @@
-import React,  { useState } from "react";
-import {
-    StyleSheet,
-    View,
-    Text,
-  } from "react-native";
-  import { ListItem, Icon } from "@rneui/themed";
-  import * as i18n from '../../../i18n';
-  import FastImage from "react-native-fast-image";
-  import { createImageProgress } from "react-native-image-progress";
-  const Image = createImageProgress(FastImage);
-  import { storage } from "../../context/components/Storage";
-  import { useMMKVObject } from "react-native-mmkv";
-  import { getLocales } from 'expo-localization';
-  import moment from "moment/min/moment-with-locales"
-import { SCREEN_WIDTH } from "../../utils/constants";
+import React, { useCallback, useEffect } from "react";
+import { StyleSheet, View, Text, ScrollView } from "react-native";
+import { ListItem, Icon } from "@rneui/themed";
+import * as i18n from '../../../i18n';
+import FastImage from "react-native-fast-image";
+import { createImageProgress } from "react-native-image-progress";
+const Image = createImageProgress(FastImage);
+import { getLocales } from "expo-localization";
+import { constants, SCREEN_WIDTH } from "../../utils/constants";
+import moment from "moment/min/moment-with-locales";
+import DeviceInfo from "react-native-device-info";
+import { useFocusEffect } from "@react-navigation/native";
 
-const Abouts = () => {
-  const [user] = useMMKVObject("user.Data", storage);
-      let [localLang] = useState(getLocales()[0].languageCode)
+const About = (props) => {
+  const deviceLanguage = getLocales()[0].languageCode;
 
-      return (
-                 <View style={{ width: SCREEN_WIDTH, height:'100%', backgroundColor: "#fff" }}>
-                   <View style={style.leftContainer}>
-                          <View style={[style.containers, {width: 70 + 6, height: 70 + 6}]}>
-                            <Image
-                              style={[style.image, {width: 70, height: 70, overflow:'hidden'}]}
-                              source={{
-                                uri:
-                                  user.user_avatar,
-                              }}
-                            />
-                          </View>
-                          {user.isPro == "1" &&
-            <View style={{ position: "absolute" }}>
-              <View
-                style={{
-                  marginTop: 63,
-                  marginLeft: 50,
-                  backgroundColor: "transparent",
-                  width: 22,
-                  height: 22,
-                  justifyContent: "center",
-                }}
-              >
-                <FastImage
-                  style={{
-                    marginLeft: 4,
-                    marginTop: 1,
-                    width: 22,
-                    height: 22,
-                    textAlignVertical: "center",
-                    textAlignVertical: "center",
-                  }}
-                  resizeMode={FastImage.resizeMode.contain}
-                  source={require("../../../assets/verified.png")}
-                />
-              </View>
-            </View>
-}
-                            <Text style={style.name}>{user.user_handle}</Text>
-                          </View>
-                          <Text style={{
-                            textAlign:'center', margin:30, fontSize:15, color:'grey'
-                          }}>{i18n.t('TooKeep')}</Text>
-                <ListItem
-              containerStyle={{ paddingHorizontal: 50, paddingVertical:20 }}
-              key="1"
-            >
-              <Icon
-                type="material-community"
-                name="map-marker-account-outline"
-                size={30}
-                color="#3D4849"
-                containerStyle={{
-                  width: 28,
-                  height: 28,
-                  borderRadius: 6,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              />
-              <ListItem.Content>
-              <ListItem.Title>{i18n.t('Account Created from:')}</ListItem.Title>
-              <ListItem.Subtitle>{user.country}</ListItem.Subtitle>
-              </ListItem.Content>
-              </ListItem>
-              <ListItem
-              containerStyle={{ paddingHorizontal: 50, paddingVertical:20 }}
-              key="2"
-            >
-              <Icon
-                type="fontisto"
-                name="world-o"
-                size={20}
-                color="#3D4849"
-                containerStyle={{
-                  width: 28,
-                  height: 28,
-                  borderRadius: 6,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              />
-              <ListItem.Content>
-              <ListItem.Title>{i18n.t('Account Time Zone:')}</ListItem.Title>
-              <ListItem.Subtitle>{ user.privacy == "1" ? i18n.t("Hidden") : user.tz}</ListItem.Subtitle>
-              </ListItem.Content>
-              </ListItem>
-              <ListItem
-              containerStyle={{ paddingHorizontal: 50, paddingVertical:20 }}
-              key="3"
-            >
-              <Icon
-                type="material-community"
-                name="calendar-clock-outline"
-                size={25}
-                color="#3D4849"
-                containerStyle={{
-                  width: 28,
-                  height: 28,
-                  borderRadius: 6,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              />
-              <ListItem.Content>
-              <ListItem.Title>{i18n.t('Account Created:')}</ListItem.Title>
-              <ListItem.Subtitle>{moment.unix(user.user_joined).locale(localLang).format("LLL")}</ListItem.Subtitle>
-              </ListItem.Content>
-              </ListItem>
-                </View>
-        )
-}
-const style = StyleSheet.create({
-    container3: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginTop: 40,
-      justifyContent: 'space-between',
-    },
-    container4: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginTop: 10,
-      justifyContent: 'space-between',
-    },
-    text1: {
-      fontSize: 17,
-      color: '#3D4849',
-      fontWeight: '600',
-    },
-    container1: {
-      flexDirection: 'row',
-      justifyContent:'space-between',
-      marginHorizontal: 40,
-      marginTop: 25,
-    },
-  
-    singleContainer: {
-      alignItems: 'center',
-      paddingHorizontal: 15,
-    },
-  
-    number: {
-      color: '#3D4849',
-      fontSize: 17,
-      fontWeight: '700',
-    },
-  
-    text: {
-      color: '#3D4849',
-    },
-    containers: {
-      margin: 8,
-      borderWidth: 3,
-      borderRadius: 42,
-      borderColor: '#ea5504',
-    },
-    container: {
-      backgroundColor: 'white',
-      padding: 10,
-      flex: 1,
-    },
-    image: {
-      borderWidth: 2,
-      borderRadius: 40,
-      borderColor: 'white',
-    },
-    upperContainer: {
-      flexDirection: 'row',
-      width: SCREEN_WIDTH,
-    },
-  
-    leftContainer: {
-      flexDirection: 'column',
-      marginTop:30,
-      alignItems: 'center',
-    },
-  
-    name: {
-      fontSize: 15,
-      fontWeight: '500',
-      color: '#3D4849',
-    },
-  });
-export default Abouts
-;
+  // Set moment locale once when the component mounts or language changes
+  useEffect(() => {
+    moment.locale(deviceLanguage);
+  }, [deviceLanguage]);
+
+  useFocusEffect(
+    useCallback(() => {
+      props.navigation.setOptions({
+        headerTitle: i18n.t("About"),
+      });
+    }, [props.navigation]) // Dependency on props.navigation
+  );
+
+  const _gotoTerms = useCallback(() => {
+    props.navigation.navigate("WebView", {
+      url: constants.url + "/termsUsePolicy.html",
+      name: i18n.t("Terms & Use"),
+    });
+  }, [props.navigation]);
+
+  const _gotoPrivacy = useCallback(() => {
+    props.navigation.navigate("WebView", {
+      url: constants.url + "/privacyPolicy.html",
+      name: i18n.t("Privacy Policy"),
+    });
+  }, [props.navigation]);
+
+  const _gotoEULA = useCallback(() => {
+    props.navigation.navigate("WebView", {
+      url: constants.url + "/EULA.html",
+      name: "EULA",
+    });
+  }, [props.navigation]);
+
+  return (
+    <ScrollView style={componentStyles.scrollView}>
+      <View style={componentStyles.container}>
+        <Image
+          source={require("../../../assets/adaptive-icon.png")}
+          style={componentStyles.logo}
+          resizeMode={FastImage.resizeMode.contain}
+        />
+        <Text style={componentStyles.versionText}>
+          {i18n.t("Version")}: {DeviceInfo.getVersion()}
+        </Text>
+      </View>
+
+      <ListItem bottomDivider onPress={_gotoTerms}>
+        <Icon type="material-community" name="book-open" color="grey" />
+        <ListItem.Content>
+          <ListItem.Title>{i18n.t("Terms & Use")}</ListItem.Title>
+        </ListItem.Content>
+        <ListItem.Chevron />
+      </ListItem>
+
+      <ListItem bottomDivider onPress={_gotoPrivacy}>
+        <Icon type="material-community" name="shield-check" color="grey" />
+        <ListItem.Content>
+          <ListItem.Title>{i18n.t("Privacy Policy")}</ListItem.Title>
+        </ListItem.Content>
+        <ListItem.Chevron />
+      </ListItem>
+
+      <ListItem onPress={_gotoEULA}>
+        <Icon type="material-community" name="file-document" color="grey" />
+        <ListItem.Content>
+          <ListItem.Title>{i18n.t("EULA")}</ListItem.Title>
+        </ListItem.Content>
+        <ListItem.Chevron />
+      </ListItem>
+
+      <View style={componentStyles.footer}>
+        <Text style={componentStyles.footerText}>
+          {i18n.t("All Rights Reserved")} &copy; {moment().format("YYYY")}{" "}
+          {constants.companyName}
+        </Text>
+      </View>
+    </ScrollView>
+  );
+};
+
+const componentStyles = StyleSheet.create({
+  scrollView: {
+    backgroundColor: '#fff',
+    flex: 1,
+  },
+  container: {
+    padding: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logo: {
+    width: SCREEN_WIDTH * 0.5,
+    height: 150,
+    marginBottom: 10,
+  },
+  versionText: {
+    fontSize: 16,
+    color: 'grey',
+    marginBottom: 20,
+  },
+  footer: {
+    marginTop: 30,
+    marginBottom: 20,
+    alignItems: 'center',
+  },
+  footerText: {
+    fontSize: 14,
+    color: 'grey',
+  },
+  backButtonContainer: {
+    padding: 7,
+    height: 40,
+    backgroundColor: "rgba(0, 0, 0, 0.60)",
+    borderRadius: 20,
+  },
+});
+
+export default About;

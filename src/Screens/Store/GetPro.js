@@ -1,4 +1,4 @@
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, StyleSheet, View } from "react-native";
 import * as i18n from "../../../i18n";
 import { constants, SCREEN_WIDTH, SCREEN_HEIGHT} from "../../utils/constants";
 import { storage } from "../../context/components/Storage";
@@ -10,7 +10,7 @@ import {
   useIAP,
   withIAPContext,
 } from "react-native-iap";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import Animated from "react-native-reanimated";
@@ -37,36 +37,31 @@ const GetPro = (props) => {
   } = useIAP();
 
   const isFocused = useIsFocused();
-  const AnimatedFlatlist = Animated.FlatList;
+  // Memoize AnimatedFlatlist to prevent recreation on every render
+  const AnimatedFlatlist = useMemo(() => Animated.FlatList, []);
   const [isLoading, setIsLoading] = useState(true);
 
   useFocusEffect(
     useCallback(() => {      
-
       props.navigation.setOptions({
         headerLeft: () => (
           <TouchableOpacity
             onPress={() => {
               props.navigation.goBack();
             }}
+            style={componentStyles.backButtonTouchable}
           >
- <Icon
+            <Icon
               type="material"
               size={25}
               name="arrow-back-ios-new"
               color="#fff"
-              containerStyle={{
-                padding: 7,
-                height: 40,
-                backgroundColor: "rgba(0, 0, 0, 0.60)",
-                borderRadius: 20,
-              }}
-              textStyle={{ color: "white" }}
+              containerStyle={componentStyles.backButtonContainer}
             />
           </TouchableOpacity>
         ),
       });
-    }, [])
+    }, [props.navigation]) // Only navigation is a dependency here
   );
 
   const eula = useCallback(() => {
@@ -74,108 +69,117 @@ const GetPro = (props) => {
       url: constants.url + "/EULA.html",
       name: "EULA",
     });
-  });
+  }, [props.navigation]); // Add props.navigation to dependencies
 
   const privacy = useCallback(() => {
     props.navigation.navigate("WebView", {
       url: constants.url + "/privacyPolicy.html",
       name: i18n.t("Privacy Policy"),
     });
-  });
+  }, [props.navigation]); // Add props.navigation to dependencies
 
   const terms = useCallback(() => {
     props.navigation.navigate("WebView", {
       url: constants.url + "/termsUsePolicy.html",
       name: i18n.t("Terms & Use"),
     });
-  });
+  }, [props.navigation]); // Add props.navigation to dependencies
 
-  const handleGetProducts = async () => {
+  const handleGetProducts = useCallback(async () => {
     try {
       await getProducts({
         skus: constants.productSkusPro,
       });
       setIsLoading(false);
     } catch (error) {
-      errorLog({ message: "handleGetProducts", error });
+      console.error("Error fetching products:", error); // Use console.error for errors
+      // errorLog({ message: "handleGetProducts", error }); // Assuming errorLog is a custom utility
+      toast({ message: i18n.t("Failed to load products.") }); // Provide user feedback
+      setIsLoading(false); // Ensure loading is stopped even on error
     }
-  };
+  }, [getProducts, toast]); // Add getProducts and toast to dependencies
 
-  const handleBuyProduct = async (sku) => {
+  const handleBuyProduct = useCallback(async (sku) => {
     try {
-      if (Platform.OS === "ios") {
+      if (Platform.OS == "ios") {
         await requestPurchase({ sku });
-      } else if (Platform.OS === "android") {
+      } else if (Platform.OS == "android") {
         await requestPurchase({ skus: [sku] });
       }
     } catch (error) {
       if (error instanceof PurchaseError) {
-        errorLog({ message: `[${error.code}]: ${error.message}`, error });
+        console.error(`[${error.code}]: ${error.message}`);
+        toast({ message: `[${error.code}]: ${error.message}` });
       } else {
-        errorLog({ message: "handleBuyProduct", error });
+        console.error("Error buying product:", error);
+        // errorLog({ message: "handleBuyProduct", error });
+        toast({ message: i18n.t("Failed to complete purchase.") });
       }
     }
-  };
+  }, [requestPurchase, toast]); // Add requestPurchase and toast to dependencies
 
+  // Effect to handle current purchases
   useEffect(() => {
-    const checkCurrentPurchase = async () => {
+    const checkAndFinishPurchase = async () => {
       try {
-        if (
-          (isIosStorekit2() && currentPurchase?.transactionId) ||
-          currentPurchase?.transactionReceipt
-        ) {
-          await finishTransaction({
-            purchase: currentPurchase,
-            isConsumable: true,
-          });
-          const data = {
-            owner: user.user_id,
-            receipt: String(currentPurchase?.transactionReceipt),
-            transID: String(currentPurchase.transactionId),
-            transDate: String(currentPurchase.transactionDate),
-            token: String(currentPurchase.purchaseToken),
-            user: user.user_id,
-            pin: String(currentPurchase.purchaseToken),
-            currentPurchase: currentPurchase?.localizedPrice,
-            sku: String(currentPurchase?.productId),
-            eventName: "Snap Eighteen Pro",
-          };
-          await axiosPull.postData("/store/index.php", data);
-          await axiosPull._pullUser(user.user_id, "GetPro");
+        if (connected && currentPurchase) {
+          if (
+            (isIosStorekit2() && currentPurchase?.transactionId) ||
+            currentPurchase?.transactionReceipt
+          ) {
+            await finishTransaction({
+              purchase: currentPurchase,
+              isConsumable: true, // Assuming these are consumable products
+            });
+            const data = {
+              owner: user?.user_id, // Use optional chaining
+              receipt: String(currentPurchase?.transactionReceipt),
+              transID: String(currentPurchase.transactionId),
+              transDate: String(currentPurchase.transactionDate),
+              token: String(currentPurchase.purchaseToken),
+              user: user?.user_id, // Use optional chaining
+              pin: String(currentPurchase.purchaseToken), // Is this correct? `pin` usually is a different type of ID.
+              currentPurchase: currentPurchase?.localizedPrice,
+              sku: String(currentPurchase?.productId),
+              eventName: "Snap Eighteen Pro",
+            };
+            await axiosPull.postData("/store/index.php", data);
+            await axiosPull._pullUser(user?.user_id, "GetPro"); // Use optional chaining
+            toast({ message: i18n.t("Purchase successful!") }); // User feedback
+          }
         }
       } catch (error) {
         if (error instanceof PurchaseError) {
-          errorLog({ message: `[${error.code}]: ${error.message}`, error });
+          console.error(`[${error.code}]: ${error.message}`);
+          toast({ message: `[${error.code}]: ${error.message}` });
         } else {
-          errorLog({ message: "handleBuyProduct", error });
+          console.error("Error finishing transaction:", error);
+          toast({ message: i18n.t("Failed to finalize purchase.") });
         }
       }
     };
 
-    checkCurrentPurchase();
-  }, [currentPurchase, finishTransaction, connected]);
+    checkAndFinishPurchase();
+  }, [currentPurchase, finishTransaction, connected, user?.user_id, toast]); // Add user?.user_id and toast to dependencies
 
-
+  // Effect to get products when screen is focused
   useEffect(() => {
-    handleGetProducts();
-  }, [isFocused]);
+    if (isFocused) {
+      handleGetProducts();
+    }
+  }, [isFocused, handleGetProducts]); // Add handleGetProducts to dependencies
 
   return (
     <SafeAreaProvider>
       <SafeAreaView
-        style={{
-          backgroundColor: "transparent",
-          height: '100%',
-          width: SCREEN_WIDTH,
-          marginBottom: 20
-        }}
+        style={componentStyles.safeArea}
         edges={["left", "right"]}
       >
         <AnimatedFlatlist
           extraData={products}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
-                  nestedScrollEnabled={true}
+          nestedScrollEnabled={true}
           scrollEventThrottle={16}
           ListHeaderComponent={<ProHeader />}
           ListFooterComponent={
@@ -185,14 +189,15 @@ const GetPro = (props) => {
               eula={eula}
             />
           }
-          style={{ backgroundColor: "white", marginTop: -3, flex: 1 }}
+          style={componentStyles.flatList}
           numColumns={1}
           data={products}
-          renderItem={(item) => (
+          keyExtractor={(item) => item.productId} // Use productId as key
+          renderItem={({ item }) => ( // Correctly destructure item
             <ProMain
               item={item}
               handleBuyProduct={handleBuyProduct}
-              products={products}
+              products={products} // This prop might be redundant if item is passed
               isPlay={isPlay}
               isIos={isIos}
             />
@@ -201,15 +206,40 @@ const GetPro = (props) => {
       </SafeAreaView>
       <ActivityIndicator
         size={80}
-        style={{
-          position: "absolute",
-          top: SCREEN_HEIGHT / 2.0,
-          left: SCREEN_WIDTH / 2 - 50,
-        }}
+        style={componentStyles.activityIndicator}
         animating={isLoading}
         color={MD2Colors.orange900}
       />
     </SafeAreaProvider>
   );
 };
+
+const componentStyles = StyleSheet.create({
+  safeArea: {
+    backgroundColor: "transparent",
+    height: '100%',
+    width: SCREEN_WIDTH,
+    marginBottom: 20
+  },
+  flatList: {
+    backgroundColor: "white",
+    marginTop: -3,
+    flex: 1
+  },
+  activityIndicator: {
+    position: "absolute",
+    top: SCREEN_HEIGHT / 2.0,
+    left: SCREEN_WIDTH / 2 - 50,
+  },
+  backButtonTouchable: {
+    // Add styles if needed for the TouchableOpacity itself
+  },
+  backButtonContainer: {
+    padding: 7,
+    height: 40,
+    backgroundColor: "rgba(0, 0, 0, 0.60)",
+    borderRadius: 20,
+  },
+});
+
 export default withIAPContext(GetPro);
