@@ -218,7 +218,7 @@ const Friends = ({ route, navigation }) => {
         );
       } else {
         const uploadEnabled = await AsyncStorage.getItem("uploadEnabled");
-        if (uploadEnabled == "1") {
+        if (uploadEnabled == "0") {
           navigation.navigate("CameraPage", {
             owner, pin, title, credits, tCredits, UUID, end, camera_add_social, start,
             user: user.user_id, lefthanded: user.lefthanded,

@@ -276,7 +276,7 @@ export default function App() {
     const fetchData = async () => {
       // Retrieve user ID and login status from AsyncStorage
       const storedOwner = await AsyncStorage.getItem("user_id");
-      await AsyncStorage.setItem("uploadEnabled", "1"); // Ensure upload is enabled
+      await AsyncStorage.setItem("uploadEnabled", "0"); // Ensure upload is enabled
       setOwner(storedOwner);
 
       const logedIn = await AsyncStorage.getItem("logedIn");

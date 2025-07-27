@@ -120,7 +120,7 @@ const PhotoGallery = (props) => {
       });
 
       try {
-        await AsyncStorage.setItem("uploadEnabled", "1");
+        await AsyncStorage.setItem("uploadEnabled", "0");
         await axios({
           method: "POST",
           url: constants.url + "/camera/upload.php",

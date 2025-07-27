@@ -230,7 +230,7 @@ const VisionCamera = (props: {
           "content-Type": "multipart/form-data",
         },
       }).then(async (res) => {
-        await AsyncStorage.setItem("uploadEnabled", "1");
+        await AsyncStorage.setItem("uploadEnabled", "0");
         const postLoading = async () => {
         storage.set("uploadData", JSON.stringify({"message": "", "display":"none", "image":"", progress:""}));
         await axiosPull._pullGalleryFeed(props.route.params.pin, props.route.params.user);

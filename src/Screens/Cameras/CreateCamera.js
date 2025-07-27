@@ -51,6 +51,7 @@ import {
   BottomSheetView, // View within the bottom sheet
   BottomSheetBackdrop, // Backdrop for the bottom sheet
 } from "@gorhom/bottom-sheet";
+import Loading from "../SubViews/home/Loading";
 
 /**
  * CreateCamera Component
@@ -73,6 +74,7 @@ const CreateCamera = (props) => {
   const [switch4, setSwitch4] = useState(false); // Auto Join
   const [switch5, setSwitch5] = useState(false); // Is Hidden
   const [switch1, setSwitch1] = useState(false); // Social Media
+  const [uploading] = useMMKVObject("uploadData", storage);
 
   // Event time configuration
   const [interval] = useState(1); // Not explicitly used but might be for future time intervals
@@ -512,18 +514,34 @@ const CreateCamera = (props) => {
     formData.append("photoName", fileName); // Name of the uploaded photo
     formData.append("isAI", isAI ? "1" : "0"); // Is this an AI-generated image
 
-    await AsyncStorage.setItem("uploadEnabled", "1"); // Disable other uploads during this process
+    await AsyncStorage.setItem("uploadEnabled", "0"); // Disable other uploads during this process
 
     // Function to handle the actual upload
     const preLoading = async () => {
+      storage.set(
+        "uploadData",
+        JSON.stringify({
+          message: i18n.t("CreatingEvent") + " " + i18n.t("PleaseWait"),
+          display: "flex",
+          progress: 0,
+        })
+      );
+
       try {
         await axios({
           method: "POST",
           url: constants.url + "/camera/create.php", // API endpoint for creating camera
           data: formData,
           onUploadProgress: (progressEvent) => {
-            //const { loaded, total } = progressEvent;
-            //const progress = total > 0 ? loaded / total : 0;
+            const { progress } = progressEvent;
+            storage.set(
+              "uploadData",
+              JSON.stringify({
+                display: "flex",
+                message: i18n.t("CreatingEvent") + " " + i18n.t("PleaseWait"),
+                progress: progress,
+              })
+            );
           },
           headers: {
             Accept: "application/json",
@@ -607,6 +625,14 @@ const CreateCamera = (props) => {
         );
       } finally {
         // Always navigate back regardless of success or failure
+        storage.set(
+          "uploadData",
+          JSON.stringify({
+            message: "",
+            display: "none",
+            progress: 0,
+          })
+        );
         props.navigation.goBack();
       }
     };
@@ -654,6 +680,11 @@ const CreateCamera = (props) => {
           nestedScrollEnabled={true}
           showsVerticalScrollIndicator={false}
         >
+          <Loading
+            message={uploading.message}
+            flex={uploading.display}
+            progress={uploading.progress}
+          />
           <View style={styles.container}>
             {/* Event Name Section */}
             <ListItem bottomDivider>
@@ -1163,8 +1194,6 @@ const CreateCamera = (props) => {
               </ListItem.Content>
             </ListItem>
 
-         
-
             <ListItem bottomDivider>
               <Icon
                 type="ionicon"
@@ -1329,18 +1358,18 @@ const CreateCamera = (props) => {
             <Text>{i18n.t("Make a Selection")}</Text>
             <View
               style={{
-    flexDirection: "row",
-    justifyContent: "center", // Changed to center for better spacing
-    alignItems: "center",
-    marginTop: 15,
-    gap: 50, // Use gap for spacing instead of fixed margins
+                flexDirection: "row",
+                justifyContent: "center", // Changed to center for better spacing
+                alignItems: "center",
+                marginTop: 15,
+                gap: 50, // Use gap for spacing instead of fixed margins
               }}
             >
               <View
                 style={{
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
                 <Icon
@@ -1349,12 +1378,12 @@ const CreateCamera = (props) => {
                   name="chip"
                   color={"#000"}
                   containerStyle={{
-    height: 70,
-    width: 70,
-    alignContent: "center",
-    justifyContent: "center",
-    borderRadius: 35, // Half of height/width for perfect circle
-    backgroundColor: "#f0f0f0", // Added a subtle background for icons
+                    height: 70,
+                    width: 70,
+                    alignContent: "center",
+                    justifyContent: "center",
+                    borderRadius: 35, // Half of height/width for perfect circle
+                    backgroundColor: "#f0f0f0", // Added a subtle background for icons
                   }}
                   onPress={() => {
                     handleDismissPress();
@@ -1425,8 +1454,8 @@ const CreateCamera = (props) => {
                 />
                 <Text
                   style={{
-    textAlign: "center",
-    marginTop: 10,
+                    textAlign: "center",
+                    marginTop: 10,
                   }}
                 >
                   {i18n.t("AI")}
@@ -1446,12 +1475,12 @@ const CreateCamera = (props) => {
                   name="image-outline"
                   color={"#000"}
                   containerStyle={{
-    height: 70,
-    width: 70,
-    alignContent: "center",
-    justifyContent: "center",
-    borderRadius: 35, // Half of height/width for perfect circle
-    backgroundColor: "#f0f0f0", // Added a subtle background for icons
+                    height: 70,
+                    width: 70,
+                    alignContent: "center",
+                    justifyContent: "center",
+                    borderRadius: 35, // Half of height/width for perfect circle
+                    backgroundColor: "#f0f0f0", // Added a subtle background for icons
                   }}
                   onPress={() => {
                     setTimeout(() => {
@@ -1463,8 +1492,8 @@ const CreateCamera = (props) => {
                 />
                 <Text
                   style={{
-    textAlign: "center",
-    marginTop: 10,
+                    textAlign: "center",
+                    marginTop: 10,
                   }}
                 >
                   {i18n.t("Gallery")}
@@ -1484,12 +1513,12 @@ const CreateCamera = (props) => {
                   name="camera-outline"
                   color={"#000"}
                   containerStyle={{
-    height: 70,
-    width: 70,
-    alignContent: "center",
-    justifyContent: "center",
-    borderRadius: 35, // Half of height/width for perfect circle
-    backgroundColor: "#f0f0f0", // Added a subtle background for icons
+                    height: 70,
+                    width: 70,
+                    alignContent: "center",
+                    justifyContent: "center",
+                    borderRadius: 35, // Half of height/width for perfect circle
+                    backgroundColor: "#f0f0f0", // Added a subtle background for icons
                   }}
                   onPress={async () => {
                     if (
@@ -1527,14 +1556,14 @@ const CreateCamera = (props) => {
                           title: String(name),
                         });
                       }, 200);
-                    handleDismissPress();
+                      handleDismissPress();
                     }
                   }}
                 />
                 <Text
                   style={{
-    textAlign: "center",
-    marginTop: 10,
+                    textAlign: "center",
+                    marginTop: 10,
                   }}
                 >
                   {i18n.t("Camera")}

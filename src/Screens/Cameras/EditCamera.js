@@ -384,7 +384,7 @@ const EditCamera = (props) => {
         },
       });
 
-      await AsyncStorage.setItem("uploadEnabled", "1");
+      await AsyncStorage.setItem("uploadEnabled", "0");
       setIsAI(false);
       await axiosPull._pullCameraFeed(user.user_id, "owner");
 
