@@ -32,53 +32,43 @@ const MemberListItem = (props) => {
             flexDirection: "row",
           }}
         >
-          <Image
-            indicator={Progress}
-            source={{
-              uri: props.item.user_avatar,
-              priority: FastImage.priority.high,
-              cache: FastImage.cacheControl.immutable,
-            }}
-            resizeMode={FastImage.resizeMode.contain}
+          <View
             style={{
-              overflow: "hidden",
-              height: 60,
-              width: 60,
-              borderRadius: 40,
-              borderWidth: 1,
-              margin: 15,
-              marginLeft: 10,
-              backgroundColor: "#f2f2f2",
+              borderWidth: 1.5,
+              borderRadius: 17,
+              borderBottomColor:
+                props.item.isPro == "1" ? "rgba(116, 198, 190, 1)" : "#ea5504",
+              borderTopColor: props.item.isPro == "1" ? "#ea5504" : "#ea5504",
+              borderRightColor:
+                props.item.isPro == "1" ? "rgba(250, 190, 0, 1)" : "#ea5504",
+              borderLeftColor: props.item.isPro == "1" ? "#3D4849" : "#ea5504",
+              width: 35,
+              height: 35,
+              alignContent: "center",
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 5,
+              marginLeft: 5,
             }}
-          />
-
-          {props.item.isPro == "1" && (
-            <View style={{ position: "absolute" }}>
-              <View
-                style={{
-                  marginTop: 50,
-                  marginLeft: 55,
-                  backgroundColor: "transparent",
-                  width: 50,
-                  height: 50,
-                  justifyContent: "center",
-                }}
-              >
-                <FastImage
-                  style={{
-                    marginLeft: -5,
-                    marginTop: -5,
-                    width: 20,
-                    height: 20,
-                    textAlignVertical: "center",
-                    textAlignVertical: "center",
-                  }}
-                  resizeMode={FastImage.resizeMode.contain}
-                  source={require("../../../../assets/verified.png")}
-                />
-              </View>
-            </View>
-          )}
+          >
+            <Image
+              indicator={Progress}
+              source={{
+                uri: props.item.user_avatar,
+                priority: FastImage.priority.high,
+                cache: FastImage.cacheControl.immutable,
+              }}
+              resizeMode={FastImage.resizeMode.cover}
+              style={{
+                width: 30,
+                borderWidth: 0.7,
+                borderColor: "white",
+                height: 30,
+                borderRadius: 15,
+                overflow: "hidden",
+              }}
+            />
+          </View>
           <View
             style={{
               flexDirection: "column",
@@ -118,11 +108,7 @@ const MemberListItem = (props) => {
           <TouchableOpacity
             onPress={async () => {
               user.isPro == "1" && props.item.credits == 0
-                ? props.moreCredits(
-                    props.item.user_id,
-                    props.pin,
-                    props.UUID
-                  )
+                ? props.moreCredits(props.item.user_id, props.pin, props.UUID)
                 : null;
             }}
           >

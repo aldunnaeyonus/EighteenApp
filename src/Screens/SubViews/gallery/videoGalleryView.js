@@ -27,6 +27,7 @@ const VideoGalleryView = (props) => {
           props.scrollToActiveIndex(props.index);
         }}
       >
+        
         <Image
           progress={Progress}
           resizeMode={FastImage.resizeMode.cover}
@@ -50,7 +51,7 @@ const VideoGalleryView = (props) => {
           }}
         />
 
-        {props.item.type == "video" && (
+        {props.item.type === "video" && (
           <Icon
             type="material-community"
             name="play-box-outline"

@@ -17,23 +17,20 @@ const AboutProfile = ({ route }) => {
   return (
     <View style={componentStyles.container}>
       <View style={componentStyles.leftContainer}>
-        <View style={componentStyles.imageContainer}>
+        <View style={[componentStyles.imageContainer, {
+          borderBottomColor:
+                  items.friend_isPro == "1" ? "rgba(116, 198, 190, 1)" : "#ea5504",
+                borderTopColor:  items.friend_isPro == "1" ? "#ea5504" : "#ea5504",
+                borderRightColor:
+                   items.friend_isPro == "1" ? "rgba(250, 190, 0, 1)" : "#ea5504",
+                borderLeftColor:  items.friend_isPro == "1" ? "#3D4849" : "#ea5504",
+        }]}>
           <Image
             style={componentStyles.profileImage}
             source={{ uri: items.friend_avatar }}
           />
         </View>
-        {items.friend_isPro == "1" && (
-          <View style={componentStyles.verifiedBadgeContainer}>
-            <View style={componentStyles.verifiedBadgeInner}>
-              <FastImage
-                style={componentStyles.verifiedBadgeImage}
-                resizeMode={FastImage.resizeMode.contain}
-                source={require("../../../assets/verified.png")}
-              />
-            </View>
-          </View>
-        )}
+       
         <Text style={componentStyles.name}>{items.friend_handle}</Text>
       </View>
       <Text style={componentStyles.tooKeepText}>{i18n.t('TooKeep')}</Text>
@@ -102,7 +99,6 @@ const componentStyles = StyleSheet.create({
     margin: 8,
     borderWidth: 3,
     borderRadius: 38, // Adjusted for 70x70 image + 6 padding + 3 border
-    borderColor: '#ea5504',
     width: 70 + 6, // 70 (image) + 6 (padding for border)
     height: 70 + 6, // 70 (image) + 6 (padding for border)
     justifyContent: 'center', // Center the image within the container

@@ -38,7 +38,7 @@ const ProMain = (props) => {
               justifyContent: 'center',
             }}
             onPress={() => {
-              user.isPro != "1" ? props.handleBuyProduct(props.item.item.productId) : null;
+              user.isPro != "1" ? props.handleBuyProduct(props.item.productId) : null;
             }}
           >
             <View
@@ -52,7 +52,7 @@ const ProMain = (props) => {
                                 size={24} />
                               <View style={styles.radioBody}>
                                 <View>
-                                  <Text style={styles.radioLabel}>{props.item.item.title}</Text>
+                                  <Text style={styles.radioLabel}>{props.item.title}</Text>
                                    <Text style={styles.radioText}>{user.isPro == "1" ? i18n.t("Expires") + " "+moment.unix(user.proExire).locale(localLang).format("LLL") : i18n.t("Monthly")}</Text>
                                 </View>
                                 <Text
@@ -60,7 +60,7 @@ const ProMain = (props) => {
                                     styles.radioPrice,
                                     styles.radioPriceActive,
                                   ]}>
-                                 {props.item.item.localizedPrice}
+                                 {props.item.localizedPrice}
                                 </Text>
                               </View>
                             </View>
@@ -71,19 +71,6 @@ const ProMain = (props) => {
           >
       <Text style={{  textAlign: "left", color:'black', fontSize:17, marginTop:20, marginLeft:10, marginBottom:10, fontWeight:'bold' }}>{i18n.t("Pro1")}</Text>
 
-                <ListItem>
-                <Image
-                  style={{
-                    width: 25,
-                    height: 25,
-                  }}
-                  source={require("../../../../assets/verified.png")}
-                />
-                <ListItem.Content>
-                  <ListItem.Title style={{fontFamily: 'HelveticaNeue-Medium',fontSize: 18,color: '#000', marginBottom:10}}>{i18n.t("Pro2")}</ListItem.Title>
-                  <ListItem.Subtitle>{i18n.t("Pro3")}</ListItem.Subtitle>
-                </ListItem.Content>
-              </ListItem>
       
               <ListItem>
                 <Icon

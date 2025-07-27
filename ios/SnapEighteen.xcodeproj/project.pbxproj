@@ -444,7 +444,7 @@
 				);
 				INFOPLIST_FILE = SnapEighteen/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Snap Eighteen";
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.photography";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -477,7 +477,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = SnapEighteen/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Snap Eighteen";
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.photography";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

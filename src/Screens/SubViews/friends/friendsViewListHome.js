@@ -61,30 +61,6 @@ const FriendListItemHome = (props) => {
       key={props.item.UUID}
       style={style.listItem}
     >
-      <Pressable
-        disabled={
-          props.item.subscribed == "0"
-            ? true
-            : props.item.show_gallery == "1"
-              ? false
-              : false
-        }
-        onPress={() => {
-          if (props.item.start < moment().unix()) {
-            props._gotoMedia(
-              props.item.pin,
-              props.item.title,
-              props.item.owner,
-              props.item.UUID,
-              props.item.end,
-              props.item.start,
-              props.item.credits,
-              props.item.camera_add_social,
-              props.item.illustration
-            );
-          }
-        }}
-      >
         <View
           key={props}
           style={{
@@ -118,53 +94,48 @@ const FriendListItemHome = (props) => {
               flexDirection: "row",
             }}
           >
-            <Image
-              indicator={Progress}
+            <View
               style={{
-                width: 30,
-                height: 30,
-                zIndex: 0,
-                borderRadius: 20,
-                borderColor: "rgba(0,0,0,1)",
-                marginTop: 10,
+                borderWidth: 1.5,
+                borderRadius: 17,
+                borderBottomColor:
+                  props.item.isPro == "1"
+                    ? "rgba(116, 198, 190, 1)"
+                    : "#ea5504",
+                borderTopColor: props.item.isPro == "1" ? "#ea5504" : "#ea5504",
+                borderRightColor:
+                  props.item.isPro == "1" ? "rgba(250, 190, 0, 1)" : "#ea5504",
+                borderLeftColor:
+                  props.item.isPro == "1" ? "#3D4849" : "#ea5504",
+                width: 35,
+                height: 35,
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+                marginTop: 5,
                 marginLeft: 5,
-                borderWidth: 0.5,
-                alignSelf: "auto",
-                overflow: "hidden",
-                backgroundColor: "transparent",
               }}
-              showSpinner={true}
-              spinnerColor={"rgba(0, 0, 0, 1.0)"}
-              source={{
-                priority: FastImage.priority.high,
-                cache: FastImage.cacheControl.immutable,
-                uri: props.item.icon,
-              }}
-            />
-            {props.item.isPro == "1" && (
-              <View style={{ position: "absolute" }}>
-                <View
-                  style={{
-                    marginTop: 20,
-                    marginLeft: 25,
-                    zIndex: 1,
-                    backgroundColor: "transparent",
-                    width: 30,
-                    height: 30,
-                    justifyContent: "center",
-                  }}
-                >
-                  <FastImage
-                    style={{
-                      width: 15,
-                      height: 15,
-                    }}
-                    resizeMode={FastImage.resizeMode.contain}
-                    source={require("../../../../assets/verified.png")}
-                  />
-                </View>
-              </View>
-            )}
+            >
+              <Image
+                indicator={Progress}
+                style={{
+                  width: 30,
+                  borderWidth: 0.7,
+                  borderColor: "white",
+                  height: 30,
+                  borderRadius: 15,
+                  overflow: "hidden",
+                }}
+                showSpinner={true}
+                spinnerColor={"rgba(0, 0, 0, 1.0)"}
+                source={{
+                  priority: FastImage.priority.high,
+                  cache: FastImage.cacheControl.immutable,
+                  uri: props.item.icon,
+                }}
+              />
+            </View>
+
             <View
               style={{
                 marginTop: 5,
@@ -209,17 +180,16 @@ const FriendListItemHome = (props) => {
           </View>
           <View
             style={[
-             props.lefthanded == "1"
-                           ? styles.imageUserNameContainersLeft
-                           : styles.imageUserNameContainers, {
-                            backgroundColor: "rgba(0, 0, 0, 0.60)",
-                                            borderRadius: 10,
-                                            margin:5
-             
-                           }]}
-            pointerEvents={
-              props.item.end >= moment().unix() ? "auto" : "none"
-            }
+              props.lefthanded == "1"
+                ? styles.imageUserNameContainersLeft
+                : styles.imageUserNameContainers,
+              {
+                backgroundColor: "rgba(0, 0, 0, 0.60)",
+                borderRadius: 10,
+                margin: 5,
+              },
+            ]}
+            pointerEvents={props.item.end >= moment().unix() ? "auto" : "none"}
           >
             <Icon
               onPress={() => {
@@ -242,8 +212,8 @@ const FriendListItemHome = (props) => {
                 }
               }}
               containerStyle={{
-              alignSelf: "auto",
-              margin: 15,
+                alignSelf: "auto",
+                margin: 15,
               }}
               type="material-community"
               size={27}
@@ -277,8 +247,8 @@ const FriendListItemHome = (props) => {
                 }
               }}
               containerStyle={{
-              alignSelf: "auto",
-              margin: 15,
+                alignSelf: "auto",
+                margin: 15,
               }}
               type="material-community"
               size={30}
@@ -296,8 +266,8 @@ const FriendListItemHome = (props) => {
                 );
               }}
               containerStyle={{
-              alignSelf: "auto",
-              margin: 15,
+                alignSelf: "auto",
+                margin: 15,
               }}
               type="material-community"
               size={30}
@@ -314,8 +284,8 @@ const FriendListItemHome = (props) => {
                 );
               }}
               containerStyle={{
-              alignSelf: "auto",
-              margin: 15,
+                alignSelf: "auto",
+                margin: 15,
               }}
               type="octicons"
               size={30}
@@ -399,9 +369,9 @@ const FriendListItemHome = (props) => {
           />
 
           <Text
-          onPress={()=> {
-            props._gotoFriend(props.item.lastCommentID);
-          }}
+            onPress={() => {
+              props._gotoFriend(props.item.lastCommentID);
+            }}
             numberOfLines={3}
             style={{
               color: "#3D4849",
@@ -409,7 +379,7 @@ const FriendListItemHome = (props) => {
               fontSize: 13,
               height: "auto",
               textAlign: "left",
-              fontWeight:'700'
+              fontWeight: "700",
             }}
           >
             {props.item.lastCommentUser}
@@ -427,7 +397,6 @@ const FriendListItemHome = (props) => {
             {props.item.lastComment}
           </Text>
         </View>
-      </Pressable>
     </SafeAreaView>
   );
 };

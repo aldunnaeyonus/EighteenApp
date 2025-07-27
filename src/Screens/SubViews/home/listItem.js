@@ -81,52 +81,45 @@ const ListItem = (props) => {
             flexDirection: "row",
           }}
         >
-          <Image
-            indicator={Progress}
+          <View
             style={{
-              width: 30,
-              height: 30,
-              zIndex: 0,
-              borderRadius: 20,
-              borderColor: "rgba(0,0,0,1)",
-              marginTop: 10,
+              borderWidth: 1.5,
+              borderRadius: 17,
+              borderBottomColor:
+                props.item.isPro == "1" ? "rgba(116, 198, 190, 1)" : "#ea5504",
+              borderTopColor: props.item.isPro == "1" ? "#ea5504" : "#ea5504",
+              borderRightColor:
+                props.item.isPro == "1" ? "rgba(250, 190, 0, 1)" : "#ea5504",
+              borderLeftColor: props.item.isPro == "1" ? "#3D4849" : "#ea5504",
+              width: 35,
+              height: 35,
+              alignContent: "center",
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 5,
               marginLeft: 5,
-              borderWidth: 0.5,
-              alignSelf: "auto",
-              overflow: "hidden",
-              backgroundColor: "transparent",
             }}
-            showSpinner={true}
-            spinnerColor={"rgba(0, 0, 0, 1.0)"}
-            source={{
-              priority: FastImage.priority.high,
-              cache: FastImage.cacheControl.immutable,
-              uri: props.item.icon,
-            }}
-          />
-          {props.item.isPro == "1" && (
-            <View style={{ position: "absolute" }}>
-              <View
-                style={{
-                  marginTop: 20,
-                  marginLeft: 25,
-                  backgroundColor: "transparent",
-                  width: 30,
-                  height: 30,
-                  justifyContent: "center",
-                }}
-              >
-                <FastImage
-                  style={{
-                    width: 15,
-                    height: 15,
-                  }}
-                  resizeMode={FastImage.resizeMode.contain}
-                  source={require("../../../../assets/verified.png")}
-                />
-              </View>
-            </View>
-          )}
+          >
+            <Image
+              indicator={Progress}
+              style={{
+                width: 30,
+                borderWidth: 0.7,
+                borderColor: "white",
+                height: 30,
+                borderRadius: 15,
+                overflow: "hidden",
+              }}
+              resizeMode={FastImage.resizeMode.cover}
+              showSpinner={true}
+              spinnerColor={"rgba(0, 0, 0, 1.0)"}
+              source={{
+                priority: FastImage.priority.high,
+                cache: FastImage.cacheControl.immutable,
+                uri: props.item.icon,
+              }}
+            />
+          </View>
           <View
             style={{
               marginTop: 5,
@@ -169,20 +162,20 @@ const ListItem = (props) => {
             </Text>
           </View>
         </View>
-          <Image
-            indicator={Progress}
-            style={{
-              width: SCREEN_WIDTH,
-              height: 500,
-              marginTop: 50,
-            }}
-            resizeMode={FastImage.resizeMode.cover}
-            source={{
-              priority: FastImage.priority.high,
-              cache: FastImage.cacheControl.immutable,
-              uri: props.item.illustration,
-            }}
-          />
+        <Image
+          indicator={Progress}
+          style={{
+            width: SCREEN_WIDTH,
+            height: 500,
+            marginTop: 50,
+          }}
+          resizeMode={FastImage.resizeMode.cover}
+          source={{
+            priority: FastImage.priority.high,
+            cache: FastImage.cacheControl.immutable,
+            uri: props.item.illustration,
+          }}
+        />
         <View
           style={{
             top: 20,
@@ -248,13 +241,13 @@ const ListItem = (props) => {
           style={[
             props.lefthanded == "1"
               ? styles.imageUserNameContainersLeft
-              : styles.imageUserNameContainers, {
-               backgroundColor: "rgba(0, 0, 0, 0.60)",
-                               borderRadius: 10,
-                               margin:5
-
-              }]
-          }
+              : styles.imageUserNameContainers,
+            {
+              backgroundColor: "rgba(0, 0, 0, 0.60)",
+              borderRadius: 10,
+              margin: 5,
+            },
+          ]}
         >
           <Icon
             onPress={() => {
@@ -273,7 +266,6 @@ const ListItem = (props) => {
             containerStyle={{
               alignSelf: "auto",
               margin: 15,
-
             }}
             type="material-community"
             size={27}
@@ -297,7 +289,6 @@ const ListItem = (props) => {
             containerStyle={{
               alignSelf: "auto",
               margin: 15,
-
             }}
             type="material-community"
             size={30}
@@ -321,7 +312,6 @@ const ListItem = (props) => {
             containerStyle={{
               alignSelf: "auto",
               margin: 15,
-
             }}
             type="material-community"
             size={30}
@@ -340,7 +330,6 @@ const ListItem = (props) => {
             containerStyle={{
               alignSelf: "auto",
               margin: 15,
-
             }}
             type="material-community"
             size={30}
@@ -359,9 +348,8 @@ const ListItem = (props) => {
                 );
               }}
               containerStyle={{
-              alignSelf: "auto",
-              margin: 15,
-
+                alignSelf: "auto",
+                margin: 15,
               }}
               type="ionicon"
               size={30}

@@ -37,33 +37,7 @@ const BlockedItems = (props) => {
           }}
         />
       </View>
-      {props.item.friend_isPro == "1" && (
-        <View style={{ position: "absolute" }}>
-          <View
-            style={{
-              marginTop: 37,
-              marginLeft: 37,
-              backgroundColor: "transparent",
-              width: 20,
-              height: 20,
-              justifyContent: "center",
-            }}
-          >
-            <FastImage
-              style={{
-                marginLeft: 4,
-                marginTop: 1,
-                width: 17,
-                height: 17,
-                textAlignVertical: "center",
-                textAlignVertical: "center",
-              }}
-              resizeMode={FastImage.resizeMode.contain}
-              source={require("../../../../assets/verified.png")}
-            />
-          </View>
-        </View>
-      )}
+     
       <View
         style={{
           flex: 1,

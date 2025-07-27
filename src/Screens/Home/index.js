@@ -97,43 +97,39 @@ const Home = ({ navigation, props }) => { // Destructure navigation from props
   const handleCloseModalPress = useCallback(() => {
     bottomSheetRef.current?.close();
   }, []);
-
-  const codeScanner = useCodeScanner( // Wrapped in useCallback if onCodeScanned relies on external state
-    useCallback(
-      async (codes) => {
-        if (isBarcodeScannerEnabled) {
-          setModalQRCodeVisible(false);
-          const code = codes[0]?.value; // Use optional chaining for safety
-          if (!code) return; // Handle undefined code
-
-          if (code.includes("friends")) {
-            let removeCode = code.replace("snapseighteenapp://friends/", "");
-            let newCode = removeCode.split("/");
-            if (newCode[0] == user.user_id) {
-              navigation.navigate("Profile");
-            } else {
-              navigation.navigate("Friends", {
-                userID: newCode[0],
-                type: newCode[1],
-              });
-            }
-          } else if (code.includes("join")) {
-            let removeCode = code.replace("snapseighteenapp://join/", "");
-            let newCode = removeCode.split("/");
-            navigation.navigate("Join", {
-              pin: newCode[0],
-              time: newCode[1],
-              owner: newCode[2],
-            });
+  const codeScanner = useCodeScanner({
+    codeTypes: ["qr"],
+    onCodeScanned: async (codes) => {
+      if (isBarcodeScannerEnabled) {
+        setmodalQRCodeVisable(false);
+        const code = JSON.parse(JSON.stringify(codes[0].value));
+        if (code.includes("friends")) {
+          let removeCode = code.replace("snapseighteenapp://friends/", "");
+          let newCode = removeCode.split("/");
+          if (newCode[0] == user.user_id) {
+            props.navigation.navigate("Profile");
           } else {
-            await Linking.openURL(code);
+            props.navigation.navigate("Friends", {
+              userID: newCode[0],
+              type: newCode[1],
+            });
           }
-          setIsBarcodeScannerEnabled(false);
+        } else if (code.includes("join")) {
+          let removeCode = code.replace("snapseighteenapp://join/", "");
+          let newCode = removeCode.split("/");
+          props.navigation.navigate("Join", {
+            pin: newCode[0],
+            time: newCode[1],
+            owner: newCode[2],
+          });
+        } else {
+          await Linking.openURL(code);
         }
-      },
-      [isBarcodeScannerEnabled, user.user_id, navigation]
-    )
-  );
+        setisBarcodeScannerEnabled(false);
+      }
+    },
+  });
+  
 
   const _gotoCamera = useCallback(
     async (

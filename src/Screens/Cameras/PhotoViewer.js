@@ -372,10 +372,8 @@ const PhotoViewer = (props) => {
   const isEventActive = props.route.params.end >= moment().unix();
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView
+      <View
         style={componentStyles.safeArea}
-        edges={["top", "bottom", "left", "right"]}
       >
         <Animated.FlatList
           ref={newphoto}
@@ -477,8 +475,8 @@ const PhotoViewer = (props) => {
             snapPoints={snapPoints}
             index={0}
             enablePanDownToClose
-            enableDismissOnClose
             enableDynamicSizing
+            enableDismissOnClose
             keyboardBehavior={Platform.OS == "ios" ? "extend" : "interactive"}
             keyboardBlurBehavior="restore"
             android_keyboardInputMode="adjustResize"
@@ -488,7 +486,7 @@ const PhotoViewer = (props) => {
               <Text style={componentStyles.commentCountText}>
                 {filteredComments.length} {i18n.t("Comments")}
               </Text>
-              <View style={{ flex: Platform.OS === "ios" ? 1 : 0.59 }}>
+              <View style={{ flex: Platform.OS === "ios" ? 1 : 0.59, height:'auto' }}>
                 <Animated.FlatList
                   showsHorizontalScrollIndicator={false}
                   showsVerticalScrollIndicator={false}
@@ -496,6 +494,7 @@ const PhotoViewer = (props) => {
                   data={filteredComments}
                   refreshing={refreshing}
                   onRefresh={_refresh}
+                  style={{height:350}}
                   extraData={filteredDataSourceGallery} // Changed to filteredComments
                   scrollEventThrottle={16}
                   renderItem={({ item }) => <CommentsView item={item} />}
@@ -508,16 +507,37 @@ const PhotoViewer = (props) => {
                     margin: 20,
                   }}
                 >
-                  <Image
-                    indicator={Progress}
-                    resizeMode={FastImage.resizeMode.contain}
-                    style={componentStyles.userAvatar}
-                    source={{
-                      priority: FastImage.priority.high,
-                      cache: FastImage.cacheControl.immutable,
-                      uri: user.user_avatar,
+                  <View
+                    style={{
+                      borderWidth: 1.5,
+                      borderRadius: 17,
+                      borderBottomColor:
+                        user.isPro == "1"
+                          ? "rgba(116, 198, 190, 1)"
+                          : "#ea5504",
+                      borderTopColor: user.isPro == "1" ? "#ea5504" : "#ea5504",
+                      borderRightColor:
+                        user.isPro == "1" ? "rgba(250, 190, 0, 1)" : "#ea5504",
+                      borderLeftColor:
+                        user.isPro == "1" ? "#3D4849" : "#ea5504",
+                      width: 30,
+                      height: 30,
+                      alignContent: "center",
+                      alignItems: "center",
+                      justifyContent: "center",
                     }}
-                  />
+                  >
+                    <Image
+                      indicator={Progress}
+                      resizeMode={FastImage.resizeMode.cover}
+                      style={componentStyles.userAvatar}
+                      source={{
+                        priority: FastImage.priority.high,
+                        cache: FastImage.cacheControl.immutable,
+                        uri: user.user_avatar,
+                      }}
+                    />
+                  </View>
                   <BottomSheetTextInput
                     multiline
                     editable={isEventActive}
@@ -556,8 +576,7 @@ const PhotoViewer = (props) => {
             </BottomSheetView>
           </BottomSheetModal>
         </Animated.View>
-      </SafeAreaView>
-    </SafeAreaProvider>
+      </View>
   );
 };
 
@@ -634,12 +653,12 @@ const componentStyles = StyleSheet.create({
     paddingVertical: 10,
   },
   userAvatar: {
-    height: 32,
-    width: 32,
+    height: 25,
+    width: 25,
     marginRight: 10,
     marginLeft: 10,
     borderRadius: 16,
-    borderColor: "#e35504",
+    borderColor: "#fff",
     borderWidth: 1,
     overflow: "hidden",
   },
@@ -647,7 +666,8 @@ const componentStyles = StyleSheet.create({
     borderColor: "lightgray",
     borderBottomWidth: 1,
     borderStyle: "solid",
-    paddingVertical: 5,
+    marginLeft: 5,
+    marginRight: 5,
     width: SCREEN_WIDTH - 100,
     color: isEditable ? "black" : "grey", // Text color based on editability
   }),

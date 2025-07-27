@@ -12,13 +12,19 @@ const FriendHeader = (props) => {
     <View style={style.container}>
       <View style={style.upperContainer}>
         <View style={style.leftContainer}>
-          <View style={[style.containers, { width: 70 + 6, height: 70 + 6 }]}>
+          <View style={[style.containers, { width: 70 + 6, height: 70 + 6,  borderBottomColor:
+                  props.isPro == "1" ? "rgba(116, 198, 190, 1)" : "#ea5504",
+                borderTopColor:  props.isPro == "1" ? "#ea5504" : "#ea5504",
+                borderRightColor:
+                   props.isPro == "1" ? "rgba(250, 190, 0, 1)" : "#ea5504",
+                borderLeftColor:  props.isPro == "1" ? "#3D4849" : "#ea5504", }]}>
             <Image
             key={"B"+props.user_id}
               style={[
                 style.image,
                 { width: 70, height: 70, overflow: "hidden" },
               ]}
+                            resizeMode={FastImage.resizeMode.cover}
               source={{
                 cache: FastImage.cacheControl.immutable,
                 priority: FastImage.priority.high,
@@ -26,34 +32,7 @@ const FriendHeader = (props) => {
               }}
             />
           </View>
-          {props.isPro == "1" && (
-            <View style={{ position: "absolute" }}>
-              <View
-                style={{
-                  marginTop: 63,
-                  marginLeft: 50,
-                  backgroundColor: "transparent",
-                  width: 22,
-                  height: 22,
-                  justifyContent: "center",
-                }}
-              >
-                <FastImage
-                   key={"A"+props.user_id}
-                  style={{
-                    marginLeft: 4,
-                    marginTop: -3,
-                    width: 22,
-                    height: 22,
-                    textAlignVertical: "center",
-                    textAlignVertical: "center",
-                  }}
-                  resizeMode={FastImage.resizeMode.contain}
-                  source={require("../../../../assets/verified.png")}
-                />
-              </View>
-            </View>
-          )}
+         
           <Text style={style.name}>
             {props.name.toLowerCase()}
           </Text>

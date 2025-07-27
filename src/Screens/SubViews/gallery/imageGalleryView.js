@@ -61,31 +61,7 @@ const ImageGalleryView = (props) => {
             uri: props.item.icon,
           }}
         />
-        {props.item.isPro == "1" && (
-          <View style={{ position: "absolute" }}>
-            <View
-              style={{
-                marginTop: 42,
-                marginLeft: 35,
-                backgroundColor: "transparent",
-                width: 20,
-                height: 20,
-                justifyContent: "center",
-              }}
-            >
-              <FastImage
-                style={{
-                  marginLeft: -5,
-                  marginTop: -30,
-                  width: 10,
-                  height: 10,
-                }}
-                resizeMode={FastImage.resizeMode.contain}
-                source={require("../../../../assets/verified.png")}
-              />
-            </View>
-          </View>
-        )}
+
         <Text
           numberOfLines={1}
           style={{
@@ -125,52 +101,44 @@ const ImageGalleryView = (props) => {
           opacity: 0.9,
         }}
       >
-        <Image
-          indicator={Progress}
+        <View
           style={{
-            width: 30,
-            height: 30,
-            borderRadius: 25,
-            marginTop: 10,
-            marginLeft: 10,
-            borderWidth: 0.5,
-            alignSelf: "auto",
-            overflow: "hidden",
-            backgroundColor: "transparent",
+            borderWidth: 1.5,
+            borderRadius: 17,
+            borderBottomColor:
+              props.item.isPro == "1" ? "rgba(116, 198, 190, 1)" : "#ea5504",
+            borderTopColor: props.item.isPro == "1" ? "#ea5504" : "#ea5504",
+            borderRightColor:
+              props.item.isPro == "1" ? "rgba(250, 190, 0, 1)" : "#ea5504",
+            borderLeftColor: props.item.isPro == "1" ? "#3D4849" : "#ea5504",
+            width: 35,
+            height: 35,
+            backgroundColor: "white",
+            alignContent: "center",
+            alignItems: "center",
+            justifyContent: "center",
           }}
-          showSpinner={true}
-          spinnerColor={"rgba(0, 0, 0, 1.0)"}
-          source={{
-            priority: FastImage.priority.high,
-            cache: FastImage.cacheControl.immutable,
-            uri: props.item.icon,
-          }}
-        />
-        {props.item.isPro == "1" && (
-          <View style={{ position: "absolute" }}>
-            <View
-              style={{
-                marginTop: 62,
-                marginLeft: 35,
-                backgroundColor: "transparent",
-                width: 20,
-                height: 20,
-                justifyContent: "center",
-              }}
-            >
-              <FastImage
-                style={{
-                  marginLeft: -5,
-                  marginTop: -70,
-                  width: 10,
-                  height: 10,
-                }}
-                resizeMode={FastImage.resizeMode.contain}
-                source={require("../../../../assets/verified.png")}
-              />
-            </View>
-          </View>
-        )}
+        >
+          <Image
+            indicator={Progress}
+            style={{
+              width: 30,
+              borderWidth: 0.7,
+              borderColor: "white",
+              height: 30,
+              borderRadius: 15,
+              overflow: "hidden",
+            }}
+            showSpinner={true}
+            spinnerColor={"rgba(0, 0, 0, 1.0)"}
+            resizeMode={FastImage.resizeMode.cover}
+            source={{
+              priority: FastImage.priority.high,
+              cache: FastImage.cacheControl.immutable,
+              uri: props.item.icon,
+            }}
+          />
+        </View>
         <Text
           numberOfLines={1}
           style={{
@@ -179,7 +147,7 @@ const ImageGalleryView = (props) => {
             fontSize: 15,
             marginLeft: 10,
             fontWeight: "bold",
-            marginTop: 15,
+            marginTop: 10,
           }}
         >
           {props.item.userName}
@@ -205,6 +173,5 @@ const ImageGalleryView = (props) => {
       </Zoom>
     </View>
   );
-
 };
 export default ImageGalleryView;

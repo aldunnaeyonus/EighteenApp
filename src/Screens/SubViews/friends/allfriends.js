@@ -24,6 +24,28 @@ const AllFriendsListItem = (props) => {
               padding: 10,
             }}
           >
+             <View
+                                              style={{
+                                                borderWidth: 1.5,
+                                                borderRadius: 17,
+                                                borderBottomColor:
+                                                  props.item.friend_isPro == "1"
+                                                    ? "rgba(116, 198, 190, 1)"
+                                                    : "#ea5504",
+                                                borderTopColor: props.item.isPro == "1" ? "#ea5504" : "#ea5504",
+                                                borderRightColor:
+                                                  props.item.friend_isPro == "1" ? "rgba(250, 190, 0, 1)" : "#ea5504",
+                                                borderLeftColor:
+                                                  props.item.friend_isPro == "1" ? "#3D4849" : "#ea5504",
+                                                width: 35,
+                                                height: 35,
+                                                alignContent: "center",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                marginTop: 5,
+                                                marginLeft: 5,
+                                              }}
+                                            >
             <Image
               indicator={Progress}
               source={{
@@ -31,51 +53,25 @@ const AllFriendsListItem = (props) => {
                 priority: FastImage.priority.high,
                 cache: FastImage.cacheControl.immutable,
               }}
-              resizeMode={FastImage.resizeMode.contain}
+              resizeMode={FastImage.resizeMode.cover}
               style={{
-                height: 45,
-                width: 45,
-                borderRadius: 24,
-                borderWidth: 1,
-                borderColor: "black",
-                overflow: "hidden",
-                backgroundColor: "#f2f2f2",
+                  width: 30,
+                  borderWidth: 0.7,
+                  borderColor: "white",
+                  height: 30,
+                  borderRadius: 15,
+                  overflow: "hidden",
               }}
             />
-          </View>
-          {props.item.friend_isPro == "1" && (
-            <View style={{ position: "absolute" }}>
-              <View
-                style={{
-                  marginTop: 37,
-                  marginLeft: 37,
-                  backgroundColor: "transparent",
-                  width: 20,
-                  height: 20,
-                  justifyContent: "center",
-                }}
-              >
-                <FastImage
-                  style={{
-                    marginLeft: 4,
-                    marginTop: 1,
-                    width: 17,
-                    height: 17,
-                    textAlignVertical: "center",
-                    textAlignVertical: "center",
-                  }}
-                  resizeMode={FastImage.resizeMode.contain}
-                  source={require("../../../../assets/verified.png")}
-                />
-              </View>
             </View>
-          )}
+          </View>
+
           <View
             style={{
               flex: 1,
               justifyContent: "center",
               alignItems: "left",
-              paddingLeft: 10,
+              paddingLeft: 5,
             }}
           >
             <Text style={style.titleText}>
@@ -91,11 +87,10 @@ const AllFriendsListItem = (props) => {
 
 const style = StyleSheet.create({
   titleText: {
-    fontFamily: "HelveticaNeue-Bold",
-    fontSize: 17,
+    fontSize: 15,
     textAlign: "left",
     color: "#3D4849",
-    fontWeight: "600",
+    fontWeight: "500",
   },
   listItem: {
     backgroundColor: "#FFF",

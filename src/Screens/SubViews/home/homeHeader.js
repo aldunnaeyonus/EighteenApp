@@ -81,6 +81,7 @@ const FriendHeader = (props) => {
                   borderBottomColor: "rgba(116, 198, 190, 1)",
                   borderTopColor: "#ea5504",
                   borderRightColor: "rgba(250, 190, 0, 1)",
+                  borderLeftColor: "#3D4849",
                   width: 76,
                   height: 76,
                   alignContent: "center",
@@ -105,7 +106,6 @@ const FriendHeader = (props) => {
                   }}
                 />
               </View>
-
             </TouchableOpacity>
 
             <Text
@@ -145,7 +145,20 @@ const FriendHeader = (props) => {
                   style={{
                     borderWidth: 3,
                     borderRadius: 38,
-                    borderColor: "#ea5504",
+                    borderBottomColor:
+                      grids.friend_isPro == "1"
+                        ? "rgba(116, 198, 190, 1)"
+                        : "#ea5504",
+                    borderTopColor:
+                      grids.friend_isPro == "1" ? "#ea5504" : "#ea5504",
+                    borderRightColor:
+                      grids.friend_isPro == "1"
+                        ? "rgba(250, 190, 0, 1)"
+                        : "#ea5504",
+                    borderLeftColor:
+                      grids.friend_isPro == "1"
+                        ? "#3D4849"
+                        : "#ea5504",
                     width: 76,
                     height: 76,
                     alignContent: "center",
@@ -202,36 +215,6 @@ const FriendHeader = (props) => {
                   </View>
                 ) : (
                   <></>
-                )}
-                {grids.friend_isPro == "1" && (
-                  <View
-                    key={"F" + grids.friendID}
-                    style={{ position: "absolute" }}
-                  >
-                    <View
-                      style={{
-                        marginTop: 63,
-                        marginLeft: 50,
-                        backgroundColor: "transparent",
-                        width: 22,
-                        height: 22,
-                        justifyContent: "center",
-                      }}
-                    >
-                      <FastImage
-                        style={{
-                          marginLeft: 5,
-                          marginTop: -17,
-                          width: 22,
-                          height: 22,
-                          textAlignVertical: "center",
-                          textAlignVertical: "center",
-                        }}
-                        resizeMode={FastImage.resizeMode.contain}
-                        source={require("../../../../assets/verified.png")}
-                      />
-                    </View>
-                  </View>
                 )}
               </TouchableOpacity>
 

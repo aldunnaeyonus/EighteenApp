@@ -5,7 +5,8 @@ import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
 const Image = createImageProgress(FastImage);
 
-const ProfileHeader = ({ item }) => { // Destructure props for cleaner access
+const ProfileHeader = ({ item }) => {
+  // Destructure props for cleaner access
   // Assuming 'item' prop contains user details like avatar, isPro, name, motto, join, create, upload
   // If 'props' was originally passed, these would be:
   // const { avatar, isPro, name, motto, join, create, upload } = props;
@@ -19,16 +20,27 @@ const ProfileHeader = ({ item }) => { // Destructure props for cleaner access
   const create = item?.created; // Placeholder, adjust to actual field names
   const upload = item?.uploaded; // Placeholder, adjust to actual field names
 
-
   return (
     <View style={styles.container}>
       <View style={styles.upperContainer}>
         {/* Left Container: Avatar and Name */}
         <View style={styles.leftContainer}>
-          <View style={styles.avatarBorder}>
+          <View
+            style={[
+              styles.avatarBorder,
+              {
+                borderBottomColor:
+                  isPro == "1" ? "rgba(116, 198, 190, 1)" : "#ea5504",
+                borderTopColor: isPro == "1" ? "#ea5504" : "#ea5504",
+                borderRightColor:
+                  isPro == "1" ? "rgba(250, 190, 0, 1)" : "#ea5504",
+                borderLeftColor: isPro == "1" ? "#3D4849" : "#ea5504",
+              },
+            ]}
+          >
             <Image
               style={styles.avatarImage}
-              resizeMode={FastImage.resizeMode.contain}
+              resizeMode={FastImage.resizeMode.cover}
               source={{
                 cache: FastImage.cacheControl.immutable,
                 priority: FastImage.priority.high,
@@ -36,18 +48,10 @@ const ProfileHeader = ({ item }) => { // Destructure props for cleaner access
               }}
             />
           </View>
-          {isPro == "1" && ( // Check for string "1" if your backend sends it as a string
-            <View style={styles.verifiedBadgeContainer}>
-              <FastImage
-                style={styles.verifiedBadgeImage}
-                resizeMode={FastImage.resizeMode.contain}
-                source={require("../../../../assets/verified.png")}
-              />
-            </View>
-          )}
+
           {/* Removed absolute positioning for name to allow natural flow. */}
           {/* Consider truncating long names or adjusting font size based on length if needed. */}
-          <Text style={styles.name}>{name ? name.toLowerCase() : ''}</Text>
+          <Text style={styles.name}>{name ? name.toLowerCase() : ""}</Text>
         </View>
 
         {/* Right Container: Stats (Joined, Created, Uploaded) */}
@@ -105,7 +109,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     // Remove fixed width from here, let it adapt to content or use flex: 1 on children
     // width: SCREEN_WIDTH,
-    alignItems: 'flex-start', // Align items to the top
+    alignItems: "flex-start", // Align items to the top
   },
   leftContainer: {
     flexDirection: "column",
@@ -117,7 +121,6 @@ const styles = StyleSheet.create({
     height: AVATAR_SIZE + AVATAR_BORDER_WIDTH * 2,
     borderRadius: (AVATAR_SIZE + AVATAR_BORDER_WIDTH * 2) / 2,
     borderWidth: AVATAR_BORDER_WIDTH,
-    borderColor: "#ea5504",
     justifyContent: "center",
     alignItems: "center",
     margin: 8, // Kept original margin
@@ -129,7 +132,7 @@ const styles = StyleSheet.create({
     borderRadius: AVATAR_SIZE / 2, // Apply border radius here as well
     borderColor: "white", // Inner white border
     borderWidth: 2, // Inner white border width
-    overflow:'hidden'
+    overflow: "hidden",
   },
   verifiedBadgeContainer: {
     position: "absolute",
@@ -152,7 +155,7 @@ const styles = StyleSheet.create({
     color: "#3D4849",
     marginTop: 5, // Space below avatar
     maxWidth: AVATAR_SIZE + AVATAR_BORDER_WIDTH * 2 + 20, // Limit width, adjust as needed
-    textAlign: 'center', // Center name below avatar
+    textAlign: "center", // Center name below avatar
   },
   statsContainer: {
     flex: 1, // Take remaining space
@@ -181,7 +184,7 @@ const styles = StyleSheet.create({
   mottoText: {
     fontSize: 15,
     color: "rgb(147, 147, 147)",
-    textAlign:"left",
+    textAlign: "left",
     lineHeight: 22, // Improve readability for longer mottos
   },
   // If you re-introduce action buttons, uncomment and style them:

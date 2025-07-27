@@ -276,17 +276,23 @@ Language Code: ${getLocales()[0].languageCode}`,
               pro();
             }}
           >
-            <FastImage
-              style={{
-                width: 25,
-                height: 25,
-                borderRadius: 6,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-              resizeMode={FastImage.resizeMode.contain}
-              source={require("../../../assets/verified.png")}
-            />
+  <View
+            style={{
+              borderWidth: 1.5,
+              borderRadius: 17,
+              borderBottomColor:"rgba(116, 198, 190, 1)",
+              borderTopColor: "#ea5504",
+              borderRightColor:"rgba(250, 190, 0, 1)",
+              borderLeftColor: "#3D4849",
+              width: 20,
+              height: 20,
+              alignContent: "center",
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 5,
+              marginLeft: 3,
+            }}
+          ></View>
 
             <ListItem.Content>
               <ListItem.Title>{i18n.t("GoPro")}</ListItem.Title>
