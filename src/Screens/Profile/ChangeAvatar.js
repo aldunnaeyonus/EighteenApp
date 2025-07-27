@@ -191,7 +191,6 @@ const ChangeAvatar = (props) => {
           >
             <View style={[componentStyles.gridButton]}>
               <Image
-                key={"AA" + grids.icon}
                 indicator={Progress}
                 resizeMode={FastImage.resizeMode.contain}
                 style={{

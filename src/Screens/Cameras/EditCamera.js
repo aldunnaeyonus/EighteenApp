@@ -327,7 +327,7 @@ const EditCamera = (props) => {
     formData.append("user", props.route.params.user);
     formData.append("owner", props.route.params.owner);
     formData.append("eventName", name);
-    formData.append("purchases", switch3 ? "1" : "0");
+    formData.append("purchases", "0");
     formData.append(
       "length",
       isPro
@@ -1021,43 +1021,7 @@ const EditCamera = (props) => {
               </ListItem>
               {isPro && (
                 <>
-                  <View style={[styles.dividerStyle]} />
-                  <ListItem key="23">
-                    <Icon
-                      type="material"
-                      name="18-up-rating"
-                      size={25}
-                      color="#3D4849"
-                      containerStyle={{
-                        width: 28,
-                        height: 28,
-                        borderRadius: 6,
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    />
-                    <ListItem.Content>
-                      <ListItem.Title style={styles.imageUserNameTitleBlack}>
-                        {i18n.t("Purchase More Shots")}
-                      </ListItem.Title>
-                      <ListItem.Subtitle>
-                        {i18n.t("Allow members")}
-                      </ListItem.Subtitle>
-                    </ListItem.Content>
-                  </ListItem>
-                  <View style={[styles.dividerStyle]} />
-                  <ListItem
-                    containerStyle={{ height: 65, backgroundColor: "#fafbfc" }}
-                    key="22"
-                  >
-                    <ListItem.Content>
-                      <Switch
-                        style={{ alignSelf: "flex-end" }}
-                        value={switch3}
-                        onValueChange={toggleSwitch3}
-                      />
-                    </ListItem.Content>
-                  </ListItem>
+                 
                   <View style={[styles.dividerStyle]} />
                   <ListItem key="19">
                     <Icon

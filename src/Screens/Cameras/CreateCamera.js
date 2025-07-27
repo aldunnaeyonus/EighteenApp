@@ -469,7 +469,7 @@ const CreateCamera = (props) => {
     const formData = new FormData();
     formData.append("owner", user.user_id); // Event owner ID
     formData.append("eventName", name); // Event name
-    formData.append("purchases", switch3 ? "1" : "0"); // Allow purchases
+    formData.append("purchases", "0"); // Allow purchases
     formData.append(
       "length",
       isPro
@@ -1119,8 +1119,8 @@ const CreateCamera = (props) => {
             {/* Number of Cameras Allowed */}
             <ListItem bottomDivider>
               <Icon
-                type="font-awesome-5"
-                name="camera-retro"
+                type="material-community"
+                name="camera-front-variant"
                 size={25}
                 color="#3D4849"
                 containerStyle={{
@@ -1163,40 +1163,7 @@ const CreateCamera = (props) => {
               </ListItem.Content>
             </ListItem>
 
-            {/* Purchase More Shots (Pro Feature) */}
-            <ListItem bottomDivider>
-              <Icon
-                type="material"
-                name="18-up-rating" // Icon suggesting age rating or premium
-                size={25}
-                color="#3D4849"
-                containerStyle={{
-                  width: 28,
-                  height: 28,
-                  borderRadius: 6,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              />
-              <ListItem.Content>
-                <ListItem.Title style={styles.imageUserNameTitleBlack}>
-                  {i18n.t("Purchase More Shots")}
-                </ListItem.Title>
-                <ListItem.Subtitle>{i18n.t("Allow members")}</ListItem.Subtitle>
-              </ListItem.Content>
-            </ListItem>
-            <ListItem
-              containerStyle={{ height: 65, backgroundColor: "#fafbfc" }}
-              bottomDivider
-            >
-              <ListItem.Content>
-                <Switch
-                  style={{ alignSelf: "flex-end" }}
-                  value={switch3} // Allow purchases switch
-                  onValueChange={toggleSwitch3}
-                />
-              </ListItem.Content>
-            </ListItem>
+         
 
             <ListItem bottomDivider>
               <Icon

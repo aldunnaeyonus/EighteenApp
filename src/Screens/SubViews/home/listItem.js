@@ -224,7 +224,7 @@ const ListItem = (props) => {
             actions={
               props.item.start < moment().unix() && props.isPro != "1"
                 ? constants.endActions(props.item.UUID)
-                : constants.actions(props.item.UUID)
+                : constants.endActions(props.item.UUID)
             }
             shouldOpenOnLongPress={false}
             themeVariant="light"
@@ -336,27 +336,7 @@ const ListItem = (props) => {
             name="account-group-outline"
             color="#fff"
           />
-          {props.isPro != "1" && (
-            <Icon
-              onPress={() => {
-                props._gotoStore(
-                  props.item.pin,
-                  props.item.owner,
-                  props.item.user == props.item.owner ? "owner" : "user",
-                  props.item.title,
-                  props.item.cameras
-                );
-              }}
-              containerStyle={{
-                alignSelf: "auto",
-                margin: 15,
-              }}
-              type="ionicon"
-              size={30}
-              name="storefront-outline"
-              color="#fff"
-            />
-          )}
+        
           <Icon
             onPress={() => {
               props._gotoShare(
@@ -386,7 +366,7 @@ const ListItem = (props) => {
             alignItems: "center",
           }}
         >
-          <Icon type="material" size={13} name="camera" color="#3D4849" />
+          <Icon type="material-community" size={13} name="camera-front-variant" color="#3D4849" />
           <Text
             style={{
               color: "#000",

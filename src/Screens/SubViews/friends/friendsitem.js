@@ -18,7 +18,6 @@ import styles from "../../../styles/SliderEntry.style";
 import { useIsFocused } from "@react-navigation/native";
 import * as i18n from "../../../../i18n";
 import CreditsFont from "../camera/credits";
-import FacePile from "react-native-face-pile";
 import { getLocales } from "expo-localization";
 import {
   SCREEN_WIDTH,
@@ -28,7 +27,6 @@ import {
 
 const FriendListItem = (props) => {
   const isFocused = useIsFocused();
-  let FACES = JSON.parse(JSON.stringify(props.item.joinedAvatars));
   let [localLang] = useState(getLocales()[0].languageCode);
 
   useEffect(() => {
@@ -107,7 +105,7 @@ const FriendListItem = (props) => {
             indicator={Progress}
             style={{
               width: SCREEN_WIDTH,
-              height: 350,
+              height: 500,
             }}
             resizeMode={FastImage.resizeMode.cover}
             source={{
@@ -119,39 +117,28 @@ const FriendListItem = (props) => {
           <View
             style={{
               position: "absolute",
-              height: 60,
-              backgroundColor: "rgba(0, 0, 0, 0.30)",
+              height: 20,
+              backgroundColor: "rgba(255, 255, 255, 1)",
               width: SCREEN_WIDTH,
-              bottom: 0,
+              top: 0,
             }}
           >
             <Text
               numberOfLines={2}
               style={{
-                position: "absolute",
-                color: "#fff",
-                fontSize: 20,
-                left: 20,
-                bottom: 30,
-                fontWeight: "bold",
-                width: SCREEN_WIDTH,
+                  color: "#3D4849",
+                  backgroundColor: "transparent",
+                  numberOfLines: 3,
+                  height: "auto",
+                  fontSize: 13,
+                  marginLeft: 5,
+                  fontWeight: "500",
+                  marginTop: 0,
               }}
             >
               {props.item.title.toUpperCase()}
             </Text>
-            <Text
-              numberOfLines={2}
-              style={{
-                position: "absolute",
-                color: "#fff",
-                fontSize: 15,
-                bottom: 7,
-                left: 20,
-                width: SCREEN_WIDTH,
-              }}
-            >
-              {endEventTime}
-            </Text>
+
           </View>
           {props.item.subscribed == "1" ? (
             <View
@@ -230,23 +217,6 @@ const FriendListItem = (props) => {
                 color="#fff"
               />
               <CreditsFont credits={props.item.credits} />
-              <Icon
-                onPress={() => {
-                  props._gotoStore(
-                    props.item.pin,
-                    props.item.owner,
-                    props.item.title
-                  );
-                }}
-                containerStyle={{
-              alignSelf: "auto",
-              margin: 15,
-                }}
-                type="material-community"
-                size={30}
-                name="cart-plus"
-                color="#fff"
-              />
 
               <Icon
                 onPress={() => {
@@ -391,66 +361,108 @@ const FriendListItem = (props) => {
               />
             </View>
           )}
-          <View
-            style={{
-              marginTop: 10,
-              marginRight: 10,
-              marginLeft: 10,
-              height: 27,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <FacePile numFaces={3} faces={FACES} circleSize={20} />
-
-            <Text
-              style={{
-                color: "grey",
-                fontSize: 14,
-              }}
-            >
-              <Text
-                style={{
-                  color: "grey",
-                  fontSize: 15,
-                  fontWeight: "600",
-                }}
-              >
-                {i18n.t("Cameras:")}
-              </Text>{" "}
-              {props.item.camera_count} of{" "}
-              {parseInt(props.item.cameras) +
-                parseInt(props.item.camera_cameras_extra)}{" "}
-              |{" "}
-              <Text
-                style={{
-                  color: "grey",
-                  fontSize: 15,
-                  fontWeight: "600",
-                }}
-              >
-                {i18n.t("Media:")}
-              </Text>{" "}
-              {props.item.media_count - 1}
-            </Text>
-          </View>
-          <View
-            style={{
-              marginBottom: 10,
-              marginTop: 10,
-              marginRight: 10,
-              marginLeft: 10,
-              height: 27,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text style={{ color: "grey", fontSize: 13 }}>
-              {eventStart} - {eventEnd}
-            </Text>
-          </View>
+           <View
+                     style={{
+                       marginTop: 10,
+                       marginRight: 10,
+                       marginLeft: 10,
+                       height: 27,
+                       flexDirection: "row",
+                       alignItems: "center",
+                     }}
+                   >
+                   <Icon type="material-community" size={13} name="camera-front-variant" color="#3D4849" />
+                     <Text
+                       style={{
+                         color: "#000",
+                         fontSize: 13,
+                         marginRight: 20,
+                       }}
+                     >
+                       {" "}
+                       {props.item.camera_count} /{" "}
+                       {parseInt(props.item.cameras) +
+                         parseInt(props.item.camera_cameras_extra)}{" "}
+                     </Text>
+                     <Icon type="material" size={13} name="perm-media" color="#3D4849" />
+         
+                     <Text
+                       style={{
+                         color: "#000",
+                         fontSize: 13,
+                         marginRight: 20,
+                       }}
+                     >
+                       {" "}
+                       {props.item.media_count - 1}
+                     </Text>
+                     <Icon
+                       type="material-community"
+                       size={13}
+                       name="calendar"
+                       color="#3D4849"
+                     />
+                     <Text
+                       numberOfLines={2}
+                       style={{
+                         color: "#000",
+                         fontSize: 13,
+                         width: "auto",
+                         textAlign: "left",
+                       }}
+                     >
+                       {" "}
+                       {endEventTime}
+                     </Text>
+                   </View>
+                    <View
+                             style={{
+                               marginTop: 10,
+                               marginRight: 10,
+                               marginLeft: 10,
+                               height: 27,
+                               flexDirection: "row",
+                               alignItems: "center",
+                               display: props.item.lastComment == "" ? "none" : "flex",
+                             }}
+                           >
+                             <Icon
+                               onPress={() => {}}
+                               name={"comment-outline"}
+                               type="material-community"
+                               size={17}
+                               color="#3D4849"
+                             />
+                   
+                             <Text
+                               onPress={() => {
+                                 props._gotoFriend(props.item.lastCommentID);
+                               }}
+                               numberOfLines={3}
+                               style={{
+                                 color: "#3D4849",
+                                 marginLeft: 10,
+                                 fontSize: 13,
+                                 height: "auto",
+                                 textAlign: "left",
+                                 fontWeight: "700",
+                               }}
+                             >
+                               {props.item.lastCommentUser}
+                             </Text>
+                             <Text
+                               numberOfLines={3}
+                               style={{
+                                 color: "#3D4849",
+                                 marginLeft: 10,
+                                 fontSize: 13,
+                                 height: "auto",
+                                 textAlign: "left",
+                               }}
+                             >
+                               {props.item.lastComment}
+                             </Text>
+                           </View>
         </View>
       </Pressable>
     </SafeAreaView>

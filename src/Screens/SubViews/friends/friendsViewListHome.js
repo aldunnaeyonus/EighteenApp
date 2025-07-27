@@ -19,6 +19,7 @@ import {
 } from "../../../utils/constants";
 
 const FriendListItemHome = (props) => {
+
   const isFocused = useIsFocused();
   let [localLang] = useState(getLocales()[0].languageCode);
 
@@ -257,23 +258,6 @@ const FriendListItemHome = (props) => {
             />
             <CreditsFont credits={props.item.credits} />
 
-            <Icon
-              onPress={() => {
-                props._gotoStore(
-                  props.item.pin,
-                  props.item.owner,
-                  props.item.title
-                );
-              }}
-              containerStyle={{
-                alignSelf: "auto",
-                margin: 15,
-              }}
-              type="material-community"
-              size={30}
-              name="cart-plus"
-              color="#fff"
-            />
 
             <Icon
               onPress={() => {
@@ -304,7 +288,7 @@ const FriendListItemHome = (props) => {
               alignItems: "center",
             }}
           >
-            <Icon type="material" size={13} name="camera" color="#3D4849" />
+          <Icon type="material-community" size={13} name="camera-front-variant" color="#3D4849" />
             <Text
               style={{
                 color: "#000",
@@ -348,8 +332,7 @@ const FriendListItemHome = (props) => {
               {endEventTime}
             </Text>
           </View>
-        </View>
-        <View
+           <View
           style={{
             marginTop: 10,
             marginRight: 10,
@@ -357,7 +340,7 @@ const FriendListItemHome = (props) => {
             height: 27,
             flexDirection: "row",
             alignItems: "center",
-            display: props.item.lastComment == "" ? "none" : "flex",
+            display: props.item.lastComment == "" ? "flex" : "flex",
           }}
         >
           <Icon
@@ -397,6 +380,8 @@ const FriendListItemHome = (props) => {
             {props.item.lastComment}
           </Text>
         </View>
+        </View>
+       
     </SafeAreaView>
   );
 };
