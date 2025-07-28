@@ -50,6 +50,7 @@ const PhotoGallery = (props) => {
       ? "99"
       : props.route.params.credits
   );
+  const [selectedUris] = useState([]);
   const [cameraStatus] = ImagePicker.useCameraPermissions();
   const [libraryStatus] = ImagePicker.useMediaLibraryPermissions();
   const bottomSheetRef = useRef(null);
@@ -226,7 +227,7 @@ const PhotoGallery = (props) => {
     });
 
     if (!result.canceled && result.assets && result.assets.length > 0) {
-      const selectedUris = [];
+
       for (const asset of result.assets) {
         const mime = getExtensionFromFilename(asset.uri).toLowerCase();
          if (result.assets.length > 1) {
