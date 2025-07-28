@@ -341,7 +341,7 @@ const Friends = ({ route, navigation }) => {
     <SafeAreaProvider>
       <SafeAreaView
         style={componentStyles.safeArea}
-        edges={["bottom", "left", "right", "top"]}
+        edges={["left", "right", "top"]}
       >
         <AnimatedFlatList
           refreshing={refreshing}
