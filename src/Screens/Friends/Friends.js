@@ -14,10 +14,9 @@ import {
   TouchableWithoutFeedback,
   Linking,
   Text,
-  ActivityIndicator,
 } from "react-native";
 import "moment-duration-format";
-import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { storage } from "../../context/components/Storage";
 import Animated from "react-native-reanimated";
 import { useMMKVObject } from "react-native-mmkv";
@@ -32,7 +31,6 @@ import Progress from "react-native-progress";
 import FastImage from "react-native-fast-image";
 import { createImageProgress } from "react-native-image-progress";
 import { useIsFocused } from "@react-navigation/native";
-import { MD2Colors } from "react-native-paper";
 import Loading from "../SubViews/home/Loading";
 import { getLocales } from "expo-localization";
 import * as  ImagePicker from "expo-image-picker";
@@ -669,10 +667,6 @@ const componentStyles = StyleSheet.create({
     marginTop: 50,
   },
   bottomSheetModal: {
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 7 },
-    shadowOpacity: 0.43,
-    shadowRadius: 9.51,
     backgroundColor: "transparent",
     elevation: 15,
   },

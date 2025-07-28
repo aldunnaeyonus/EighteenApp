@@ -1,8 +1,12 @@
-import React, {useRef} from "react";
+import React, { useRef } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { MD2Colors } from "react-native-paper";
-import * as Progress from 'react-native-progress'; // Ensure this is installed: npm install react-native-progress
+import * as Progress from "react-native-progress"; // Ensure this is installed: npm install react-native-progress
 import { SCREEN_WIDTH } from "../../../utils/constants"; // Assuming this path is correct
+import FastImage from "react-native-fast-image"; // Optimized image loading
+import { createImageProgress } from "react-native-image-progress"; // Image loading with progress indicator
+const Image = createImageProgress(FastImage); // Combined FastImage with progress
+import Video from "react-native-video";
 
 /**
  * A reusable loading component with an activity indicator and an optional progress bar.
@@ -13,15 +17,12 @@ import { SCREEN_WIDTH } from "../../../utils/constants"; // Assuming this path i
  * @param {string} [props.message="Loading..."] - The message to display next to the spinner.
  */
 const Loading = ({ progress, message, flex, image }) => {
-
   let progres = Number(progress);
-  let messages = message
+  let messages = message;
   let isVisible = flex == "none" ? false : true;
   const video = useRef();
   const photo = useRef();
   const mime = String(image).split(".").pop().toLowerCase();
-  let photos = photo;
-  
   if (!isVisible) {
     return null; // Don't render anything if not visible
   }
@@ -30,55 +31,52 @@ const Loading = ({ progress, message, flex, image }) => {
     <View style={styles.container}>
       {/* Container for ActivityIndicator and Text */}
       <View style={styles.contentRow}>
-       {
-        (mime == "mov") || (mime == "mpeg") || (mime == "mp4") ?
-  		        <Video
-                    fullscreen={false}
-                    fullscreenAutorotate={false}
-                    ignoreSilentSwitch="obey"
-                    showNotificationControls={false}
-                    playWhenInactive={false}
-                    playInBackground={false}
-                    ref={video}
-                    controls={false}
-                    repeat={false}
-                    muted={true}
-                    resizeMode={"cover"}
-                    paused={true}
-                    style={{
-                      borderRadius:6,
-                      overflow:'hidden',
-                      height: 40, 
-                      width: 40,
-                    }}
-                    source={{ 
-                      cache: FastImage.cacheControl.immutable,
-                      priority: FastImage.priority.high,
-                      uri: photos 
-                    }}
-                  />
-    :
-     <Image
-     ref={photo}
-      style={{
-        width: 40,
-        height: 40,
-        borderRadius:6,
-        overflow:'hidden',
-      }}
-      indicator={Progress}
-      resizeMode={'cover'}
-      source={{
-        cache: FastImage.cacheControl.immutable,
-        priority: FastImage.priority.high,
-        uri: photos
-      }}
-    />
-}
+        {mime == "mov" || mime == "mpeg" || mime == "mp4" ? (
+          <Video
+            fullscreen={false}
+            fullscreenAutorotate={false}
+            ignoreSilentSwitch="obey"
+            showNotificationControls={false}
+            playWhenInactive={false}
+            playInBackground={false}
+            ref={video}
+            controls={false}
+            repeat={false}
+            muted={true}
+            resizeMode={"cover"}
+            paused={true}
+            style={{
+              overflow: "hidden",
+              width: 50,
+              height: 50,
+              borderRadius: 2,
+            }}
+            source={{
+              cache: FastImage.cacheControl.immutable,
+              priority: FastImage.priority.high,
+              uri: image,
+            }}
+          />
+        ) : (
+          <Image
+            ref={photo}
+            style={{
+              width: 50,
+              height: 50,
+              borderRadius: 2,
+              overflow: "hidden",
+            }}
+            indicator={Progress}
+            resizeMode={"cover"}
+            source={{
+              cache: FastImage.cacheControl.immutable,
+              priority: FastImage.priority.high,
+              uri: image,
+            }}
+          />
+        )}
 
-        <Text style={styles.messageText}>
-          {messages}
-        </Text>
+        <Text style={styles.messageText}>{messages}</Text>
       </View>
 
       {/* Progress Bar at the bottom */}
@@ -103,18 +101,18 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH, // Takes full width of the screen
     paddingVertical: 15,
     paddingHorizontal: 10,
-    backgroundColor: 'white', // Or a subtle background
+    backgroundColor: "white", // Or a subtle background
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#eee',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
+    borderBottomColor: "#eee",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
   },
   contentRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start', // Align content to the start
-    width: '100%', // Take full width of parent container for alignment
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start", // Align content to the start
+    width: "100%", // Take full width of parent container for alignment
     paddingLeft: 10, // Indent content slightly
     marginBottom: 10, // Space between text/spinner and progress bar
   },
@@ -122,12 +120,12 @@ const styles = StyleSheet.create({
     marginLeft: 15, // Space between spinner and text
     fontWeight: "600",
     fontSize: 15,
-    color: '#333', // Darker text for readability
+    color: "#333", // Darker text for readability
     flexShrink: 1, // Allow text to wrap if too long
   },
   progressBar: {
     // Positioned normally at the bottom of the container
-    alignSelf: 'center', // Center the progress bar within its container
+    alignSelf: "center", // Center the progress bar within its container
   },
 });
 

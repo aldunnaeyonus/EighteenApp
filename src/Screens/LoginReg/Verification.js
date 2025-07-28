@@ -114,13 +114,12 @@ const Verification = (props) => {
             onPress={() => {
               props.navigation.goBack();
             }}
-            style={componentStyles.backButtonContainer}
           >
             <Icon
               type="material"
               size={25}
               name="arrow-back-ios-new"
-              color="#fff"
+              color="#000"
             />
           </TouchableOpacity>
         ),
