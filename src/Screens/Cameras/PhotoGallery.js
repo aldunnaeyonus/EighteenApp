@@ -84,8 +84,8 @@ const PhotoGallery = (props) => {
     []
   );
 
-  const processAndUploadImages = useCallback(
-    async (uris) => {
+   const processAndUploadImages = useCallback(
+    async () => {
       setAnimating(true);
       storage.set(
         "uploadData",
@@ -105,7 +105,7 @@ const PhotoGallery = (props) => {
       formData.append("device", Platform.OS);
       formData.append("camera", "0");
 
-      uris.forEach((uri) => {
+      selectedUris.forEach((uri) => {
         formData.append("file[]", {
           type: constants.mimes(getExtensionFromFilename(uri).toLowerCase()),
           name:
@@ -142,7 +142,8 @@ const PhotoGallery = (props) => {
             Accept: "application/json",
             "Content-Type": "multipart/form-data",
           },
-        });
+       }).then(async () => {
+    selectedUris([]);
 
         await AsyncStorage.setItem("uploadEnabled", "0");
         storage.set(
@@ -176,12 +177,14 @@ const PhotoGallery = (props) => {
             "1"
           );
         }
+              });
       } catch (error) {
         console.error("Upload error:", error);
         Alert.alert(i18n.t("Error"), i18n.t("Failed to upload images."));
       } finally {
         setAnimating(false);
       }
+
     },
     [
       props.route.params.pin,
@@ -227,17 +230,15 @@ const PhotoGallery = (props) => {
     });
 
     if (!result.canceled && result.assets && result.assets.length > 0) {
-
-      for (const asset of result.assets) {
         const mime = getExtensionFromFilename(asset.uri).toLowerCase();
          if (result.assets.length > 1) {
           result.assets.forEach((file) => {
             selectedUris.push(file.uri);
           });
-        processAndUploadImages(selectedUris);
+        processAndUploadImages();
         } else if (mime == "mov" || mime == "mpeg" || mime == "mp4" || mime == "m4v") {
-          selectedUris.push(asset.uri);
-                  processAndUploadImages(selectedUris);
+          selectedUris.push( result.assets[0].uri);
+                  processAndUploadImages();
         } else {
           try {
            await PhotoEditor.open({
@@ -245,7 +246,7 @@ const PhotoGallery = (props) => {
               stickers,
             }).then((image) => {
               selectedUris.push(image);
-        processAndUploadImages(selectedUris);
+        processAndUploadImages();
             });
           } catch (e) {
             console.error("Photo editor error:", e.message);
@@ -253,7 +254,6 @@ const PhotoGallery = (props) => {
             setAnimating(false);
             return;
           }
-        }
       }
     } else {
       setAnimating(false); // If selection is cancelled or no assets
