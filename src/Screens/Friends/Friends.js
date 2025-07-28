@@ -338,11 +338,7 @@ const Friends = ({ route, navigation }) => {
   );
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView
-        style={componentStyles.safeArea}
-        edges={["left", "right", "top"]}
-      >
+    <SafeAreaProvider style={componentStyles.safeArea}>
         <AnimatedFlatList
           refreshing={refreshing}
           onRefresh={_refresh}
@@ -531,7 +527,6 @@ const Friends = ({ route, navigation }) => {
             </Animated.View>
           </BottomSheetView>
         </BottomSheetModal>
-      </SafeAreaView>
     </SafeAreaProvider>
   );
 };
