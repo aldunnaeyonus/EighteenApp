@@ -236,9 +236,6 @@ const PhotoGallery = (props) => {
             selectedUris.push(file.uri);
           });
         processAndUploadImages();
-        } else if (mime == "mov" || mime == "mpeg" || mime == "mp4" || mime == "m4v") {
-          selectedUris.push( result.assets[0].uri);
-                  processAndUploadImages();
         } else {
           try {
            await PhotoEditor.open({
