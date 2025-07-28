@@ -225,6 +225,18 @@ const VisionCamera = (props: {
         method: "POST",
         url: constants.url + "/camera/upload.php",
         data: formData,
+        onUploadProgress: (progressEvent) => {
+            const { loaded, total } = progressEvent;
+            const progress = loaded / total;
+            storage.set(
+              "uploadData",
+              JSON.stringify({
+                message: i18n.t("Uploading"),
+                display: "flex",
+                progress: progress,
+              })
+            );
+          },
         headers: {
           Accept: "application/json",
           "content-Type": "multipart/form-data",
