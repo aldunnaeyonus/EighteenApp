@@ -546,7 +546,7 @@ const componentStyles = StyleSheet.create({
     backgroundColor: "white",
     flex: 1, // Use flex: 1 instead of fixed height to adapt to screen size
     width: SCREEN_WIDTH,
-    paddingBottom: 24,
+    paddingBottom: 22,
   },
   flatList: {
     flex: 1,
