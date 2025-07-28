@@ -229,15 +229,23 @@ const PhotoGallery = (props) => {
       const selectedUris = [];
       for (const asset of result.assets) {
         const mime = getExtensionFromFilename(asset.uri).toLowerCase();
-        if (mime == "mov" || mime == "mpeg" || mime == "mp4" || mime == "m4v") {
+         if (result.assets.length > 1) {
+          result.assets.forEach((file) => {
+            selectedUris.push(file.uri);
+          });
+        processAndUploadImages(selectedUris);
+        } else if (mime == "mov" || mime == "mpeg" || mime == "mp4" || mime == "m4v") {
           selectedUris.push(asset.uri);
+                  processAndUploadImages(selectedUris);
         } else {
           try {
-            const editedImage = await PhotoEditor.open({
-              path: asset.uri,
+           await PhotoEditor.open({
+              path: result.assets[0].uri,
               stickers,
+            }).then((image) => {
+              selectedUris.push(image);
+        processAndUploadImages(selectedUris);
             });
-            selectedUris.push(editedImage);
           } catch (e) {
             console.error("Photo editor error:", e.message);
             Alert.alert(i18n.t("Error"), i18n.t("Failed to edit image."));
@@ -245,9 +253,6 @@ const PhotoGallery = (props) => {
             return;
           }
         }
-      }
-      if (selectedUris.length > 0) {
-        processAndUploadImages(selectedUris);
       }
     } else {
       setAnimating(false); // If selection is cancelled or no assets
