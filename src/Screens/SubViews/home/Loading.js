@@ -1,9 +1,8 @@
-import React from "react";
+import React, {useRef} from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { MD2Colors } from "react-native-paper";
 import * as Progress from 'react-native-progress'; // Ensure this is installed: npm install react-native-progress
 import { SCREEN_WIDTH } from "../../../utils/constants"; // Assuming this path is correct
-import * as i18n from "../../../../i18n"; // Assuming i18n for messages if needed
 
 /**
  * A reusable loading component with an activity indicator and an optional progress bar.
