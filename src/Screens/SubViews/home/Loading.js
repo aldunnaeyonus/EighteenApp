@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
-import { ActivityIndicator, MD2Colors } from "react-native-paper";
+import { MD2Colors } from "react-native-paper";
 import * as Progress from 'react-native-progress'; // Ensure this is installed: npm install react-native-progress
 import { SCREEN_WIDTH } from "../../../utils/constants"; // Assuming this path is correct
 import * as i18n from "../../../../i18n"; // Assuming i18n for messages if needed
@@ -13,12 +13,16 @@ import * as i18n from "../../../../i18n"; // Assuming i18n for messages if neede
  * @param {number} [props.progress=0] - The progress value (0 to 1) for the progress bar.
  * @param {string} [props.message="Loading..."] - The message to display next to the spinner.
  */
-const Loading = ({ progress, message, flex }) => {
+const Loading = ({ progress, message, flex, image }) => {
 
   let progres = Number(progress);
   let messages = message
   let isVisible = flex == "none" ? false : true;
-
+  const video = useRef();
+  const photo = useRef();
+  const mime = String(image).split(".").pop().toLowerCase();
+  let photos = photo;
+  
   if (!isVisible) {
     return null; // Don't render anything if not visible
   }
@@ -27,11 +31,52 @@ const Loading = ({ progress, message, flex }) => {
     <View style={styles.container}>
       {/* Container for ActivityIndicator and Text */}
       <View style={styles.contentRow}>
-        <ActivityIndicator
-          size={25}
-          animating={true}
-          color={MD2Colors.grey700}
-        />
+       {
+        (mime == "mov") || (mime == "mpeg") || (mime == "mp4") ?
+  		        <Video
+                    fullscreen={false}
+                    fullscreenAutorotate={false}
+                    ignoreSilentSwitch="obey"
+                    showNotificationControls={false}
+                    playWhenInactive={false}
+                    playInBackground={false}
+                    ref={video}
+                    controls={false}
+                    repeat={false}
+                    muted={true}
+                    resizeMode={"cover"}
+                    paused={true}
+                    style={{
+                      borderRadius:6,
+                      overflow:'hidden',
+                      height: 40, 
+                      width: 40,
+                    }}
+                    source={{ 
+                      cache: FastImage.cacheControl.immutable,
+                      priority: FastImage.priority.high,
+                      uri: photos 
+                    }}
+                  />
+    :
+     <Image
+     ref={photo}
+      style={{
+        width: 40,
+        height: 40,
+        borderRadius:6,
+        overflow:'hidden',
+      }}
+      indicator={Progress}
+      resizeMode={'cover'}
+      source={{
+        cache: FastImage.cacheControl.immutable,
+        priority: FastImage.priority.high,
+        uri: photos
+      }}
+    />
+}
+
         <Text style={styles.messageText}>
           {messages}
         </Text>
