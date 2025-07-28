@@ -317,29 +317,7 @@ const PhotoGallery = (props) => {
               />
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity
-              onPress={() => {
-                props.navigation.navigate("Purchase", {
-                  pin: props.route.params.pin,
-                  owner: props.route.params.owner,
-                  type: "user",
-                  eventName: props.route.params.title,
-                });
-              }}
-            >
-              <Icon
-                type="ionicon"
-                size={30}
-                name="storefront-outline"
-                color="#fff"
-                containerStyle={{
-                  padding: 7,
-                  height: 44,
-                  backgroundColor: "rgba(0, 0, 0, 0.60)",
-                  borderRadius: 22,
-                }}
-              />
-            </TouchableOpacity>
+            <></>
           ),
       });
 
